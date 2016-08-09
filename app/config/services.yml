@@ -1,0 +1,23 @@
+# Learn more about services, parameters and containers at
+# http://symfony.com/doc/current/book/service_container.html
+parameters:
+    sms_username: 9125995014
+    sms_password: 7436
+    sms_from: 50002016008194
+#    parameter_name: value
+
+services:
+    app.customer_token_authenticator:
+        class: AppBundle\Security\TokenAuthenticator
+        arguments: ['@doctrine.orm.entity_manager']
+
+    app.sms:
+        class: AppBundle\Utils\Sms
+        arguments: ['%sms_username%', '%sms_password%', '%sms_from%']
+    app.gcm:
+        class: AppBundle\Utils\GCM
+    app.form_error:
+        class: AppBundle\Utils\FormError
+#    service_name:
+#        class: AppBundle\Directory\ClassName
+#        arguments: ["@another_service_name", "plain_value", "%parameter_name%"]

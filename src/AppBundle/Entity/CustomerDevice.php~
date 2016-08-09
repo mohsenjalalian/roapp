@@ -1,0 +1,105 @@
+<?php
+
+namespace AppBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * CustomerDevice
+ *
+ * @ORM\Table(name="customer_device")
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\CustomerDeviceRepository")
+ */
+class CustomerDevice
+{
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    private $id;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="installed_at", type="datetime", nullable=true)
+     */
+    private $installedAt;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="last_access_at", type="datetime", nullable=true)
+     */
+    private $lastAccessAt;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="device_uuid", type="string", length=255)
+     */
+    private $deviceUuid;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="device_token", type="string", length=255, nullable=true, unique=true)
+     */
+    private $deviceToken;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="latitude", type="decimal", precision=10, scale=8, nullable=true)
+     */
+    private $latitude;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="longitude", type="decimal", precision=11, scale=8, nullable=true)
+     */
+    private $longitude;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="device_type", type="integer")
+     */
+    private $deviceType;
+
+    /**
+     * @var bool
+     *
+     * @ORM\Column(name="phone_verification_status", type="boolean")
+     */
+    private $phoneVerificationStatus;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="phone_verification_code", type="string", length=255, nullable=true)
+     */
+    private $phoneVerificationCode;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="phone_verification_sent", type="datetime", nullable=true, nullable=true)
+     */
+    private $phoneVerificationSent;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="notification_token", type="string", length=255, nullable=true)
+     */
+    private $notificationToken;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="\AppBundle\Entity\Customer")
+     */
+    private $customer;
+}

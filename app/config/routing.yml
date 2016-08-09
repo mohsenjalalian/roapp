@@ -1,0 +1,7 @@
+app:
+    resource: "@AppBundle/Controller/"
+    type:     annotation
+
+app.customer.api.v1:
+    resource: "@AppBundle/Controller/Customer/Api/V1/"
+    prefix:   /customer/api/{version}/
