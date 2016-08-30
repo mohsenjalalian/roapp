@@ -1,0 +1,19 @@
+{
+  "name": "public",
+  "authors": [
+    "modiamir <amir.modarresi.13@gmail.com>"
+  ],
+  "description": "",
+  "main": "",
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "../../../web/assets/vendor/",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+  }
+}
