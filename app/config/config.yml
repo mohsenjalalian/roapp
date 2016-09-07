@@ -94,7 +94,7 @@ assetic:
     assets:
         semantic_base_js:
             inputs:
-                - '@AppBundle/Resources/public/semantic/dist/semantic.js'
+                - 'bundles/app/semantic/dist/semantic.js'
         semantic_base_css:
             inputs:
-                - "@AppBundle/Resources/public/semantic/dist/semantic.rtl.css"
+                - "bundles/app/semantic/dist/semantic.rtl.css"
