@@ -9,7 +9,7 @@ set :format, :pretty
 set :pty, true
 set :symfony_env,  "dev"
 set :composer_install_flags, '--no-interaction --optimize-autoloader'
-#set :linked_files, ["app/config/parameters.yml"]
+set :linked_files, ["app/config/parameters.yml"]
 set :controllers_to_clear, []
 
 set :permission_method, :chmod
