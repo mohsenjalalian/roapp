@@ -21,5 +21,5 @@
 /.idea
 /app/Resources/assets/semantic/node_modules/
 /app/Resources/assets/semantic/dist/
-/src/AppBundle/Resources/public/semantic/node_modules/
-/src/AppBundle/Resources/public/semantic/dist/
+/src/AppBundle/Resources/public/semantic/node_modules/*
+/src/AppBundle/Resources/public/semantic/dist/*
