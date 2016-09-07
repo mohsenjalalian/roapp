@@ -86,3 +86,15 @@ sensio_framework_extra:
 #    routing_loader:
 #        default_format: json
 
+assetic:
+    debug:          '%kernel.debug%'
+    use_controller: '%kernel.debug%'
+    filters:
+        cssrewrite: ~
+    assets:
+        semantic_base_js:
+            inputs:
+                - '@AppBundle/Resources/public/semantic/dist/semantic.js'
+        semantic_base_css:
+            inputs:
+                - "@AppBundle/Resources/public/semantic/dist/semantic.rtl.css"
