@@ -9,7 +9,9 @@ parameters:
 services:
     app.customer_token_authenticator:
         class: AppBundle\Security\TokenAuthenticator
-        arguments: ['@doctrine.orm.entity_manager']
+        arguments:
+            - '@doctrine.orm.entity_manager'
+            - '@logger'
 
     app.sms:
         class: AppBundle\Utils\Sms
@@ -18,6 +20,8 @@ services:
         class: AppBundle\Utils\GCM
     app.form_error:
         class: AppBundle\Utils\FormError
+    app.token_generator:
+        class: AppBundle\Utils\TokenGenerator
 #    service_name:
 #        class: AppBundle\Directory\ClassName
 #        arguments: ["@another_service_name", "plain_value", "%parameter_name%"]

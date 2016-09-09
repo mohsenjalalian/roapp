@@ -2,10 +2,13 @@
 
 namespace AppBundle\Controller\Customer\Api\V1;
 
+use AppBundle\DBAL\EnumCustomerDeviceHistoryActionType;
 use AppBundle\Entity\CustomerDevice;
+use AppBundle\Entity\CustomerDeviceHistory;
 use AppBundle\Form\Customer\Api\V1\CustomerDeviceType;
 use FOS\RestBundle\Controller\Annotations\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -18,6 +21,7 @@ use Symfony\Component\HttpFoundation\Response;
 class CustomerDeviceController extends Controller
 {
     /**
+     * @Security("is_granted('IS_AUTHENTICATED_ANONYMOUSLY')")
      * @param Request $request
      * @return JsonResponse
      * @Route()
@@ -55,6 +59,14 @@ class CustomerDeviceController extends Controller
             } else {
                 $em->persist($customerDevice);
             }
+            
+            $customerDeviceHistory = new CustomerDeviceHistory();
+            $customerDeviceHistory
+                ->setAction(EnumCustomerDeviceHistoryActionType::ENUM_CREATE)
+                ->setCustomerDevice($customerDeviceEntity)
+                ->setDateTime(new \DateTime())
+                ->setStatus(true);
+            $em->persist($customerDeviceHistory);
 
             $em->flush();
 

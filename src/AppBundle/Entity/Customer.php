@@ -29,12 +29,6 @@ class Customer implements UserInterface
      */
     private $phone;
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="api_key", type="string", length=255, unique=true)
-     */
-    private $apiKey;
 
     /**
      * Get id
@@ -68,30 +62,6 @@ class Customer implements UserInterface
     public function getPhone()
     {
         return $this->phone;
-    }
-
-    /**
-     * Set apiKey
-     *
-     * @param string $apiKey
-     *
-     * @return Customer
-     */
-    public function setApiKey($apiKey)
-    {
-        $this->apiKey = $apiKey;
-
-        return $this;
-    }
-
-    /**
-     * Get apiKey
-     *
-     * @return string
-     */
-    public function getApiKey()
-    {
-        return $this->apiKey;
     }
 
     /**
