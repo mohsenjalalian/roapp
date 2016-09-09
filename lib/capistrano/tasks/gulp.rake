@@ -2,7 +2,7 @@ namespace :gulp do
   desc 'build semantic'
   task :build do
     on roles(:app) do
-      execute "cd '#{release_path}/src/AppBundle/Resources/public/semantic';~/.npm-packages/bin/gulp build;"
+      execute "cd '#{release_path}/src/AppBundle/Resources/public/semantic';npm install --no-interaction;~/.npm-packages/bin/gulp build;"
     end
   end
 end

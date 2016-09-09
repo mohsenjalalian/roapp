@@ -43,8 +43,8 @@ set :file_permissions_paths, ["var"]
 
 # Default value for linked_dirs is []
 append :linked_dirs,
-    "src/AppBundle/Resources/public/semantic/dist/",
-    "src/AppBundle/Resources/public/semantic/node_modules/"
+    "src/AppBundle/Resources/public/semantic/dist",
+    "src/AppBundle/Resources/public/semantic/node_modules"
 
 # Default value for default_env is {}
 # set :default_env, { path: "/opt/ruby/bin:$PATH" }
