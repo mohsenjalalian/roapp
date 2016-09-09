@@ -16,7 +16,7 @@ use Symfony\Component\HttpFoundation\Request;
 class DefaultController extends Controller
 {
     /**
-     * @Route("/index", name="customer_home")
+     * @Route(path="/", name="customer_home")
      * @Security("has_role('ROLE_CUSTOMER')")
      * @param Request $request
      * @return JsonResponse

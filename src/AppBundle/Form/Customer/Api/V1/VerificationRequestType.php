@@ -27,8 +27,10 @@ class VerificationRequestType extends AbstractType
      */
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults(array(
-            'csrf_protection' => false,
-        ));
+        $resolver->setDefaults(
+            [
+                'csrf_protection' => false,
+            ]
+        );
     }
 }

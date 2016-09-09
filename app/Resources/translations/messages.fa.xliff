@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+    <file source-language="en" target-language="fa" datatype="plaintext" original="file.ext">
+        <body>
+            <trans-unit id="verification_message">
+                <source>Your verification code is:</source>
+                <target>کد فعال سازی شما:</target>
+            </trans-unit>
+            <trans-unit id="maximum_verfication_request_number">
+                <source>You reached maximum verification request number.</source>
+                <target>شما به حداکثر تعداد درخواست رسیده اید.</target>
+             </trans-unit>
+        </body>
+    </file>
+</xliff>
