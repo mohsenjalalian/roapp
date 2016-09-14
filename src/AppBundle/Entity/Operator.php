@@ -3,6 +3,7 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping\ManyToMany;
 
 /**
  * Operator
@@ -35,11 +36,24 @@ class Operator
      */
     private $password;
 
+    /**
+     * @var int
+     * 
+     * @ManyToMany(targetEntity="AppBundle\Entity\Role", inversedBy="operatorId")
+     */
+    private $roleId;
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->roleId = new \Doctrine\Common\Collections\ArrayCollection();
+    }
 
     /**
      * Get id
      *
-     * @return int
+     * @return integer
      */
     public function getId()
     {
@@ -93,5 +107,38 @@ class Operator
     {
         return $this->password;
     }
-}
 
+    /**
+     * Add roleId
+     *
+     * @param \AppBundle\Entity\Role $roleId
+     *
+     * @return Operator
+     */
+    public function addRoleId(\AppBundle\Entity\Role $roleId)
+    {
+        $this->roleId[] = $roleId;
+
+        return $this;
+    }
+
+    /**
+     * Remove roleId
+     *
+     * @param \AppBundle\Entity\Role $roleId
+     */
+    public function removeRoleId(\AppBundle\Entity\Role $roleId)
+    {
+        $this->roleId->removeElement($roleId);
+    }
+
+    /**
+     * Get roleId
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getRoleId()
+    {
+        return $this->roleId;
+    }
+}

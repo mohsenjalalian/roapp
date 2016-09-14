@@ -3,6 +3,7 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping\ManyToMany;
 
 /**
  * Role
@@ -34,12 +35,27 @@ class Role
      * @ORM\Column(name="label", type="string", length=255)
      */
     private $label;
-
+    
+    /**
+     * @var int
+     * 
+     * @ManyToMany(targetEntity="AppBundle\Entity\Operator", mappedBy="roleId")
+     */
+    
+    private $operatorId;
+    
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->operatorId = new \Doctrine\Common\Collections\ArrayCollection();
+    }
 
     /**
      * Get id
      *
-     * @return int
+     * @return integer
      */
     public function getId()
     {
@@ -93,5 +109,38 @@ class Role
     {
         return $this->label;
     }
-}
 
+    /**
+     * Add operatorId
+     *
+     * @param \AppBundle\Entity\Operator $operatorId
+     *
+     * @return Role
+     */
+    public function addOperatorId(\AppBundle\Entity\Operator $operatorId)
+    {
+        $this->operatorId[] = $operatorId;
+
+        return $this;
+    }
+
+    /**
+     * Remove operatorId
+     *
+     * @param \AppBundle\Entity\Operator $operatorId
+     */
+    public function removeOperatorId(\AppBundle\Entity\Operator $operatorId)
+    {
+        $this->operatorId->removeElement($operatorId);
+    }
+
+    /**
+     * Get operatorId
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getOperatorId()
+    {
+        return $this->operatorId;
+    }
+}
