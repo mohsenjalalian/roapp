@@ -7,11 +7,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-/**
- * Class CustomerDeviceType
- * @package AppBundle\Form
- */
-class CustomerDeviceType extends AbstractType
+class VerificationReportType extends AbstractType
 {
     /**
      * @param FormBuilderInterface $builder
@@ -21,10 +17,8 @@ class CustomerDeviceType extends AbstractType
     {
         $builder
             ->add('deviceUuid')
-            ->add('notificationToken')
             ->add('deviceType')
-            ->add('latitude')
-            ->add('longitude')
+            ->add('verificationCode')
         ;
     }
 
@@ -35,7 +29,6 @@ class CustomerDeviceType extends AbstractType
     {
         $resolver->setDefaults(
             [
-                'data_class' => 'AppBundle\Entity\CustomerDevice',
                 'csrf_protection' => false,
             ]
         );

@@ -2,6 +2,7 @@
 
 namespace AppBundle\Security;
 
+use Symfony\Bridge\Monolog\Logger;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -13,11 +14,25 @@ use Doctrine\ORM\EntityManager;
 
 class TokenAuthenticator extends AbstractGuardAuthenticator
 {
+    /**
+     * @var EntityManager
+     */
     private $em;
 
-    public function __construct(EntityManager $em)
+    /**
+     * @var Logger
+     */
+    private $logger;
+
+    /**
+     * TokenAuthenticator constructor.
+     * @param EntityManager $em
+     * @param Logger $logger
+     */
+    public function __construct(EntityManager $em, Logger $logger)
     {
         $this->em = $em;
+        $this->logger = $logger;
     }
 
     /**
@@ -26,10 +41,11 @@ class TokenAuthenticator extends AbstractGuardAuthenticator
      */
     public function getCredentials(Request $request)
     {
-        if (!$token = $request->headers->get('X-AUTH-TOKEN')) {
+        if (!$token = $request->headers->get('X-Auth-Token')) {
             // no token? Return null and no other methods will be called
             return null;
         }
+        $token = substr($token, strpos($token, 'Bearer ') + 7);
 
         // What you return here will be passed to getUser() as $credentials
         return array(
@@ -37,16 +53,55 @@ class TokenAuthenticator extends AbstractGuardAuthenticator
         );
     }
 
+    /**
+     * Return a UserInterface object based on the credentials.
+     *
+     * The *credentials* are the return value from getCredentials()
+     *
+     * You may throw an AuthenticationException if you wish. If you return
+     * null, then a UsernameNotFoundException is thrown for you.
+     *
+     * @param mixed                 $credentials
+     * @param UserProviderInterface $userProvider
+     *
+     * @throws AuthenticationException
+     *
+     * @return UserInterface|null
+     */
     public function getUser($credentials, UserProviderInterface $userProvider)
     {
-        $apiKey = $credentials['token'];
-
+        $token = $credentials['token'];
         // if null, authentication will fail
         // if a User object, checkCredentials() is called
-        return $this->em->getRepository('AppBundle:Customer')
-            ->findOneBy(array('apiKey' => $apiKey));
+        $customerDevice = $this->em->getRepository('AppBundle:CustomerDevice')
+            ->findOneBy(
+                [
+                    'deviceToken' => $token
+                ]
+            );
+        if ($customerDevice) {
+            return $customerDevice->getCustomer();
+        }
+
+        return null;
     }
 
+    /**
+     * Returns true if the credentials are valid.
+     *
+     * If any value other than true is returned, authentication will
+     * fail. You may also throw an AuthenticationException if you wish
+     * to cause authentication to fail.
+     *
+     * The *credentials* are the return value from getCredentials()
+     *
+     * @param mixed         $credentials
+     * @param UserInterface $user
+     *
+     * @return bool
+     *
+     * @throws AuthenticationException
+     */
     public function checkCredentials($credentials, UserInterface $user)
     {
         // check credentials - e.g. make sure the password is valid
@@ -74,8 +129,24 @@ class TokenAuthenticator extends AbstractGuardAuthenticator
         return new JsonResponse($data, 403);
     }
 
+
     /**
-     * Called when authentication is needed, but it's not sent
+     * Returns a response that directs the user to authenticate.
+     *
+     * This is called when an anonymous request accesses a resource that
+     * requires authentication. The job of this method is to return some
+     * response that "helps" the user start into the authentication process.
+     *
+     * Examples:
+     *  A) For a form login, you might redirect to the login page
+     *      return new RedirectResponse('/login');
+     *  B) For an API token authentication system, you return a 401 response
+     *      return new Response('Auth header required', 401);
+     *
+     * @param Request                 $request       The request that resulted in an AuthenticationException
+     * @param AuthenticationException $authException The exception that started the authentication process
+     *
+     * @return Response
      */
     public function start(Request $request, AuthenticationException $authException = null)
     {
