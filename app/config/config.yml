@@ -6,7 +6,7 @@ imports:
 # Put parameters here that don't need to change on each machine where the app is deployed
 # http://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
-    locale: en
+    locale: fa
 
 framework:
     #esi:             ~
@@ -31,6 +31,7 @@ framework:
     fragments:       ~
     http_method_override: true
     assets: ~
+    translator: { fallbacks: ['%locale%'] }
 
 # Twig Configuration
 twig:
@@ -47,6 +48,10 @@ doctrine:
         user:     "%database_user%"
         password: "%database_password%"
         charset:  UTF8
+        types:
+            enumCustomerDeviceHistoryAction: AppBundle\DBAL\EnumCustomerDeviceHistoryActionType
+        mapping_types:
+                  enum: integer
         # if using pdo_sqlite as your database driver:
         #   1. add the path in parameters.yml
         #     e.g. database_path: "%kernel.root_dir%/data/data.db3"

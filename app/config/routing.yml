@@ -4,8 +4,9 @@ app:
 
 app.customer.api.v1:
     resource: "@AppBundle/Controller/Customer/Api/V1/"
-    prefix:   /customer/api/{version}/
+    prefix:   /customer/api/v1/
 
 app.customer.dashboard:
     resource: "@AppBundle/Controller/Customer/Dashboard/"
     prefix:   /customer/dashboard/
+    
