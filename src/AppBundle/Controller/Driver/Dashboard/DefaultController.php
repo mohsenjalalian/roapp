@@ -13,23 +13,10 @@ class DefaultController extends Controller
      * @Route("/", name="customer_dashboard_front")
      * @Security(expression="is_granted('ROLE_USER')")
      */
-    public function indexAction(Request $request)
+    public function indexAction()
     {
-        $authenticationUtils = $this->get('security.authentication_utils');
-
-        // get the login error if there is one
-        $error = $authenticationUtils->getLastAuthenticationError();
-
-        // last username entered by the user
-        $lastUsername = $authenticationUtils->getLastUsername();
-
         return $this->render(
-            'driver/dashboard/default/index.html.twig',
-            array(
-                // last username entered by the user
-                'last_username' => $lastUsername,
-                'error'         => $error,
-            )
+            'driver/dashboard/default/index.html.twig'
         );
     }
 }

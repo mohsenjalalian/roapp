@@ -37,6 +37,10 @@ framework:
 twig:
     debug:            "%kernel.debug%"
     strict_variables: "%kernel.debug%"
+    form_themes:
+        - 'form/form_semantic_layout.html.twig'
+        - 'VichUploaderBundle:Form:fields.html.twig'
+
 
 # Doctrine Configuration
 doctrine:
@@ -103,3 +107,14 @@ assetic:
         semantic_base_css:
             inputs:
                 - "bundles/app/semantic/dist/semantic.rtl.css"
+
+vich_uploader:
+    db_driver: orm # or mongodb or propel or phpcr
+    mappings:
+        media_file:
+            uri_prefix:         /uploads/media
+            upload_destination: %kernel.root_dir%/../web/uploads/media
+
+            inject_on_load:     false
+            delete_on_update:   true
+            delete_on_remove:   true
