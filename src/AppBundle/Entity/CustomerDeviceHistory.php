@@ -184,4 +184,3 @@ class CustomerDeviceHistory
         return $this->status;
     }
 }
-

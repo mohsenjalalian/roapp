@@ -42,6 +42,11 @@ class Driver implements UserInterface, \Serializable
      */
     private $isActive;
 
+    /**
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Shipment", mappedBy="driver")
+     */
+    private $shipments;
+
     public function __construct()
     {
         $this->isActive = true;
@@ -250,5 +255,39 @@ class Driver implements UserInterface, \Serializable
     public function getIsActive()
     {
         return $this->isActive;
+    }
+
+    /**
+     * Add shipment
+     *
+     * @param \AppBundle\Entity\Shipment $shipment
+     *
+     * @return Driver
+     */
+    public function addShipment(\AppBundle\Entity\Shipment $shipment)
+    {
+        $this->shipments[] = $shipment;
+
+        return $this;
+    }
+
+    /**
+     * Remove shipment
+     *
+     * @param \AppBundle\Entity\Shipment $shipment
+     */
+    public function removeShipment(\AppBundle\Entity\Shipment $shipment)
+    {
+        $this->shipments->removeElement($shipment);
+    }
+
+    /**
+     * Get shipments
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getShipments()
+    {
+        return $this->shipments;
     }
 }
