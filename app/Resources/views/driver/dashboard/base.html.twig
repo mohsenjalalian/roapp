@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <title>{% block title %}Welcome!{% endblock %}</title>
+        {% block stylesheets %}
+            <link rel="stylesheet" href="{{ asset('bundles/app/semantic/dist/semantic.rtl.css') }}" />
+            {% stylesheets
+                '@semantic_base_css' %}
+            <link rel="stylesheet" href="{{ asset_url }}" />
+            {% endstylesheets %}
+        {% endblock %}
+        <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
+    </head>
+    <body dir="rtl">
+        {% block body %}{% endblock %}
+        {% block javascripts %}
+            {% javascripts
+                'assets/vendor/jquery/dist/jquery.js'
+                '@semantic_base_js' %}
+                <script type="text/javascript" src="{{ asset_url }}" ></script>
+            {% endjavascripts %}
+        {% endblock %}
+    </body>
+</html>

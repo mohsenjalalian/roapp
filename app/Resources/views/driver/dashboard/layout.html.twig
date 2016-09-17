@@ -1,0 +1,41 @@
+{% extends ':driver/dashboard:base.html.twig' %}
+
+{% block body %}
+    <div class="ui container">
+        <div class="row">
+            <div class="column">
+                <div class="ui secondary menu">
+                    <a class="logo">
+                        <img width="80" src="{{ asset('bundles/app/logo.png') }}" alt="ROAPP">
+                    </a>
+                    <a class="active item">
+                        <i class="home icon"></i>                          خانه
+                    </a>
+                    <div class="right menu">
+                        <div class="item">
+                            <div class="ui primary button">ثبت سفارش <i class="add circle icon right"></i></div>
+                        </div>
+                        <a class="ui item">
+                            خروج
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <h1 class="ui header">
+            header
+        </h1>
+
+        <div class="ui tra/home/amir/Downloads/6867ae6d-f421-4827-bf18-f05b820e950b.pngnsition information visible" style="">
+            <div class="ui grid">
+                <p>
+                    {% block main %}
+                    {% endblock %}
+                </p>
+            </div>
+        </div>
+    </div>
+
+
+{% endblock %}

@@ -9,4 +9,7 @@ app.customer.api.v1:
 app.customer.dashboard:
     resource: "@AppBundle/Controller/Customer/Dashboard/"
     prefix:   /customer/dashboard/
-    
+
+app.driver.dashboard:
+    resource: "@AppBundle/Controller/Driver/Dashboard/"
+    prefix:   /driver/dashboard/

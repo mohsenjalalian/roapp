@@ -1,0 +1,56 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>Shipment</h1>
+
+    <table>
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ shipment.id }}</td>
+            </tr>
+            <tr>
+                <th>Description</th>
+                <td>{{ shipment.description }}</td>
+            </tr>
+            <tr>
+                <th>Value</th>
+                <td>{{ shipment.value }}</td>
+            </tr>
+            <tr>
+                <th>Status</th>
+                <td>{{ shipment.status }}</td>
+            </tr>
+            <tr>
+                <th>Pickuptime</th>
+                <td>{% if shipment.pickUpTime %}{{ shipment.pickUpTime|date('Y-m-d H:i:s') }}{% endif %}</td>
+            </tr>
+            <tr>
+                <th>Createdat</th>
+                <td>{% if shipment.createdAt %}{{ shipment.createdAt|date('Y-m-d H:i:s') }}{% endif %}</td>
+            </tr>
+            <tr>
+                <th>Price</th>
+                <td>{{ shipment.price }}</td>
+            </tr>
+            <tr>
+                <th>Type</th>
+                <td>{{ shipment.type }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <ul>
+        <li>
+            <a href="{{ path('customer_dashboard_shipment_index') }}">Back to the list</a>
+        </li>
+        <li>
+            <a href="{{ path('customer_dashboard_shipment_edit', { 'id': shipment.id }) }}">Edit</a>
+        </li>
+        <li>
+            {{ form_start(delete_form) }}
+                <input type="submit" value="Delete">
+            {{ form_end(delete_form) }}
+        </li>
+    </ul>
+{% endblock %}

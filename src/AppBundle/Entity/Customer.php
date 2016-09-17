@@ -4,14 +4,17 @@ namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * Customer
  *
  * @ORM\Table(name="customer")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\CustomerRepository")
+ * @UniqueEntity(fields="username", message="Username already taken")
  */
-class Customer implements UserInterface
+class Customer implements UserInterface, \Serializable
 {
     /**
      * @var int
@@ -29,6 +32,35 @@ class Customer implements UserInterface
      */
     private $phone;
 
+    /**
+     * @ORM\Column(type="string", length=255, unique=true)
+     * @Assert\NotBlank()
+     */
+    private $username;
+
+
+    /**
+     * @ORM\Column(name="password", type="string")
+     */
+    private $password;
+
+    /**
+     * @ORM\Column(name="is_active", type="boolean")
+     */
+    private $isActive;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="api_key", type="string", length=255, unique=true)
+     */
+    private $apiKey;
+
+
+    public function __construct()
+    {
+        $this->isActive = true;
+    }
 
     /**
      * Get id
@@ -38,6 +70,117 @@ class Customer implements UserInterface
     public function getId()
     {
         return $this->id;
+    }
+
+
+    /**
+     * String representation of object
+     * @link http://php.net/manual/en/serializable.serialize.php
+     * @return string the string representation of the object or null
+     * @since 5.1.0
+     */
+    public function serialize()
+    {
+        return serialize(array(
+            $this->id,
+            $this->username,
+            $this->password,
+            // see section on salt below
+            // $this->salt,
+        ));
+        // TODO: Implement serialize() method.
+    }
+
+    /**
+     * Constructs the object
+     * @link http://php.net/manual/en/serializable.unserialize.php
+     * @param string $serialized <p>
+     * The string representation of the object.
+     * </p>
+     * @return void
+     * @since 5.1.0
+     */
+    public function unserialize($serialized)
+    {
+        list (
+            $this->id,
+            $this->phone,
+            $this->password,
+            // see section on salt below
+            // $this->salt
+            ) = unserialize($serialized);
+        // TODO: Implement unserialize() method.
+    }
+
+    /**
+     * Returns the roles granted to the user.
+     *
+     * <code>
+     * public function getRoles()
+     * {
+     *     return array('ROLE_USER');
+     * }
+     * </code>
+     *
+     * Alternatively, the roles might be stored on a ``roles`` property,
+     * and populated in any number of different ways when the user object
+     * is created.
+     *
+     * @return (Role|string)[] The user roles
+     */
+    public function getRoles()
+    {
+        return ['ROLE_USER'];
+    }
+
+    /**
+     * Returns the password used to authenticate the user.
+     *
+     * This should be the encoded password. On authentication, a plain-text
+     * password will be salted, encoded, and then compared to this value.
+     *
+     * @return string The password
+     */
+    public function getPassword()
+    {
+        return $this->password;
+        // TODO: Implement getPassword() method.
+    }
+
+    /**
+     * Returns the salt that was originally used to encode the password.
+     *
+     * This can return null if the password was not encoded using a salt.
+     *
+     * @return string|null The salt
+     */
+    public function getSalt()
+    {
+        return null;
+        // TODO: Implement getSalt() method.
+    }
+
+    /**
+     * Returns the username used to authenticate the user.
+     *
+     * @return string The username
+     */
+    public function getUsername()
+    {
+        return $this->username;
+        // TODO: Implement getUsername() method.
+    }
+
+
+    /**
+     * Removes sensitive data from the user.
+     *
+     * This is important if, at any given point, sensitive information like
+     * the plain-text password is stored on this object.
+     */
+    public function eraseCredentials()
+    {
+        // TODO: Implement eraseCredentials() method.
     }
 
     /**
@@ -65,68 +208,79 @@ class Customer implements UserInterface
     }
 
     /**
-     * Returns the roles granted to the user.
+     * Set apiKey
      *
-     * <code>
-     * public function getRoles()
-     * {
-     *     return array('ROLE_USER');
-     * }
-     * </code>
+     * @param string $apiKey
      *
-     * Alternatively, the roles might be stored on a ``roles`` property,
-     * and populated in any number of different ways when the user object
-     * is created.
-     * @return array (Role|string)[] The user roles
+     * @return Customer
      */
-    public function getRoles()
+    public function setApiKey($apiKey)
     {
-        return array('ROLE_CUSTOMER');
+        $this->apiKey = $apiKey;
+
+        return $this;
     }
 
     /**
-     * Returns the password used to authenticate the user.
+     * Get apiKey
      *
-     * This should be the encoded password. On authentication, a plain-text
-     * password will be salted, encoded, and then compared to this value.
-     *
-     * @return string The password
+     * @return string
      */
-    public function getPassword()
+    public function getApiKey()
     {
-        // TODO: Implement getPassword() method.
+        return $this->apiKey;
+    }
+
+
+    /**
+     * Set username
+     *
+     * @param string $username
+     *
+     * @return Customer
+     */
+    public function setUsername($username)
+    {
+        $this->username = $username;
+
+        return $this;
     }
 
     /**
-     * Returns the salt that was originally used to encode the password.
+     * Set password
      *
-     * This can return null if the password was not encoded using a salt.
+     * @param string $password
      *
-     * @return string|null The salt
+     * @return Customer
      */
-    public function getSalt()
+    public function setPassword($password)
     {
-        // TODO: Implement getSalt() method.
+        $this->password = $password;
+
+        return $this;
     }
 
     /**
-     * Returns the username used to authenticate the user.
+     * Set isActive
      *
-     * @return string The username
+     * @param boolean $isActive
+     *
+     * @return Customer
      */
-    public function getUsername()
+    public function setIsActive($isActive)
     {
-        return $this->getPhone();
+        $this->isActive = $isActive;
+
+        return $this;
     }
 
     /**
-     * Removes sensitive data from the user.
+     * Get isActive
      *
-     * This is important if, at any given point, sensitive information like
-     * the plain-text password is stored on this object.
+     * @return boolean
      */
-    public function eraseCredentials()
+    public function getIsActive()
     {
-        // TODO: Implement eraseCredentials() method.
+        return $this->isActive;
     }
 }
