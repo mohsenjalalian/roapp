@@ -1,0 +1,13 @@
+{% extends "default/layout.html.twig" %}
+
+{% block content %}
+    <div class="ui grid">
+        <div class="four wide column">
+            {{ knp_menu_render('profile_side', {"template": "menu.html.twig", "currentClass": "active"}) }}
+        </div>
+        <div class="twelve wide column">
+            {% block main_content %}
+            {% endblock %}
+        </div>
+    </div>
+{% endblock %}
