@@ -9,4 +9,12 @@ app.customer.api.v1:
 app.customer.dashboard:
     resource: "@AppBundle/Controller/Customer/Dashboard/"
     prefix:   /customer/dashboard/
-    
+
+app.operator.api.v1:
+    resource: "@AppBundle/Controller/Operator/Dashboard/"
+    prefix:   /operator/api/
+
+app.operator.dashboard:
+    resource: "@AppBundle/Controller/Operator/Dashboard/"
+    prefix:   /operator/dashboard/
+

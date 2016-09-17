@@ -1,9 +1,17 @@
 # To get started with security, check out the documentation:
 # http://symfony.com/doc/current/book/security.html
 security:
-
+    encoders:
+        AppBundle\Entity\Operator:
+              algorithm: plaintext
     # http://symfony.com/doc/current/book/security.html#where-do-users-come-from-user-providers
     providers:
+        operator_provider:
+            entity:
+                class: AppBundle:Operator
+                property: email
+                    # if you're using multiple entity managers
+                    # manager_name: customer
         customer_provider:
             entity:
                 class: AppBundle:Customer
@@ -19,6 +27,18 @@ security:
             guard:
                 authenticators:
                     - app.customer_token_authenticator
+
+        operator_dashboard:
+            pattern:  ^/operator/dashboard
+            anonymous: ~
+            form_login:
+                login_path: /operator/dashboard/login
+                check_path: /operator/dashboard/login
+            logout:
+                path: /operator/dashboard/logout
+                target: /operator/dashboard/
+            provider: operator_provider
+
 
         # disables authentication for assets and the profiler, adapt it according to your needs
         dev:
