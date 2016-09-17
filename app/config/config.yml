@@ -37,6 +37,10 @@ framework:
 twig:
     debug:            "%kernel.debug%"
     strict_variables: "%kernel.debug%"
+    form_themes:
+        - 'form/form_semantic_layout.html.twig'
+        - 'VichUploaderBundle:Form:fields.html.twig'
+
 
 # Doctrine Configuration
 doctrine:
@@ -103,3 +107,105 @@ assetic:
         semantic_base_css:
             inputs:
                 - "bundles/app/semantic/dist/semantic.rtl.css"
+        font_droid_kufi_bold_eot:
+            inputs:
+                - "bundles/app/fonts/DroidKufi-Bold.eot"
+            output: css/fonts/DroidKufi-Bold.eot
+        font_droid_kufi_bold_ttf:
+            inputs:
+                - "bundles/app/fonts/DroidKufi-Bold.ttf"
+            output: css/fonts/DroidKufi-Bold.ttf
+        font_droid_kufi_bold_woff:
+            inputs:
+                - "bundles/app/fonts/DroidKufi-Bold.woff"
+            output: css/fonts/DroidKufi-Bold.woff
+        font_droid_kufi_bold_woff2:
+            inputs:
+                - "bundles/app/fonts/DroidKufi-Bold.woff"
+            output: css/fonts/DroidKufi-Bold.woff2
+
+        font_droid_kufi_regular_eot:
+            inputs:
+                - "bundles/app/fonts/DroidKufi-Regular.eot"
+            output: css/fonts/DroidKufi-Regular.eot
+        font_droid_kufi_regular_ttf:
+            inputs:
+                - "bundles/app/fonts/DroidKufi-Regular.ttf"
+            output: css/fonts/DroidKufi-Regular.ttf
+        font_droid_kufi_regular_woff:
+            inputs:
+                - "bundles/app/fonts/DroidKufi-Regular.woff"
+            output: css/fonts/DroidKufi-Regular.woff
+        font_droid_kufi_regular_woff2:
+            inputs:
+                - "bundles/app/fonts/DroidKufi-Regular.woff"
+            output: css/fonts/DroidKufi-Regular.woff2
+
+        font_droid_naskh_bold_eot:
+            inputs:
+                - "bundles/app/fonts/DroidNaskh-Bold.eot"
+            output: css/fonts/DroidNaskh-Bold.eot
+        font_droid_naskh_bold_ttf:
+            inputs:
+                - "bundles/app/fonts/DroidNaskh-Bold.ttf"
+            output: css/fonts/DroidNaskh-Bold.ttf
+        font_droid_naskh_bold_woff:
+            inputs:
+                - "bundles/app/fonts/DroidNaskh-Bold.woff"
+            output: css/fonts/DroidNaskh-Bold.woff
+        font_droid_naskh_bold_woff2:
+            inputs:
+                - "bundles/app/fonts/DroidNaskh-Bold.woff"
+            output: css/fonts/DroidNaskh-Bold.woff2
+
+        font_droid_naskh_regular_eot:
+            inputs:
+                - "bundles/app/fonts/DroidNaskh-Regular.eot"
+            output: css/fonts/DroidNaskh-Regular.eot
+        font_droid_naskh_regular_ttf:
+            inputs:
+                - "bundles/app/fonts/DroidNaskh-Regular.ttf"
+            output: css/fonts/DroidNaskh-Regular.ttf
+        font_droid_naskh_regular_woff:
+            inputs:
+                - "bundles/app/fonts/DroidNaskh-Regular.woff"
+            output: css/fonts/DroidNaskh-Regular.woff
+        font_droid_naskh_regular_woff2:
+            inputs:
+                - "bundles/app/fonts/DroidNaskh-Regular.woff"
+            output: css/fonts/DroidNaskh-Regular.woff2
+        font_semantic_eot:
+            inputs:
+                - "bundles/app/semantic/dist/themes/default/assets/fonts/icons.eot"
+            output: css/themes/default/assets/fonts/icons.eot
+        font_semantic_svg:
+            inputs:
+                - "bundles/app/semantic/dist/themes/default/assets/fonts/icons.svg"
+            output: css/themes/default/assets/fonts/icons.svg
+        font_semantic_ttf:
+            inputs:
+                - "bundles/app/semantic/dist/themes/default/assets/fonts/icons.ttf"
+            output: css/themes/default/assets/fonts/icons.ttf
+        font_semantic_woff:
+            inputs:
+                - "bundles/app/semantic/dist/themes/default/assets/fonts/icons.woff"
+            output: css/themes/default/assets/fonts/icons.woff
+        font_semantic_woff2:
+            inputs:
+                - "bundles/app/semantic/dist/themes/default/assets/fonts/icons.woff2"
+            output: css/themes/default/assets/fonts/icons.woff2
+
+
+vich_uploader:
+    db_driver: orm # or mongodb or propel or phpcr
+    mappings:
+        media_file:
+            uri_prefix:         /uploads/media
+            upload_destination: %kernel.root_dir%/../web/uploads/media
+
+            inject_on_load:     false
+            delete_on_update:   true
+            delete_on_remove:   true
+knp_menu:
+    # use "twig: false" to disable the Twig extension and the TwigRenderer
+    twig: ~
