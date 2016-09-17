@@ -1,16 +1,16 @@
 <?php
 
-namespace AppBundle\Form\Customer\Api\V1;
+namespace AppBundle\Form\Driver\Api\V1;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
- * Class CustomerDeviceType
+ * Class DriverDeviceType
  * @package AppBundle\Form
  */
-class CustomerDeviceType extends AbstractType
+class DriverDeviceType extends AbstractType
 {
     /**
      * @param FormBuilderInterface $builder

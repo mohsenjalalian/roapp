@@ -1,16 +1,12 @@
 <?php
 
-namespace AppBundle\Form\Customer\Api\V1;
+namespace AppBundle\Form\Driver\Api\V1;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-/**
- * Class CustomerDeviceType
- * @package AppBundle\Form
- */
-class CustomerDeviceType extends AbstractType
+class VerificationReportType extends AbstractType
 {
     /**
      * @param FormBuilderInterface $builder
@@ -20,10 +16,8 @@ class CustomerDeviceType extends AbstractType
     {
         $builder
             ->add('deviceUuid')
-            ->add('notificationToken')
             ->add('deviceType')
-            ->add('latitude')
-            ->add('longitude')
+            ->add('verificationCode')
         ;
     }
 
@@ -34,7 +28,6 @@ class CustomerDeviceType extends AbstractType
     {
         $resolver->setDefaults(
             [
-                'data_class' => 'AppBundle\Entity\PersonDevice',
                 'csrf_protection' => false,
             ]
         );
