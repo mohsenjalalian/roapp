@@ -2,6 +2,8 @@
 
 namespace AppBundle\Security;
 
+use AppBundle\Entity\Customer;
+use AppBundle\Entity\Driver;
 use Symfony\Bridge\Monolog\Logger;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -12,6 +14,10 @@ use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Doctrine\ORM\EntityManager;
 
+/**
+ * Class TokenAuthenticator
+ * @package AppBundle\Security
+ */
 class TokenAuthenticator extends AbstractGuardAuthenticator
 {
     /**
@@ -48,9 +54,9 @@ class TokenAuthenticator extends AbstractGuardAuthenticator
         $token = substr($token, strpos($token, 'Bearer ') + 7);
 
         // What you return here will be passed to getUser() as $credentials
-        return array(
+        return [
             'token' => $token,
-        );
+        ];
     }
 
     /**
@@ -65,25 +71,41 @@ class TokenAuthenticator extends AbstractGuardAuthenticator
      * @param UserProviderInterface $userProvider
      *
      * @throws AuthenticationException
+     * @throws \Exception
      *
      * @return UserInterface|null
      */
     public function getUser($credentials, UserProviderInterface $userProvider)
     {
-        $token = $credentials['token'];
-        // if null, authentication will fail
-        // if a User object, checkCredentials() is called
-        $customerDevice = $this->em->getRepository('AppBundle:CustomerDevice')
-            ->findOneBy(
-                [
-                    'deviceToken' => $token
-                ]
-            );
-        if ($customerDevice) {
-            return $customerDevice->getCustomer();
-        }
+        if ($userProvider->supportsClass(Customer::class)) {
+            $token = $credentials['token'];
+            $customerDevice = $this->em->getRepository('AppBundle:PersonDevice')
+                ->findOneBy(
+                    [
+                        'deviceToken' => $token
+                    ]
+                );
+            if ($customerDevice) {
+                return $customerDevice->getPerson();
+            }
 
-        return null;
+            return null;
+        } elseif ($userProvider->supportsClass(Driver::class)) {
+            $token = $credentials['token'];
+            $driverDevice = $this->em->getRepository('AppBundle:PersonDevice')
+                ->findOneBy(
+                    [
+                        'deviceToken' => $token
+                    ]
+                );
+            if ($driverDevice) {
+                return $driverDevice->getPerson();
+            }
+
+            return null;
+        }
+        
+        throw new \Exception('No provider found');
     }
 
     /**

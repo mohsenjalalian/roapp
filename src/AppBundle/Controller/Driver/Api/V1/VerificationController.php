@@ -1,27 +1,26 @@
 <?php
 
-namespace AppBundle\Controller\Customer\Api\V1;
+namespace AppBundle\Controller\Driver\Api\V1;
 
 use AppBundle\DBAL\EnumPersonDeviceHistoryActionType;
-use AppBundle\Entity\Customer;
+use AppBundle\Entity\Driver;
 use AppBundle\Entity\PersonDevice;
 use AppBundle\Entity\PersonDeviceHistory;
-use AppBundle\Form\Customer\Api\V1\VerificationReportType;
-use AppBundle\Form\Customer\Api\V1\VerificationRequestType;
+use AppBundle\Form\Driver\Api\V1\VerificationReportType;
+use AppBundle\Form\Driver\Api\V1\VerificationRequestType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Validator\Constraints\DateTime;
 
 /**
  * Class VerificationController
  * 
  * @Route(path="/verification")
  * 
- * @package AppBundle\Controller\Customer\Api\V1
+ * @package AppBundle\Controller\Driver\Api\V1
  */
 class VerificationController extends Controller
 {
@@ -43,7 +42,7 @@ class VerificationController extends Controller
         $form = $this->createForm(VerificationRequestType::class);
         $form->submit($data);
         if ($form->isValid()) {
-            $customerDevice = $this->getDoctrine()
+            $driverDevice = $this->getDoctrine()
                 ->getRepository('AppBundle:PersonDevice')
                 ->findOneBy(
                     [
@@ -52,12 +51,12 @@ class VerificationController extends Controller
                     ]
                 );
 
-            if (!$customerDevice instanceof PersonDevice) {
+            if (!$driverDevice instanceof PersonDevice) {
                 return new Response('device not found', Response::HTTP_NOT_FOUND);
             }
 
-            $customer = $this->getDoctrine()
-                ->getRepository('AppBundle:Customer')
+            $driver = $this->getDoctrine()
+                ->getRepository('AppBundle:Driver')
                 ->findOneBy(
                     [
                         'phone' => $form->get('phone')->getData(),
@@ -67,18 +66,18 @@ class VerificationController extends Controller
             $em = $this->getDoctrine()
                 ->getManager();
 
-            if (!$customer instanceof Customer) {
-                $customer = new Customer();
-                $customer->setPhone($form->get('phone')->getData());
-                $em->persist($customer);
+            if (!$driver instanceof Driver) {
+                $driver = new Driver();
+                $driver->setPhone($form->get('phone')->getData());
+                $em->persist($driver);
             }
 
             $randomVerificationNumber = rand(100000, 999999);
-            $customerDevice->setPerson($customer);
-            $customerDevice->setPhoneVerificationSent(new \DateTime());
-            $customerDevice->setPhoneVerificationCode($randomVerificationNumber);
-            $customerDevice->setPhoneVerificationStatus(false);
-            $em->persist($customerDevice);
+            $driverDevice->setPerson($driver);
+            $driverDevice->setPhoneVerificationSent(new \DateTime());
+            $driverDevice->setPhoneVerificationCode($randomVerificationNumber);
+            $driverDevice->setPhoneVerificationStatus(false);
+            $em->persist($driverDevice);
 
             $qb = $this->getDoctrine()
                 ->getRepository('AppBundle:PersonDeviceHistory')
@@ -94,12 +93,12 @@ class VerificationController extends Controller
                 ->getQuery()
                 ->getResult();
 
-            $customerDeviceHistory = new PersonDeviceHistory();
+            $driverDeviceHistory = new PersonDeviceHistory();
 
             if (count($lastFiveVerificationRequest) > 4) {
-                $customerDeviceHistory
+                $driverDeviceHistory
                     ->setAction(EnumPersonDeviceHistoryActionType::ENUM_VERIFY)
-                    ->setCustomerDevice($customerDevice)
+                    ->setPersonDevice($driverDevice)
                     ->setDateTime(new \DateTime())
                     ->setData(
                         [
@@ -108,7 +107,7 @@ class VerificationController extends Controller
                         ]
                     )
                     ->setStatus(false);
-                $em->persist($customerDeviceHistory);
+                $em->persist($driverDeviceHistory);
                 $em->flush();
 
                 return new JsonResponse(
@@ -119,9 +118,9 @@ class VerificationController extends Controller
                 );
             }
 
-            $customerDeviceHistory
+            $driverDeviceHistory
                 ->setAction(EnumPersonDeviceHistoryActionType::ENUM_VERIFY)
-                ->setPersonDevice($customerDevice)
+                ->setPersonDevice($driverDevice)
                 ->setDateTime(new \DateTime())
                 ->setData(
                     [
@@ -130,7 +129,7 @@ class VerificationController extends Controller
                     ]
                 )
                 ->setStatus(true);
-            $em->persist($customerDeviceHistory);
+            $em->persist($driverDeviceHistory);
 
             $em->flush();
 
@@ -162,7 +161,7 @@ class VerificationController extends Controller
         $form->submit($data);
 
         if ($form->isValid()) {
-            $customerDevice = $this->getDoctrine()
+            $driverDevice = $this->getDoctrine()
                 ->getRepository('AppBundle:PersonDevice')
                 ->findOneBy(
                     [
@@ -175,20 +174,20 @@ class VerificationController extends Controller
             $em = $this->getDoctrine()
                 ->getManager();
 
-            if (!$customerDevice instanceof PersonDevice) {
-                $customerDeviceHistory = new PersonDeviceHistory();
-                $customerDeviceHistory
+            if (!$driverDevice instanceof PersonDevice) {
+                $driverDeviceHistory = new PersonDeviceHistory();
+                $driverDeviceHistory
                     ->setAction(EnumPersonDeviceHistoryActionType::ENUM_REPORT)
-                    ->setCustomerDevice($customerDevice)
+                    ->setPersonDevice($driverDevice)
                     ->setDateTime(new \DateTime())
                     ->setData(
                         [
                             "message" => $this->get('translator')
-                                ->trans('Verification report: Customer device not found.')
+                                ->trans('Verification report: Person device not found.')
                         ]
                     )
                     ->setStatus(false);
-                $em->persist($customerDeviceHistory);
+                $em->persist($driverDeviceHistory);
                 $em->flush();
 
                 return new Response('invalid verification', Response::HTTP_NOT_FOUND);
@@ -196,22 +195,22 @@ class VerificationController extends Controller
 
             $token = $this->get('app.token_generator')
                 ->generate($form->get('deviceUuid')->getData());
-            $customerDevice->setPhoneVerificationStatus(true)
+            $driverDevice->setPhoneVerificationStatus(true)
                 ->setDeviceToken($token);
-            $em->persist($customerDevice);
-            $customerDeviceHistory = new PersonDeviceHistory();
-            $customerDeviceHistory
+            $em->persist($driverDevice);
+            $driverDeviceHistory = new PersonDeviceHistory();
+            $driverDeviceHistory
                 ->setAction(EnumPersonDeviceHistoryActionType::ENUM_REPORT)
-                ->setPersonDevice($customerDevice)
+                ->setPersonDevice($driverDevice)
                 ->setDateTime(new \DateTime())
                 ->setData(
                     [
                         "message" => $this->get('translator')
-                            ->trans('Verification report: Customer Verified Successfully.')
+                            ->trans('Verification report: Person Verified Successfully.')
                     ]
                 )
                 ->setStatus(true);
-            $em->persist($customerDeviceHistory);
+            $em->persist($driverDeviceHistory);
 
             $em->flush();
             
