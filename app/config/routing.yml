@@ -17,4 +17,3 @@ app.driver.api.v1:
 app.driver.dashboard:
     resource: "@AppBundle/Controller/Driver/Dashboard/"
     prefix:   /driver/dashboard/
-    

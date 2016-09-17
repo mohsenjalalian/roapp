@@ -1,21 +1,29 @@
 # To get started with security, check out the documentation:
 # http://symfony.com/doc/current/book/security.html
 security:
+    encoders:
+        AppBundle\Entity\Driver:
+            algorithm: plaintext
+
+        AppBundle\Entity\Customer:
+            algorithm: plaintext
+
 
     # http://symfony.com/doc/current/book/security.html#where-do-users-come-from-user-providers
     providers:
         customer_provider:
             entity:
                 class: AppBundle:Customer
+                property: username
         driver_provider:
             entity:
                 class: AppBundle:Driver
-
+                property: email
         in_memory:
             memory: ~
 
     firewalls:
-        customer:
+        customer_api:
             anonymous: ~
             logout: ~
             pattern: ^/customer/api
@@ -23,8 +31,29 @@ security:
             guard:
                 authenticators:
                     - app.token_authenticator
+        customer_dashboard:
+            pattern: ^/customer/dashboard
+            anonymous: ~
+            form_login:
+                login_path: /customer/dashboard/login
+                check_path: /customer/dashboard/login
+            logout:
+                path: /customer/dashboard/logout
+                target: /customer/dashboard
+            provider: customer_provider
 
-        driver:
+        driver_dashboard:
+            pattern: ^/driver/dashboard
+            anonymous: ~
+            form_login:
+                login_path: /driver/dashboard/login
+                check_path: /driver/dashboard/login
+            logout:
+                path: /driver/dashboard/logout
+                target: /driver/dashboard
+            provider: driver_provider
+
+        driver_api:
             anonymous: ~
             logout: ~
             pattern: ^/driver/api
