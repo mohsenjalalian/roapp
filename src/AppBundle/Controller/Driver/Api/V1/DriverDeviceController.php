@@ -1,11 +1,11 @@
 <?php
 
-namespace AppBundle\Controller\Customer\Api\V1;
+namespace AppBundle\Controller\Driver\Api\V1;
 
 use AppBundle\DBAL\EnumPersonDeviceHistoryActionType;
 use AppBundle\Entity\PersonDevice;
 use AppBundle\Entity\PersonDeviceHistory;
-use AppBundle\Form\Customer\Api\V1\CustomerDeviceType;
+use AppBundle\Form\Driver\Api\V1\DriverDeviceType;
 use FOS\RestBundle\Controller\Annotations\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -15,10 +15,10 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Class CustomerController
- * @Route("customer_device")
+ * Class DriverDeviceController
+ * @Route("driver_device")
  */
-class CustomerDeviceController extends Controller
+class DriverDeviceController extends Controller
 {
     /**
      * @Security("is_granted('IS_AUTHENTICATED_ANONYMOUSLY')")
@@ -29,44 +29,44 @@ class CustomerDeviceController extends Controller
      */
     public function createAction(Request $request)
     {
-        $customerDevice = new PersonDevice();
+        $driverDevice = new PersonDevice();
         $data = json_decode($request->getContent(), true);
 
-        $form = $this->createForm(CustomerDeviceType::class, $customerDevice);
+        $form = $this->createForm(DriverDeviceType::class, $driverDevice);
         $form->submit($data);
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getEntityManager();
-            $customerDeviceEntity = $this->getDoctrine()->getRepository('AppBundle:PersonDevice')
+            $driverDeviceEntity = $this->getDoctrine()->getRepository('AppBundle:PersonDevice')
                 ->findOneBy(
                     [
                         'deviceType' => $form->get('deviceType')->getData(),
                         'deviceUuid' => $form->get('deviceUuid')->getData(),
                     ]
                 );
-            if ($customerDeviceEntity instanceof PersonDevice) {
+            if ($driverDeviceEntity instanceof PersonDevice) {
                 if ($form->has('latitude')) {
-                    $customerDeviceEntity->setLatitude($form->get('latitude')->getData());
+                    $driverDeviceEntity->setLatitude($form->get('latitude')->getData());
                 }
                 if ($form->has('longitude')) {
-                    $customerDeviceEntity->setLongitude($form->get('longitude')->getData());
+                    $driverDeviceEntity->setLongitude($form->get('longitude')->getData());
                 }
                 if ($form->has('notificationToken')) {
-                    $customerDeviceEntity->setNotificationToken($form->get('notificationToken')->getData());
+                    $driverDeviceEntity->setNotificationToken($form->get('notificationToken')->getData());
                 }
 
-                $em->persist($customerDeviceEntity);
+                $em->persist($driverDeviceEntity);
             } else {
-                $em->persist($customerDevice);
+                $em->persist($driverDevice);
             }
             
-            $customerDeviceHistory = new PersonDeviceHistory();
-            $customerDeviceHistory
+            $driverDeviceHistory = new PersonDeviceHistory();
+            $driverDeviceHistory
                 ->setAction(EnumPersonDeviceHistoryActionType::ENUM_CREATE)
-                ->setPersonDevice($customerDeviceEntity)
+                ->setPersonDevice($driverDeviceEntity)
                 ->setDateTime(new \DateTime())
                 ->setStatus(true);
-            $em->persist($customerDeviceHistory);
+            $em->persist($driverDeviceHistory);
 
             $em->flush();
 

@@ -7,18 +7,31 @@ security:
         customer_provider:
             entity:
                 class: AppBundle:Customer
+        driver_provider:
+            entity:
+                class: AppBundle:Driver
 
         in_memory:
             memory: ~
 
     firewalls:
-        main:
+        customer:
             anonymous: ~
             logout: ~
             pattern: ^/customer/api
+            provider: customer_provider
             guard:
                 authenticators:
-                    - app.customer_token_authenticator
+                    - app.token_authenticator
+
+        driver:
+            anonymous: ~
+            logout: ~
+            pattern: ^/driver/api
+            provider: driver_provider
+            guard:
+                authenticators:
+                    - app.token_authenticator
 
         # disables authentication for assets and the profiler, adapt it according to your needs
         dev:

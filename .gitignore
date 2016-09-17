@@ -21,3 +21,5 @@
 /.idea
 /app/Resources/assets/semantic/node_modules/
 /app/Resources/assets/semantic/dist/
+/Vagrantfile
+/.vagrant

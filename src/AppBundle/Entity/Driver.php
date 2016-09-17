@@ -5,11 +5,12 @@ namespace AppBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Customer
+ * Driver
  * @ORM\Entity
  */
-class Customer extends Person
+class Driver extends Person
 {
+
     /**
      * Returns the roles granted to the user.
      *
@@ -23,11 +24,12 @@ class Customer extends Person
      * Alternatively, the roles might be stored on a ``roles`` property,
      * and populated in any number of different ways when the user object
      * is created.
-     * @return array (Role|string)[] The user roles
+     *
+     * @return (Role|string)[] The user roles
      */
     public function getRoles()
     {
-        return array('ROLE_CUSTOMER');
+        return array('ROLE_DRIVER');
     }
 
     /**

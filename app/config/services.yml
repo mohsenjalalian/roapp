@@ -7,7 +7,7 @@ parameters:
 #    parameter_name: value
 
 services:
-    app.customer_token_authenticator:
+    app.token_authenticator:
         class: AppBundle\Security\TokenAuthenticator
         arguments:
             - '@doctrine.orm.entity_manager'

@@ -7,12 +7,12 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 /**
- * CustomerDevice
+ * PersonDevice
  *
- * @ORM\Table(name="customer_device")
- * @ORM\Entity(repositoryClass="AppBundle\Repository\CustomerDeviceRepository")
+ * @ORM\Table(name="person_device")
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\PersonDeviceRepository")
  */
-class CustomerDevice
+class PersonDevice
 {
     /**
      * @var int
@@ -103,9 +103,9 @@ class CustomerDevice
     private $notificationToken;
 
     /**
-     * @ORM\ManyToOne(targetEntity="\AppBundle\Entity\Customer")
+     * @ORM\ManyToOne(targetEntity="\AppBundle\Entity\Person")
      */
-    private $customer;
+    private $person;
 
     /**
      * Get id
@@ -122,7 +122,7 @@ class CustomerDevice
      *
      * @param \DateTime $installedAt
      *
-     * @return CustomerDevice
+     * @return PersonDevice
      */
     public function setInstalledAt($installedAt)
     {
@@ -146,7 +146,7 @@ class CustomerDevice
      *
      * @param \DateTime $lastAccessAt
      *
-     * @return CustomerDevice
+     * @return PersonDevice
      */
     public function setLastAccessAt($lastAccessAt)
     {
@@ -170,7 +170,7 @@ class CustomerDevice
      *
      * @param string $deviceUuid
      *
-     * @return CustomerDevice
+     * @return PersonDevice
      */
     public function setDeviceUuid($deviceUuid)
     {
@@ -194,7 +194,7 @@ class CustomerDevice
      *
      * @param string $deviceToken
      *
-     * @return CustomerDevice
+     * @return personDevice
      */
     public function setDeviceToken($deviceToken)
     {
@@ -218,7 +218,7 @@ class CustomerDevice
      *
      * @param string $latitude
      *
-     * @return CustomerDevice
+     * @return personDevice
      */
     public function setLatitude($latitude)
     {
@@ -242,7 +242,7 @@ class CustomerDevice
      *
      * @param string $longitude
      *
-     * @return CustomerDevice
+     * @return PersonDevice
      */
     public function setLongitude($longitude)
     {
@@ -266,7 +266,7 @@ class CustomerDevice
      *
      * @param integer $deviceType
      *
-     * @return CustomerDevice
+     * @return PersonDevice
      */
     public function setDeviceType($deviceType)
     {
@@ -290,7 +290,7 @@ class CustomerDevice
      *
      * @param boolean $phoneVerificationStatus
      *
-     * @return CustomerDevice
+     * @return PersonDevice
      */
     public function setPhoneVerificationStatus($phoneVerificationStatus)
     {
@@ -314,7 +314,7 @@ class CustomerDevice
      *
      * @param string $phoneVerificationCode
      *
-     * @return CustomerDevice
+     * @return PersonDevice
      */
     public function setPhoneVerificationCode($phoneVerificationCode)
     {
@@ -338,7 +338,7 @@ class CustomerDevice
      *
      * @param \DateTime $phoneVerificationSent
      *
-     * @return CustomerDevice
+     * @return PersonDevice
      */
     public function setPhoneVerificationSent($phoneVerificationSent)
     {
@@ -362,7 +362,7 @@ class CustomerDevice
      *
      * @param string $notificationToken
      *
-     * @return CustomerDevice
+     * @return PersonDevice
      */
     public function setNotificationToken($notificationToken)
     {
@@ -382,27 +382,27 @@ class CustomerDevice
     }
 
     /**
-     * Set customer
+     * Set person
      *
-     * @param \AppBundle\Entity\Customer $customer
+     * @param \AppBundle\Entity\Person $person
      *
-     * @return CustomerDevice
+     * @return PersonDevice
      */
-    public function setCustomer(\AppBundle\Entity\Customer $customer = null)
+    public function setPerson(\AppBundle\Entity\Person $person = null)
     {
-        $this->customer = $customer;
+        $this->person = $person;
 
         return $this;
     }
 
     /**
-     * Get customer
+     * Get person
      *
-     * @return \AppBundle\Entity\Customer
+     * @return \AppBundle\Entity\Person
      */
-    public function getCustomer()
+    public function getPerson()
     {
-        return $this->customer;
+        return $this->person;
     }
 
     /**
