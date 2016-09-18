@@ -41,53 +41,10 @@
             </div>
         </div>
 
-
         <input class="ui button" type="submit" tabindex="0" value="ایجاد" />
-
 
         {{ form_rest(form) }}
     </form>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    {#{{ form_start(form, {attr: {class: "ui form"}}) }}#}
-        {#{% set children = form.children%}#}
-
-                {#{% for child in children %}#}
-                    {#{% if loop.index %2 != 0 %}#}
-                        {#<div class="two fields">#}
-                    {#{% endif %}#}
-
-                        {#<div class="field">#}
-                            {#{{ form_label(child)}}#}
-                            {#{{ form_widget(child) }}#}
-                        {#</div>#}
-
-
-                    {#{% if loop.index %2 == 0 %}#}
-                        {#</div>#}
-                    {#{% endif %}#}
-
-                {#{% endfor %}#}
-            {#</div>#}
-        {#<input type="submit" value="Create" />#}
-    {#{{ form_end(form) }}#}
 
     <ul>
         <li>
@@ -96,12 +53,34 @@
     </ul>
 {% endblock %}
 
-
 {% block stylesheets %}
-
     {{ parent()  }}
     {% stylesheets
-    'bundles/app/stylesheets/customer/dashboard/shipment/new.css' %}
+    'bundles/app/stylesheets/customer/dashboard/shipment/new.css'
+    'bundles/app/stylesheets/customer/jquery-ui.min.css'
+    %}
     <link rel="stylesheet" href="{{ asset_url }}" />
+
     {% endstylesheets %}
+{% endblock %}
+
+
+{% block javascripts %}
+    {{ parent()  }}
+
+    {% javascripts
+    'assets/vendor/jquery-ui.min.js'%}
+    <script type="text/javascript" src="{{ asset_url }}" ></script>
+    {% endjavascripts %}
+
+    <script>
+        $(document).ready(function() {
+            $('.js-datepicker').datepicker({
+                format: 'yyyy-mm-dd'
+            });
+        });
+    </script>
+
+
+
 {% endblock %}

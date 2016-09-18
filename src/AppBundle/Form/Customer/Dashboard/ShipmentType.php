@@ -30,7 +30,10 @@ class ShipmentType extends AbstractType
             ->add('pickUpTime', DateTimeType::class,
                 array(
                     "label"=>"form.pickUpTime",
-                    'translation_domain' => 'messages'
+                    'translation_domain' => 'messages',
+                    'widget' => 'single_text',
+                    'html5' => false,
+                    'attr' => ['class' => 'js-datepicker']
                 ))
 //            ->add('createdAt', DateTimeType::class)
 //            ->add('price')
