@@ -15,5 +15,12 @@
     "tests"
   ],
   "dependencies": {
-  }
+  },
+
+  "name": "jquery-ui",
+  "version": "1.12.1",
+  "dependencies": {
+  },
+  "private": true
+
 }
