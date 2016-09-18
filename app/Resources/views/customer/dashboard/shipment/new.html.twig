@@ -1,58 +1,107 @@
 {% extends ':customer/dashboard:layout.html.twig' %}
 
 {% block page_title %}
-    ثبت درخواست ارسال
+   {#<h1>#}
+       {#ثبت درخواست ارسال#}
+   {#</h1>#}
 {% endblock %}
 
 {% block main %}
 
-    {#<div class="two column row">#}
-        {#<div class="column">#}
-            {#<h2 class="ui medium header">Subheading</h2>#}
-            {#<p>Donec id elit non mi porta gravida at eget metus. Maecenas faucibus mollis interdum.</p>#}
-        {#</div>#}
-        {#<div class="column">#}
-            {#<h2 class="ui medium header">Subheading</h2>#}
-            {#<p>Donec id elit non mi porta gravida at eget metus. Maecenas faucibus mollis interdum.</p>#}
-        {#</div>#}
-    {#</div>#}
-    {#<div class="two column row">#}
-        {#<div class="column">#}
-            {#<h2 class="ui medium header">Subheading</h2>#}
-            {#<p>Morbi leo risus, porta ac consectetur ac, vestibulum at eros. Cras mattis consectetur purus sit amet fermentum.</p>#}
-        {#</div>#}
-        {#<div class="column">#}
-            {#<h2 class="ui medium header">Subheading</h2>#}
-            {#<p>Morbi leo risus, porta ac consectetur ac, vestibulum at eros. Cras mattis consectetur purus sit amet fermentum.</p>#}
-        {#</div>#}
-    {#</div>#}
-    {#<div class="two column row">#}
-        {#<div class="column">#}
-            {#<h2 class="ui medium header">Subheading</h2>#}
-            {#<p>Maecenas sed diam eget risus varius blandit sit amet non magna.</p>#}
-        {#</div>#}
-        {#<div class="column">#}
-            {#<h2 class="ui medium header">Subheading</h2>#}
-            {#<p>Maecenas sed diam eget risus varius blandit sit amet non magna.</p>#}
-        {#</div>#}
-    {#</div>#}
+    <form action="{{ path('customer_dashboard_shipment_new') }}" method="POST" class="ui form">
 
+        {{ form_errors(form) }}
 
-    {{ form_start(form, {attr: {class: "ui form"}}) }}
-        {% set children = form.children%}
-        {% for child in children %}
+        <h4 class="ui dividing header">ثبت درخواست ارسال</h4>
+
+        <div class="field">
+            <label>{{ form_label(form.description) }}</label>
+            <div>{{ form_widget(form.description ) }}</div>
+        </div>
+
+        <div class="two fields">
             <div class="field">
-                {{ form_label(child)}}
-                {{ form_widget(child) }}
+                <label>{{ form_label(form.pickUpTime) }}</label>
+                <div>{{ form_widget(form.pickUpTime ) }}</div>
             </div>
+            <div class="field">
+                <label>{{ form_label(form.value) }}</label>
+                <div>{{ form_widget(form.value ) }}</div>
+            </div>
+        </div>
 
-        {% endfor %}
-        <input type="submit" value="Create" />
-    {{ form_end(form) }}
+        <div class="two fields">
+            <div class="field">
+                <label>{{ form_label(form.ownerAddress) }}</label>
+                <div>{{ form_widget(form.ownerAddress ) }}</div>
+            </div>
+            <div class="field">
+                <label>{{ form_label(form.otherAddress) }}</label>
+                <div>{{ form_widget(form.otherAddress ) }}</div>
+            </div>
+        </div>
+
+
+        <input class="ui button" type="submit" tabindex="0" value="ایجاد" />
+
+
+        {{ form_rest(form) }}
+    </form>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    {#{{ form_start(form, {attr: {class: "ui form"}}) }}#}
+        {#{% set children = form.children%}#}
+
+                {#{% for child in children %}#}
+                    {#{% if loop.index %2 != 0 %}#}
+                        {#<div class="two fields">#}
+                    {#{% endif %}#}
+
+                        {#<div class="field">#}
+                            {#{{ form_label(child)}}#}
+                            {#{{ form_widget(child) }}#}
+                        {#</div>#}
+
+
+                    {#{% if loop.index %2 == 0 %}#}
+                        {#</div>#}
+                    {#{% endif %}#}
+
+                {#{% endfor %}#}
+            {#</div>#}
+        {#<input type="submit" value="Create" />#}
+    {#{{ form_end(form) }}#}
 
     <ul>
         <li>
             <a href="{{ path('customer_dashboard_shipment_index') }}">Back to the list</a>
         </li>
     </ul>
+{% endblock %}
+
+
+{% block stylesheets %}
+
+    {{ parent()  }}
+    {% stylesheets
+    'bundles/app/stylesheets/customer/dashboard/shipment/new.css' %}
+    <link rel="stylesheet" href="{{ asset_url }}" />
+    {% endstylesheets %}
 {% endblock %}
