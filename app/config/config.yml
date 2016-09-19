@@ -53,7 +53,7 @@ doctrine:
         password: "%database_password%"
         charset:  UTF8
         types:
-            enumCustomerDeviceHistoryAction: AppBundle\DBAL\EnumPersonDeviceHistoryActionType
+            enumPersonDeviceHistoryAction: AppBundle\DBAL\EnumPersonDeviceHistoryActionType
         mapping_types:
                   enum: integer
         # if using pdo_sqlite as your database driver:
