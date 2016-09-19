@@ -5,12 +5,12 @@ namespace AppBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * CustomerDeviceHistory
+ * PersonDeviceHistory
  *
- * @ORM\Table(name="customer_device_history")
- * @ORM\Entity(repositoryClass="AppBundle\Repository\CustomerDeviceHistoryRepository")
+ * @ORM\Table(name="person_device_history")
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\PersonDeviceHistoryRepository")
  */
-class CustomerDeviceHistory
+class PersonDeviceHistory
 {
     /**
      * @var int
@@ -43,9 +43,9 @@ class CustomerDeviceHistory
     private $dateTime;
 
     /**
-     * @ORM\ManyToOne(targetEntity="\AppBundle\Entity\CustomerDevice")
+     * @ORM\ManyToOne(targetEntity="\AppBundle\Entity\PersonDevice")
      */
-    private $customerDevice;
+    private $personDevice;
 
     /**
      * @var bool
@@ -69,7 +69,7 @@ class CustomerDeviceHistory
      *
      * @param string $action
      *
-     * @return CustomerDeviceHistory
+     * @return PersonDeviceHistory
      */
     public function setAction($action)
     {
@@ -93,7 +93,7 @@ class CustomerDeviceHistory
      *
      * @param array $data
      *
-     * @return CustomerDeviceHistory
+     * @return PersonDeviceHistory
      */
     public function setData($data)
     {
@@ -117,7 +117,7 @@ class CustomerDeviceHistory
      *
      * @param \DateTime $dateTime
      *
-     * @return CustomerDeviceHistory
+     * @return PersonDeviceHistory
      */
     public function setDateTime($dateTime)
     {
@@ -137,27 +137,27 @@ class CustomerDeviceHistory
     }
 
     /**
-     * Set customerDevice
+     * Set personDevice
      *
-     * @param CustomerDevice $customerDevice
+     * @param PersonDevice $personDevice
      *
-     * @return CustomerDeviceHistory
+     * @return PersonDeviceHistory
      */
-    public function setCustomerDevice($customerDevice)
+    public function setPersonDevice($personDevice)
     {
-        $this->customerDevice = $customerDevice;
+        $this->personDevice = $personDevice;
 
         return $this;
     }
 
     /**
-     * Get customerDevice
+     * Get personDevice
      *
-     * @return CustomerDevice
+     * @return PersonDevice
      */
-    public function getCustomerDevice()
+    public function getPersonDevice()
     {
-        return $this->customerDevice;
+        return $this->personDevice;
     }
 
     /**

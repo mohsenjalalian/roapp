@@ -2,6 +2,12 @@
 # http://symfony.com/doc/current/book/security.html
 security:
     encoders:
+        AppBundle\Entity\Driver:
+            algorithm: plaintext
+
+        AppBundle\Entity\Customer:
+            algorithm: plaintext
+
         AppBundle\Entity\Operator:
               algorithm: plaintext
     # http://symfony.com/doc/current/book/security.html#where-do-users-come-from-user-providers
@@ -15,18 +21,53 @@ security:
         customer_provider:
             entity:
                 class: AppBundle:Customer
-
+                property: username
+        driver_provider:
+            entity:
+                class: AppBundle:Driver
+                property: email
         in_memory:
             memory: ~
 
     firewalls:
-        main:
+        customer_api:
             anonymous: ~
             logout: ~
             pattern: ^/customer/api
+            provider: customer_provider
             guard:
                 authenticators:
-                    - app.customer_token_authenticator
+                    - app.token_authenticator
+        customer_dashboard:
+            pattern: ^/customer/dashboard
+            anonymous: ~
+            form_login:
+                login_path: /customer/dashboard/login
+                check_path: /customer/dashboard/login
+            logout:
+                path: /customer/dashboard/logout
+                target: /customer/dashboard
+            provider: customer_provider
+
+        driver_dashboard:
+            pattern: ^/driver/dashboard
+            anonymous: ~
+            form_login:
+                login_path: /driver/dashboard/login
+                check_path: /driver/dashboard/login
+            logout:
+                path: /driver/dashboard/logout
+                target: /driver/dashboard
+            provider: driver_provider
+
+        driver_api:
+            anonymous: ~
+            logout: ~
+            pattern: ^/driver/api
+            provider: driver_provider
+            guard:
+                authenticators:
+                    - app.token_authenticator
 
         operator_dashboard:
             pattern:  ^/operator/dashboard

@@ -21,3 +21,8 @@
 /.idea
 /app/Resources/assets/semantic/node_modules/
 /app/Resources/assets/semantic/dist/
+/Vagrantfile
+/.vagrant
+/web/uploads/
+/src/AppBundle/Resources/public/stylesheets/
+/src/AppBundle/Resources/public/.sass-cache/

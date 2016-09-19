@@ -1,0 +1,58 @@
+{% extends ':customer/dashboard:layout.html.twig' %}
+
+{% block page_title %}
+    ثبت درخواست ارسال
+{% endblock %}
+
+{% block main %}
+
+    {#<div class="two column row">#}
+        {#<div class="column">#}
+            {#<h2 class="ui medium header">Subheading</h2>#}
+            {#<p>Donec id elit non mi porta gravida at eget metus. Maecenas faucibus mollis interdum.</p>#}
+        {#</div>#}
+        {#<div class="column">#}
+            {#<h2 class="ui medium header">Subheading</h2>#}
+            {#<p>Donec id elit non mi porta gravida at eget metus. Maecenas faucibus mollis interdum.</p>#}
+        {#</div>#}
+    {#</div>#}
+    {#<div class="two column row">#}
+        {#<div class="column">#}
+            {#<h2 class="ui medium header">Subheading</h2>#}
+            {#<p>Morbi leo risus, porta ac consectetur ac, vestibulum at eros. Cras mattis consectetur purus sit amet fermentum.</p>#}
+        {#</div>#}
+        {#<div class="column">#}
+            {#<h2 class="ui medium header">Subheading</h2>#}
+            {#<p>Morbi leo risus, porta ac consectetur ac, vestibulum at eros. Cras mattis consectetur purus sit amet fermentum.</p>#}
+        {#</div>#}
+    {#</div>#}
+    {#<div class="two column row">#}
+        {#<div class="column">#}
+            {#<h2 class="ui medium header">Subheading</h2>#}
+            {#<p>Maecenas sed diam eget risus varius blandit sit amet non magna.</p>#}
+        {#</div>#}
+        {#<div class="column">#}
+            {#<h2 class="ui medium header">Subheading</h2>#}
+            {#<p>Maecenas sed diam eget risus varius blandit sit amet non magna.</p>#}
+        {#</div>#}
+    {#</div>#}
+
+
+    {{ form_start(form, {attr: {class: "ui form"}}) }}
+        {% set children = form.children%}
+        {% for child in children %}
+            <div class="field">
+                {{ form_label(child)}}
+                {{ form_widget(child) }}
+            </div>
+
+        {% endfor %}
+        <input type="submit" value="Create" />
+    {{ form_end(form) }}
+
+    <ul>
+        <li>
+            <a href="{{ path('customer_dashboard_shipment_index') }}">Back to the list</a>
+        </li>
+    </ul>
+{% endblock %}
