@@ -45,5 +45,76 @@ class Task
     {
         return $this->id;
     }
-}
 
+    /**
+     * Set status
+     *
+     * @param integer $status
+     *
+     * @return Task
+     */
+    public function setStatus($status)
+    {
+        $this->status = $status;
+
+        return $this;
+    }
+
+    /**
+     * Get status
+     *
+     * @return integer
+     */
+    public function getStatus()
+    {
+        return $this->status;
+    }
+
+    /**
+     * Set type
+     *
+     * @param integer $type
+     *
+     * @return Task
+     */
+    public function setType($type)
+    {
+        $this->type = $type;
+
+        return $this;
+    }
+
+    /**
+     * Get type
+     *
+     * @return integer
+     */
+    public function getType()
+    {
+        return $this->type;
+    }
+
+    /**
+     * Set shipment
+     *
+     * @param \AppBundle\Entity\Shipment $shipment
+     *
+     * @return Task
+     */
+    public function setShipment(\AppBundle\Entity\Shipment $shipment = null)
+    {
+        $this->shipment = $shipment;
+
+        return $this;
+    }
+
+    /**
+     * Get shipment
+     *
+     * @return \AppBundle\Entity\Shipment
+     */
+    public function getShipment()
+    {
+        return $this->shipment;
+    }
+}

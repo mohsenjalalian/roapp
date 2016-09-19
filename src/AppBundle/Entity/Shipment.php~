@@ -11,9 +11,9 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity(repositoryClass="AppBundle\Repository\ShipmentRepository")
  * @ORM\InheritanceType(value="SINGLE_TABLE")
  * @ORM\DiscriminatorColumn(name="discriminator", type="string")
- * @ORM\DiscriminatorMap({"known" = "KnownShipment", "unknown" = "UnknownShipment"})
+ * @ORM\DiscriminatorMap({"undefined" = "Shipment", "known" = "KnownShipment", "unknown" = "UnknownShipment"})
  */
-abstract class Shipment
+class Shipment
 {
     /**
      * @var int
@@ -25,7 +25,7 @@ abstract class Shipment
     protected $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Address")
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Address" )
      */
     protected $ownerAddress;
 
@@ -66,6 +66,7 @@ abstract class Shipment
 
     /**
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Driver", inversedBy="shipments")
+     * @ORM\JoinColumn(name="driver_id")
      */
     protected $driver;
 
@@ -302,5 +303,46 @@ abstract class Shipment
     public function getDriver()
     {
         return $this->driver;
+    }
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->photos = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+    /**
+     * Add photo
+     *
+     * @param \AppBundle\Entity\Media $photo
+     *
+     * @return Shipment
+     */
+    public function addPhoto(\AppBundle\Entity\Media $photo)
+    {
+        $this->photos[] = $photo;
+
+        return $this;
+    }
+
+    /**
+     * Remove photo
+     *
+     * @param \AppBundle\Entity\Media $photo
+     */
+    public function removePhoto(\AppBundle\Entity\Media $photo)
+    {
+        $this->photos->removeElement($photo);
+    }
+
+    /**
+     * Get photos
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getPhotos()
+    {
+        return $this->photos;
     }
 }

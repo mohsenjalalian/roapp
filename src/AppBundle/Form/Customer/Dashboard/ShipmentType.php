@@ -16,14 +16,39 @@ class ShipmentType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('description')
-            ->add('value')
-            ->add('status')
-            ->add('pickUpTime', DateTimeType::class)
-            ->add('createdAt', DateTimeType::class)
-            ->add('price')
-            ->add('type')
-            ->add('ownerAddress')
+            ->add('description', null,
+                array(
+                    "label"=>"form.description",
+                    'translation_domain' => 'messages'
+                ))
+            ->add('value', null,
+                array(
+                    "label"=>"form.value",
+                    'translation_domain' => 'messages'
+                ))
+//            ->add('status')
+            ->add('pickUpTime', DateTimeType::class,
+                array(
+                    "label"=>"form.pickUpTime",
+                    'translation_domain' => 'messages',
+                    'widget' => 'single_text',
+                    'html5' => false,
+                    'attr' => ['class' => 'js-datepicker']
+                ))
+//            ->add('createdAt', DateTimeType::class)
+//            ->add('price')
+//            ->add('type')
+            ->add('ownerAddress', null,
+                array(
+                    "label"=>"form.ownerAddress",
+                    'translation_domain' => 'messages'
+                ))
+            ->add('otherAddress', null,
+                array(
+                    "label"=>"other.address",
+                    'translation_domain' => 'messages',
+                    'mapped' => false
+                ))
         ;
     }
     
