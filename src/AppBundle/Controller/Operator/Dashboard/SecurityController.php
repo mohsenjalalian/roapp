@@ -1,6 +1,7 @@
 <?php
 
 namespace AppBundle\Controller\Operator\Dashboard;
+
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -16,21 +17,19 @@ class SecurityController extends Controller
         $authenticationUtils = $this->get('security.authentication_utils');
         $error = $authenticationUtils->getLastAuthenticationError();
         $lastUsername = $authenticationUtils->getLastUsername();
-        return $this->render(
+        return $this->render
+        (
             'operator/dashboard/security/login.html.twig',
             array(
                 'last_username' => $lastUsername,
                 'error' => $error,
             )
         );
-
     }
-    
     /**
      * @Route("/logout", name="operator_dashboard_logout")
      */
     public function logoutAction(Request $request)
     {
-        
     }
 }

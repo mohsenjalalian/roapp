@@ -18,7 +18,6 @@ app.driver.dashboard:
     resource: "@AppBundle/Controller/Driver/Dashboard/"
     prefix:   /driver/dashboard/
 
-
 app.operator.api.v1:
     resource: "@AppBundle/Controller/Operator/Dashboard/"
     prefix:   /operator/api/
