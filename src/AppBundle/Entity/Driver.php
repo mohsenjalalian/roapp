@@ -12,6 +12,14 @@ class Driver extends Person
 {
 
     /**
+     *
+     * @var ArrayCollection
+     * @ORM\OneToMany(targetEntity="Shipment", mappedBy="driver")
+     */
+
+    protected $shipments;
+
+    /**
      * Returns the roles granted to the user.
      *
      * <code>
@@ -76,5 +84,46 @@ class Driver extends Person
     public function eraseCredentials()
     {
         // TODO: Implement eraseCredentials() method.
+    }
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->shipments = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+    /**
+     * Add shipment
+     *
+     * @param \AppBundle\Entity\Shipment $shipment
+     *
+     * @return Driver
+     */
+    public function addShipment(\AppBundle\Entity\Shipment $shipment)
+    {
+        $this->shipments[] = $shipment;
+
+        return $this;
+    }
+
+    /**
+     * Remove shipment
+     *
+     * @param \AppBundle\Entity\Shipment $shipment
+     */
+    public function removeShipment(\AppBundle\Entity\Shipment $shipment)
+    {
+        $this->shipments->removeElement($shipment);
+    }
+
+    /**
+     * Get shipments
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getShipments()
+    {
+        return $this->shipments;
     }
 }

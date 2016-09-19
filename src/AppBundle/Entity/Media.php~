@@ -11,6 +11,7 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
  *
  * @ORM\Table(name="media")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\MediaRepository")
+ * @Vich\Uploadable
  */
 class Media
 {
@@ -26,7 +27,7 @@ class Media
     /**
      * NOTE: This is not a mapped field of entity metadata, just a simple property.
      *
-     * @Vich\UploadableField(mapping="product_image", fileNameProperty="imageName")
+     * @Vich\UploadableField(mapping="media_file", fileNameProperty="name")
      *
      * @var File
      */
@@ -101,13 +102,13 @@ class Media
     }
 
     /**
-     * @param string $imageName
+     * @param string $name
      *
      * @return Media
      */
-    public function setName($imageName)
+    public function setName($name)
     {
-        $this->name = $imageName;
+        $this->name = $name;
 
         return $this;
     }
@@ -119,5 +120,52 @@ class Media
     {
         return $this->name;
     }
-}
 
+    /**
+     * Set createdAt
+     *
+     * @param \DateTime $createdAt
+     *
+     * @return Media
+     */
+    public function setCreatedAt($createdAt)
+    {
+        $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+    /**
+     * Get createdAt
+     *
+     * @return \DateTime
+     */
+    public function getCreatedAt()
+    {
+        return $this->createdAt;
+    }
+
+    /**
+     * Set updatedAt
+     *
+     * @param \DateTime $updatedAt
+     *
+     * @return Media
+     */
+    public function setUpdatedAt($updatedAt)
+    {
+        $this->updatedAt = $updatedAt;
+
+        return $this;
+    }
+
+    /**
+     * Get updatedAt
+     *
+     * @return \DateTime
+     */
+    public function getUpdatedAt()
+    {
+        return $this->updatedAt;
+    }
+}
