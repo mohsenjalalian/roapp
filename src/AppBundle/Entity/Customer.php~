@@ -4,18 +4,47 @@ namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
+<<<<<<< HEAD
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+=======
+>>>>>>> e8b7c77b47809cea0ca15c4538d787a2964bc563
+>>>>>>> 644c85d397060c76da693f8f7aa0281ca323b699
+=======
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
+>>>>>>> 124b83bd9591089a7a3aa5c525b8aef454cdf4db
 
 /**
  * Customer
  * @ORM\Entity(repositoryClass="AppBundle\Repository\CustomerRepository")
  * @UniqueEntity(fields="username", message="Username already taken")
  */
+<<<<<<< HEAD
+<<<<<<< HEAD
+class Customer implements UserInterface
+=======
+<<<<<<< HEAD
+class Customer implements UserInterface, \Serializable
+=======
+class Customer implements UserInterface
+>>>>>>> e8b7c77b47809cea0ca15c4538d787a2964bc563
+>>>>>>> 644c85d397060c76da693f8f7aa0281ca323b699
+=======
 class Customer extends Person implements \Serializable
+>>>>>>> 124b83bd9591089a7a3aa5c525b8aef454cdf4db
 {
 
+<<<<<<< HEAD
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+=======
+>>>>>>> 124b83bd9591089a7a3aa5c525b8aef454cdf4db
     /**
      * @ORM\Column(type="string", length=255, unique=true)
      * @Assert\NotBlank()
@@ -40,6 +69,7 @@ class Customer extends Person implements \Serializable
     {
         $this->isActive = true;
     }
+>>>>>>> 644c85d397060c76da693f8f7aa0281ca323b699
 
     /**
      * Returns the roles granted to the user.
@@ -151,6 +181,12 @@ class Customer extends Person implements \Serializable
     }
 
     /**
+<<<<<<< HEAD
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+=======
+>>>>>>> 124b83bd9591089a7a3aa5c525b8aef454cdf4db
      * Set apiKey
      *
      * @param string $apiKey
@@ -171,6 +207,31 @@ class Customer extends Person implements \Serializable
     {
         return $this->apiKey;
     }
+<<<<<<< HEAD
+
+=======
+>>>>>>> 644c85d397060c76da693f8f7aa0281ca323b699
+     * Returns the roles granted to the user.
+     *
+     * <code>
+     * public function getRoles()
+     * {
+     *     return array('ROLE_USER');
+     * }
+     * </code>
+     *
+     * Alternatively, the roles might be stored on a ``roles`` property,
+     * and populated in any number of different ways when the user object
+     * is created.
+     * @return array (Role|string)[] The user roles
+     */
+    public function getRoles()
+    {
+        return array('ROLE_CUSTOMER');
+    }
+
+=======
+>>>>>>> 124b83bd9591089a7a3aa5c525b8aef454cdf4db
     /**
      * Set username
      *
@@ -216,4 +277,11 @@ class Customer extends Person implements \Serializable
     {
         return $this->isActive;
     }
+<<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> e8b7c77b47809cea0ca15c4538d787a2964bc563
+>>>>>>> 644c85d397060c76da693f8f7aa0281ca323b699
+=======
+>>>>>>> 124b83bd9591089a7a3aa5c525b8aef454cdf4db
 }
