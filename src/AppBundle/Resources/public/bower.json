@@ -17,10 +17,12 @@
   "dependencies": {
   },
 
-  "name": "jquery-ui",
-  "version": "1.12.1",
+  "name": "persian-datepicker",
+  "version": "0.4.5",
   "dependencies": {
+    " persian-date": "~0.1.6"
   },
   "private": true
+
 
 }

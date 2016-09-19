@@ -22,7 +22,7 @@
         <div class="two fields">
             <div class="field">
                 <label>{{ form_label(form.pickUpTime) }}</label>
-                <div>{{ form_widget(form.pickUpTime ) }}</div>
+                <div style="direction: rtl !important;">{{ form_widget(form.pickUpTime ) }}</div>
             </div>
             <div class="field">
                 <label>{{ form_label(form.value) }}</label>
@@ -57,8 +57,10 @@
     {{ parent()  }}
     {% stylesheets
     'bundles/app/stylesheets/customer/dashboard/shipment/new.css'
-    'assets/vendor/jquery-ui/themes/ui-lightness/jquery-ui.min.css'
+    'assets/vendor/persian-datepicker/src/css/persian-datepicker.css'
     %}
+
+
     <link rel="stylesheet" href="{{ asset_url }}" />
 
     {% endstylesheets %}
@@ -69,15 +71,24 @@
     {{ parent()  }}
 
     {% javascripts
-    'assets/vendor/jquery-ui/jquery-ui.min.js'%}
+    'assets/vendor/persian-datepicker/lib/persian-date.js'
+    'assets/vendor/persian-datepicker/dist/js/persian-datepicker-0.4.5.min.js'
+    %}
     <script type="text/javascript" src="{{ asset_url }}" ></script>
     {% endjavascripts %}
 
     <script>
         $(document).ready(function() {
-            $('.js-datepicker').datepicker({
-                format: 'yyyy-mm-dd'
-            });
+            $(".js-datepicker").pDatepicker(
+                    {
+                        timePicker: {
+                            enabled: true,
+                            showSeconds: true,
+                            showMeridian: true,
+                            scrollEnabled: true
+                        },
+                    }
+            );
         });
     </script>
 
