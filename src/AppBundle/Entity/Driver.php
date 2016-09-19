@@ -3,103 +3,13 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * Driver
- *
- * @ORM\Table(name="driver")
- * @ORM\Entity(repositoryClass="AppBundle\Repository\DriverRepository")
+ * @ORM\Entity
  */
-class Driver implements UserInterface, \Serializable
+class Driver extends Person
 {
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    private $id;
-
-    /**
-     * @ORM\Column(name="phone", type="string")
-     */
-    private $phone;
-
-    /**
-     * @ORM\Column(name="email", type="string")
-     */
-    private $email;
-
-    /**
-     * @ORM\Column(name="password", type="string")
-     */
-    private $password;
-
-    /**
-     * @ORM\Column(name="is_active", type="boolean")
-     */
-    private $isActive;
-
-    /**
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Shipment", mappedBy="driver")
-     */
-    private $shipments;
-
-    public function __construct()
-    {
-        $this->isActive = true;
-    }
-
-    /**
-     * Get id
-     *
-     * @return int
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    /**
-     * String representation of object
-     * @link http://php.net/manual/en/serializable.serialize.php
-     * @return string the string representation of the object or null
-     * @since 5.1.0
-     */
-    public function serialize()
-    {
-        return serialize(array(
-            $this->id,
-            $this->email,
-            $this->password,
-            // see section on salt below
-            // $this->salt,
-        ));
-        // TODO: Implement serialize() method.
-    }
-
-    /**
-     * Constructs the object
-     * @link http://php.net/manual/en/serializable.unserialize.php
-     * @param string $serialized <p>
-     * The string representation of the object.
-     * </p>
-     * @return void
-     * @since 5.1.0
-     */
-    public function unserialize($serialized)
-    {
-        list (
-            $this->id,
-            $this->phone,
-            $this->password,
-            // see section on salt below
-            // $this->salt
-            ) = unserialize($serialized);
-        // TODO: Implement unserialize() method.
-    }
 
     /**
      * Returns the roles granted to the user.
@@ -119,7 +29,7 @@ class Driver implements UserInterface, \Serializable
      */
     public function getRoles()
     {
-        return ['ROLE_USER'];
+        return array('ROLE_DRIVER');
     }
 
     /**
@@ -132,7 +42,6 @@ class Driver implements UserInterface, \Serializable
      */
     public function getPassword()
     {
-        return $this->password;
         // TODO: Implement getPassword() method.
     }
 
@@ -145,7 +54,6 @@ class Driver implements UserInterface, \Serializable
      */
     public function getSalt()
     {
-        return null;
         // TODO: Implement getSalt() method.
     }
 
@@ -156,8 +64,7 @@ class Driver implements UserInterface, \Serializable
      */
     public function getUsername()
     {
-        return $this->getEmail();
-        // TODO: Implement getUsername() method.
+        return $this->getPhone();
     }
 
     /**
@@ -169,125 +76,5 @@ class Driver implements UserInterface, \Serializable
     public function eraseCredentials()
     {
         // TODO: Implement eraseCredentials() method.
-    }
-
-    /**
-     * Set phone
-     *
-     * @param string $phone
-     *
-     * @return Driver
-     */
-    public function setPhone($phone)
-    {
-        $this->phone = $phone;
-
-        return $this;
-    }
-
-    /**
-     * Get phone
-     *
-     * @return string
-     */
-    public function getPhone()
-    {
-        return $this->phone;
-    }
-
-    /**
-     * Set email
-     *
-     * @param string $email
-     *
-     * @return Driver
-     */
-    public function setEmail($email)
-    {
-        $this->email = $email;
-
-        return $this;
-    }
-
-    /**
-     * Get email
-     *
-     * @return string
-     */
-    public function getEmail()
-    {
-        return $this->email;
-    }
-
-    /**
-     * Set password
-     *
-     * @param string $password
-     *
-     * @return Driver
-     */
-    public function setPassword($password)
-    {
-        $this->password = $password;
-
-        return $this;
-    }
-
-    /**
-     * Set isActive
-     *
-     * @param boolean $isActive
-     *
-     * @return Driver
-     */
-    public function setIsActive($isActive)
-    {
-        $this->isActive = $isActive;
-
-        return $this;
-    }
-
-    /**
-     * Get isActive
-     *
-     * @return boolean
-     */
-    public function getIsActive()
-    {
-        return $this->isActive;
-    }
-
-    /**
-     * Add shipment
-     *
-     * @param \AppBundle\Entity\Shipment $shipment
-     *
-     * @return Driver
-     */
-    public function addShipment(\AppBundle\Entity\Shipment $shipment)
-    {
-        $this->shipments[] = $shipment;
-
-        return $this;
-    }
-
-    /**
-     * Remove shipment
-     *
-     * @param \AppBundle\Entity\Shipment $shipment
-     */
-    public function removeShipment(\AppBundle\Entity\Shipment $shipment)
-    {
-        $this->shipments->removeElement($shipment);
-    }
-
-    /**
-     * Get shipments
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getShipments()
-    {
-        return $this->shipments;
     }
 }

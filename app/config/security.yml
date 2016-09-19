@@ -23,13 +23,14 @@ security:
             memory: ~
 
     firewalls:
-        main:
+        customer_api:
             anonymous: ~
             logout: ~
             pattern: ^/customer/api
+            provider: customer_provider
             guard:
                 authenticators:
-                    - app.customer_token_authenticator
+                    - app.token_authenticator
         customer_dashboard:
             pattern: ^/customer/dashboard
             anonymous: ~
@@ -41,13 +42,6 @@ security:
                 target: /customer/dashboard
             provider: customer_provider
 
-        main:
-            anonymous: ~
-            logout: ~
-            pattern: ^/customer/api
-            guard:
-                authenticators:
-                    - app.customer_token_authenticator
         driver_dashboard:
             pattern: ^/driver/dashboard
             anonymous: ~
@@ -58,6 +52,15 @@ security:
                 path: /driver/dashboard/logout
                 target: /driver/dashboard
             provider: driver_provider
+
+        driver_api:
+            anonymous: ~
+            logout: ~
+            pattern: ^/driver/api
+            provider: driver_provider
+            guard:
+                authenticators:
+                    - app.token_authenticator
 
         # disables authentication for assets and the profiler, adapt it according to your needs
         dev:
