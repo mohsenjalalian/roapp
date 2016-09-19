@@ -3,7 +3,6 @@
 namespace AppBundle\Form\Customer\Api\V1;
 
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -35,7 +34,7 @@ class CustomerDeviceType extends AbstractType
     {
         $resolver->setDefaults(
             [
-                'data_class' => 'AppBundle\Entity\CustomerDevice',
+                'data_class' => 'AppBundle\Entity\PersonDevice',
                 'csrf_protection' => false,
             ]
         );

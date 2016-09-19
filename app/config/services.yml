@@ -7,7 +7,7 @@ parameters:
 #    parameter_name: value
 
 services:
-    app.customer_token_authenticator:
+    app.token_authenticator:
         class: AppBundle\Security\TokenAuthenticator
         arguments:
             - '@doctrine.orm.entity_manager'
@@ -22,6 +22,13 @@ services:
         class: AppBundle\Utils\FormError
     app.token_generator:
         class: AppBundle\Utils\TokenGenerator
+    app.menu_builder:
+        class: AppBundle\Menu\MenuBuilder
+        arguments: ["@knp_menu.factory", "@service_container", "@security.authorization_checker", "@security.token_storage"]
+        tags:
+            - { name: knp_menu.menu_builder, method: createProfileSidebarMenu, alias: profile_side } # The alias is what is used to retrieve the menu
+            - { name: knp_menu.menu_builder, method: createMainMenu, alias: main_menu } # The alias is what is used to retrieve the menu
+
 #    service_name:
 #        class: AppBundle\Directory\ClassName
 #        arguments: ["@another_service_name", "plain_value", "%parameter_name%"]
