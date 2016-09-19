@@ -25,7 +25,7 @@ class Shipment
     protected $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Address")
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Address" )
      */
     protected $ownerAddress;
 
@@ -66,6 +66,7 @@ class Shipment
 
     /**
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Driver", inversedBy="shipments")
+     * @ORM\JoinColumn(name="driver_id")
      */
     protected $driver;
 
