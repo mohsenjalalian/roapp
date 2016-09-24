@@ -28,6 +28,9 @@ services:
         tags:
             - { name: knp_menu.menu_builder, method: createProfileSidebarMenu, alias: profile_side } # The alias is what is used to retrieve the menu
             - { name: knp_menu.menu_builder, method: createMainMenu, alias: main_menu } # The alias is what is used to retrieve the menu
+    app.cost_calculator:
+        class: AppBundle\Utils\CostCalculator
+        arguments: ['%time_based_mapping%', '%value_based_mapping%']
 
 #    service_name:
 #        class: AppBundle\Directory\ClassName
