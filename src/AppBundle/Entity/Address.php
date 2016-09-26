@@ -209,4 +209,8 @@ class Address
     {
         return $this->creator;
     }
+    public function __toString()
+    {
+        return (string) $this->getLatitude();
+    }
 }

@@ -1,0 +1,57 @@
+{% extends ':operator/dashboard:layout.html.twig' %}
+
+{% block main %}
+    <h1>سفارش</h1>
+
+    <table class="ui celled table">
+        <tbody class="headColor">
+            <tr>
+                <th>Id</th>
+                <td>{{ shipment.id }}</td>
+            </tr>
+            <tr>
+                <th>توضیحات</th>
+                <td>{{ shipment.description }}</td>
+            </tr>
+            <tr>
+                <th>مقدار</th>
+                <td>{{ shipment.value }}</td>
+            </tr>
+            <tr>
+                <th>وضعیت</th>
+                <td>{{ shipment.status }}</td>
+            </tr>
+            <tr>
+                <th>زمان انجام</th>
+                <td>{% if shipment.pickUpTime %}{{ shipment.pickUpTime|date('Y-m-d H:i:s') }}{% endif %}</td>
+            </tr>
+            <tr>
+                <th>زمان ایجاد</th>
+                <td>{% if shipment.createdAt %}{{ shipment.createdAt|date('Y-m-d H:i:s') }}{% endif %}</td>
+            </tr>
+            <tr>
+                <th>قیمت</th>
+                <td>{{ shipment.price }}</td>
+            </tr>
+            <tr>
+                <th>نوع</th>
+                <td>{{ shipment.type }}</td>
+            </tr>
+        </tbody>
+    </table>
+    <div>
+        <a style="color: black" href="{{ path('operator_dashboard_shipment_list') }}"><button>لیست کل سفارشات</button></a>
+        <a style="color: black" href="{{ path('operator_dashboard_edit', { 'id': shipment.id }) }}"><button>ویرایش</button></a>
+        {{ form_start(delete_form) }}
+        <input type="submit" value="حذف">
+        {{ form_end(delete_form) }}
+    </div>
+    {% block stylesheets %}
+        {{ parent()  }}
+        {% stylesheets
+        'bundles/app/sass/operator/dashboard/driverList/showPageStyle.scss'
+        %}
+        <link rel="stylesheet" href="{{ asset_url }}" />
+        {% endstylesheets %}
+    {% endblock %}
+{% endblock %}

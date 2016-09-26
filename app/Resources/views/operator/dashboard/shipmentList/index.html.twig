@@ -1,0 +1,45 @@
+{% extends ':operator/dashboard:layout.html.twig' %}
+
+{% block main %}
+    <h2 class="ui header" style="display: inline">لیست سفارشات</h2>
+    <table class="ui celled table">
+        <thead>
+        <tr>
+            <th>{{ knp_pagination_sortable(pagination, 'id','a.id') }}</th>
+            <th{% if pagination.isSorted('a.description') %} class="sorted"{% endif %}>{{ knp_pagination_sortable(pagination, 'توضیحات', 'a.description') }}</th>
+            <th{% if pagination.isSorted('a.value') %} class="sorted"{% endif %}>{{ knp_pagination_sortable(pagination, 'مقدار', 'a.value') }}</th>
+            <th{% if pagination.isSorted('a.status') %} class="sorted"{% endif %}>{{ knp_pagination_sortable(pagination, 'وضعیت', 'a.status') }}</th>
+            <th{% if pagination.isSorted('a.pickUpTime') %} class="sorted"{% endif %}>{{ knp_pagination_sortable(pagination, 'زمان انجام', 'a.pickUpTime') }}</th>
+            <th{% if pagination.isSorted('a.createdAt') %} class="sorted"{% endif %}>{{ knp_pagination_sortable(pagination, 'زمان ایجاد', 'a.createdAt') }}</th>
+            <th{% if pagination.isSorted('a.price') %} class="sorted"{% endif %}>{{ knp_pagination_sortable(pagination, 'قیمت', 'a.price') }}</th>
+            <th{% if pagination.isSorted('a.type') %} class="sorted"{% endif %}>{{ knp_pagination_sortable(pagination, 'نوع سفارش', 'a.type') }}</th>
+            <th>عملیات</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for shipment in pagination %}
+            <tr>
+                <td><a href="{{ path('operator_dashboard_show', { 'id': shipment.id }) }}">{{ shipment.id }}</a></td>
+                <td>{{ shipment.description }}</td>
+                <td>{{ shipment.value }}</td>
+                <td>{{ shipment.status }}</td>
+                <td>{% if shipment.pickUpTime %}{{ shipment.pickUpTime|date('Y-m-d H:i:s') }}{% endif %}</td>
+                <td>{% if shipment.createdAt %}{{ shipment.createdAt|date('Y-m-d H:i:s') }}{% endif %}</td>
+                <td>{{ shipment.price }}</td>
+                <td>{{ shipment.type }}</td>
+                <td>
+                    <a href="{{ path('operator_dashboard_show', { 'id': shipment.id }) }}"><button>نمایش</button></a>
+                    <a href="{{ path('operator_dashboard_edit', { 'id': shipment.id }) }}"><button>ویرایش</button></a>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    {% if pagination.getTotalItemCount > 5 %}
+        <div class="ui one column stackable center aligned page grid navigation">
+            <div class="pagination menu column twelve wide ui" style="font-size: 18px">
+                {{ knp_pagination_render(pagination) }}
+            </div>
+        </div>
+    {% endif  %}
+{% endblock %}

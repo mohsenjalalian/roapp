@@ -217,4 +217,8 @@ class Driver extends Person
     {
         return $this->shipments;
     }
+    public function __toString()
+    {
+        return (string) $this->getUsername();
+    }
 }
