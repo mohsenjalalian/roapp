@@ -1,0 +1,41 @@
+{% extends ':operator/dashboard:layout.html.twig' %}
+
+{% block main %}
+    <div>
+        <h2 class="ui header" style="display: inline">لیست مشتریان</h2>
+        <a style="margin-right: 10px" href="{{ path('operator_dashboard_create_customer') }}"><button>ایجاد مشتری جدید</button></a>
+    </div>
+    <table class="ui celled table">
+        <thead>
+        <tr>
+            <th>{{ knp_pagination_sortable(pagination, 'نام کاربری','a.username') }}</th>
+            <th{% if pagination.isSorted('a.password') %} class="sorted"{% endif %}>{{ knp_pagination_sortable(pagination, 'رمز عبور', 'a.password') }}</th>
+            <th{% if pagination.isSorted('a.isActive') %} class="sorted"{% endif %}>{{ knp_pagination_sortable(pagination, 'وضعیت', 'a.isActive') }}</th>
+            <th{% if pagination.isSorted('a.apiKey') %} class="sorted"{% endif %}>{{ knp_pagination_sortable(pagination, 'apiKey', 'a.apiKey') }}</th>
+            <th{% if pagination.isSorted('a.phone') %} class="sorted"{% endif %}>{{ knp_pagination_sortable(pagination, 'شماره تلفن', 'a.phone') }}</th>
+            <th>عملیات</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for customer in pagination %}
+            <tr>
+                {#<td>{{ customer.id }}</td>#}
+                <td><a href="{{ path('operator_dashboard_customer_show', { 'id': customer.id }) }}">{{ customer.username }}</a></td>
+                <td>{{ customer.password }}</td>
+                <td>{% if customer.isActive %}فعال{% else %}غیر فعال{% endif %}</td>
+                <td>{{ customer.apiKey }}</td>
+                <td>{{ customer.phone }}</td>
+                <td>
+                    <a href="{{ path('operator_dashboard_customer_show', { 'id': customer.id }) }}"><button>نمایش</button></a>
+                    <a href="{{ path('operator_dashboard_customer_edit', { 'id': customer.id }) }}"><button>ویرایش</button></a>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <div class="ui one column stackable center aligned page grid navigation">
+        <div class="pagination menu column twelve wide ui" style="font-size: 18px">
+            {{ knp_pagination_render(pagination) }}
+        </div>
+    </div>
+{% endblock %}
