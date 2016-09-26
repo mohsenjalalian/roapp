@@ -1,0 +1,40 @@
+{% extends ':operator/dashboard:layout.html.twig' %}
+
+{% block main %}
+    <div>
+        <h2 class="ui header" style="display: inline">لیست راننده ها</h2>
+        <a style="margin-right: 10px" href="{{ path('operator_dashboard_driver_create') }}"><button>ایجاد راننده ی جدید</button></a>
+    </div>
+    <table class="ui celled table">
+        <thead>
+        <tr>
+            <th>{{ knp_pagination_sortable(pagination, 'نام کاربری','a.username') }}</th>
+            <th{% if pagination.isSorted('a.password') %} class="sorted"{% endif %}>{{ knp_pagination_sortable(pagination, 'رمز عبور', 'a.password') }}</th>
+            <th{% if pagination.isSorted('a.isActive') %} class="sorted"{% endif %}>{{ knp_pagination_sortable(pagination, 'وضعیت', 'a.isActive') }}</th>
+            <th{% if pagination.isSorted('a.apiKey') %} class="sorted"{% endif %}>{{ knp_pagination_sortable(pagination, 'apiKey', 'a.apiKey') }}</th>
+            <th{% if pagination.isSorted('a.phone') %} class="sorted"{% endif %}>{{ knp_pagination_sortable(pagination, 'شماره تلفن', 'a.phone') }}</th>
+            <th>عملیات</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for driver in pagination %}
+            <tr>
+                <td><a href="{{ path('operator_dashboard_driver_show', { 'id': driver.id }) }}">{{ driver.username }}</a></td>
+                <td>{{ driver.password }}</td>
+                <td>{% if driver.isActive %}فعال{% else %}غیر فعال{% endif %}</td>
+                <td>{{ driver.apiKey }}</td>
+                <td>{{ driver.phone }}</td>
+                <td>
+                    <a href="{{ path('operator_dashboard_driver_show', { 'id': driver.id }) }}"><button>نمایش</button></a>
+                    <a href="{{ path('operator_dashboard_driver_edit', { 'id': driver.id }) }}"><button>ویرایش</button></a>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <div class="ui one column stackable center aligned page grid navigation">
+        <div class="pagination menu column twelve wide ui" style="font-size: 18px">
+            {{ knp_pagination_render(pagination) }}
+        </div>
+    </div>
+{% endblock %}

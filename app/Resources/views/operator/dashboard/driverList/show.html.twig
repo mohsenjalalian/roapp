@@ -1,0 +1,48 @@
+{% extends ':operator/dashboard:layout.html.twig' %}
+
+{% block main %}
+    <h2 class="ui header">راننده</h2>
+    <table class="ui celled table">
+        <tbody class="headColor">
+        <tr>
+            <th>Id</th>
+            <td>{{ driver.id }}</td>
+        </tr>
+        <tr>
+            <th>نام کاربری</th>
+            <td>{{ driver.username }}</td>
+        </tr>
+        <tr>
+            <th>رمز عبور</th>
+            <td>{{ driver.password }}</td>
+        </tr>
+        <tr>
+            <th>وضعیت</th>
+            <td>{% if driver.isActive %}فعال{% else %}غیر فعال{% endif %}</td>
+        </tr>
+        <tr>
+            <th>Apikey</th>
+            <td>{{ driver.apiKey }}</td>
+        </tr>
+        <tr>
+            <th>تلفن</th>
+            <td>{{ driver.phone }}</td>
+        </tr>
+        </tbody>
+    </table>
+    <div>
+        <a style="color: black" href="{{ path('operator_dashboard_driver_list') }}"><button>لیست کل راننده ها</button></a>
+        <a style="color: black" href="{{ path('operator_dashboard_driver_edit', { 'id': driver.id }) }}"><button>ویرایش</button></a>
+        {{ form_start(delete_form) }}
+        <input type="submit" value="حذف">
+        {{ form_end(delete_form) }}
+    </div>
+    {% block stylesheets %}
+        {{ parent()  }}
+        {% stylesheets
+        'bundles/app/sass/operator/dashboard/driverList/showPageStyle.scss'
+        %}
+        <link rel="stylesheet" href="{{ asset_url }}" />
+        {% endstylesheets %}
+    {% endblock %}
+{% endblock %}

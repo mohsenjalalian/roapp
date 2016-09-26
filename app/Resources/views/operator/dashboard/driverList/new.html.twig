@@ -1,0 +1,14 @@
+{% extends ':operator/dashboard:layout.html.twig' %}
+
+{% block main %}
+    <h1>ایجاد راننده ی جدید</h1>
+    <div class="ui form">
+        {{ form_start(form) }}
+        {{ form_widget(form) }}
+        <input type="submit" value="ایجاد" />
+        {{ form_end(form) }}
+    </div>
+    <div style="margin-top: 10px">
+        <a style="color: black" href="{{ path('operator_dashboard_driver_list') }}"><button>لیست کل مشتریان</button></a>
+    </div>
+{% endblock %}
