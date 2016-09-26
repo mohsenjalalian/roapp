@@ -43,7 +43,7 @@ class CustomerListController extends Controller
     public function newAction(Request $request)
     {
         $customer = new Customer();
-        $form = $this->createForm('AppBundle\Form\CustomerType', $customer);
+        $form = $this->createForm('AppBundle\Form\Operator\Dashboard\CustomerType', $customer);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -83,7 +83,7 @@ class CustomerListController extends Controller
     public function editAction(Request $request, Customer $customer)
     {
         $deleteForm = $this->createDeleteForm($customer);
-        $editForm = $this->createForm('AppBundle\Form\CustomerType', $customer);
+        $editForm = $this->createForm('AppBundle\Form\Operator\Dashboard\CustomerType', $customer);
         $editForm->handleRequest($request);
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
