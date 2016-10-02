@@ -1,0 +1,48 @@
+{% extends ':operator/dashboard:layout.html.twig' %}
+
+{% block main %}
+    <h2 class="ui header">مشتری</h2>
+    <table class="ui celled table">
+        <tbody class="headColor">
+        <tr>
+            <th>Id</th>
+            <td>{{ customer.id }}</td>
+        </tr>
+        <tr>
+            <th>نام کاربری</th>
+            <td>{{ customer.username }}</td>
+        </tr>
+        <tr>
+            <th>رمز عبور</th>
+            <td>{{ customer.password }}</td>
+        </tr>
+        <tr>
+            <th>وضعیت</th>
+            <td>{% if customer.isActive %}آنلاین{% else %}آفلاین{% endif %}</td>
+        </tr>
+        <tr>
+            <th>Apikey</th>
+            <td>{{ customer.apiKey }}</td>
+        </tr>
+        <tr>
+            <th>تلفن</th>
+            <td>{{ customer.phone }}</td>
+        </tr>
+        </tbody>
+    </table>
+    <div>
+        <a style="color: black" href="{{ path('operator_dashboard_customer_list') }}"><button>لیست کل مشتریان</button></a>
+        <a style="color: black" href="{{ path('operator_dashboard_customer_edit', { 'id': customer.id }) }}"><button>ویرایش</button></a>
+        {{ form_start(delete_form) }}
+        <input type="submit" value="حذف">
+        {{ form_end(delete_form) }}
+    </div>
+    {% block stylesheets %}
+        {{ parent()  }}
+        {% stylesheets
+        'bundles/app/sass/operator/dashboard/customerList/showPageStyle.scss'
+        %}
+        <link rel="stylesheet" href="{{ asset_url }}" />
+        {% endstylesheets %}
+    {% endblock %}
+{% endblock %}

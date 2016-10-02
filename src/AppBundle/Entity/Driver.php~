@@ -3,6 +3,9 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+
 
 /**
  * Driver
@@ -10,6 +13,25 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Driver extends Person
 {
+    /**
+     * @ORM\Column(type="string",length=255,unique=true)
+     * @Assert\NotBlank()
+     */
+    private $username;
+    /**
+     * @ORM\Column(name="password", type="string")
+     */
+    private $password;
+    /**
+     * @ORM\Column(name="is_active", type="boolean")
+     */
+    private $isActive;
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="api_key", type="string", length=255, unique=true)
+     */
+    private $apiKey;
 
     /**
      *
@@ -50,6 +72,7 @@ class Driver extends Person
      */
     public function getPassword()
     {
+        return $this->password;
         // TODO: Implement getPassword() method.
     }
 
@@ -72,7 +95,8 @@ class Driver extends Person
      */
     public function getUsername()
     {
-        return $this->getPhone();
+        return $this->username;
+        // TODO: Implement getUsername() method.
     }
 
     /**
@@ -86,10 +110,77 @@ class Driver extends Person
         // TODO: Implement eraseCredentials() method.
     }
     /**
+     * Set apiKey
+     *
+     * @param string $apiKey
+     *
+     * @return Driver
+     */
+    public function setApiKey($apiKey)
+    {
+        $this->apiKey = $apiKey;
+        return $this;
+    }
+    /**
+     * Get apiKey
+     *
+     * @return string
+     */
+    public function getApiKey()
+    {
+        return $this->apiKey;
+    }
+    /**
+     * Set username
+     *
+     * @param string $username
+     *
+     * @return Driver
+     */
+    public function setUsername($username)
+    {
+        $this->username = $username;
+        return $this;
+    }
+    /**
+     * Set password
+     *
+     * @param string $password
+     *
+     * @return Driver
+     */
+    public function setPassword($password)
+    {
+        $this->password = $password;
+        return $this;
+    }
+    /**
+     * Set isActive
+     *
+     * @param boolean $isActive
+     *
+     * @return Driver
+     */
+    public function setIsActive($isActive)
+    {
+        $this->isActive = $isActive;
+        return $this;
+    }
+    /**
+     * Get isActive
+     *
+     * @return boolean
+     */
+    public function getIsActive()
+    {
+        return $this->isActive;
+    }
+    /**
      * Constructor
      */
     public function __construct()
     {
+        $this->isActive = true;
         $this->shipments = new \Doctrine\Common\Collections\ArrayCollection();
     }
 

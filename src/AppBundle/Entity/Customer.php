@@ -23,6 +23,24 @@ class Customer extends Person implements UserInterface, \Serializable
     private $password;
     
     /**
+     * @ORM\Column(name="is_active", type="boolean")
+     */
+    private $isActive;
+
+    /**
+     * @ORM\Column(name="status", type="integer")
+     */
+    private $status;
+    /**
+     * Customer constructor.
+     */
+
+    public function __construct()
+    {
+        $this->isActive = true;
+    }
+
+    /**
      * @inheritdoc
      */
     public function getRoles()
@@ -36,6 +54,7 @@ class Customer extends Person implements UserInterface, \Serializable
     public function getPassword()
     {
         return $this->password;
+        // TODO: Implement getPassword() method.
     }
 
 
@@ -45,6 +64,7 @@ class Customer extends Person implements UserInterface, \Serializable
     public function getSalt()
     {
         return null;
+        // TODO: Implement getSalt() method.
     }
 
     /**
@@ -55,11 +75,13 @@ class Customer extends Person implements UserInterface, \Serializable
         return $this->email;
     }
 
+
     /**
      * @inheritdoc
      */
     public function eraseCredentials()
     {
+        // TODO: Implement eraseCredentials() method.
     }
 
     /**
@@ -74,6 +96,7 @@ class Customer extends Person implements UserInterface, \Serializable
             // see section on salt below
             // $this->salt,
         ));
+        // TODO: Implement serialize() method.
     }
 
     /**
@@ -88,6 +111,7 @@ class Customer extends Person implements UserInterface, \Serializable
             // see section on salt below
             // $this->salt
             ) = unserialize($serialized);
+        // TODO: Implement unserialize() method.
     }
 
     /**
@@ -116,5 +140,50 @@ class Customer extends Person implements UserInterface, \Serializable
         $this->password = $password;
 
         return $this;
+    }
+    /**
+     * Set isActive
+     *
+     * @param boolean $isActive
+     *
+     * @return Customer
+     */
+    public function setIsActive($isActive)
+    {
+        $this->isActive = $isActive;
+        return $this;
+    }
+    /**
+     * Get isActive
+     *
+     * @return boolean
+     */
+    public function getIsActive()
+    {
+        return $this->isActive;
+    }
+
+    /**
+     * Set status
+     *
+     * @param integer $status
+     *
+     * @return Customer
+     */
+    public function setStatus($status)
+    {
+        $this->status = $status;
+
+        return $this;
+    }
+
+    /**
+     * Get status
+     *
+     * @return integer
+     */
+    public function getStatus()
+    {
+        return $this->status;
     }
 }

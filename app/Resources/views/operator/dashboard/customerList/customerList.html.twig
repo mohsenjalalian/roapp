@@ -1,0 +1,33 @@
+{% extends ':operator/dashboard:layout.html.twig' %}
+
+ {% block main %}
+     <h2 class="ui header">لیست مشتریان</h2>
+     <table class="ui celled table">
+         <thead>
+         <tr>
+             <th>{{ knp_pagination_sortable(pagination, 'نام کاربری','a.username') }}</th>
+             <th{% if pagination.isSorted('a.phone') %} class="sorted"{% endif %}>{{ knp_pagination_sortable(pagination, 'شماره تلفن', 'a.phone') }}</th>
+             <th{% if pagination.isSorted('a.isActive') %} class="sorted"{% endif %}>{{ knp_pagination_sortable(pagination, 'وضعیت', 'a.isActive') }}</th>
+         </tr>
+         </thead>
+         {% for customer in pagination %}
+             <tr {% if loop.index is odd %}class="color"{% endif %}> </tr>
+             <tbody>
+             <tr>
+                 <td>{{ customer.username}}</td>
+                 <td>{{ customer.phone}}</td>
+                 {% if customer.isActive %}
+                     <td>فعال</td>
+                 {% else %}
+                     <td>غیر فعال</td>
+                 {% endif %}
+             </tr>
+             </tbody>
+         {% endfor %}
+     </table>
+     <div class="ui one column stackable center aligned page grid navigation">
+         <div class="pagination menu column twelve wide ui" style="font-size: 18px">
+             {{ knp_pagination_render(pagination) }}
+         </div>
+     </div>
+ {% endblock %}

@@ -32,6 +32,9 @@ services:
         class: AppBundle\Utils\CostCalculator
         arguments: ['%time_based_mapping%', '%value_based_mapping%', '%google_map%']
 
+    app.shipment_assignment:
+        class: AppBundle\Utils\AssignmentShipment
+        arguments: ["@doctrine.orm.default_entity_manager"]
 #    service_name:
 #        class: AppBundle\Directory\ClassName
 #        arguments: ["@another_service_name", "plain_value", "%parameter_name%"]
