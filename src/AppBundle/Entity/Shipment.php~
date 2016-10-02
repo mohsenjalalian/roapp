@@ -78,7 +78,11 @@ class Shipment
      *      )
      */
     protected $photos;
-    
+
+    /**
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\AssignmentRequest",mappedBy="shipment")
+     */
+    private $assignments;
     /**
      * Get id
      *
@@ -344,5 +348,39 @@ class Shipment
     public function getPhotos()
     {
         return $this->photos;
+    }
+
+    /**
+     * Add assignment
+     *
+     * @param \AppBundle\Entity\AssignmentRequest $assignment
+     *
+     * @return Shipment
+     */
+    public function addAssignment(\AppBundle\Entity\AssignmentRequest $assignment)
+    {
+        $this->assignments[] = $assignment;
+
+        return $this;
+    }
+
+    /**
+     * Remove assignment
+     *
+     * @param \AppBundle\Entity\AssignmentRequest $assignment
+     */
+    public function removeAssignment(\AppBundle\Entity\AssignmentRequest $assignment)
+    {
+        $this->assignments->removeElement($assignment);
+    }
+
+    /**
+     * Get assignments
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getAssignments()
+    {
+        return $this->assignments;
     }
 }
