@@ -1,8 +1,0 @@
-
-insert: 'ورود'
-form.description: 'توضیحات'
-form.value: 'ارزش'
-form.pickUpTime: 'تاریخ ارسال'
-form.ownerAddress: 'آدرس'
-form.description: 'توضیحات'
-other.address: 'شماره گیرنده'
