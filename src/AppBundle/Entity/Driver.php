@@ -13,11 +13,10 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  */
 class Driver extends Person
 {
-    /**
-     * @ORM\Column(type="string",length=255,unique=true)
-     * @Assert\NotBlank()
-     */
-    private $username;
+    const STATUS_FREE = 1;
+    const STATUS_BUSY = 0;
+    const STATUS_IN_PROGRESS = 2;
+    
     /**
      * @ORM\Column(name="password", type="string")
      */
@@ -26,13 +25,11 @@ class Driver extends Person
      * @ORM\Column(name="is_active", type="boolean")
      */
     private $isActive;
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="api_key", type="string", length=255, unique=true)
-     */
-    private $apiKey;
 
+    /**
+     * @ORM\Column(name="status", type="integer")
+     */
+    private $status;
     /**
      *
      * @var ArrayCollection
@@ -180,6 +177,7 @@ class Driver extends Person
      */
     public function __construct()
     {
+        $this->status = 1;
         $this->isActive = true;
         $this->shipments = new \Doctrine\Common\Collections\ArrayCollection();
     }
@@ -220,5 +218,29 @@ class Driver extends Person
     public function __toString()
     {
         return (string) $this->getUsername();
+    }
+
+    /**
+     * Set status
+     *
+     * @param integer $status
+     *
+     * @return Driver
+     */
+    public function setStatus($status)
+    {
+        $this->status = $status;
+
+        return $this;
+    }
+
+    /**
+     * Get status
+     *
+     * @return integer
+     */
+    public function getStatus()
+    {
+        return $this->status;
     }
 }

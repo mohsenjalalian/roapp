@@ -13,6 +13,11 @@ use Doctrine\ORM\Mapping\JoinColumn;
  */
 class AssignmentRequest
 {
+    const STATUS_ACCEPTED = 1;
+    const STATUS_REJECTED = 0;
+    const STATUS_WAITING = 2;
+    const STATUS_TIMEOUT = 3;
+
     /**
      * @var int
      *
@@ -42,7 +47,7 @@ class AssignmentRequest
      * @ORM\Column(name="reason", type="string", length=255,nullable=true)
      */
     private $reason;
-    
+
     /**
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Shipment",inversedBy="assignments")
      */

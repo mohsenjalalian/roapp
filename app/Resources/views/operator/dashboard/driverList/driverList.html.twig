@@ -17,10 +17,11 @@
                  <td>{{ driver.username}}</td>
                  <td>{{ driver.phone}}</td>
                  {% if driver.isActive %}
-                     <td>فعال</td>
+                     <td>آنلاین</td>
                  {% else %}
-                     <td>غیر فعال</td>
+                     <td>آفلاین</td>
                  {% endif %}
+                 <td>{{ driver.status }}</td>
              </tr>
              </tbody>
          {% endfor %}

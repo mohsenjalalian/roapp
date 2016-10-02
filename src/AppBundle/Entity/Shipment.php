@@ -15,6 +15,10 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Shipment
 {
+    const STATUS_ASSIGNED = 1;
+    const STATUS_NOT_ASSIGNED = 0;
+    const STATUS_ASSIGNMENT_SENT = 2;
+    
     /**
      * @var int
      *

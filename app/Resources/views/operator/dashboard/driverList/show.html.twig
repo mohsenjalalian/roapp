@@ -21,6 +21,16 @@
             <td>{% if driver.isActive %}فعال{% else %}غیر فعال{% endif %}</td>
         </tr>
         <tr>
+            <th>وضعیت فعالیت</th>
+            {% if driver.status == 1 %}
+                <td>آزاد</td>
+            {% elseif driver.status == 0 %}
+                <td>مشغول</td>
+            {% else %}
+                <td>درحال بررسی درخواست</td>
+            {% endif %}
+        </tr>
+        <tr>
             <th>Apikey</th>
             <td>{{ driver.apiKey }}</td>
         </tr>

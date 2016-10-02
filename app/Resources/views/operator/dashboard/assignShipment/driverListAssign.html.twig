@@ -13,12 +13,12 @@
         </thead>
         <tbody>
         {% for driver in pagination %}
-            {% if driver.isActive %}
+            {% if driver.status != 0 and driver.status != 2 %}
                 {% if driver.id not in banDriverList %}
                     <tr>
                         <td>{{ driver.username }}</td>
                         <td>{{ driver.phone }}</td>
-                        <td>{{ driver.isActive }}</td>
+                        <td>آزاد</td>
                         <td><a href="{{ path("operator_dashboard_assignSet") }}/{{ shipmentId }}/{{ driver.id }}"><button>انتصاب</button></a></td>
                     </tr>
                 {%  endif %}

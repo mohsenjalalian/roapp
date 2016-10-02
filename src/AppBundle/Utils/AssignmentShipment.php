@@ -27,7 +27,7 @@ class AssignmentShipment
             ->findBy(
                 [
                     'shipment' => $shipment->getId(),
-                    'status' => 0,
+                    'status' => AssignmentRequest::STATUS_REJECTED,
                 ]
             );
         if ($filterDriver) {
@@ -40,27 +40,34 @@ class AssignmentShipment
         }
     }
     public function waitingStageAction(Shipment $shipment,Driver $driver){
+        $assignmentRequestObj = new AssignmentRequest();
         $em = $this->entityManager;
         // send request to driver
         $sendRequestTime = (int)date("i",time());
         $expireRequestTime = $sendRequestTime+1;
         // waiting for driver answer
-        $driver->setIsActive(0); // driver status = waiting
-        $shipment->setStatus(4); // shipment status = waiting
+        $driver->setStatus(Driver::STATUS_IN_PROGRESS); // driver status = waiting
+        $shipment->setStatus(Shipment::STATUS_ASSIGNMENT_SENT); // shipment status = waiting
+        $assignmentRequestObj->setShipment($shipment);
+        $assignmentRequestObj->setDriver($driver);
+        $assignmentRequestObj->setReason('waiting');
+        $assignmentRequestObj->setStatus(AssignmentRequest::STATUS_WAITING);
         $em->persist($driver);
         $em->persist($shipment);
+        $em->persist($assignmentRequestObj);
         $em->flush();
+        
         return $expireRequestTime;
     }
     public function timeOutStageAction(Shipment $shipment,Driver $driver)
     {
         $assignmentRequestObj = new AssignmentRequest();
         $em = $this->entityManager;
-        $driver->setIsActive(1); // driver status = free
-        $shipment->setStatus(3); // shipment status = timeOut
+        $driver->setStatus(Driver::STATUS_FREE); // driver status = free
+        $shipment->setStatus(Shipment::STATUS_NOT_ASSIGNED); // shipment status = timeOut
         $assignmentRequestObj->setShipment($shipment);
         $assignmentRequestObj->setDriver($driver);
-        $assignmentRequestObj->setStatus(2); // assignment status = timeOut
+        $assignmentRequestObj->setStatus(AssignmentRequest::STATUS_TIMEOUT); // assignment status = timeOut
         $assignmentRequestObj->setReason("timeOut");
         $em->persist($shipment);
         $em->persist($driver);
@@ -71,11 +78,11 @@ class AssignmentShipment
     {
         $assignmentRequestObj = new AssignmentRequest();
         $em = $this->entityManager;
-        $driver->setIsActive(false); // driver status = busy
-        $shipment->setStatus(1); // shipment status = assignment ok
+        $driver->setStatus(Driver::STATUS_BUSY); // driver status = busy
+        $shipment->setStatus(Shipment::STATUS_ASSIGNED); // shipment status = assignment ok
         $assignmentRequestObj->setShipment($shipment);
         $assignmentRequestObj->setDriver($driver);
-        $assignmentRequestObj->setStatus(1); // assignment status = accepted
+        $assignmentRequestObj->setStatus(AssignmentRequest::STATUS_ACCEPTED); // assignment status = accepted
         $assignmentRequestObj->setReason("accepted");
         // create two tasks with diffrent types
         $taskTypes = ['pickup','deliver'];
@@ -97,13 +104,16 @@ class AssignmentShipment
     {
         $assignmentRequestObj = new AssignmentRequest();
         $em = $this->entityManager;
+        $shipment->setStatus(Shipment::STATUS_NOT_ASSIGNED);
+        $driver->setStatus(Driver::STATUS_FREE);
         $assignmentRequestObj->setShipment($shipment);
         $assignmentRequestObj->setDriver($driver);
-        $assignmentRequestObj->setStatus(0); // assign status = rejected
+        $assignmentRequestObj->setStatus(AssignmentRequest::STATUS_REJECTED); // assign status = rejected
         $assignmentRequestObj->setReason("نداشتن وقت آزاد");
-        $shipment->setStatus(2); // shipment status = rejected by driver
         $em->persist($assignmentRequestObj);
         $em->persist($shipment);
+        $em->persist($driver);
+
         $em->flush();
     }
 }

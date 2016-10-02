@@ -2,6 +2,7 @@
 
 {% block main %}
     <h2 class="ui header" style="display: inline">لیست سفارشات</h2>
+
     <table class="ui celled table">
         <thead>
         <tr>
@@ -17,13 +18,13 @@
         </thead>
         <tbody>
         {% for shipment in pagination %}
-            {% if shipment.status != 1  %}
+            {% if shipment.status != 1 and shipment.status != 2 %}
                 <tr>
                     <td>{{ shipment.id }}</td>
                     <td>{{ shipment.ownerAddress.creator.username }}</td>
                     <td>{{ shipment.pickUpTime|date('Y-m-d H:i:s') }}</td>
                     <td>{{ shipment.type }}</td>
-                    <td>{{ shipment.status }}</td>
+                    <td>انتصاب نشده</td>
                     <td>{{ shipment.ownerAddress.latitude }}</td>
                     <td>{{ shipment.ownerAddress.longitude }}</td>
                     <td><a href="{{ path("operator_dashboard_driverAssign") }}/{{ shipment.id }}"><button>انتصاب به راننده</button></a></td>
@@ -38,6 +39,7 @@
                 {{ knp_pagination_render(pagination) }}
             </div>
         </div>
+
     {% endif  %}
     {% block javascripts %}
         {% javascripts

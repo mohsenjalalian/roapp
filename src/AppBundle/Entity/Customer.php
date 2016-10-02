@@ -16,11 +16,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 class Customer extends Person implements \Serializable
 {
 
-    /**
-     * @ORM\Column(type="string", length=255, unique=true)
-     * @Assert\NotBlank()
-     */
-    private $username;
+
     /**
      * @ORM\Column(name="password", type="string")
      */
@@ -29,12 +25,14 @@ class Customer extends Person implements \Serializable
      * @ORM\Column(name="is_active", type="boolean")
      */
     private $isActive;
+
     /**
-     * @var string
-     *
-     * @ORM\Column(name="api_key", type="string", length=255, unique=true)
+     * @ORM\Column(name="status", type="integer")
      */
-    private $apiKey;
+    private $status;
+    /**
+     * Customer constructor.
+     */
 
     public function __construct()
     {
@@ -215,5 +213,29 @@ class Customer extends Person implements \Serializable
     public function getIsActive()
     {
         return $this->isActive;
+    }
+
+    /**
+     * Set status
+     *
+     * @param integer $status
+     *
+     * @return Customer
+     */
+    public function setStatus($status)
+    {
+        $this->status = $status;
+
+        return $this;
+    }
+
+    /**
+     * Get status
+     *
+     * @return integer
+     */
+    public function getStatus()
+    {
+        return $this->status;
     }
 }
