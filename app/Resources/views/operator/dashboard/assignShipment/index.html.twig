@@ -6,17 +6,17 @@
         <thead>
         <tr>
             <td>id</td>
-            <td>customerName</td>
-            <td>pickUpTime</td>
-            <td>type</td>
-            <td>status</td>
-            <td>latitude</td>
-            <td>longitude</td>
+            <td>نام سفارش دهنده</td>
+            <th>{{ knp_pagination_sortable(pagination, 'زمان انجام کار', 'a.pickUpTime') }}</th>
+            <td>نوع</td>
+            <td>وضعیت</td>
+            <td>عرض جغرافیایی</td>
+            <td>طول جغرافیایی</td>
             <td>عملیات</td>
         </tr>
         </thead>
         <tbody>
-        {% for shipment in shipmentInfo %}
+        {% for shipment in pagination %}
             {% if shipment.status != 1  %}
                 <tr>
                     <td>{{ shipment.id }}</td>
@@ -32,6 +32,13 @@
         {% endfor %}
         </tbody>
     </table>
+    {% if pagination.getTotalItemCount > 10 %}
+        <div class="ui one column stackable center aligned page grid navigation">
+            <div class="pagination menu column twelve wide ui" style="font-size: 18px">
+                {{ knp_pagination_render(pagination) }}
+            </div>
+        </div>
+    {% endif  %}
     {% block javascripts %}
         {% javascripts
         'assets/vendor/jquery/dist/jquery.js'

@@ -5,6 +5,7 @@ namespace AppBundle\Controller\Operator\Dashboard;
 use AppBundle\Entity\AssignmentRequest;
 use AppBundle\Entity\Task;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use AppBundle\Entity\Shipment;
 use AppBundle\Entity\Driver;
@@ -14,36 +15,49 @@ class AssignShipmentController extends Controller
     /**
      * @Route("/assignShipment",name="operator_dashboard_assignShipment")
      */
-    public function indexAction()
+    public function indexAction(Request $request)
     {
-        $shipmentInfo = $this->get("app.shipment_assignment")
-            ->getShipmentInfoAction();
+        $em    = $this->get('doctrine.orm.entity_manager');
+        $dql   = "SELECT a FROM AppBundle:Shipment a ORDER BY a.pickUpTime ";
+        $query = $em->createQuery($dql);
+        $paginator  = $this->get('knp_paginator');
+        $pagination = $paginator->paginate(
+            $query, /* query NOT result */
+            $request->query->getInt('page', 1)/*page number*/,
+            10/*limit per page*/
+        );
         return $this->render(
             "operator/dashboard/assignShipment/index.html.twig",
             [
-                "shipmentInfo"=>$shipmentInfo
+                'pagination' => $pagination
             ]
         );
     }
     /**
      * @Route("/driverAssign/{shipment}",name="operator_dashboard_driverAssign")
      */
-    public function driverAssignAction(Shipment $shipment=null)
+    public function driverAssignAction(Shipment $shipment=null,Request $request)
     {
         // check shipment is exist
         if ($shipment) {
             // check shipment rejected by some driver or no
             $banDriver = $this->get("app.shipment_assignment")
                 ->filterDriverAction($shipment);
-            $driverInfo = $this->getDoctrine()
-                ->getRepository("AppBundle:Driver")
-                ->findAll();
+            $em    = $this->get('doctrine.orm.entity_manager');
+            $dql   = "SELECT d FROM AppBundle:Driver d ORDER BY d.username";
+            $query = $em->createQuery($dql);
+            $paginator  = $this->get('knp_paginator');
+            $pagination = $paginator->paginate(
+                $query, /* query NOT result */
+                $request->query->getInt('page', 1)/*page number*/,
+                10/*limit per page*/
+            );
             return $this->render(
                 "operator/dashboard/assignShipment/driverListAssign.html.twig",
                 [
-                    'driverInfo' => $driverInfo,
                     'shipmentId'=>$shipment->getId(),
-                    'banDriverList'=>$banDriver
+                    'banDriverList'=>$banDriver,
+                    'pagination'=>$pagination
                 ]
             );
         }

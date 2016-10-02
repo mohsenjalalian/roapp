@@ -19,12 +19,6 @@ class AssignmentShipment
     {
         $this->entityManager = $entityManager;
     }
-    
-    public function getShipmentInfoAction()
-    {
-        $shipmentInfo = $this->entityManager->getRepository("AppBundle:Shipment")->findAll();
-        return $shipmentInfo;
-    }
     // check shipment rejected by some driver or no
     public function filterDriverAction(Shipment $shipment)
     {

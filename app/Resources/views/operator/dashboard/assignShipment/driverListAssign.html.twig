@@ -5,14 +5,14 @@
     <table class="ui celled table">
         <thead>
         <tr>
-            <td>userName</td>
-            <td>phone</td>
-            <td>isActive</td>
+            <th>{{ knp_pagination_sortable(pagination, 'نام کاربری','d.username') }}</th>
+            <th{% if pagination.isSorted('d.phone') %} class="sorted"{% endif %}>{{ knp_pagination_sortable(pagination, 'شماره تلفن', 'd.phone') }}</th>
+            <th{% if pagination.isSorted('d.isActive') %} class="sorted"{% endif %}>{{ knp_pagination_sortable(pagination, 'وضعیت', 'd.isActive') }}</th>
             <td>عملیات</td>
         </tr>
         </thead>
         <tbody>
-        {% for driver in driverInfo %}
+        {% for driver in pagination %}
             {% if driver.isActive %}
                 {% if driver.id not in banDriverList %}
                     <tr>
@@ -26,6 +26,13 @@
         {% endfor %}
         </tbody>
     </table>
+    {% if pagination.getTotalItemCount > 10 %}
+        <div class="ui one column stackable center aligned page grid navigation">
+            <div class="pagination menu column twelve wide ui" style="font-size: 18px">
+                {{ knp_pagination_render(pagination) }}
+            </div>
+        </div>
+    {% endif  %}
     {% block javascripts %}
         {% javascripts
         'assets/vendor/jquery/dist/jquery.js'
