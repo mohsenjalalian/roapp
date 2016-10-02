@@ -1,0 +1,20 @@
+parameters:
+    value_based_mapping:
+        1:
+            "name":    "a"
+            "percent": 10
+        2:
+            "name":    "b"
+            "percent": 20
+        3:
+            "name":    "c"
+            "percent": 30
+        4:
+            "name":    "c"
+            "percent": 40
+        5:
+            "name":    "e"
+            "percent": 40
+
+
+

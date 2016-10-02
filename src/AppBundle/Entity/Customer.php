@@ -4,23 +4,24 @@ namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
-use Symfony\Component\Validator\Constraints as Assert;
-use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
-
 
 /**
  * Customer
  * @ORM\Entity(repositoryClass="AppBundle\Repository\CustomerRepository")
- * @UniqueEntity(fields="username", message="Username already taken")
  */
-class Customer extends Person implements \Serializable
+class Customer extends Person implements UserInterface, \Serializable
 {
-
+    /**
+     * @ORM\Column(name="email", type="string", length=255, unique=true, nullable=true)
+     *
+     */
+    private $email;
 
     /**
-     * @ORM\Column(name="password", type="string")
+     * @ORM\Column(name="password", type="string", nullable=true)
      */
     private $password;
+    
     /**
      * @ORM\Column(name="is_active", type="boolean")
      */
@@ -40,19 +41,7 @@ class Customer extends Person implements \Serializable
     }
 
     /**
-     * Returns the roles granted to the user.
-     *
-     * <code>
-     * public function getRoles()
-     * {
-     *     return array('ROLE_USER');
-     * }
-     * </code>
-     *
-     * Alternatively, the roles might be stored on a ``roles`` property,
-     * and populated in any number of different ways when the user object
-     * is created.
-     * @return array (Role|string)[] The user roles
+     * @inheritdoc
      */
     public function getRoles()
     {
@@ -60,12 +49,7 @@ class Customer extends Person implements \Serializable
     }
 
     /**
-     * Returns the password used to authenticate the user.
-     *
-     * This should be the encoded password. On authentication, a plain-text
-     * password will be salted, encoded, and then compared to this value.
-     *
-     * @return string The password
+     * @inheritdoc
      */
     public function getPassword()
     {
@@ -75,11 +59,7 @@ class Customer extends Person implements \Serializable
 
 
     /**
-     * Returns the salt that was originally used to encode the password.
-     *
-     * This can return null if the password was not encoded using a salt.
-     *
-     * @return string|null The salt
+     * @inheritdoc
      */
     public function getSalt()
     {
@@ -88,22 +68,16 @@ class Customer extends Person implements \Serializable
     }
 
     /**
-     * Returns the username used to authenticate the user.
-     *
-     * @return string The username
+     * @inheritdoc
      */
     public function getUsername()
     {
-        return $this->username;
-        // TODO: Implement getUsername() method.
+        return $this->email;
     }
 
 
     /**
-     * Removes sensitive data from the user.
-     *
-     * This is important if, at any given point, sensitive information like
-     * the plain-text password is stored on this object.
+     * @inheritdoc
      */
     public function eraseCredentials()
     {
@@ -111,30 +85,22 @@ class Customer extends Person implements \Serializable
     }
 
     /**
-     * String representation of object
-     * @link http://php.net/manual/en/serializable.serialize.php
-     * @return string the string representation of the object or null
-     * @since 5.1.0
+     * @inheritdoc
      */
     public function serialize()
     {
         return serialize(array(
             $this->id,
-            $this->username,
+            $this->email,
             $this->password,
             // see section on salt below
             // $this->salt,
         ));
         // TODO: Implement serialize() method.
     }
+
     /**
-     * Constructs the object
-     * @link http://php.net/manual/en/serializable.unserialize.php
-     * @param string $serialized <p>
-     * The string representation of the object.
-     * </p>
-     * @return void
-     * @since 5.1.0
+     * @inheritdoc
      */
     public function unserialize($serialized)
     {
@@ -149,38 +115,19 @@ class Customer extends Person implements \Serializable
     }
 
     /**
-     * Set apiKey
+     * Set email
      *
-     * @param string $apiKey
-     *
-     * @return Customer
-     */
-    public function setApiKey($apiKey)
-    {
-        $this->apiKey = $apiKey;
-        return $this;
-    }
-    /**
-     * Get apiKey
-     *
-     * @return string
-     */
-    public function getApiKey()
-    {
-        return $this->apiKey;
-    }
-    /**
-     * Set username
-     *
-     * @param string $username
+     * @param string $email
      *
      * @return Customer
      */
-    public function setUsername($username)
+    public function setUsername($email)
     {
-        $this->username = $username;
+        $this->email = $email;
+
         return $this;
     }
+
     /**
      * Set password
      *
@@ -191,6 +138,7 @@ class Customer extends Person implements \Serializable
     public function setPassword($password)
     {
         $this->password = $password;
+
         return $this;
     }
     /**
