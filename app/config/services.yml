@@ -28,7 +28,9 @@ services:
         tags:
             - { name: knp_menu.menu_builder, method: createProfileSidebarMenu, alias: profile_side } # The alias is what is used to retrieve the menu
             - { name: knp_menu.menu_builder, method: createMainMenu, alias: main_menu } # The alias is what is used to retrieve the menu
-
+    app.shipment_assignment:
+        class: AppBundle\Utils\AssignmentShipment
+        arguments: ["@doctrine.orm.default_entity_manager"]
 #    service_name:
 #        class: AppBundle\Directory\ClassName
 #        arguments: ["@another_service_name", "plain_value", "%parameter_name%"]

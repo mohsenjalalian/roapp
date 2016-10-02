@@ -1,0 +1,39 @@
+{% extends ':operator/dashboard:layout.html.twig' %}
+
+{% block main %}
+    <h2 class="ui header" style="display: inline">لیست رانندگان</h2>
+    <table class="ui celled table">
+        <thead>
+        <tr>
+            <td>userName</td>
+            <td>phone</td>
+            <td>isActive</td>
+            <td>عملیات</td>
+        </tr>
+        </thead>
+        <tbody>
+        {% for driver in driverInfo %}
+            {% if driver.isActive %}
+                {% if driver.id not in banDriverList %}
+                    <tr>
+                        <td>{{ driver.username }}</td>
+                        <td>{{ driver.phone }}</td>
+                        <td>{{ driver.isActive }}</td>
+                        <td><a href="{{ path("operator_dashboard_assignSet") }}/{{ shipmentId }}/{{ driver.id }}"><button>انتصاب</button></a></td>
+                    </tr>
+                {%  endif %}
+            {% endif %}
+        {% endfor %}
+        </tbody>
+    </table>
+    {% block javascripts %}
+        {% javascripts
+        'assets/vendor/jquery/dist/jquery.js'
+        '@semantic_base_js'
+        'bundles/app/javascripts/operator/dashboard/assignOrder/getOrderInfo.js'
+        %}
+        <script type="text/javascript" src="{{ asset_url }}" ></script>
+        {% endjavascripts %}
+    {% endblock %}
+{% endblock %}
+

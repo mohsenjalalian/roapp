@@ -1,0 +1,45 @@
+{% extends ':operator/dashboard:layout.html.twig' %}
+
+{% block main %}
+    <h2 class="ui header" style="display: inline">لیست سفارشات</h2>
+    <table class="ui celled table">
+        <thead>
+        <tr>
+            <td>id</td>
+            <td>customerName</td>
+            <td>pickUpTime</td>
+            <td>type</td>
+            <td>status</td>
+            <td>latitude</td>
+            <td>longitude</td>
+            <td>عملیات</td>
+        </tr>
+        </thead>
+        <tbody>
+        {% for shipment in shipmentInfo %}
+            {% if shipment.status != 1  %}
+                <tr>
+                    <td>{{ shipment.id }}</td>
+                    <td>{{ shipment.ownerAddress.creator.username }}</td>
+                    <td>{{ shipment.pickUpTime|date('Y-m-d H:i:s') }}</td>
+                    <td>{{ shipment.type }}</td>
+                    <td>{{ shipment.status }}</td>
+                    <td>{{ shipment.ownerAddress.latitude }}</td>
+                    <td>{{ shipment.ownerAddress.longitude }}</td>
+                    <td><a href="{{ path("operator_dashboard_driverAssign") }}/{{ shipment.id }}"><button>انتصاب به راننده</button></a></td>
+                </tr>
+            {% endif %}
+        {% endfor %}
+        </tbody>
+    </table>
+    {% block javascripts %}
+        {% javascripts
+        'assets/vendor/jquery/dist/jquery.js'
+        '@semantic_base_js'
+        'bundles/app/javascripts/operator/dashboard/assignOrder/getOrderInfo.js'
+        %}
+        <script type="text/javascript" src="{{ asset_url }}" ></script>
+        {% endjavascripts %}
+    {% endblock %}
+{% endblock %}
+
