@@ -11,13 +11,19 @@ use AppBundle\Entity\Driver;
 class AssignShipmentController extends Controller
 {
     /**
-     * @Route("/assignShipment",name="operator_dashboard_assignShipment")
+     * @Route("/assign_shipment",name="app_operator_dashboard_assign_shipment_index")
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function indexAction(Request $request)
     {
-        $em    = $this->get('doctrine.orm.entity_manager');
-        $dql   = "SELECT a FROM AppBundle:Shipment a ORDER BY a.pickUpTime ";
-        $query = $em->createQuery($dql);
+        $query = $this->getDoctrine()
+            ->getRepository('AppBundle:Shipment')
+            ->createQueryBuilder('s')
+            ->orderBy('s.pickUpTime', 'Asc')
+            ->getQuery()
+        ;
+
         $paginator  = $this->get('knp_paginator');
         $pagination = $paginator->paginate(
             $query, /* query NOT result */
@@ -26,25 +32,34 @@ class AssignShipmentController extends Controller
         );
 
         return $this->render(
-            "operator/dashboard/assignShipment/index.html.twig",
+            ":operator/dashboard/assignShipment:index.html.twig",
             [
                 'pagination' => $pagination
             ]
         );
     }
+
     /**
-     * @Route("/driverAssign/{shipment}",name="operator_dashboard_driverAssign")
+     * @Route("/driver_assign/{shipment}",name="app_operator_dashboard_assign_shipment_driver_assign")
+     * @param Shipment $shipment
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
      */
-    public function driverAssignAction(Shipment $shipment=null,Request $request)
+    public function driverAssignAction(Shipment $shipment = null, Request $request)
     {
         // check shipment is exist
         if ($shipment) {
             // check shipment rejected by some driver or no
             $banDriver = $this->get("app.shipment_assignment")
                 ->filterDriverAction($shipment);
-            $em    = $this->get('doctrine.orm.entity_manager');
-            $dql   = "SELECT d FROM AppBundle:Driver d ORDER BY d.fullName";
-            $query = $em->createQuery($dql);
+
+            $query = $this->getDoctrine()
+                ->getRepository('AppBundle:Driver')
+                ->createQueryBuilder('d')
+                ->orderBy('d.fullName', 'Asc')
+                ->getQuery()
+            ;
+            
             $paginator  = $this->get('knp_paginator');
             $pagination = $paginator->paginate(
                 $query, /* query NOT result */
@@ -60,17 +75,20 @@ class AssignShipmentController extends Controller
                     'pagination'=>$pagination
                 ]
             );
-        }
-        else {
+        } else {
             return $this->redirectToRoute(
-                "operator_dashboard_assignShipment"
+                "app_operator_dashboard_assign_shipment_index"
             );
         }
     }
+
     /**
-     * @Route("/assignSet/{shipment}/{driver}",name="operator_dashboard_assignSet")
+     * @Route("/assign_set/{shipment}/{driver}",name="app_operator_dashboard_assign_shipment_assign_set")
+     * @param Shipment $shipment
+     * @param Driver $driver
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
      */
-    public function assignSetAction(Shipment $shipment=null,Driver $driver=null)
+    public function assignSetAction(Shipment $shipment = null, Driver $driver = null)
     {
         // if there is shipment and driver with given id
         if ($shipment && $driver) {
@@ -78,7 +96,7 @@ class AssignShipmentController extends Controller
                 ->sendRequest($shipment, $driver);
             if ($sendedRequest) {
                 return $this->redirectToRoute(
-                    "operator_dashboard_assignShipment"
+                    "app_operator_dashboard_assign_shipment_index"
                 );
             } else {
                 return $this->render(
@@ -90,7 +108,7 @@ class AssignShipmentController extends Controller
             }
         } else {
             return $this->redirectToRoute(
-                "operator_dashboard_assignShipment"
+                "app_operator_dashboard_assign_shipment_index"
             );
         }
     }

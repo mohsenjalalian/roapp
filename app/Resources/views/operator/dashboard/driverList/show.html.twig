@@ -37,8 +37,8 @@
         </tbody>
     </table>
     <div>
-        <a style="color: black" href="{{ path('operator_dashboard_driver_list') }}"><button>لیست کل راننده ها</button></a>
-        <a style="color: black" href="{{ path('operator_dashboard_driver_edit', { 'id': driver.id }) }}"><button>ویرایش</button></a>
+        <a style="color: black" href="{{ path('app_operator_dashboard_driver_list_index') }}"><button>لیست کل راننده ها</button></a>
+        <a style="color: black" href="{{ path('app_operator_dashboard_driver_list_edit', { 'id': driver.id }) }}"><button>ویرایش</button></a>
         {{ form_start(delete_form) }}
         <input type="submit" value="حذف">
         {{ form_end(delete_form) }}

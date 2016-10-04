@@ -3,7 +3,7 @@
 {% block main %}
     <div>
         <h2 class="ui header" style="display: inline">لیست مشتریان</h2>
-        <a style="margin-right: 10px" href="{{ path('operator_dashboard_create_customer') }}"><button>ایجاد مشتری جدید</button></a>
+        <a style="margin-right: 10px" href="{{ path('app_operator_dashboard_customer_list_new') }}"><button>ایجاد مشتری جدید</button></a>
     </div>
     <table class="ui celled table">
         <thead>
@@ -19,13 +19,13 @@
         {% for customer in pagination %}
             <tr>
                 {#<td>{{ customer.id }}</td>#}
-                <td><a href="{{ path('operator_dashboard_customer_show', { 'id': customer.id }) }}">{{ customer.username }}</a></td>
+                <td><a href="{{ path('app_operator_dashboard_customer_list_show', { 'id': customer.id }) }}">{{ customer.username }}</a></td>
                 <td>{{ customer.password }}</td>
                 <td>{% if customer.isActive %}آنلاین{% else %}آفلاین{% endif %}</td>
                 <td>{{ customer.phone }}</td>
                 <td>
-                    <a href="{{ path('operator_dashboard_customer_show', { 'id': customer.id }) }}"><button>نمایش</button></a>
-                    <a href="{{ path('operator_dashboard_customer_edit', { 'id': customer.id }) }}"><button>ویرایش</button></a>
+                    <a href="{{ path('app_operator_dashboard_customer_list_show', { 'id': customer.id }) }}"><button>نمایش</button></a>
+                    <a href="{{ path('app_operator_dashboard_customer_list_edit', { 'id': customer.id }) }}"><button>ویرایش</button></a>
                 </td>
             </tr>
         {% endfor %}

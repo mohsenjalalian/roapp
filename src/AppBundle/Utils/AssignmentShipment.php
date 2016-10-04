@@ -46,8 +46,8 @@ class AssignmentShipment
         $assignmentId = $this->setWaitingAssign($shipment,$driver);
         $this->sendNotification();
         $this->setExpireTime($assignmentId);
-        
-        return false;
+
+        return true;
     }
     public function setWaitingAssign(Shipment $shipment , Driver $driver)
     {
@@ -73,12 +73,12 @@ class AssignmentShipment
     {
         $sendUrl = 'https://fcm.googleapis.com/fcm/send';
         $headers = array(
-            'Authorization:key = AIzaSyBa77ogNwwV0R8hDPatYRGy_y1IsBlCTIY',
+            'Authorization:key = AIzaSyBJaQ9dbnGXZbWoNu70nibNsUajGUj2GpA',
             'Content-Type: application/json'
         );
         $title='درخواست تحویل سفارش';
         $text= "سفارش با مشخصات زیر آماده ارسال می باشد";
-        $topic='sharzh';
+        $topic='charge';
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $sendUrl);
         curl_setopt($ch, CURLOPT_POST, true);
@@ -130,7 +130,8 @@ class AssignmentShipment
             ->find($shipmentId);
         $driverObj->setStatus(Driver::STATUS_FREE); // driver status = free
         $shipmentObj->setStatus(Shipment::STATUS_NOT_ASSIGNED);
-        $currentAssignObj = $this->fetchCurrentAssignmentInfo($shipmentId,$driverId);
+        $currentAssignObj = $currentAssignObj = $em->getRepository("AppBundle:AssignmentRequest")
+            ->fetchCurrentAssignmentInfo($shipmentId,$driverId);
         $currentAssignObj->setStatus(AssignmentRequest::STATUS_TIMEOUT); // assign status = timeOut
         $currentAssignObj->setReason("time over");
         $em->persist($shipmentObj);
@@ -143,7 +144,9 @@ class AssignmentShipment
     }
     public function checkAssignTime($shipmentId,$driverId)
     {
-        $currentAssignObj = $this->fetchCurrentAssignmentInfo($shipmentId,$driverId);
+        $em = $this->entityManager;
+        $currentAssignObj = $currentAssignObj = $em->getRepository("AppBundle:AssignmentRequest")
+            ->fetchCurrentAssignmentInfo($shipmentId,$driverId);
         $currentTime = new \DateTime();
         $expireTime = $currentAssignObj->getExpireTime();
         if ($currentTime <= $expireTime) {
@@ -155,13 +158,16 @@ class AssignmentShipment
     public function acceptRequest($shipmentId,$driverId)
     {
         $em = $this->entityManager;
-        $driverObj = $em->getRepository("AppBundle:Driver")
+        $driverObj = $em
+            ->getRepository("AppBundle:Driver")
             ->find($driverId);
-        $shipmentObj = $em->getRepository("AppBundle:Shipment")
+        $shipmentObj = $em
+            ->getRepository("AppBundle:Shipment")
             ->find($shipmentId);
         $driverObj->setStatus(Driver::STATUS_BUSY); // driver status = busy
         $shipmentObj->setStatus(Shipment::STATUS_ASSIGNED); // shipment status = assignment ok
-        $currentAssignObj = $this->fetchCurrentAssignmentInfo($shipmentId,$driverId);
+        $currentAssignObj = $em->getRepository("AppBundle:AssignmentRequest")
+            ->fetchCurrentAssignmentInfo($shipmentId,$driverId);
         $currentAssignObj->setStatus(AssignmentRequest::STATUS_ACCEPTED);
         $currentAssignObj->setReason("Accept shipment");
         // create two tasks with diffrent types
@@ -202,7 +208,8 @@ class AssignmentShipment
             ->find($shipmentId);
         $driverObj->setStatus(Driver::STATUS_FREE); // driver status = busy
         $shipmentObj->setStatus(Shipment::STATUS_NOT_ASSIGNED);
-        $currentAssignObj = $this->fetchCurrentAssignmentInfo($shipmentId,$driverId);
+        $currentAssignObj = $em->getRepository("AppBundle:AssignmentRequest")
+            ->fetchCurrentAssignmentInfo($shipmentId,$driverId);
         $currentAssignObj->setStatus(AssignmentRequest::STATUS_REJECTED); // assign status = rejected
         $currentAssignObj->setReason($reason);
         $em->persist($currentAssignObj);
@@ -212,22 +219,5 @@ class AssignmentShipment
         $em->flush();
         
         return true;
-    }
-    public function fetchCurrentAssignmentInfo($shipmentId,$driverId)
-    {
-        $em = $this->entityManager;
-        $qb = $em->createQueryBuilder();
-        $currentAssignResult = $qb->select('a')
-            ->from('AppBundle:AssignmentRequest','a')
-            ->where('a.shipment=:shipmentId')
-            ->andWhere('a.driver=:driverId')
-            ->andWhere('a.status=:assignmentStatus')
-            ->setParameter('shipmentId',$shipmentId)
-            ->setParameter('driverId',$driverId)
-            ->setParameter('assignmentStatus',AssignmentRequest::STATUS_WAITING)
-            ->getQuery()
-            ->getSingleResult();
-        
-        return $currentAssignResult;
     }
 }

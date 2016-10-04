@@ -27,7 +27,7 @@
                     <td>انتصاب نشده</td>
                     <td>{{ shipment.ownerAddress.latitude }}</td>
                     <td>{{ shipment.ownerAddress.longitude }}</td>
-                    <td><a href="{{ path("operator_dashboard_driverAssign") }}/{{ shipment.id }}"><button>انتصاب به راننده</button></a></td>
+                    <td><a href="{{ path("app_operator_dashboard_assign_shipment_driver_assign") }}/{{ shipment.id }}"><button>انتصاب به راننده</button></a></td>
                 </tr>
             {% endif %}
         {% endfor %}

@@ -12,14 +12,20 @@ class CustomerListController extends Controller
 {
     /**
      * Lists all Customer entities.
-     * @Route("/customersList", name="operator_dashboard_customer_list")
+     * @Route("/customers_list", name="app_operator_dashboard_customer_list_index")
      * @Method("GET")
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function indexAction(Request $request)
     {
-        $em    = $this->get('doctrine.orm.entity_manager');
-        $dql   = "SELECT a FROM AppBundle:Customer a ORDER BY a.id";
-        $query = $em->createQuery($dql);
+        $query = $this->getDoctrine()
+            ->getRepository('AppBundle:Customer')
+            ->createQueryBuilder('a')
+            ->orderBy('a.id', 'Asc')
+            ->getQuery()
+        ;
+
         $paginator  = $this->get('knp_paginator');
         $pagination = $paginator->paginate(
             $query, /* query NOT result */
@@ -34,11 +40,14 @@ class CustomerListController extends Controller
             ]
         );
     }
+
     /**
      * Creates a new Customer entity.
      *
-     * @Route("/createCustomer", name="operator_dashboard_create_customer")
+     * @Route("/create_customer", name="app_operator_dashboard_customer_list_new")
      * @Method({"GET", "POST"})
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
      */
     public function newAction(Request $request)
     {
@@ -51,7 +60,7 @@ class CustomerListController extends Controller
             $em->persist($customer);
             $em->flush();
 
-            return $this->redirectToRoute('operator_dashboard_customer_show', array('id' => $customer->getId()));
+            return $this->redirectToRoute('app_operator_dashboard_customer_list_show', array('id' => $customer->getId()));
         }
 
         return $this->render('operator/dashboard/customerList/new.html.twig', array(
@@ -59,11 +68,14 @@ class CustomerListController extends Controller
             'form' => $form->createView(),
         ));
     }
+
     /**
      * Finds and displays a Customer entity.
      *
-     * @Route("/customerShow/{id}", name="operator_dashboard_customer_show")
+     * @Route("/customer_show/{id}", name="app_operator_dashboard_customer_list_show")
      * @Method("GET")
+     * @param Customer $customer
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function showAction(Customer $customer)
     {
@@ -74,11 +86,15 @@ class CustomerListController extends Controller
             'delete_form' => $deleteForm->createView(),
         ));
     }
+
     /**
      * Displays a form to edit an existing Customer entity.
      *
-     * @Route("/customer{id}/edit", name="operator_dashboard_customer_edit")
+     * @Route("/customer{id}/edit", name="app_operator_dashboard_customer_list_edit")
      * @Method({"GET", "POST"})
+     * @param Request $request
+     * @param Customer $customer
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
      */
     public function editAction(Request $request, Customer $customer)
     {
@@ -91,7 +107,7 @@ class CustomerListController extends Controller
             $em->persist($customer);
             $em->flush();
 
-            return $this->redirectToRoute('operator_dashboard_customer_edit', array('id' => $customer->getId()));
+            return $this->redirectToRoute('app_operator_dashboard_customer_list_edit', array('id' => $customer->getId()));
         }
 
         return $this->render('operator/dashboard/customerList/edit.html.twig', array(
@@ -100,11 +116,15 @@ class CustomerListController extends Controller
             'delete_form' => $deleteForm->createView(),
         ));
     }
+
     /**
      * Deletes a Customer entity.
      *
-     * @Route("/deleteCustomer{id}", name="operator_dashboard_customer_delete")
+     * @Route("/delete_customer{id}", name="app_operator_dashboard_customer_list_delete")
      * @Method("DELETE")
+     * @param Request $request
+     * @param Customer $customer
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
     public function deleteAction(Request $request, Customer $customer)
     {
@@ -117,7 +137,7 @@ class CustomerListController extends Controller
             $em->flush();
         }
 
-        return $this->redirectToRoute('operator_dashboard_customer_list');
+        return $this->redirectToRoute('app_operator_dashboard_customer_list_index');
     }
     /**
      * Creates a form to delete a Customer entity.
@@ -129,7 +149,7 @@ class CustomerListController extends Controller
     private function createDeleteForm(Customer $customer)
     {
         return $this->createFormBuilder()
-            ->setAction($this->generateUrl('operator_dashboard_customer_delete', array('id' => $customer->getId())))
+            ->setAction($this->generateUrl('app_operator_dashboard_customer_list_delete', array('id' => $customer->getId())))
             ->setMethod('DELETE')
             ->getForm()
             ;

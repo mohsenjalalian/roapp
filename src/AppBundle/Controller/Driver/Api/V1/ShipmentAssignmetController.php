@@ -11,7 +11,9 @@ use Symfony\Component\Routing\Annotation\Route;
 class ShipmentAssignmetController extends Controller
 {
     /**
-     * @Route("/assignmentAnswer")
+     * @param Request $req
+     * @return JsonResponse
+     * @Route("/assignment_answer")
      */
     public function assignmentAnswerAction(Request $req)
     {

@@ -14,20 +14,27 @@ class DriverListController extends Controller
     /**
      * Lists all Driver entities.
      *
-     * @Route("/driverList", name="operator_dashboard_driver_list")
+     * @Route("/drivers_list", name="app_operator_dashboard_driver_list_index")
      * @Method("GET")
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function indexAction(Request $request)
     {
-        $em    = $this->get('doctrine.orm.entity_manager');
-        $dql   = "SELECT a FROM AppBundle:Driver a ORDER BY a.id";
-        $query = $em->createQuery($dql);
+        $query = $this->getDoctrine()
+            ->getRepository('AppBundle:Driver')
+            ->createQueryBuilder('a')
+            ->orderBy('a.id', 'Asc')
+            ->getQuery()
+        ;
+        
         $paginator  = $this->get('knp_paginator');
         $pagination = $paginator->paginate(
             $query, /* query NOT result */
             $request->query->getInt('page', 1)/*page number*/,
             5/*limit per page*/
         );
+        
         return $this->render
         (
             'operator/dashboard/driverList/index.html.twig',
@@ -40,8 +47,10 @@ class DriverListController extends Controller
     /**
      * Creates a new Driver entity.
      *
-     * @Route("/createDriver", name="operator_dashboard_driver_create")
+     * @Route("/create_driver", name="app_operator_dashboard_driver_list_create")
      * @Method({"GET", "POST"})
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
      */
     public function newAction(Request $request)
     {
@@ -54,7 +63,7 @@ class DriverListController extends Controller
             $em->persist($driver);
             $em->flush();
 
-            return $this->redirectToRoute('operator_dashboard_driver_show', array('id' => $driver->getId()));
+            return $this->redirectToRoute('app_operator_dashboard_driver_list_show', array('id' => $driver->getId()));
         }
 
         return $this->render('operator/dashboard/driverList/new.html.twig', array(
@@ -66,8 +75,10 @@ class DriverListController extends Controller
     /**
      * Finds and displays a Driver entity.
      *
-     * @Route("/driverShow/{id}", name="operator_dashboard_driver_show")
+     * @Route("/driver_show/{id}", name="app_operator_dashboard_driver_list_show")
      * @Method("GET")
+     * @param Driver $driver
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function showAction(Driver $driver)
     {
@@ -82,8 +93,11 @@ class DriverListController extends Controller
     /**
      * Displays a form to edit an existing Driver entity.
      *
-     * @Route("/driver{id}/edit", name="operator_dashboard_driver_edit")
+     * @Route("/driver{id}/edit", name="app_operator_dashboard_driver_list_edit")
      * @Method({"GET", "POST"})
+     * @param Request $request
+     * @param Driver $driver
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
      */
     public function editAction(Request $request, Driver $driver)
     {
@@ -96,7 +110,7 @@ class DriverListController extends Controller
             $em->persist($driver);
             $em->flush();
 
-            return $this->redirectToRoute('operator_dashboard_driver_edit', array('id' => $driver->getId()));
+            return $this->redirectToRoute('app_operator_dashboard_driver_list_edit', array('id' => $driver->getId()));
         }
 
         return $this->render('operator/dashboard/driverList/edit.html.twig', array(
@@ -109,8 +123,11 @@ class DriverListController extends Controller
     /**
      * Deletes a Driver entity.
      *
-     * @Route("/{id}", name="operator_dashboard_driver_delete")
+     * @Route("/{id}", name="app_operator_dashboard_driver_list_delete")
      * @Method("DELETE")
+     * @param Request $request
+     * @param Driver $driver
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
     public function deleteAction(Request $request, Driver $driver)
     {
@@ -123,7 +140,7 @@ class DriverListController extends Controller
             $em->flush();
         }
 
-        return $this->redirectToRoute('operator_dashboard_driver_list');
+        return $this->redirectToRoute('app_operator_dashboard_driver_list_index');
     }
 
     /**
@@ -136,7 +153,7 @@ class DriverListController extends Controller
     private function createDeleteForm(Driver $driver)
     {
         return $this->createFormBuilder()
-            ->setAction($this->generateUrl('operator_dashboard_driver_delete', array('id' => $driver->getId())))
+            ->setAction($this->generateUrl('app_operator_dashboard_driver_list_delete', array('id' => $driver->getId())))
             ->setMethod('DELETE')
             ->getForm()
             ;

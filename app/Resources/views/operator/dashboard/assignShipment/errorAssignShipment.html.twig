@@ -4,7 +4,7 @@
     <div class="ui info message">
         <h4>خطا در ارسال درخواست</h4>
         <p>لطفا برای انتصاب سفارش مجددا تلاش نمایید. با تشکر</p>
-        <a href="{{ path("operator_dashboard_driverAssign") }}/{{ shipmentId }}"><button>انتصاب مجدد</button></a>
-        <a href="{{ path("operator_dashboard_assignShipment") }}"><button>بازگشت</button></a>
+        <a href="{{ path("app_operator_dashboard_assign_shipment_driver_assign") }}/{{ shipmentId }}"><button>انتصاب مجدد</button></a>
+        <a href="{{ path("app_operator_dashboard_assign_shipment_index") }}"><button>بازگشت</button></a>
     </div>
 {% endblock %}

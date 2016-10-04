@@ -8,7 +8,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * Driver
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\DriverRepository")
  */
 class Driver extends Person
 {
