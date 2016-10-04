@@ -37,7 +37,12 @@ abstract class Person
      * @ORM\Column(name="is_active", type="boolean")
      */
     protected $isActive = false;
-
+    
+    /**
+     * @ORM\Column(name="full_name", type="string")
+     */
+    protected $fullName;
+    
     /**
      * Get id
      *
@@ -94,5 +99,29 @@ abstract class Person
     public function getIsActive()
     {
         return $this->isActive;
+    }
+
+    /**
+     * Set fullName
+     *
+     * @param string $fullName
+     *
+     * @return Person
+     */
+    public function setFullName($fullName)
+    {
+        $this->fullName = $fullName;
+
+        return $this;
+    }
+
+    /**
+     * Get fullName
+     *
+     * @return string
+     */
+    public function getFullName()
+    {
+        return $this->fullName;
     }
 }

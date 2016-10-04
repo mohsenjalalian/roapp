@@ -9,8 +9,8 @@
             <td>{{ driver.id }}</td>
         </tr>
         <tr>
-            <th>نام کاربری</th>
-            <td>{{ driver.username }}</td>
+            <th>نام</th>
+            <td>{{ driver.fullName }}</td>
         </tr>
         <tr>
             <th>رمز عبور</th>
@@ -29,10 +29,6 @@
             {% else %}
                 <td>درحال بررسی درخواست</td>
             {% endif %}
-        </tr>
-        <tr>
-            <th>Apikey</th>
-            <td>{{ driver.apiKey }}</td>
         </tr>
         <tr>
             <th>تلفن</th>

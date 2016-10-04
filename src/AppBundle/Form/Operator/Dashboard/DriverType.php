@@ -15,10 +15,9 @@ class DriverType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('username')
+            ->add('fullName')
             ->add('password')
             ->add('isActive')
-            ->add('apiKey')
             ->add('phone')
         ;
     }
