@@ -6,7 +6,6 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
-
 /**
  * Driver
  * @ORM\Entity
@@ -16,7 +15,7 @@ class Driver extends Person
     const STATUS_FREE = 1;
     const STATUS_BUSY = 0;
     const STATUS_IN_PROGRESS = 2;
-    
+
     /**
      * @ORM\Column(name="password", type="string")
      */
@@ -24,7 +23,7 @@ class Driver extends Person
     /**
      * @ORM\Column(name="is_active", type="boolean")
      */
-    private $isActive;
+    protected $isActive;
 
     /**
      * @ORM\Column(name="status", type="integer")
@@ -71,7 +70,7 @@ class Driver extends Person
      */
     public function getUsername()
     {
-        return $this->username;
+        return $this->phone;
         // TODO: Implement getUsername() method.
     }
 
@@ -86,27 +85,6 @@ class Driver extends Person
         // TODO: Implement eraseCredentials() method.
     }
     /**
-     * Set apiKey
-     *
-     * @param string $apiKey
-     *
-     * @return Driver
-     */
-    public function setApiKey($apiKey)
-    {
-        $this->apiKey = $apiKey;
-        return $this;
-    }
-    /**
-     * Get apiKey
-     *
-     * @return string
-     */
-    public function getApiKey()
-    {
-        return $this->apiKey;
-    }
-    /**
      * Set username
      *
      * @param string $username
@@ -115,7 +93,7 @@ class Driver extends Person
      */
     public function setUsername($username)
     {
-        $this->username = $username;
+        $this->phone = $username;
         return $this;
     }
     /**
