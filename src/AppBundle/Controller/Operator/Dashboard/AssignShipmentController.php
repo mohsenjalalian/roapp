@@ -2,8 +2,6 @@
 
 namespace AppBundle\Controller\Operator\Dashboard;
 
-use AppBundle\Entity\AssignmentRequest;
-use AppBundle\Entity\Task;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -26,6 +24,7 @@ class AssignShipmentController extends Controller
             $request->query->getInt('page', 1)/*page number*/,
             10/*limit per page*/
         );
+
         return $this->render(
             "operator/dashboard/assignShipment/index.html.twig",
             [
@@ -44,7 +43,7 @@ class AssignShipmentController extends Controller
             $banDriver = $this->get("app.shipment_assignment")
                 ->filterDriverAction($shipment);
             $em    = $this->get('doctrine.orm.entity_manager');
-            $dql   = "SELECT d FROM AppBundle:Driver d ORDER BY d.username";
+            $dql   = "SELECT d FROM AppBundle:Driver d ORDER BY d.fullName";
             $query = $em->createQuery($dql);
             $paginator  = $this->get('knp_paginator');
             $pagination = $paginator->paginate(
@@ -52,6 +51,7 @@ class AssignShipmentController extends Controller
                 $request->query->getInt('page', 1)/*page number*/,
                 10/*limit per page*/
             );
+
             return $this->render(
                 "operator/dashboard/assignShipment/driverListAssign.html.twig",
                 [
@@ -62,7 +62,9 @@ class AssignShipmentController extends Controller
             );
         }
         else {
-            return $this->redirectToRoute("operator_dashboard_assignShipment");
+            return $this->redirectToRoute(
+                "operator_dashboard_assignShipment"
+            );
         }
     }
     /**
@@ -71,47 +73,25 @@ class AssignShipmentController extends Controller
     public function assignSetAction(Shipment $shipment=null,Driver $driver=null)
     {
         // if there is shipment and driver with given id
-        if ($shipment && $driver){
-            $expireRequestTime = $this->get("app.shipment_assignment")
-                ->waitingStageAction($shipment,$driver);
-            $driverAnswer = $this->driverAnswerAction();
-            // check time.driver answer is expire or no
-            if (date("i",time())>$expireRequestTime){
-                  $this->get("app.shipment_assignment")
-                    ->timeOutStageAction($shipment,$driver);
+        if ($shipment && $driver) {
+            $sendedRequest = $this->get("app.shipment_assignment")
+                ->sendRequest($shipment, $driver);
+            if ($sendedRequest) {
+                return $this->redirectToRoute(
+                    "operator_dashboard_assignShipment"
+                );
+            } else {
                 return $this->render(
-                    "operator/dashboard/assignShipment/timeOutMsg.html.twig",
+                    ":operator/dashboard/assignShipment:errorAssignShipment.html.twig",
                     [
                         'shipmentId'=>$shipment->getId()
                     ]
                 );
-                // if driver accept request
-            } else {
-                if ($driverAnswer) {
-                    $this->get("app.shipment_assignment")
-                        ->acceptRequestStageAction($shipment,$driver);
-                    return $this->redirectToRoute(
-                        "operator_dashboard_assignShipment"
-                    );
-                    // driver reject request
-                } else {
-                    $this->get("app.shipment_assignment")
-                        ->rejectRequestStageAction($shipment,$driver);
-                    return $this->render(
-                        ':operator/dashboard/assignShipment:rejectMsg.html.twig',
-                        [
-                            'shipmentId'=>$shipment->getId(),
-                        ]
-                    );
-                }
             }
-        } else{
-            return $this->redirectToRoute("operator_dashboard_assignShipment");
+        } else {
+            return $this->redirectToRoute(
+                "operator_dashboard_assignShipment"
+            );
         }
-    }
-    public function driverAnswerAction(){
-//        return mt_rand(false,true);
-//        sleep(5);
-        return false;
     }
 }
