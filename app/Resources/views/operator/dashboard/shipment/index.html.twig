@@ -19,7 +19,7 @@
         <tbody>
         {% for shipment in pagination %}
             <tr>
-                <td><a href="{{ path('app_operator_dashboard_shipment_list_show', { 'id': shipment.id }) }}">{{ shipment.id }}</a></td>
+                <td><a href="{{ path('app_operator_dashboard_shipment_show', { 'id': shipment.id }) }}">{{ shipment.id }}</a></td>
                 <td>{{ shipment.description }}</td>
                 <td>{{ shipment.value }}</td>
                 <td>{{ shipment.status }}</td>
@@ -28,8 +28,8 @@
                 <td>{{ shipment.price }}</td>
                 <td>{{ shipment.type }}</td>
                 <td>
-                    <a href="{{ path('app_operator_dashboard_shipment_list_show', { 'id': shipment.id }) }}"><button>نمایش</button></a>
-                    <a href="{{ path('app_operator_dashboard_shipment_list_edit', { 'id': shipment.id }) }}"><button>ویرایش</button></a>
+                    <a href="{{ path('app_operator_dashboard_shipment_show', { 'id': shipment.id }) }}"><button>نمایش</button></a>
+                    <a href="{{ path('app_operator_dashboard_shipment_edit', { 'id': shipment.id }) }}"><button>ویرایش</button></a>
                 </td>
             </tr>
         {% endfor %}
