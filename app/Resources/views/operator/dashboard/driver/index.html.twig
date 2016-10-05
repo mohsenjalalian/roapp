@@ -3,7 +3,7 @@
 {% block main %}
     <div>
         <h2 class="ui header" style="display: inline">لیست راننده ها</h2>
-        <a style="margin-right: 10px" href="{{ path('app_operator_dashboard_driver_list_create') }}"><button>ایجاد راننده ی جدید</button></a>
+        <a style="margin-right: 10px" href="{{ path('app_operator_dashboard_driver_create') }}"><button>ایجاد راننده ی جدید</button></a>
     </div>
     <table class="ui celled table">
         <thead>
@@ -19,7 +19,7 @@
         <tbody>
         {% for driver in pagination %}
             <tr>
-                <td><a href="{{ path('app_operator_dashboard_driver_list_show', { 'id': driver.id }) }}">{{ driver.fullName }}</a></td>
+                <td><a href="{{ path('app_operator_dashboard_driver_show', { 'id': driver.id }) }}">{{ driver.fullName }}</a></td>
                 <td>{{ driver.password }}</td>
                 <td>{% if driver.isActive %}آنلاین{% else %}آفلاین{% endif %}</td>
                 {% if driver.status == 1 %}
@@ -31,8 +31,8 @@
                 {% endif %}
                 <td>{{ driver.phone }}</td>
                 <td>
-                    <a href="{{ path('app_operator_dashboard_driver_list_show', { 'id': driver.id }) }}"><button>نمایش</button></a>
-                    <a href="{{ path('app_operator_dashboard_driver_list_edit', { 'id': driver.id }) }}"><button>ویرایش</button></a>
+                    <a href="{{ path('app_operator_dashboard_driver_show', { 'id': driver.id }) }}"><button>نمایش</button></a>
+                    <a href="{{ path('app_operator_dashboard_driver_edit', { 'id': driver.id }) }}"><button>ویرایش</button></a>
                 </td>
             </tr>
         {% endfor %}

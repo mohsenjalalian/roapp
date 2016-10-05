@@ -1,0 +1,46 @@
+{% extends ':operator/dashboard:layout.html.twig' %}
+
+{% block main %}
+    <h2 class="ui header" style="display: inline">لیست رانندگان</h2>
+    <table class="ui celled table">
+        <thead>
+        <tr>
+            <th>{{ knp_pagination_sortable(pagination, 'نام','d.fullName') }}</th>
+            <th{% if pagination.isSorted('d.phone') %} class="sorted"{% endif %}>{{ knp_pagination_sortable(pagination, 'شماره تلفن', 'd.phone') }}</th>
+            <th{% if pagination.isSorted('d.isActive') %} class="sorted"{% endif %}>{{ knp_pagination_sortable(pagination, 'وضعیت', 'd.isActive') }}</th>
+            <td>عملیات</td>
+        </tr>
+        </thead>
+        <tbody>
+        {% for driver in pagination %}
+            {% if driver.status != 0 and driver.status != 2 %}
+                {% if driver.id not in banDriverList %}
+                    <tr>
+                        <td>{{ driver.fullName   }}</td>
+                        <td>{{ driver.phone }}</td>
+                        <td>آزاد</td>
+                        <td><a href="{{ path("app_operator_dashboard_assign_shipment_match") }}/{{ shipmentId }}/{{ driver.id }}"><button>انتصاب</button></a></td>
+                    </tr>
+                {%  endif %}
+            {% endif %}
+        {% endfor %}
+        </tbody>
+    </table>
+    {% if pagination.getTotalItemCount > 10 %}
+        <div class="ui one column stackable center aligned page grid navigation">
+            <div class="pagination menu column twelve wide ui" style="font-size: 18px">
+                {{ knp_pagination_render(pagination) }}
+            </div>
+        </div>
+    {% endif  %}
+    {% block javascripts %}
+        {% javascripts
+        'assets/vendor/jquery/dist/jquery.js'
+        '@semantic_base_js'
+        'bundles/app/javascripts/operator/dashboard/assignOrder/getOrderInfo.js'
+        %}
+        <script type="text/javascript" src="{{ asset_url }}" ></script>
+        {% endjavascripts %}
+    {% endblock %}
+{% endblock %}
+
