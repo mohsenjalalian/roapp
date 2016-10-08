@@ -34,7 +34,13 @@ services:
 
     app.shipment_assignment:
         class: AppBundle\Utils\AssignmentShipment
-        arguments: ["@doctrine.orm.default_entity_manager"]
+        arguments:
+            - "@doctrine.orm.default_entity_manager"
+            - "@app.send_notification"
+
+
+    app.send_notification:
+        class: AppBundle\Utils\SendNotification
 #    service_name:
 #        class: AppBundle\Directory\ClassName
 #        arguments: ["@another_service_name", "plain_value", "%parameter_name%"]
