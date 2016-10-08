@@ -1,7 +1,7 @@
 {% extends ':operator/dashboard:layout.html.twig' %}
 
 {% block main %}
-    <h1>ویرایش مشتری</h1>
+    <h1>ویرایش راننده</h1>
     <div class="ui form">
         {{ form_start(edit_form) }}
         {{ form_widget(edit_form) }}
@@ -9,7 +9,7 @@
         {{ form_end(edit_form) }}
     </div>
     <div style="margin-top: 10px">
-        <a style="color: black" href="{{ path('operator_dashboard_customer_list') }}"><button>لیست کل مشتریان</button></a>
+        <a style="color: black" href="{{ path('app_operator_dashboard_driver_index') }}"><button>لیست کل راننده ها</button></a>
         {{ form_start(delete_form) }}
         <input type="submit" value="حذف">
         {{ form_end(delete_form) }}

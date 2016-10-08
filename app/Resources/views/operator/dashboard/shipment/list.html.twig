@@ -1,7 +1,7 @@
 {% extends ':operator/dashboard:layout.html.twig' %}
 
 {% block main %}
-    <h2 class="ui header" style="display: inline">لیست سفارشات</h2>
+    <h2 class="ui header" style="display: inline">لیست سفارشات آماده برای انتصاب</h2>
 
     <table class="ui celled table">
         <thead>
@@ -27,7 +27,7 @@
                     <td>انتصاب نشده</td>
                     <td>{{ shipment.ownerAddress.latitude }}</td>
                     <td>{{ shipment.ownerAddress.longitude }}</td>
-                    <td><a href="{{ path("operator_dashboard_driverAssign") }}/{{ shipment.id }}"><button>انتصاب به راننده</button></a></td>
+                    <td><a href="{{ path("app_operator_dashboard_driver_list") }}/{{ shipment.id }}"><button>انتصاب به راننده</button></a></td>
                 </tr>
             {% endif %}
         {% endfor %}

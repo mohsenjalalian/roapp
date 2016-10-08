@@ -13,6 +13,11 @@ use Doctrine\ORM\Mapping\JoinColumn;
  */
 class AssignmentRequest
 {
+    const STATUS_ACCEPTED = 1;
+    const STATUS_REJECTED = 0;
+    const STATUS_WAITING = 2;
+    const STATUS_TIMEOUT = 3;
+
     /**
      * @var int
      *
@@ -37,12 +42,18 @@ class AssignmentRequest
     private $status;
 
     /**
+     * @var \DateTime
+     * @ORM\Column(name="expire_time", type="datetime",nullable=true)
+     */
+    private $expireTime;
+
+    /**
      * @var string
      *
      * @ORM\Column(name="reason", type="string", length=255,nullable=true)
      */
     private $reason;
-    
+
     /**
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Shipment",inversedBy="assignments")
      */
@@ -186,5 +197,29 @@ class AssignmentRequest
     public function getDriver()
     {
         return $this->driver;
+    }
+
+    /**
+     * Set expireTime
+     *
+     * @param \DateTime $expireTime
+     *
+     * @return AssignmentRequest
+     */
+    public function setExpireTime($expireTime)
+    {
+        $this->expireTime = $expireTime;
+
+        return $this;
+    }
+
+    /**
+     * Get expireTime
+     *
+     * @return \DateTime
+     */
+    public function getExpireTime()
+    {
+        return $this->expireTime;
     }
 }

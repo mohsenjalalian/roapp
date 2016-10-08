@@ -25,7 +25,7 @@ class Customer extends Person implements UserInterface, \Serializable
     /**
      * @ORM\Column(name="is_active", type="boolean")
      */
-    private $isActive;
+    protected $isActive;
 
     /**
      * @ORM\Column(name="status", type="integer")

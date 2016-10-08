@@ -42,6 +42,12 @@ class AssignmentRequest
     private $status;
 
     /**
+     * @var \DateTime
+     * @ORM\Column(name="expire_time", type="datetime",nullable=true)
+     */
+    private $expireTime;
+
+    /**
      * @var string
      *
      * @ORM\Column(name="reason", type="string", length=255,nullable=true)
@@ -191,5 +197,29 @@ class AssignmentRequest
     public function getDriver()
     {
         return $this->driver;
+    }
+
+    /**
+     * Set expireTime
+     *
+     * @param \DateTime $expireTime
+     *
+     * @return AssignmentRequest
+     */
+    public function setExpireTime($expireTime)
+    {
+        $this->expireTime = $expireTime;
+
+        return $this;
+    }
+
+    /**
+     * Get expireTime
+     *
+     * @return \DateTime
+     */
+    public function getExpireTime()
+    {
+        return $this->expireTime;
     }
 }
