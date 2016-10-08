@@ -69,12 +69,6 @@ class Shipment
     protected $type;
 
     /**
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Driver", inversedBy="shipments")
-     * @ORM\JoinColumn(name="driver_id")
-     */
-    protected $driver;
-
-    /**
      * @ORM\ManyToMany(targetEntity="AppBundle\Entity\Media")
      * @ORM\JoinTable(name="shipment_photos",
      *      joinColumns={@ORM\JoinColumn(name="shipment_id", referencedColumnName="id")},
@@ -287,30 +281,6 @@ class Shipment
     public function getType()
     {
         return $this->type;
-    }
-
-    /**
-     * Set driver
-     *
-     * @param \AppBundle\Entity\Driver $driver
-     *
-     * @return Shipment
-     */
-    public function setDriver(\AppBundle\Entity\Driver $driver = null)
-    {
-        $this->driver = $driver;
-
-        return $this;
-    }
-
-    /**
-     * Get driver
-     *
-     * @return \AppBundle\Entity\Driver
-     */
-    public function getDriver()
-    {
-        return $this->driver;
     }
     /**
      * Constructor

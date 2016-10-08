@@ -44,6 +44,11 @@ abstract class Person
     protected $fullName;
     
     /**
+     * @ORM\Column(name="password", type="string")
+     */
+    protected $password;
+    
+    /**
      * Get id
      *
      * @return int
@@ -81,8 +86,7 @@ abstract class Person
      * Set isActive
      *
      * @param boolean $isActive
-     *
-     * @return Customer
+     * @return $this
      */
     public function setIsActive($isActive)
     {
@@ -123,5 +127,29 @@ abstract class Person
     public function getFullName()
     {
         return $this->fullName;
+    }
+
+    /**
+     * Set password
+     *
+     * @param string $password
+     *
+     * @return Person
+     */
+    public function setPassword($password)
+    {
+        $this->password = $password;
+
+        return $this;
+    }
+
+    /**
+     * Get password
+     *
+     * @return string
+     */
+    public function getPassword()
+    {
+        return $this->password;
     }
 }

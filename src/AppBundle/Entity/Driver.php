@@ -17,15 +17,6 @@ class Driver extends Person
     const STATUS_IN_PROGRESS = 2;
 
     /**
-     * @ORM\Column(name="password", type="string")
-     */
-    private $password;
-    /**
-     * @ORM\Column(name="is_active", type="boolean")
-     */
-    protected $isActive;
-
-    /**
      * @ORM\Column(name="status", type="integer")
      */
     private $status;
@@ -35,20 +26,6 @@ class Driver extends Person
     public function getRoles()
     {
         return array('ROLE_DRIVER');
-    }
-
-    /**
-     * Returns the password used to authenticate the user.
-     *
-     * This should be the encoded password. On authentication, a plain-text
-     * password will be salted, encoded, and then compared to this value.
-     *
-     * @return string The password
-     */
-    public function getPassword()
-    {
-        return $this->password;
-        // TODO: Implement getPassword() method.
     }
 
     /**
@@ -97,81 +74,14 @@ class Driver extends Person
         return $this;
     }
     /**
-     * Set password
-     *
-     * @param string $password
-     *
-     * @return Driver
-     */
-    public function setPassword($password)
-    {
-        $this->password = $password;
-        return $this;
-    }
-    /**
-     * Set isActive
-     *
-     * @param boolean $isActive
-     *
-     * @return Driver
-     */
-    public function setIsActive($isActive)
-    {
-        $this->isActive = $isActive;
-        return $this;
-    }
-    /**
-     * Get isActive
-     *
-     * @return boolean
-     */
-    public function getIsActive()
-    {
-        return $this->isActive;
-    }
-    /**
      * Constructor
      */
     public function __construct()
     {
         $this->status = 1;
         $this->isActive = true;
-        $this->shipments = new \Doctrine\Common\Collections\ArrayCollection();
     }
-
-    /**
-     * Add shipment
-     *
-     * @param \AppBundle\Entity\Shipment $shipment
-     *
-     * @return Driver
-     */
-    public function addShipment(\AppBundle\Entity\Shipment $shipment)
-    {
-        $this->shipments[] = $shipment;
-
-        return $this;
-    }
-
-    /**
-     * Remove shipment
-     *
-     * @param \AppBundle\Entity\Shipment $shipment
-     */
-    public function removeShipment(\AppBundle\Entity\Shipment $shipment)
-    {
-        $this->shipments->removeElement($shipment);
-    }
-
-    /**
-     * Get shipments
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getShipments()
-    {
-        return $this->shipments;
-    }
+    
     public function __toString()
     {
         return (string) $this->getUsername();
@@ -200,4 +110,5 @@ class Driver extends Person
     {
         return $this->status;
     }
+    
 }
