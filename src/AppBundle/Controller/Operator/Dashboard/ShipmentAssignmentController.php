@@ -11,13 +11,13 @@ use AppBundle\Entity\Driver;
 /**
  * Class AssignShipmentController
  * @package AppBundle\Controller\Operator\Dashboard
- * @Route("/assign_shipment")
+ * @Route("/shipment_assignment")
  */
-class AssignShipmentController extends Controller
+class ShipmentAssignmentController extends Controller
 {
     
     /**
-     * @Route("/match/{shipment}/{driver}",name="app_operator_dashboard_assign_shipment_match")
+     * @Route("/match/{shipment}/{driver}",name="app_operator_dashboard_shipment_assignment_match")
      * @param Shipment $shipment
      * @param Driver $driver
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
