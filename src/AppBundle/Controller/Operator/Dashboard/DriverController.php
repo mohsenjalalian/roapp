@@ -176,7 +176,9 @@ class DriverController extends Controller
         if ($shipment) {
 
             // check shipment rejected by some driver or no
-            $banDriver = $this->get("app.shipment_assignment")
+            $banDriver = $this
+                ->getDoctrine()
+                ->getRepository("AppBundle:Driver")
                 ->filterDriverAction($shipment);
 
             $query = $this->getDoctrine()

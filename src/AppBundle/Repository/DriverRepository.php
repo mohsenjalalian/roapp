@@ -1,6 +1,8 @@
 <?php
 
 namespace AppBundle\Repository;
+use AppBundle\Entity\AssignmentRequest;
+use AppBundle\Entity\Shipment;
 use Doctrine\ORM\EntityRepository;
 
 /**
@@ -11,4 +13,26 @@ use Doctrine\ORM\EntityRepository;
  */
 class DriverRepository extends EntityRepository
 {
+    // check shipment rejected by some driver or no
+    public function filterDriverAction(Shipment $shipment)
+    {
+        $filterDriver = $this->getEntityManager()
+            ->getRepository("AppBundle:AssignmentRequest")
+            ->findBy(
+                [
+                    'shipment' => $shipment->getId(),
+                    'status' => AssignmentRequest::STATUS_REJECTED,
+                ]
+            );
+        if ($filterDriver) {
+            foreach ($filterDriver as $value) {
+                $banDriver[] = $value->getDriver()
+                    ->getId();
+            }
+
+            return $banDriver;
+        } else {
+            return $banDriver=[];
+        }
+    }
 }
