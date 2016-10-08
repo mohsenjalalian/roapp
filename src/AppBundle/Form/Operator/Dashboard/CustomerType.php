@@ -18,7 +18,6 @@ class CustomerType extends AbstractType
             ->add('username')
             ->add('password')
             ->add('isActive')
-            ->add('apiKey')
             ->add('phone')
         ;
     }

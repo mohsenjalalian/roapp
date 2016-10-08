@@ -10,7 +10,9 @@ use Symfony\Component\HttpFoundation\Request;
 class SecurityController extends Controller
 {
     /**
-     * @Route("/login",name="operator_dashboard_login")
+     * @Route("/login",name="app_operator_dashboard_security_login")
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function loginAction(Request $request)
     {
@@ -26,8 +28,10 @@ class SecurityController extends Controller
             )
         );
     }
+
     /**
-     * @Route("/logout", name="operator_dashboard_logout")
+     * @Route("/logout", name="app_operator_dashboard_security_logout")
+     * @param Request $request
      */
     public function logoutAction(Request $request)
     {
