@@ -6,12 +6,12 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\JoinColumn;
 
 /**
- * AssignmentRequest
+ * ShipmentAssignment
  *
- * @ORM\Table(name="assignment_request")
- * @ORM\Entity(repositoryClass="AppBundle\Repository\AssignmentRequestRepository")
+ * @ORM\Table(name="shipment_assignment")
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\ShipmentAssignmentRepository")
  */
-class AssignmentRequest
+class ShipmentAssignment
 {
     const STATUS_ACCEPTED = 1;
     const STATUS_REJECTED = 0;
@@ -84,7 +84,7 @@ class AssignmentRequest
      *
      * @param \DateTime $dateTime
      *
-     * @return AssignmentRequest
+     * @return ShipmentAssignment
      */
     public function setDateTime($dateTime)
     {
@@ -108,7 +108,7 @@ class AssignmentRequest
      *
      * @param integer $status
      *
-     * @return AssignmentRequest
+     * @return ShipmentAssignment
      */
     public function setStatus($status)
     {
@@ -132,7 +132,7 @@ class AssignmentRequest
      *
      * @param string $reason
      *
-     * @return AssignmentRequest
+     * @return ShipmentAssignment
      */
     public function setReason($reason)
     {
@@ -156,7 +156,7 @@ class AssignmentRequest
      *
      * @param \AppBundle\Entity\Shipment $shipment
      *
-     * @return AssignmentRequest
+     * @return ShipmentAssignment
      */
     public function setShipment(\AppBundle\Entity\Shipment $shipment = null)
     {
@@ -180,7 +180,7 @@ class AssignmentRequest
      *
      * @param \AppBundle\Entity\Driver $driver
      *
-     * @return AssignmentRequest
+     * @return ShipmentAssignment
      */
     public function setDriver(\AppBundle\Entity\Driver $driver = null)
     {
@@ -204,7 +204,7 @@ class AssignmentRequest
      *
      * @param \DateTime $expireTime
      *
-     * @return AssignmentRequest
+     * @return ShipmentAssignment
      */
     public function setExpireTime($expireTime)
     {

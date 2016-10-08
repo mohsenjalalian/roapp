@@ -2,7 +2,7 @@
 
 namespace AppBundle\Controller\Driver\Api\V1;
 
-use AppBundle\Entity\AssignmentRequest;
+use AppBundle\Entity\ShipmentAssignment;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -19,10 +19,10 @@ class ShipmentAssignmentController extends Controller
 
     /**
      * @Route("/{assignment}/accept")
-     * @param $assignment
+     * @param ShipmentAssignment $assignment
      * @return JsonResponse
      */
-    public function acceptAction(AssignmentRequest $assignment)
+    public function acceptAction(ShipmentAssignment $assignment)
     {
         $isAssignTimeExpire = $this->get("app.shipment_assignment")
             ->isAssignTimeExpire($assignment);
@@ -48,10 +48,11 @@ class ShipmentAssignmentController extends Controller
 
     /**
      * @Route("/{assignment}/reject")
-     * @param AssignmentRequest $assignment
+     * @param ShipmentAssignment $assignment
+     * @param Request $req
      * @return JsonResponse
      */
-    public function rejectAction(AssignmentRequest $assignment , Request $req)
+    public function rejectAction(ShipmentAssignment $assignment , Request $req)
     {
         $isAssignTimeExpire = $this->get("app.shipment_assignment")
             ->isAssignTimeExpire($assignment);

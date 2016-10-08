@@ -2,7 +2,7 @@
 
 namespace AppBundle\Utils;
 
-use AppBundle\Entity\AssignmentRequest;
+use AppBundle\Entity\ShipmentAssignment;
 use AppBundle\Entity\Driver;
 use AppBundle\Entity\Task;
 use Doctrine\ORM\EntityManager;
@@ -34,7 +34,7 @@ class AssignmentShipment
 
         return true;
     }
-    public function initDataForSend(AssignmentRequest $assignmentObj)
+    public function initDataForSend(ShipmentAssignment $assignmentObj)
     {
         $data =
             [
@@ -52,25 +52,25 @@ class AssignmentShipment
     }
     public function setWaitingAssign(Shipment $shipment , Driver $driver)
     {
-        $assignmentRequestObj = new AssignmentRequest();
+        $ShipmentAssignmentObj = new ShipmentAssignment();
         $em = $this->entityManager;
         // waiting for driver answer
         $driver->setStatus(Driver::STATUS_IN_PROGRESS); // driver status = waiting
         $shipment->setStatus(Shipment::STATUS_ASSIGNMENT_SENT); // shipment status = waiting
-        $assignmentRequestObj->setShipment($shipment);
-        $assignmentRequestObj->setDriver($driver);
-        $assignmentRequestObj->setReason('waiting');
-        $assignmentRequestObj->setStatus(AssignmentRequest::STATUS_WAITING);
+        $ShipmentAssignmentObj->setShipment($shipment);
+        $ShipmentAssignmentObj->setDriver($driver);
+        $ShipmentAssignmentObj->setReason('waiting');
+        $ShipmentAssignmentObj->setStatus(ShipmentAssignment::STATUS_WAITING);
         $em->persist($driver);
         $em->persist($shipment);
-        $em->persist($assignmentRequestObj);
-        $assignmentId = $assignmentRequestObj;
+        $em->persist($ShipmentAssignmentObj);
+        $assignmentId = $ShipmentAssignmentObj;
 
         $em->flush();
 
         return $assignmentId;
     }
-    public function setExpireTime(AssignmentRequest $assignment)
+    public function setExpireTime(ShipmentAssignment $assignment)
     {
         $em = $this->entityManager;
 
@@ -87,7 +87,7 @@ class AssignmentShipment
         $em->flush();
         
     }
-    public function timeOutAction(AssignmentRequest $assignment)
+    public function timeOutAction(ShipmentAssignment $assignment)
     {
         $em = $this->entityManager;
         $assignment
@@ -97,7 +97,7 @@ class AssignmentShipment
             ->getShipment()
             ->setStatus(Shipment::STATUS_NOT_ASSIGNED);
         $assignment
-            ->setStatus(AssignmentRequest::STATUS_TIMEOUT);
+            ->setStatus(ShipmentAssignment::STATUS_TIMEOUT);
         $assignment
             ->setReason("time over");
 
@@ -106,7 +106,7 @@ class AssignmentShipment
         $em->flush();
         
     }
-    public function isAssignTimeExpire(AssignmentRequest $assignment)
+    public function isAssignTimeExpire(ShipmentAssignment $assignment)
     {
         $currentTime = new \DateTime();
         $expireTime = $assignment->getExpireTime();
@@ -116,7 +116,7 @@ class AssignmentShipment
             return true;
         }
     }
-    public function acceptRequest(AssignmentRequest $assignment)
+    public function acceptRequest(ShipmentAssignment $assignment)
     {
         $em = $this->entityManager;
         $assignment
@@ -126,7 +126,7 @@ class AssignmentShipment
             ->getDriver()
             ->setStatus(Driver::STATUS_BUSY);
         $assignment
-            ->setStatus(AssignmentRequest::STATUS_ACCEPTED);
+            ->setStatus(ShipmentAssignment::STATUS_ACCEPTED);
         $assignment
             ->setReason("Accept shipment");
         // create two tasks with diffrent types
@@ -151,7 +151,7 @@ class AssignmentShipment
             $taskEm->flush();
         }
     }
-    public function rejectRequest(AssignmentRequest $assignment , $reason)
+    public function rejectRequest(ShipmentAssignment $assignment , $reason)
     {
         $em = $this->entityManager;
         $assignment
@@ -161,7 +161,7 @@ class AssignmentShipment
             ->getShipment()
             ->setStatus(Shipment::STATUS_NOT_ASSIGNED);
         $assignment
-            ->setStatus(AssignmentRequest::STATUS_REJECTED);
+            ->setStatus(ShipmentAssignment::STATUS_REJECTED);
         $assignment
             ->setReason($reason);
         

@@ -84,7 +84,7 @@ class Shipment
     protected $photos;
 
     /**
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\AssignmentRequest",mappedBy="shipment")
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\ShipmentAssignment",mappedBy="shipment")
      */
     private $assignments;
     /**
@@ -357,11 +357,11 @@ class Shipment
     /**
      * Add assignment
      *
-     * @param \AppBundle\Entity\AssignmentRequest $assignment
+     * @param \AppBundle\Entity\ShipmentAssignment $assignment
      *
      * @return Shipment
      */
-    public function addAssignment(\AppBundle\Entity\AssignmentRequest $assignment)
+    public function addAssignment(\AppBundle\Entity\ShipmentAssignment $assignment)
     {
         $this->assignments[] = $assignment;
 
@@ -371,9 +371,9 @@ class Shipment
     /**
      * Remove assignment
      *
-     * @param \AppBundle\Entity\AssignmentRequest $assignment
+     * @param \AppBundle\Entity\ShipmentAssignment $assignment
      */
-    public function removeAssignment(\AppBundle\Entity\AssignmentRequest $assignment)
+    public function removeAssignment(\AppBundle\Entity\ShipmentAssignment $assignment)
     {
         $this->assignments->removeElement($assignment);
     }

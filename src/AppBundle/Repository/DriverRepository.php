@@ -1,7 +1,7 @@
 <?php
 
 namespace AppBundle\Repository;
-use AppBundle\Entity\AssignmentRequest;
+use AppBundle\Entity\ShipmentAssignment;
 use AppBundle\Entity\Shipment;
 use Doctrine\ORM\EntityRepository;
 
@@ -17,11 +17,11 @@ class DriverRepository extends EntityRepository
     public function filterDriverAction(Shipment $shipment)
     {
         $filterDriver = $this->getEntityManager()
-            ->getRepository("AppBundle:AssignmentRequest")
+            ->getRepository("AppBundle:ShipmentAssignment")
             ->findBy(
                 [
                     'shipment' => $shipment->getId(),
-                    'status' => AssignmentRequest::STATUS_REJECTED,
+                    'status' => ShipmentAssignment::STATUS_REJECTED,
                 ]
             );
         if ($filterDriver) {
