@@ -15,14 +15,6 @@
     "tests"
   ],
   "dependencies": {
-  },
-
-  "name": "persian-datepicker",
-  "version": "0.4.5",
-  "dependencies": {
-    " persian-date": "~0.1.6"
-  },
-  "private": true
-
-
+    "persian-datepicker": "^0.4.5"
+  }
 }
