@@ -7,6 +7,8 @@ use AppBundle\Entity\Driver;
 use AppBundle\Entity\Task;
 use Doctrine\ORM\EntityManager;
 use AppBundle\Entity\Shipment;
+use Symfony\Component\Translation\Translator;
+use Symfony\Component\Translation\TranslatorInterface;
 
 class AssignmentShipment
 {
@@ -20,10 +22,23 @@ class AssignmentShipment
      */
     private $sendNotification;
 
-    public function __construct(EntityManager $entityManager , SendNotification $sendNotification)
+    /**
+     * TranslatorInterface
+     */
+    private $translations;
+
+    /**
+     * AssignmentShipment constructor.
+     * @param EntityManager $entityManager
+     * @param SendNotification $sendNotification
+     * @param TranslatorInterface $translation
+     */
+
+    public function __construct(EntityManager $entityManager , SendNotification $sendNotification , TranslatorInterface $translation)
     {
         $this->entityManager = $entityManager;
         $this->sendNotification = $sendNotification;
+        $this->translations = $translation;
     }
     public function sendRequest(Shipment $shipment,Driver $driver)
     {
@@ -47,7 +62,7 @@ class AssignmentShipment
                         'type' => 'test'
                     ]
             ];
-        
+
         return $data;
     }
     public function setWaitingAssign(Shipment $shipment , Driver $driver)
@@ -59,7 +74,11 @@ class AssignmentShipment
         $shipment->setStatus(Shipment::STATUS_ASSIGNMENT_SENT); // shipment status = waiting
         $ShipmentAssignmentObj->setShipment($shipment);
         $ShipmentAssignmentObj->setDriver($driver);
-        $ShipmentAssignmentObj->setReason('waiting');
+        $ShipmentAssignmentObj
+            ->setReason
+            (
+                $this->translations->trans("waiting")
+            );
         $ShipmentAssignmentObj->setStatus(ShipmentAssignment::STATUS_WAITING);
         $em->persist($driver);
         $em->persist($shipment);
@@ -85,7 +104,7 @@ class AssignmentShipment
         $em->persist($assignment);
 
         $em->flush();
-        
+
     }
     public function timeOutAction(ShipmentAssignment $assignment)
     {
@@ -99,12 +118,15 @@ class AssignmentShipment
         $assignment
             ->setStatus(ShipmentAssignment::STATUS_TIMEOUT);
         $assignment
-            ->setReason("time over");
+            ->setReason
+            (
+                $this->translations->trans("time over")
+            );
 
         $em->persist($assignment);
 
         $em->flush();
-        
+
     }
     public function isAssignTimeExpire(ShipmentAssignment $assignment)
     {
@@ -128,14 +150,17 @@ class AssignmentShipment
         $assignment
             ->setStatus(ShipmentAssignment::STATUS_ACCEPTED);
         $assignment
-            ->setReason("Accept shipment");
+            ->setReason
+            (
+                $this->translations->trans("accept shipment")
+            );
         // create two tasks with diffrent types
         $this->createTasks($assignment->getShipment());
 
         $em->persist($assignment);
 
         $em->flush();
-        
+
     }
     public function createTasks($shipment)
     {
@@ -164,7 +189,7 @@ class AssignmentShipment
             ->setStatus(ShipmentAssignment::STATUS_REJECTED);
         $assignment
             ->setReason($reason);
-        
+
         $em->persist($assignment);
 
         $em->flush();

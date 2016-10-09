@@ -34,7 +34,7 @@ class ShipmentAssignmentController extends Controller
                 );
             } else {
                 return $this->render(
-                    ":operator/dashboard/assignShipment:errorAssignShipment.html.twig",
+                    ":operator/dashboard/shipmentAssignment:errorAssignShipment.html.twig",
                     [
                         'shipmentId'=>$shipment->getId()
                     ]
