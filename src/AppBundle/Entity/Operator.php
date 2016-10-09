@@ -12,16 +12,16 @@ use Symfony\Component\Security\Core\User\UserInterface;
  * @ORM\Table(name="operator")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\OperatorRepository")
  */
-class Operator implements UserInterface, \Serializable
+class Operator extends Person implements UserInterface, \Serializable
 {
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    private $id;
+//    /**
+//     * @var int
+//     *
+//     * @ORM\Column(name="id", type="integer")
+//     * @ORM\Id
+//     * @ORM\GeneratedValue(strategy="AUTO")
+//     */
+//    private $id;
 
     /**
      * @var string
@@ -30,12 +30,12 @@ class Operator implements UserInterface, \Serializable
      */
     private $email;
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="password", type="string", length=255)
-     */
-    private $password;
+//    /**
+//     * @var string
+//     *
+//     * @ORM\Column(name="password", type="string", length=255)
+//     */
+//    private $password;
 
     /**
      * @var int
@@ -51,15 +51,15 @@ class Operator implements UserInterface, \Serializable
         $this->roleId = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
-    /**
-     * Get id
-     *
-     * @return integer
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
+//    /**
+//     * Get id
+//     *
+//     * @return integer
+//     */
+//    public function getId()
+//    {
+//        return $this->id;
+//    }
 
     /**
      * Set email
@@ -85,29 +85,29 @@ class Operator implements UserInterface, \Serializable
         return $this->email;
     }
 
-    /**
-     * Set password
-     *
-     * @param string $password
-     *
-     * @return Operator
-     */
-    public function setPassword($password)
-    {
-        $this->password = $password;
+//    /**
+//     * Set password
+//     *
+//     * @param string $password
+//     *
+//     * @return Operator
+//     */
+//    public function setPassword($password)
+//    {
+//        $this->password = $password;
+//
+//        return $this;
+//    }
 
-        return $this;
-    }
-
-    /**
-     * Get password
-     *
-     * @return string
-     */
-    public function getPassword()
-    {
-        return $this->password;
-    }
+//    /**
+//     * Get password
+//     *
+//     * @return string
+//     */
+//    public function getPassword()
+//    {
+//        return $this->password;
+//    }
 
     /**
      * Add roleId

@@ -85,7 +85,7 @@ class Customer extends Person implements UserInterface, \Serializable
     public function unserialize($serialized)
     {
         list (
-//            $this->id,
+            $this->id,
 //            $this->phone,
             $this->password,
             // see section on salt below
