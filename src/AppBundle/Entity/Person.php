@@ -13,7 +13,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  * @ORM\InheritanceType("SINGLE_TABLE")
  * @ORM\DiscriminatorColumn(name="type", type="string")
  * @ORM\DiscriminatorMap({"customer" = "Customer", "driver" = "Driver" , "operator" = "Operator"})
- * @UniqueEntity(fields="username", message="Username already taken")
+ * @UniqueEntity(fields="phone", message="Phone already taken")
  */
 abstract class Person
 {

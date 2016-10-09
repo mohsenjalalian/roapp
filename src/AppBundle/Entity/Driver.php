@@ -71,6 +71,7 @@ class Driver extends Person
     public function setUsername($username)
     {
         $this->phone = $username;
+        
         return $this;
     }
     /**
