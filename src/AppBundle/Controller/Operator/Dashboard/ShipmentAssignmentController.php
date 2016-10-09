@@ -26,9 +26,9 @@ class ShipmentAssignmentController extends Controller
     {
         // if there is shipment and driver with given id
         if ($shipment && $driver) {
-            $sentRequest = $this->get("app.shipment_assignment")
+            $isSendRequest = $this->get("app.shipment_assignment")
                 ->sendRequest($shipment, $driver);
-            if ($sentRequest) {
+            if ($isSendRequest) {
                 return $this->redirectToRoute(
                     "app_operator_dashboard_shipment_list"
                 );
