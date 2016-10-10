@@ -12,8 +12,8 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  * @ORM\Table(name="person")
  * @ORM\InheritanceType("SINGLE_TABLE")
  * @ORM\DiscriminatorColumn(name="type", type="string")
- * @ORM\DiscriminatorMap({"customer" = "Customer", "driver" = "Driver"})
- * @UniqueEntity(fields="username", message="Username already taken")
+ * @ORM\DiscriminatorMap({"customer" = "Customer", "driver" = "Driver" , "operator" = "Operator"})
+ * @UniqueEntity(fields="phone", message="Phone already taken")
  */
 abstract class Person
 {
@@ -39,9 +39,14 @@ abstract class Person
     protected $isActive = false;
     
     /**
-     * @ORM\Column(name="full_name", type="string")
+     * @ORM\Column(name="full_name", type="string" , nullable=true)
      */
     protected $fullName;
+    
+    /**
+     * @ORM\Column(name="password", type="string")
+     */
+    protected $password;
     
     /**
      * Get id
@@ -81,8 +86,7 @@ abstract class Person
      * Set isActive
      *
      * @param boolean $isActive
-     *
-     * @return Customer
+     * @return $this
      */
     public function setIsActive($isActive)
     {
@@ -123,5 +127,29 @@ abstract class Person
     public function getFullName()
     {
         return $this->fullName;
+    }
+
+    /**
+     * Set password
+     *
+     * @param string $password
+     *
+     * @return Person
+     */
+    public function setPassword($password)
+    {
+        $this->password = $password;
+
+        return $this;
+    }
+
+    /**
+     * Get password
+     *
+     * @return string
+     */
+    public function getPassword()
+    {
+        return $this->password;
     }
 }

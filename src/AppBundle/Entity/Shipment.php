@@ -69,12 +69,6 @@ class Shipment
     protected $type;
 
     /**
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Driver", inversedBy="shipments")
-     * @ORM\JoinColumn(name="driver_id")
-     */
-    protected $driver;
-
-    /**
      * @ORM\ManyToMany(targetEntity="AppBundle\Entity\Media")
      * @ORM\JoinTable(name="shipment_photos",
      *      joinColumns={@ORM\JoinColumn(name="shipment_id", referencedColumnName="id")},
@@ -84,7 +78,7 @@ class Shipment
     protected $photos;
 
     /**
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\AssignmentRequest",mappedBy="shipment")
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\ShipmentAssignment",mappedBy="shipment")
      */
     private $assignments;
     /**
@@ -288,30 +282,6 @@ class Shipment
     {
         return $this->type;
     }
-
-    /**
-     * Set driver
-     *
-     * @param \AppBundle\Entity\Driver $driver
-     *
-     * @return Shipment
-     */
-    public function setDriver(\AppBundle\Entity\Driver $driver = null)
-    {
-        $this->driver = $driver;
-
-        return $this;
-    }
-
-    /**
-     * Get driver
-     *
-     * @return \AppBundle\Entity\Driver
-     */
-    public function getDriver()
-    {
-        return $this->driver;
-    }
     /**
      * Constructor
      */
@@ -357,11 +327,11 @@ class Shipment
     /**
      * Add assignment
      *
-     * @param \AppBundle\Entity\AssignmentRequest $assignment
+     * @param \AppBundle\Entity\ShipmentAssignment $assignment
      *
      * @return Shipment
      */
-    public function addAssignment(\AppBundle\Entity\AssignmentRequest $assignment)
+    public function addAssignment(\AppBundle\Entity\ShipmentAssignment $assignment)
     {
         $this->assignments[] = $assignment;
 
@@ -371,9 +341,9 @@ class Shipment
     /**
      * Remove assignment
      *
-     * @param \AppBundle\Entity\AssignmentRequest $assignment
+     * @param \AppBundle\Entity\ShipmentAssignment $assignment
      */
-    public function removeAssignment(\AppBundle\Entity\AssignmentRequest $assignment)
+    public function removeAssignment(\AppBundle\Entity\ShipmentAssignment $assignment)
     {
         $this->assignments->removeElement($assignment);
     }

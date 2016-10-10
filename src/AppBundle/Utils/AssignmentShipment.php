@@ -2,11 +2,13 @@
 
 namespace AppBundle\Utils;
 
-use AppBundle\Entity\AssignmentRequest;
+use AppBundle\Entity\ShipmentAssignment;
 use AppBundle\Entity\Driver;
 use AppBundle\Entity\Task;
 use Doctrine\ORM\EntityManager;
 use AppBundle\Entity\Shipment;
+use Symfony\Component\Translation\Translator;
+use Symfony\Component\Translation\TranslatorInterface;
 
 class AssignmentShipment
 {
@@ -14,177 +16,154 @@ class AssignmentShipment
      * @var EntityManager
      */
     private $entityManager;
-    
-    public function __construct(EntityManager $entityManager) 
+
+    /**
+     * @var SendNotification
+     */
+    private $sendNotification;
+
+    /**
+     * TranslatorInterface
+     */
+    private $translations;
+
+    /**
+     * AssignmentShipment constructor.
+     * @param EntityManager $entityManager
+     * @param SendNotification $sendNotification
+     * @param TranslatorInterface $translation
+     */
+
+    public function __construct(EntityManager $entityManager , SendNotification $sendNotification , TranslatorInterface $translation)
     {
         $this->entityManager = $entityManager;
-    }
-    // check shipment rejected by some driver or no
-    public function filterDriverAction(Shipment $shipment)
-    {
-        $filterDriver = $this->entityManager
-            ->getRepository("AppBundle:AssignmentRequest")
-            ->findBy(
-                [
-                    'shipment' => $shipment->getId(),
-                    'status' => AssignmentRequest::STATUS_REJECTED,
-                ]
-            );
-        if ($filterDriver) {
-            foreach ($filterDriver as $value) {
-                $banDriver[] = $value->getDriver()
-                    ->getId();
-            }
-
-            return $banDriver;
-        } else {
-            return $banDriver=[];
-        }
+        $this->sendNotification = $sendNotification;
+        $this->translations = $translation;
     }
     public function sendRequest(Shipment $shipment,Driver $driver)
     {
-        $assignmentId = $this->setWaitingAssign($shipment,$driver);
-        $this->sendNotification();
-        $this->setExpireTime($assignmentId);
+        $assignmentObj = $this->setWaitingAssign($shipment,$driver);
+        $data = $this->initDataForSend($assignmentObj);
+        $this->sendNotification->sendNotification($data);
+        $this->setExpireTime($assignmentObj);
 
         return true;
     }
+    public function initDataForSend(ShipmentAssignment $assignmentObj)
+    {
+        $data =
+            [
+                'title'=>'درخواست تحویل سفارش',
+                'body'=> 'سفارش با مشخصات زیر آماده ارسال می باشد' ,
+                'topic'=>'charge',
+                'parameters'=>
+                    [
+                        'assignmentId'=>$assignmentObj->getId(),
+                        'type' => 'test'
+                    ]
+            ];
+
+        return $data;
+    }
     public function setWaitingAssign(Shipment $shipment , Driver $driver)
     {
-        $assignmentRequestObj = new AssignmentRequest();
+        $ShipmentAssignmentObj = new ShipmentAssignment();
         $em = $this->entityManager;
         // waiting for driver answer
         $driver->setStatus(Driver::STATUS_IN_PROGRESS); // driver status = waiting
         $shipment->setStatus(Shipment::STATUS_ASSIGNMENT_SENT); // shipment status = waiting
-        $assignmentRequestObj->setShipment($shipment);
-        $assignmentRequestObj->setDriver($driver);
-        $assignmentRequestObj->setReason('waiting');
-        $assignmentRequestObj->setStatus(AssignmentRequest::STATUS_WAITING);
+        $ShipmentAssignmentObj->setShipment($shipment);
+        $ShipmentAssignmentObj->setDriver($driver);
+        $ShipmentAssignmentObj
+            ->setReason
+            (
+                $this->translations->trans("waiting")
+            );
+        $ShipmentAssignmentObj->setStatus(ShipmentAssignment::STATUS_WAITING);
         $em->persist($driver);
         $em->persist($shipment);
-        $em->persist($assignmentRequestObj);
-        $assignmentId = $assignmentRequestObj->getId();
-        
+        $em->persist($ShipmentAssignmentObj);
+        $assignmentId = $ShipmentAssignmentObj;
+
         $em->flush();
-        
+
         return $assignmentId;
     }
-    public function sendNotification()
-    {
-        $sendUrl = 'https://fcm.googleapis.com/fcm/send';
-        $headers = array(
-            'Authorization:key = AIzaSyBJaQ9dbnGXZbWoNu70nibNsUajGUj2GpA',
-            'Content-Type: application/json'
-        );
-        $title='درخواست تحویل سفارش';
-        $text= "سفارش با مشخصات زیر آماده ارسال می باشد";
-        $topic='charge';
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $sendUrl);
-        curl_setopt($ch, CURLOPT_POST, true);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST,0);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-        $fields = array(
-            'notification' => array(
-                'title' => $title,
-                'body' => $text
-            ),
-            'to' => '/topics/'.$topic
-        );
-        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($fields));
-        $result = curl_exec($ch);
-        if ($result===FALSE) {
-            die("curl deny:" . curl_error($ch));
-        }
-        curl_close($ch);
-        // send request to driver
-
-        return true;
-    }
-    public function setExpireTime($assignmentId)
+    public function setExpireTime(ShipmentAssignment $assignment)
     {
         $em = $this->entityManager;
-        $assignmentTbl = $em->getRepository("AppBundle:AssignmentRequest")
-            ->find($assignmentId);
-        $crateAssignTime = $assignmentTbl->getDateTime()
+
+        $crateAssignTime = $assignment
+            ->getDateTime()
             ->format("Y-m-d H:i:s");
         $currentTime = strtotime($crateAssignTime);
         $currentTime = $currentTime+(60*10);
         $currentTime = date("Y-m-d H:i:s", $currentTime);
         $expireRequestTime = new \DateTime($currentTime, new \DateTimeZone('Asia/Tehran'));
-        $assignmentTbl->setExpireTime($expireRequestTime);
-        $em->persist($assignmentTbl);
-        
+        $assignment->setExpireTime($expireRequestTime);
+        $em->persist($assignment);
+
         $em->flush();
-        
-        return true;
+
     }
-    public function timeOutAction($shipmentId,$driverId)
+    public function timeOutAction(ShipmentAssignment $assignment)
     {
         $em = $this->entityManager;
-        $driverObj = $em->getRepository("AppBundle:Driver")
-            ->find($driverId);
-        $shipmentObj = $em->getRepository("AppBundle:Shipment")
-            ->find($shipmentId);
-        $driverObj->setStatus(Driver::STATUS_FREE); // driver status = free
-        $shipmentObj->setStatus(Shipment::STATUS_NOT_ASSIGNED);
-        $currentAssignObj = $currentAssignObj = $em->getRepository("AppBundle:AssignmentRequest")
-            ->fetchCurrentAssignmentInfo($shipmentId,$driverId);
-        $currentAssignObj->setStatus(AssignmentRequest::STATUS_TIMEOUT); // assign status = timeOut
-        $currentAssignObj->setReason("time over");
-        $em->persist($shipmentObj);
-        $em->persist($driverObj);
-        $em->persist($currentAssignObj);
-        
+        $assignment
+            ->getDriver()
+            ->setStatus(Driver::STATUS_FREE);
+        $assignment
+            ->getShipment()
+            ->setStatus(Shipment::STATUS_NOT_ASSIGNED);
+        $assignment
+            ->setStatus(ShipmentAssignment::STATUS_TIMEOUT);
+        $assignment
+            ->setReason
+            (
+                $this->translations->trans("time over")
+            );
+
+        $em->persist($assignment);
+
         $em->flush();
-        
-        return true;
+
     }
-    public function checkAssignTime($shipmentId,$driverId)
+    public function isAssignTimeExpire(ShipmentAssignment $assignment)
     {
-        $em = $this->entityManager;
-        $currentAssignObj = $currentAssignObj = $em->getRepository("AppBundle:AssignmentRequest")
-            ->fetchCurrentAssignmentInfo($shipmentId,$driverId);
         $currentTime = new \DateTime();
-        $expireTime = $currentAssignObj->getExpireTime();
+        $expireTime = $assignment->getExpireTime();
         if ($currentTime <= $expireTime) {
-            return true;
-        } else {
             return false;
+        } else {
+            return true;
         }
     }
-    public function acceptRequest($shipmentId,$driverId)
+    public function acceptRequest(ShipmentAssignment $assignment)
     {
         $em = $this->entityManager;
-        $driverObj = $em
-            ->getRepository("AppBundle:Driver")
-            ->find($driverId);
-        $shipmentObj = $em
-            ->getRepository("AppBundle:Shipment")
-            ->find($shipmentId);
-        $driverObj->setStatus(Driver::STATUS_BUSY); // driver status = busy
-        $shipmentObj->setStatus(Shipment::STATUS_ASSIGNED); // shipment status = assignment ok
-        $currentAssignObj = $em->getRepository("AppBundle:AssignmentRequest")
-            ->fetchCurrentAssignmentInfo($shipmentId,$driverId);
-        $currentAssignObj->setStatus(AssignmentRequest::STATUS_ACCEPTED);
-        $currentAssignObj->setReason("Accept shipment");
+        $assignment
+            ->getShipment()
+            ->setStatus(Shipment::STATUS_ASSIGNED);
+        $assignment
+            ->getDriver()
+            ->setStatus(Driver::STATUS_BUSY);
+        $assignment
+            ->setStatus(ShipmentAssignment::STATUS_ACCEPTED);
+        $assignment
+            ->setReason
+            (
+                $this->translations->trans("accept shipment")
+            );
         // create two tasks with diffrent types
-        $this->createTasks($shipmentId);
-        $em->persist($driverObj);
-        $em->persist($shipmentObj);
-        $em->persist($currentAssignObj);
-        
+        $this->createTasks($assignment->getShipment());
+
+        $em->persist($assignment);
+
         $em->flush();
-        
-        return true;
+
     }
-    public function createTasks($shipmentId)
+    public function createTasks($shipment)
     {
-        $em = $this->entityManager;
-        $shipment = $em->getRepository("AppBundle:Shipment")
-            ->find($shipmentId);
         $taskTypes = ['pickup','deliver'];
         foreach ($taskTypes as $key=>$type) {
             $taskTblObj = new Task();
@@ -193,31 +172,26 @@ class AssignmentShipment
             $taskTblObj->setType($key);
             $taskEm = $this->entityManager;
             $taskEm->persist($taskTblObj);
-            
+
             $taskEm->flush();
         }
-        
-        return true;
     }
-    public function rejectRequest($shipmentId,$driverId,$reason)
+    public function rejectRequest(ShipmentAssignment $assignment , $reason)
     {
         $em = $this->entityManager;
-        $driverObj = $em->getRepository("AppBundle:Driver")
-            ->find($driverId);
-        $shipmentObj = $em->getRepository("AppBundle:Shipment")
-            ->find($shipmentId);
-        $driverObj->setStatus(Driver::STATUS_FREE); // driver status = busy
-        $shipmentObj->setStatus(Shipment::STATUS_NOT_ASSIGNED);
-        $currentAssignObj = $em->getRepository("AppBundle:AssignmentRequest")
-            ->fetchCurrentAssignmentInfo($shipmentId,$driverId);
-        $currentAssignObj->setStatus(AssignmentRequest::STATUS_REJECTED); // assign status = rejected
-        $currentAssignObj->setReason($reason);
-        $em->persist($currentAssignObj);
-        $em->persist($shipmentObj);
-        $em->persist($driverObj);
+        $assignment
+            ->getDriver()
+            ->setStatus(Driver::STATUS_FREE);
+        $assignment
+            ->getShipment()
+            ->setStatus(Shipment::STATUS_NOT_ASSIGNED);
+        $assignment
+            ->setStatus(ShipmentAssignment::STATUS_REJECTED);
+        $assignment
+            ->setReason($reason);
+
+        $em->persist($assignment);
 
         $em->flush();
-        
-        return true;
     }
 }

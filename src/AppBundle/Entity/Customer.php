@@ -16,23 +16,13 @@ class Customer extends Person implements UserInterface, \Serializable
      *
      */
     private $email;
-
-    /**
-     * @ORM\Column(name="password", type="string", nullable=true)
-     */
-    private $password;
     
-    /**
-     * @ORM\Column(name="is_active", type="boolean")
-     */
-    protected $isActive;
-
     /**
      * @ORM\Column(name="status", type="integer")
      */
     private $status;
     /**
-     * Customer constructor.
+     * Customer constructor
      */
 
     public function __construct()
@@ -47,17 +37,7 @@ class Customer extends Person implements UserInterface, \Serializable
     {
         return array('ROLE_CUSTOMER');
     }
-
-    /**
-     * @inheritdoc
-     */
-    public function getPassword()
-    {
-        return $this->password;
-        // TODO: Implement getPassword() method.
-    }
-
-
+    
     /**
      * @inheritdoc
      */
@@ -105,7 +85,7 @@ class Customer extends Person implements UserInterface, \Serializable
     public function unserialize($serialized)
     {
         list (
-//            $this->id,
+            $this->id,
 //            $this->phone,
             $this->password,
             // see section on salt below
@@ -127,42 +107,7 @@ class Customer extends Person implements UserInterface, \Serializable
 
         return $this;
     }
-
-    /**
-     * Set password
-     *
-     * @param string $password
-     *
-     * @return Customer
-     */
-    public function setPassword($password)
-    {
-        $this->password = $password;
-
-        return $this;
-    }
-    /**
-     * Set isActive
-     *
-     * @param boolean $isActive
-     *
-     * @return Customer
-     */
-    public function setIsActive($isActive)
-    {
-        $this->isActive = $isActive;
-        return $this;
-    }
-    /**
-     * Get isActive
-     *
-     * @return boolean
-     */
-    public function getIsActive()
-    {
-        return $this->isActive;
-    }
-
+    
     /**
      * Set status
      *
@@ -185,5 +130,29 @@ class Customer extends Person implements UserInterface, \Serializable
     public function getStatus()
     {
         return $this->status;
+    }
+
+    /**
+     * Set email
+     *
+     * @param string $email
+     *
+     * @return Customer
+     */
+    public function setEmail($email)
+    {
+        $this->email = $email;
+
+        return $this;
+    }
+
+    /**
+     * Get email
+     *
+     * @return string
+     */
+    public function getEmail()
+    {
+        return $this->email;
     }
 }
