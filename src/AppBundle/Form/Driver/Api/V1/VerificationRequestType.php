@@ -1,6 +1,6 @@
 <?php
 
-namespace AppBundle\Form\Customer\Api\V1;
+namespace AppBundle\Form\Driver\Api\V1;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
