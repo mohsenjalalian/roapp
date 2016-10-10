@@ -29,7 +29,12 @@
                 <div>{{ form_widget(form.value ) }}</div>
             </div>
         </div>
-
+        {#<div class="two field">#}
+            {#<div class="field">#}
+                {#<label>{{ form_label(form.price) }}</label>#}
+                {#<div>{{ form_widget(form.price) }}</div>#}
+            {#</div>#}
+        {#</div>#}
         <div class="two fields">
             <div class="field">
                 <label>{{ form_label(form.ownerAddress) }}</label>
@@ -59,8 +64,6 @@
     'bundles/app/stylesheets/customer/dashboard/shipment/new.css'
     'assets/vendor/persian-datepicker/src/css/persian-datepicker.css'
     %}
-
-
     <link rel="stylesheet" href="{{ asset_url }}" />
 
     {% endstylesheets %}
@@ -85,8 +88,14 @@
                             enabled: true,
                             showSeconds: true,
                             showMeridian: true,
-                            scrollEnabled: true
-                        },
+                            scrollEnabled: true,
+                            showOn: 'button',
+                            buttonImageOnly: true,
+                            changeMonth: true,
+                            changeYear: true,
+                            dateFormat: 'dd-mm-yy',
+                            yearRange: "-0:+1"
+                        }
                     }
             );
         });

@@ -3,6 +3,8 @@
 namespace AppBundle\Controller\Customer\Dashboard;
 
 use AppBundle\Form\Customer\Dashboard\ShipmentType;
+use DateTime;
+use jDateTime;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -42,10 +44,19 @@ class ShipmentController extends Controller
     public function newAction(Request $request)
     {
         $shipment = new Shipment();
+        $now = new \DateTime();
+        $tomorrow = $now->add(new \DateInterval('P1D'));
+        $shipment->setPickUpTime($tomorrow);
         $form = $this->createForm(ShipmentType::class, $shipment);
         $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
+        if ($form->isSubmitted()) {
+            $description = $form->get("description")
+                ->getData();
+            $value = $form->get("value")
+                ->getData();
+            $shipment->setDescription($description);
+            $shipment->setValue($value);
+            
             $em = $this->getDoctrine()->getManager();
             $em->persist($shipment);
             $em->flush();
@@ -58,7 +69,6 @@ class ShipmentController extends Controller
             'form' => $form->createView(),
         ));
     }
-
     /**
      * Finds and displays a Shipment entity.
      *
@@ -135,6 +145,6 @@ class ShipmentController extends Controller
             ->setAction($this->generateUrl('customer_dashboard_shipment_delete', array('id' => $shipment->getId())))
             ->setMethod('DELETE')
             ->getForm()
-        ;
+            ;
     }
 }
