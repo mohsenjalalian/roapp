@@ -1,0 +1,10 @@
+{% extends ':operator/dashboard:layout.html.twig' %}
+
+{% block main %}
+    <div class="ui info message">
+        <h4>{% trans %}error in send request{% endtrans %}</h4>
+        <p>{% trans %}please try for reassign.thanks{% endtrans %}</p>
+        <a href="{{ path("app_operator_dashboard_driver_list") }}/{{ shipmentId }}"><button>انتصاب مجدد</button></a>
+        <a href="{{ path("app_operator_dashboard_shipment_list") }}"><button>بازگشت</button></a>
+    </div>
+{% endblock %}

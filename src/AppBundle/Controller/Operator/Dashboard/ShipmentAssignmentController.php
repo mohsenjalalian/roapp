@@ -11,13 +11,13 @@ use AppBundle\Entity\Driver;
 /**
  * Class AssignShipmentController
  * @package AppBundle\Controller\Operator\Dashboard
- * @Route("/assign_shipment")
+ * @Route("/shipment_assignment")
  */
-class AssignShipmentController extends Controller
+class ShipmentAssignmentController extends Controller
 {
     
     /**
-     * @Route("/match/{shipment}/{driver}",name="app_operator_dashboard_assign_shipment_match")
+     * @Route("/match/{shipment}/{driver}",name="app_operator_dashboard_shipment_assignment_match")
      * @param Shipment $shipment
      * @param Driver $driver
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
@@ -26,15 +26,15 @@ class AssignShipmentController extends Controller
     {
         // if there is shipment and driver with given id
         if ($shipment && $driver) {
-            $sentRequest = $this->get("app.shipment_assignment")
+            $isSendRequest = $this->get("app.shipment_assignment")
                 ->sendRequest($shipment, $driver);
-            if ($sentRequest) {
+            if ($isSendRequest) {
                 return $this->redirectToRoute(
                     "app_operator_dashboard_shipment_list"
                 );
             } else {
                 return $this->render(
-                    ":operator/dashboard/assignShipment:errorAssignShipment.html.twig",
+                    ":operator/dashboard/shipmentAssignment:errorAssignShipment.html.twig",
                     [
                         'shipmentId'=>$shipment->getId()
                     ]

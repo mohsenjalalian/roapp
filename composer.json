@@ -35,7 +35,8 @@
         "vich/uploader-bundle": "^1.3",
         "knplabs/knp-menu-bundle": "^2.1",
         "guzzlehttp/guzzle": "^6.2",
-        "knplabs/knp-paginator-bundle": "^2.5"
+        "knplabs/knp-paginator-bundle": "^2.5",
+        "sallar/jdatetime": "dev-master"
     },
     "require-dev": {
         "sensio/generator-bundle": "^3.0",

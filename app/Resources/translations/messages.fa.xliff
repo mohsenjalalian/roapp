@@ -10,6 +10,26 @@
                 <source>You reached maximum verification request number.</source>
                 <target>شما به حداکثر تعداد درخواست رسیده اید.</target>
              </trans-unit>
+             <trans-unit id="waiting">
+                <source>waiting</source>
+                <target>در حال انتظار</target>
+             </trans-unit>
+             <trans-unit id="time over">
+                <source>time over</source>
+                <target>به اتمام رسیدن زمان پاسخ</target>
+             </trans-unit>
+             <trans-unit id="accept shipment">
+                <source>accept shipment</source>
+                <target>پذیرفتن سفارش</target>
+             </trans-unit>
+             <trans-unit id="error in send request">
+                <source>error in send request</source>
+                <target>خطا در ارسال درخواست!!!</target>
+             </trans-unit>
+             <trans-unit id="please try for reassign.thanks">
+                <source>please try for reassign.thanks</source>
+                <target>لطفا برای انتصاب مجدد تلاش نمایید. با تشکر</target>
+             </trans-unit>
         </body>
     </file>
 </xliff>
