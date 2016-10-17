@@ -5,6 +5,7 @@ namespace AppBundle\Utils;
 use AppBundle\Entity\ShipmentAssignment;
 use AppBundle\Entity\Driver;
 use AppBundle\Entity\Task;
+use AppBundle\Utils\NotificationService;
 use Doctrine\ORM\EntityManager;
 use AppBundle\Entity\Shipment;
 use Symfony\Component\Translation\Translator;
@@ -18,9 +19,9 @@ class AssignmentShipment
     private $entityManager;
 
     /**
-     * @var SendNotification
+     * @var notificationService
      */
-    private $sendNotification;
+    private $notificationService;
 
     /**
      * TranslatorInterface
@@ -30,21 +31,23 @@ class AssignmentShipment
     /**
      * AssignmentShipment constructor.
      * @param EntityManager $entityManager
-     * @param SendNotification $sendNotification
+     * @param NotificationService $notificationService
      * @param TranslatorInterface $translation
+     * @internal param NotificationService $NotificationService
+     * @internal param NotificationService $sendNotification
      */
 
-    public function __construct(EntityManager $entityManager , SendNotification $sendNotification , TranslatorInterface $translation)
+    public function __construct(EntityManager $entityManager ,NotificationService $notificationService ,TranslatorInterface $translation)
     {
         $this->entityManager = $entityManager;
-        $this->sendNotification = $sendNotification;
+        $this->notificationService = $notificationService;
         $this->translations = $translation;
     }
     public function sendRequest(Shipment $shipment,Driver $driver)
     {
         $assignmentObj = $this->setWaitingAssign($shipment,$driver);
         $data = $this->initDataForSend($assignmentObj);
-        $this->sendNotification->sendNotification($data);
+        $this->notificationService->sendNotification($data);
         $this->setExpireTime($assignmentObj);
 
         return true;
@@ -53,12 +56,11 @@ class AssignmentShipment
     {
         $data =
             [
-                'title'=>'درخواست تحویل سفارش',
-                'body'=> 'سفارش با مشخصات زیر آماده ارسال می باشد' ,
-                'topic'=>'charge',
-                'parameters'=>
-                    [
-                        'assignmentId'=>$assignmentObj->getId(),
+                'title' => 'درخواست تحویل سفارش',
+                'body' => 'سفارش با مشخصات زیر آماده ارسال می باشد',
+                'topic' => 'charge',
+                'parameters' => [
+                        'assignmentId' => $assignmentObj->getId(),
                         'type' => 'test'
                     ]
             ];
@@ -75,16 +77,15 @@ class AssignmentShipment
         $ShipmentAssignmentObj->setShipment($shipment);
         $ShipmentAssignmentObj->setDriver($driver);
         $ShipmentAssignmentObj
-            ->setReason
-            (
+            ->setReason(
                 $this->translations->trans("waiting")
             );
         $ShipmentAssignmentObj->setStatus(ShipmentAssignment::STATUS_WAITING);
+
         $em->persist($driver);
         $em->persist($shipment);
         $em->persist($ShipmentAssignmentObj);
         $assignmentId = $ShipmentAssignmentObj;
-
         $em->flush();
 
         return $assignmentId;
@@ -101,10 +102,9 @@ class AssignmentShipment
         $currentTime = date("Y-m-d H:i:s", $currentTime);
         $expireRequestTime = new \DateTime($currentTime, new \DateTimeZone('Asia/Tehran'));
         $assignment->setExpireTime($expireRequestTime);
+
         $em->persist($assignment);
-
         $em->flush();
-
     }
     public function timeOutAction(ShipmentAssignment $assignment)
     {
@@ -118,17 +118,14 @@ class AssignmentShipment
         $assignment
             ->setStatus(ShipmentAssignment::STATUS_TIMEOUT);
         $assignment
-            ->setReason
-            (
+            ->setReason(
                 $this->translations->trans("time over")
             );
 
         $em->persist($assignment);
-
         $em->flush();
-
     }
-    public function isAssignTimeExpire(ShipmentAssignment $assignment)
+    public function isExpiredAssignTime(ShipmentAssignment $assignment)
     {
         $currentTime = new \DateTime();
         $expireTime = $assignment->getExpireTime();
@@ -150,30 +147,27 @@ class AssignmentShipment
         $assignment
             ->setStatus(ShipmentAssignment::STATUS_ACCEPTED);
         $assignment
-            ->setReason
-            (
+            ->setReason(
                 $this->translations->trans("accept shipment")
             );
         // create two tasks with diffrent types
         $this->createTasks($assignment->getShipment());
 
         $em->persist($assignment);
-
         $em->flush();
-
     }
     public function createTasks($shipment)
     {
+        $em = $this->entityManager;
         $taskTypes = ['pickup','deliver'];
-        foreach ($taskTypes as $key=>$type) {
+        foreach ($taskTypes as $key => $type) {
             $taskTblObj = new Task();
             $taskTblObj->setShipment($shipment);
             $taskTblObj->setStatus(1);
             $taskTblObj->setType($key);
-            $taskEm = $this->entityManager;
-            $taskEm->persist($taskTblObj);
 
-            $taskEm->flush();
+            $em->persist($taskTblObj);
+            $em->flush();
         }
     }
     public function rejectRequest(ShipmentAssignment $assignment , $reason)
@@ -191,7 +185,6 @@ class AssignmentShipment
             ->setReason($reason);
 
         $em->persist($assignment);
-
         $em->flush();
     }
 }
