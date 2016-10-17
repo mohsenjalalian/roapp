@@ -1,0 +1,45 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>Address list</h1>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Ispublic</th>
+                <th>Description</th>
+                <th>Latitude</th>
+                <th>Longitude</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for address in addresses %}
+            <tr>
+                <td><a href="{{ path('customer_dashboard_address_show', { 'id': address.id }) }}">{{ address.id }}</a></td>
+                <td>{% if address.isPublic %}Yes{% else %}No{% endif %}</td>
+                <td>{{ address.description }}</td>
+                <td>{{ address.latitude }}</td>
+                <td>{{ address.longitude }}</td>
+                <td>
+                    <ul>
+                        <li>
+                            <a href="{{ path('customer_dashboard_address_show', { 'id': address.id }) }}">show</a>
+                        </li>
+                        <li>
+                            <a href="{{ path('customer_dashboard_address_edit', { 'id': address.id }) }}">edit</a>
+                        </li>
+                    </ul>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <ul>
+        <li>
+            <a href="{{ path('customer_dashboard_address_new') }}">Create a new entry</a>
+        </li>
+    </ul>
+{% endblock %}
