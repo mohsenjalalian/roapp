@@ -50,7 +50,7 @@ class AddressController extends Controller
 
         if ($form->isSubmitted()) {
             $result = $this->get('app.address_utils')->newAddress($address, $owner, $user);
-            if ($result == true) {
+            if ($result != false) {
                 return $this->redirectToRoute('customer_dashboard_address_show',
                     array('id' => $address->getId())
                 );

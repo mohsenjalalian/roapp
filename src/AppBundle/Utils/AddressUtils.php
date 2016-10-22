@@ -65,15 +65,13 @@ class AddressUtils
 
         if (count($errors) > 0) {
 
-            $errorsString = (string) $errors;
-
-            return $errorsString;
+            return false;
         }
 
         $em->persist($address);
         $em->flush();
 
-        return true;
+        return $address;
 
 
 
