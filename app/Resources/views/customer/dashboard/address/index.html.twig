@@ -1,9 +1,12 @@
-{% extends 'base.html.twig' %}
+{% extends ':operator/dashboard:layout.html.twig' %}
 
-{% block body %}
-    <h1>Address list</h1>
+{% block main %}
+    <div>
+        <h2 class="ui header" style="display: inline">لیست آدرس ها</h2>
+        <a style="margin-right: 10px" href="{{ path('customer_dashboard_address_new') }}"><button>ایجاد آدرس جدید</button></a>
+    </div>
 
-    <table>
+    <table class="ui celled table">
         <thead>
             <tr>
                 <th>Id</th>
@@ -23,23 +26,11 @@
                 <td>{{ address.latitude }}</td>
                 <td>{{ address.longitude }}</td>
                 <td>
-                    <ul>
-                        <li>
-                            <a href="{{ path('customer_dashboard_address_show', { 'id': address.id }) }}">show</a>
-                        </li>
-                        <li>
-                            <a href="{{ path('customer_dashboard_address_edit', { 'id': address.id }) }}">edit</a>
-                        </li>
-                    </ul>
+                            <a href="{{ path('customer_dashboard_address_show', { 'id': address.id }) }}"><button>نمایش</button></a>
+                            <a href="{{ path('customer_dashboard_address_edit', { 'id': address.id }) }}"><button>ویرایش</button></a>
                 </td>
             </tr>
         {% endfor %}
         </tbody>
     </table>
-
-    <ul>
-        <li>
-            <a href="{{ path('customer_dashboard_address_new') }}">Create a new entry</a>
-        </li>
-    </ul>
 {% endblock %}

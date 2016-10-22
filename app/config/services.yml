@@ -50,3 +50,9 @@ services:
         arguments: ["@request_stack"]
         tags:
             - { name: form.type }
+
+    app.address_utils:
+        class: AppBundle\Utils\AddressUtils
+        arguments:
+            - "@doctrine.orm.default_entity_manager"
+            - "@validator"

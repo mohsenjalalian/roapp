@@ -1,10 +1,10 @@
-{% extends 'base.html.twig' %}
+{% extends ':customer/dashboard:layout.html.twig' %}
 
-{% block body %}
-    <h1>Address</h1>
+{% block main %}
+    <h2 class="ui header">آدرس</h2>
 
-    <table>
-        <tbody>
+    <table class="ui celled table">
+        <tbody class="headColor">
             <tr>
                 <th>Id</th>
                 <td>{{ address.id }}</td>
@@ -28,17 +28,9 @@
         </tbody>
     </table>
 
-    <ul>
-        <li>
-            <a href="{{ path('customer_dashboard_address_index') }}">Back to the list</a>
-        </li>
-        <li>
-            <a href="{{ path('customer_dashboard_address_edit', { 'id': address.id }) }}">Edit</a>
-        </li>
-        <li>
+            <a href="{{ path('customer_dashboard_address_index') }}"><button>برگشت به لیست</button></a>
+            <a href="{{ path('customer_dashboard_address_edit', { 'id': address.id }) }}"><button>ویرایش</button></a>
             {{ form_start(delete_form) }}
-                <input type="submit" value="Delete">
-            {{ form_end(delete_form) }}
-        </li>
-    </ul>
+            <input type="submit" value="حذف">
+
 {% endblock %}
