@@ -2,14 +2,20 @@
 
 namespace AppBundle\Controller\Customer\Dashboard;
 
+use AppBundle\Entity\Address;
+use AppBundle\Form\Customer\Dashboard\AddressType;
 use AppBundle\Form\Customer\Dashboard\ShipmentType;
 use DateTime;
 use jDateTime;
+//use Symfony\Component\BrowserKit\Response;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use AppBundle\Entity\Shipment;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Validator\Constraints\Url;
 
 /**
  * Shipment controller.
@@ -44,10 +50,29 @@ class ShipmentController extends Controller
     public function newAction(Request $request)
     {
         $shipment = new Shipment();
+        $addressEntity = new Address();
+        $customerId = 1; // get current customer id
+        $address = $this->getDoctrine()
+            ->getRepository("AppBundle:Address")
+            ->getPublicAddressCustomer($customerId);
         $now = new \DateTime();
         $tomorrow = $now->add(new \DateInterval('P1D'));
         $shipment->setPickUpTime($tomorrow);
         $form = $this->createForm(ShipmentType::class, $shipment);
+        $addressForm = $this
+            ->createForm(
+                AddressType::class,
+                $addressEntity,
+                [
+                    'action' => $this->generateUrl(
+                        'customer_dashboard_address_add_address'
+                    ),
+                    'attr' => [
+                            'id' => 'add_address'
+                        ]
+                ]
+            )
+        ;
         $form->handleRequest($request);
         if ($form->isSubmitted()) {
             $description = $form->get("description")
@@ -56,7 +81,7 @@ class ShipmentController extends Controller
                 ->getData();
             $shipment->setDescription($description);
             $shipment->setValue($value);
-            
+
             $em = $this->getDoctrine()->getManager();
             $em->persist($shipment);
             $em->flush();
@@ -65,6 +90,9 @@ class ShipmentController extends Controller
         }
 
         return $this->render('customer/dashboard/shipment/new.html.twig', array(
+            'customerId' => $customerId,
+            'addressFrom' => $addressForm->createView(),
+            'address' => $address,
             'shipment' => $shipment,
             'form' => $form->createView(),
         ));

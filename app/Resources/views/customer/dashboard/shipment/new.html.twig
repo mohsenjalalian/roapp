@@ -1,9 +1,7 @@
 {% extends ':customer/dashboard:layout.html.twig' %}
 
 {% block page_title %}
-   {#<h1>#}
-       {#ثبت درخواست ارسال#}
-   {#</h1>#}
+
 {% endblock %}
 
 {% block main %}
@@ -29,21 +27,43 @@
                 <div>{{ form_widget(form.value ) }}</div>
             </div>
         </div>
-        {#<div class="two field">#}
-            {#<div class="field">#}
-                {#<label>{{ form_label(form.price) }}</label>#}
-                {#<div>{{ form_widget(form.price) }}</div>#}
-            {#</div>#}
-        {#</div>#}
         <div class="two fields">
-            <div class="field">
-                <label>{{ form_label(form.ownerAddress) }}</label>
-                <div>{{ form_widget(form.ownerAddress ) }}</div>
-            </div>
-            <div class="field">
-                <label>{{ form_label(form.otherAddress) }}</label>
-                <div>{{ form_widget(form.otherAddress ) }}</div>
-            </div>
+            {% if address is not empty  %}
+                <div class="field">
+                    <label>آدرس فرستنده</label>
+                    {% for infoAddress in address %}
+                        {% if loop.index <=4 %}
+                            <div class="" style="margin-top: 10px" id="address_show_section">
+                                {% if loop.index == 1 %}
+                                    <input checked type="radio"  name="publicAddress" value="{{ infoAddress.id }}"><span>{{ infoAddress.description }}</span>
+                                {% else %}
+                                    <input type="radio"  name="publicAddress" value="{{ infoAddress.id }}"><span>{{ infoAddress.description }}</span>
+                                {% endif %}
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                    {% if address|length >= 5 %}
+                    <div class="ui accordion">
+                        <div class="title">
+                            <i class="dropdown icon"></i>
+                            <span style="color:#2b669a">آدرس های دیگر</span>
+                        </div>
+                        {#<a id="addressContinue" style="cursor: pointer"> آدرس های دیگر+</a>#}
+                        <div class="otherAddress content" id="bbb">
+                            {% for infoAddress in address %}
+                                {% if loop.index >=5 %}
+                                    <input id="" type="radio"  name="publicAddress" value="{{ infoAddress.id }}"><span>{{ infoAddress.description }}</span>
+                                    <br>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endif %}
+                    <div style="margin-top: 10px">
+                        <a id="address_modal" style="cursor: pointer">افزودن آدرس جدید</a>
+                    </div>
+                </div>
+            {% endif %}
         </div>
 
         <input class="ui button" type="submit" tabindex="0" value="ایجاد" />
@@ -56,51 +76,71 @@
             <a href="{{ path('customer_dashboard_shipment_index') }}">Back to the list</a>
         </li>
     </ul>
+    <div class="ui modal" id="address_modal_form">
+        <i class="close icon"></i>
+        <div class="header">
+            <span>افزودن آدرس جدید</span>
+        </div>
+        <div class="image content">
+            <div class="description">
+                <div id="map"></div>
+                <input id="pac-input" class="controls" type="text" placeholder="Search Box">
+            </div>
+        </div>
+        <div style="margin: 20px" class="ui form">
+            {{ form_start(addressFrom) }}
+            {{ form_widget(addressFrom) }}
+            <input type="submit" style="margin-top: 10px " value="اضافه کردن" />
+            {{ form_end(addressFrom) }}
+        </div>
+    </div>
 {% endblock %}
 
-{% block stylesheets %}
-    {{ parent()  }}
-    {% stylesheets
-    'bundles/app/stylesheets/customer/dashboard/shipment/new.css'
-    'assets/vendor/persian-datepicker/src/css/persian-datepicker.css'
-    %}
-    <link rel="stylesheet" href="{{ asset_url }}" />
+    {% block stylesheets %}
+        {{ parent()  }}
+        {% stylesheets
+        'bundles/app/stylesheets/customer/dashboard/shipment/new.css'
+        'assets/vendor/persian-datepicker/src/css/persian-datepicker.css'
+        'bundles/app/stylesheets/customer/dashboard/address/style.css'
+        %}
+        <link rel="stylesheet" href="{{ asset_url }}" />
 
-    {% endstylesheets %}
-{% endblock %}
+        {% endstylesheets %}
+    {% endblock %}
 
 
-{% block javascripts %}
-    {{ parent()  }}
+    {% block javascripts %}
+        {{ parent()  }}
 
-    {% javascripts
-    'assets/vendor/persian-datepicker/lib/persian-date.js'
-    'assets/vendor/persian-datepicker/dist/js/persian-datepicker-0.4.5.min.js'
-    %}
-    <script type="text/javascript" src="{{ asset_url }}" ></script>
-    {% endjavascripts %}
+        {% javascripts
+        'assets/vendor/persian-datepicker/lib/persian-date.js'
+        'assets/vendor/persian-datepicker/dist/js/persian-datepicker-0.4.5.min.js'
+        'bundles/app/javascript/customer/dashboard/shipment/script.js'
+        'bundles/app/javascript/customer/dashboard/address/script.js'
+        'https://maps.googleapis.com/maps/api/js?key=AIzaSyAVHhOs42kp45lE5xJTOI3o2GKMO5hgqV8&language=fa&region=IR&libraries=places&callback=initMap'
+        %}
+        <script type="text/javascript" src="{{ asset_url }}" ></script>
+        {% endjavascripts %}
 
-    <script>
-        $(document).ready(function() {
-            $(".js-datepicker").pDatepicker(
-                    {
-                        timePicker: {
-                            enabled: true,
-                            showSeconds: true,
-                            showMeridian: true,
-                            scrollEnabled: true,
-                            showOn: 'button',
-                            buttonImageOnly: true,
-                            changeMonth: true,
-                            changeYear: true,
-                            dateFormat: 'dd-mm-yy',
-                            yearRange: "-0:+1"
+        <script>
+            $(document).ready(function() {
+                $(".js-datepicker").pDatepicker(
+                        {
+                            timePicker: {
+                                enabled: true,
+                                showSeconds: true,
+                                showMeridian: true,
+                                scrollEnabled: true,
+                                showOn: 'button',
+                                buttonImageOnly: true,
+                                changeMonth: true,
+                                changeYear: true,
+                                dateFormat: 'dd-mm-yy',
+                                yearRange: "-0:+1"
+                            }
                         }
-                    }
-            );
-        });
-    </script>
+                );
+            });
+        </script>
 
-
-
-{% endblock %}
+    {% endblock %}

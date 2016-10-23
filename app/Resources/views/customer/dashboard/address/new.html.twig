@@ -11,7 +11,7 @@
     {{ parent()  }}
     {% javascripts
     'bundles/app/javascript/customer/dashboard/address/script.js'
-    'https://maps.googleapis.com/maps/api/js?key=AIzaSyArreo16WcGaS9Y8SGJAjsrE88WzL-tTDU&&language=fa&region=IR&libraries=places&callback=initMap'
+    'https://maps.googleapis.com/maps/api/js?key=AIzaSyAVHhOs42kp45lE5xJTOI3o2GKMO5hgqV8&language=fa&region=IR&libraries=places&callback=initMap'
     %}
     <script src="{{ asset_url }}"></script>
     {% endjavascripts %}
@@ -22,7 +22,7 @@
 {% endblock %}
 
 {% block main %}
-    <div id="map""></div>
+    <div id="map"></div>
     <input id="pac-input" class="controls" type="text" placeholder="Search Box">
     <div class="ui form">
     {{ form_start(form) }}

@@ -211,6 +211,6 @@ class Address
     }
     public function __toString()
     {
-        return (string) $this->getLatitude();
+        return (string) $this->getDescription();
     }
 }
