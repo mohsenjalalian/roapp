@@ -52,7 +52,7 @@ class AddressUtils
                 );
 
             if (!$customer) {
-                $customer = new Customer();
+
                 $customer->setPhone($owner);
                 $customer->setPassword('1234');
                 $em->persist($customer);
