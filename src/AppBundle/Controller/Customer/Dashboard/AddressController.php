@@ -29,9 +29,12 @@ class AddressController extends Controller
 
         $addresses = $em->getRepository('AppBundle:Address')->findAll();
 
-        return $this->render('customer/dashboard/address/index.html.twig', array(
-            'addresses' => $addresses,
-        ));
+        return $this->render(
+            'customer/dashboard/address/index.html.twig',
+            [
+                'addresses' => $addresses,
+            ]
+        );
     }
 
     /**
@@ -48,21 +51,24 @@ class AddressController extends Controller
         $owner = $request->query->get('owner');
         $user = $this->getUser();
 
-        if ($form->isSubmitted()) {
-            $result = $this->get('app.address_utils')->newAddress($address, $owner, $user);
-            if ($result != false) {
-                return $this->redirectToRoute('customer_dashboard_address_show',
-                    array('id' => $address->getId())
+        if ($form->isSubmitted() && $form->isValid()) {
+            $this->get('app.address_service')->createAddress($address, $owner, $user);
+
+                return $this->redirectToRoute(
+                    'customer_dashboard_address_show',
+                    [
+                        'id' => $address->getId(),
+                    ]
                 );
-            }
         }
 
-
-        return $this->render('customer/dashboard/address/new.html.twig', array(
-            'address' => $address,
-            'form' => $form->createView(),
-        ));
-
+        return $this->render(
+            'customer/dashboard/address/new.html.twig',
+            [
+                'address' => $address,
+                'form' => $form->createView(),
+            ]
+        );
     }
 
     /**
@@ -75,10 +81,13 @@ class AddressController extends Controller
     {
         $deleteForm = $this->createDeleteForm($address);
 
-        return $this->render('customer/dashboard/address/show.html.twig', array(
-            'address' => $address,
-            'delete_form' => $deleteForm->createView(),
-        ));
+        return $this->render(
+            'customer/dashboard/address/show.html.twig',
+            [
+                'address' => $address,
+                'delete_form' => $deleteForm->createView(),
+            ]
+        );
     }
 
     /**
@@ -98,15 +107,22 @@ class AddressController extends Controller
             $em->persist($address);
             $em->flush();
 
-            return $this->redirectToRoute('customer_dashboard_address_show',
-                array('id' => $address->getId()));
+            return $this->redirectToRoute(
+                'customer_dashboard_address_show',
+                [
+                    'id' => $address->getId(),
+                ]
+            );
         }
 
-        return $this->render('customer/dashboard/address/edit.html.twig', array(
-            'address' => $address,
-            'edit_form' => $editForm->createView(),
-            'delete_form' => $deleteForm->createView(),
-        ));
+        return $this->render(
+            'customer/dashboard/address/edit.html.twig',
+            [
+                'address' => $address,
+                'edit_form' => $editForm->createView(),
+                'delete_form' => $deleteForm->createView(),
+            ]
+        );
     }
 
     /**
@@ -139,8 +155,13 @@ class AddressController extends Controller
     private function createDeleteForm(Address $address)
     {
         return $this->createFormBuilder()
-            ->setAction($this->generateUrl('customer_dashboard_address_delete',
-                array('id' => $address->getId())))
+            ->setAction(
+                $this->generateUrl(
+                    'customer_dashboard_address_delete',
+                    [
+                        'id' => $address->getId(),
+                    ]
+                ))
             ->setMethod('DELETE')
             ->getForm()
         ;

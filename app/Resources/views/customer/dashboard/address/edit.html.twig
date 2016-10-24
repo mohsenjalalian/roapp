@@ -11,9 +11,9 @@
     {{ parent()  }}
     {% javascripts
     'bundles/app/javascript/customer/dashboard/address/script.js'
-    'https://maps.googleapis.com/maps/api/js?key=AIzaSyAVHhOs42kp45lE5xJTOI3o2GKMO5hgqV8&language=fa&region=IR&libraries=places&callback=editMap'
     %}
     <script src="{{ asset_url }}"></script>
+    <script src="{{ getGoogleMapEditLink() }}"></script>
     {% endjavascripts %}
 {% endblock %}
 
@@ -26,14 +26,13 @@
     <div id="map"></div>
     <input data-lat="{{ edit_form.vars.data.latitude }}" data-lng="{{ edit_form.vars.data.longitude }}" data-addr="{{ edit_form.vars.data.description }}"  id="address" class="controls" type="text" placeholder="آدرس">
 
-
     {{ form_start(edit_form) }}
         {{ form_widget(edit_form) }}
         <input type="submit" value="ویرایش" />
     {{ form_end(edit_form) }}
 
-            <a href="{{ path('customer_dashboard_address_index') }}"><button>برگشت به لیست</button></a>
-            {{ form_start(delete_form) }}
-                <input type="submit" value="حذف">
-            {{ form_end(delete_form) }}
+    <a href="{{ path('customer_dashboard_address_index') }}"><button>برگشت به لیست</button></a>
+    {{ form_start(delete_form) }}
+        <input type="submit" value="حذف">
+    {{ form_end(delete_form) }}
 {% endblock %}

@@ -51,8 +51,14 @@ services:
         tags:
             - { name: form.type }
 
-    app.address_utils:
-        class: AppBundle\Utils\AddressUtils
+    app.address_service:
+        class: AppBundle\Utils\Services\AddressService
         arguments:
             - "@doctrine.orm.default_entity_manager"
-            - "@validator"
+
+    app.google_map_extension:
+        class: AppBundle\Twig\GoogleMapExtension
+        arguments: ['%google_map_api%']
+        public: false
+        tags:
+            - { name: twig.extension }

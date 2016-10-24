@@ -13,15 +13,13 @@ function initMap() {
 
     var geocoder = new google.maps.Geocoder();
 
-
-    $("#address").keyup(function(){
+    $("#address").keyup(function() {
         geocodeAddress(geocoder, map, marker);
     });
 }
 
 function geocodeAddress(geocoder, resultsMap, marker) {
     var address = document.getElementById('address').value;
-
     geocoder.geocode({'address': address}, function(results, status) {
         if (status === 'OK') {
             resultsMap.setCenter(results[0].geometry.location);
@@ -61,12 +59,11 @@ function editMap() {
 
     var geocoder = new google.maps.Geocoder();
 
-
-    $("#address").keyup(function(){
+    $("#address").keyup(function() {
         geocodeAddress(geocoder, map, marker);
     });
 }
 
-$("#address").keyup(function(){
+$("#address").keyup(function() {
     $("#address_description").val($(this).val());
 });

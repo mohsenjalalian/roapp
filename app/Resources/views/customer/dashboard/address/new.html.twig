@@ -11,9 +11,9 @@
     {{ parent()  }}
     {% javascripts
     'bundles/app/javascript/customer/dashboard/address/script.js'
-    'https://maps.googleapis.com/maps/api/js?key=AIzaSyAVHhOs42kp45lE5xJTOI3o2GKMO5hgqV8&language=fa&region=IR&libraries=places&callback=initMap'
     %}
     <script src="{{ asset_url }}"></script>
+    <script src="{{ getGoogleMapInitLink() }}"></script>
     {% endjavascripts %}
 {% endblock %}
 
@@ -31,5 +31,5 @@
     {{ form_end(form) }}
     </div>
 
-            <a href="{{ path('customer_dashboard_address_index') }}"><button>برگشت به لیست</button></a>
+    <a href="{{ path('customer_dashboard_address_index') }}"><button>برگشت به لیست</button></a>
 {% endblock %}
