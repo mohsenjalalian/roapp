@@ -11,9 +11,9 @@
     {{ parent()  }}
     {% javascripts
     'bundles/app/javascript/customer/dashboard/address/script.js'
-    'https://maps.googleapis.com/maps/api/js?key=AIzaSyArreo16WcGaS9Y8SGJAjsrE88WzL-tTDU&&language=fa&region=IR&libraries=places&callback=initMap'
     %}
     <script src="{{ asset_url }}"></script>
+    <script src="{{ getGoogleMapInitLink() }}"></script>
     {% endjavascripts %}
 {% endblock %}
 
@@ -22,8 +22,8 @@
 {% endblock %}
 
 {% block main %}
-    <div id="map""></div>
-    <input id="pac-input" class="controls" type="text" placeholder="Search Box">
+    <div id="map"></div>
+    <input id="address" class="controls" type="text" placeholder="آدرس">
     <div class="ui form">
     {{ form_start(form) }}
     {{ form_widget(form) }}
@@ -31,5 +31,5 @@
     {{ form_end(form) }}
     </div>
 
-            <a href="{{ path('customer_dashboard_address_index') }}"><button>برگشت به لیست</button></a>
+    <a href="{{ path('customer_dashboard_address_index') }}"><button>برگشت به لیست</button></a>
 {% endblock %}

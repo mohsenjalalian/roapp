@@ -42,7 +42,10 @@ class AddressType extends AbstractType
             $form = $event->getForm();
 
             if (!$this->request->query->get('owner')) {
-                $form->add('isPublic', CheckboxType::class, array('label' => 'آدرس به صورت عمومی باشد'));
+                $form->add('isPublic', CheckboxType::class, array(
+                    'label' => 'آدرس به صورت عمومی باشد',
+                    'required' => false
+                ));
             }
         });
     }
