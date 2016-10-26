@@ -48,3 +48,15 @@ services:
         arguments: ["@request_stack"]
         tags:
             - { name: form.type }
+
+    app.address_service:
+        class: AppBundle\Utils\Services\AddressService
+        arguments:
+            - "@doctrine.orm.default_entity_manager"
+
+    app.google_map_extension:
+        class: AppBundle\Twig\GoogleMapExtension
+        arguments: ['%google_map_api%']
+        public: false
+        tags:
+            - { name: twig.extension }

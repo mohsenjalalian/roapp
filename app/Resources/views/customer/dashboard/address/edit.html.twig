@@ -1,21 +1,38 @@
-{% extends 'base.html.twig' %}
+{% extends ':customer/dashboard:layout.html.twig' %}
 
-{% block body %}
-    <h1>Address edit</h1>
+{% block stylesheets %}
+    {{ parent()  }}
+    {% stylesheets 'bundles/app/stylesheets/customer/dashboard/address/style.css' %}
+    <link rel="stylesheet" href="{{ asset_url }}" />
+    {% endstylesheets %}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent()  }}
+    {% javascripts
+    'bundles/app/javascript/customer/dashboard/address/script.js'
+    %}
+    <script src="{{ asset_url }}"></script>
+    <script src="{{ getGoogleMapEditLink() }}"></script>
+    {% endjavascripts %}
+{% endblock %}
+
+{% block page_title %}
+    <h1>ویرایش آدرس</h1>
+{% endblock %}
+
+{% block main %}
+
+    <div id="map"></div>
+    <input data-lat="{{ edit_form.vars.data.latitude }}" data-lng="{{ edit_form.vars.data.longitude }}" data-addr="{{ edit_form.vars.data.description }}"  id="address" class="controls" type="text" placeholder="آدرس">
 
     {{ form_start(edit_form) }}
         {{ form_widget(edit_form) }}
-        <input type="submit" value="Edit" />
+        <input type="submit" value="ویرایش" />
     {{ form_end(edit_form) }}
 
-    <ul>
-        <li>
-            <a href="{{ path('customer_dashboard_address_index') }}">Back to the list</a>
-        </li>
-        <li>
-            {{ form_start(delete_form) }}
-                <input type="submit" value="Delete">
-            {{ form_end(delete_form) }}
-        </li>
-    </ul>
+    <a href="{{ path('customer_dashboard_address_index') }}"><button>برگشت به لیست</button></a>
+    {{ form_start(delete_form) }}
+        <input type="submit" value="حذف">
+    {{ form_end(delete_form) }}
 {% endblock %}

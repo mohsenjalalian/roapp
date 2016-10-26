@@ -1,0 +1,12 @@
+{% block roapp_image_widget %}
+    {% spaceless %}
+        {% set attr = attr|merge({'class': (attr.class|default('') ~ ' roapp-image-upload')|trim}) %}
+        {% set attr = attr|merge({'data-path': path}) %}
+        {% set attr = attr|merge({'data-directory': directory}) %}
+        {% set attr = attr|merge({'data-parallel-uploads': parallel_uploads}) %}
+        {% set attr = attr|merge({'data-max-filesize': max_filesize}) %}
+        {% set attr = attr|merge({'data-max-files': max_files}) %}
+        {% set attr = attr|merge({'data-accepted-files': accepted_files}) %}
+        {{ block('hidden_widget') }}
+    {% endspaceless %}
+{% endblock %}

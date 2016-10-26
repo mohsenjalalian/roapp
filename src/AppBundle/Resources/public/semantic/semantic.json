@@ -17,6 +17,6 @@
   },
   "permission": false,
   "autoInstall": false,
-  "rtl": "both",
+  "rtl": true,
   "version": "2.2.4"
 }
