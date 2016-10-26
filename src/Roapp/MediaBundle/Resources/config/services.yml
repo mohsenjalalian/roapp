@@ -1,0 +1,29 @@
+services:
+#    roapp_media.example:
+#        class: Roapp\MediaBundle\Example
+#        arguments: ["@service_id", "plain_value", %parameter%]
+    roaapp_media.form.type.roapp_image:
+        class: Roapp\MediaBundle\Form\RoappImageType
+        arguments:
+            - "%roapp_media.uploads%"
+            - "@service_container"
+        tags:
+            - { name: form.type }
+
+    roapp_media.upload_manager:
+        class: Roapp\MediaBundle\Utils\UploadManager
+        arguments:
+            - "@session"
+            - "%roapp_media.temporary_directory%"
+            - "%roapp_media.permanent_directory%"
+            - "%roapp_media.uploads%"
+    roapp_media.media_association_handler:
+        class: Roapp\MediaBundle\Utils\MediaAssociationHandler
+        arguments:
+            - "@service_container"
+    roapp_media.event.upload_subscriber:
+        class: Roapp\MediaBundle\EventListener\UploadSubscriber
+        tags:
+            - { name: doctrine.event_subscriber, connection: default }
+        arguments:
+            - "@roapp_media.media_association_handler"
