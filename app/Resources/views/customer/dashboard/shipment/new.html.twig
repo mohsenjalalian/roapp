@@ -28,12 +28,12 @@
             </div>
         </div>
         <div class="two fields">
-            {% if address is not empty  %}
-                <div class="field">
-                    <label>آدرس فرستنده</label>
+            <div class="field">
+                <label>آدرس فرستنده</label>
+                <div class="" style="margin-top: 10px" id="address_show_section">
                     {% for infoAddress in address %}
                         {% if loop.index <=4 %}
-                            <div class="" style="margin-top: 10px" id="address_show_section">
+                            <div class="" style="margin-top: 10px">
                                 {% if loop.index == 1 %}
                                     <input checked type="radio"  name="publicAddress" value="{{ infoAddress.id }}"><span>{{ infoAddress.description }}</span>
                                 {% else %}
@@ -42,7 +42,8 @@
                             </div>
                         {% endif %}
                     {% endfor %}
-                    {% if address|length >= 5 %}
+                </div>
+                {% if address|length >= 5 %}
                     <div class="ui accordion">
                         <div class="title">
                             <i class="dropdown icon"></i>
@@ -58,13 +59,32 @@
                             {% endfor %}
                         </div>
                     </div>
-                    {% endif %}
-                    <div style="margin-top: 10px">
-                        <a id="address_modal" style="cursor: pointer">افزودن آدرس جدید</a>
+                {% endif %}
+                <div style="margin-top: 10px">
+                    <a class="address_modal" name="ownerFormModal" style="cursor: pointer">افزودن آدرس جدید</a>
+                </div>
+            </div>
+            <div class="field">
+                <label>شماره گیرنده</label>
+                <div>
+                    <input id="mobile_reciver"  name="reciver_mobile_number" placeholder="وارد کردن شماره تلفن همراه" type="text">
+                    <div id="reciver_address" class="ui toggle checkbox" style="margin-top: 5px">
+                        <input id="show_reciver_address_btn" name="public" type="checkbox" disabled>
+                        <label>نمایش آدرس</label>
+                    </div>
+                    <div id="reciver_info_box" style="margin-top: 15px;display: none">
+
+                    </div>
+                    <div id="noAddress"  style="margin-top:10px;display: none">
+                        <span>آدرسی وجود ندارد</span>
+                    </div>
+                    <div id="reciver_modal_box" style="margin-top: 15px">
+                        <a class="address_modal" name="otherFormModal" style="cursor: pointer;display: none">افزودن آدرس جدید</a>
                     </div>
                 </div>
-            {% endif %}
+            </div>
         </div>
+
 
         <input class="ui button" type="submit" tabindex="0" value="ایجاد" />
 
@@ -76,6 +96,7 @@
             <a href="{{ path('customer_dashboard_shipment_index') }}">Back to the list</a>
         </li>
     </ul>
+
     <div class="ui modal" id="address_modal_form">
         <i class="close icon"></i>
         <div class="header">
@@ -87,11 +108,8 @@
                 <input id="pac-input" class="controls" type="text" placeholder="Search Box">
             </div>
         </div>
-        <div style="margin: 20px" class="ui form">
-            {{ form_start(addressFrom) }}
-            {{ form_widget(addressFrom) }}
-            <input type="submit" style="margin-top: 10px " value="اضافه کردن" />
-            {{ form_end(addressFrom) }}
+        <div id="load_form_place" style="margin: 20px" class="ui form">
+
         </div>
     </div>
 {% endblock %}
@@ -117,7 +135,7 @@
         'assets/vendor/persian-datepicker/dist/js/persian-datepicker-0.4.5.min.js'
         'bundles/app/javascript/customer/dashboard/shipment/script.js'
         'bundles/app/javascript/customer/dashboard/address/script.js'
-        'https://maps.googleapis.com/maps/api/js?key=AIzaSyAVHhOs42kp45lE5xJTOI3o2GKMO5hgqV8&language=fa&region=IR&libraries=places&callback=initMap'
+        'https://maps.googleapis.com/maps/api/js?key=AIzaSyC0HLakyBsAdkkVV5n2-1YJNCzvK9G-QRY&language=fa&region=IR&libraries=places&callback=initMap'
         %}
         <script type="text/javascript" src="{{ asset_url }}" ></script>
         {% endjavascripts %}

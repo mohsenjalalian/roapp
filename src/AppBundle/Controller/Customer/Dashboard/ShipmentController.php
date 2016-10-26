@@ -46,6 +46,8 @@ class ShipmentController extends Controller
      *
      * @Route("/new", name="customer_dashboard_shipment_new")
      * @Method({"GET", "POST"})
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
      */
     public function newAction(Request $request)
     {
@@ -97,6 +99,96 @@ class ShipmentController extends Controller
             'form' => $form->createView(),
         ));
     }
+
+    /**
+     * @Route("/load_owner_form",name="customer_dashboard_shipment_load_owner_form")
+     */
+    public function loadOwnerAddressFormAction()
+    {
+        $addressEntity = new Address();
+        $addressForm = $this
+            ->createForm(
+                AddressType::class,
+                $addressEntity,
+                [
+                    'action' => $this->generateUrl(
+                        'customer_dashboard_address_add_address'
+                    ),
+                    'attr' => [
+                        'id' => 'add_address'
+                    ]
+                ]
+            )
+        ;
+        return $this->render('customer/dashboard/shipment/load_owner_form.html.twig', array(
+            'addressFrom' => $addressForm->createView(),
+        ));
+    }
+
+    /**
+     *@Route("/load_other_form",name="customer_dashboard_shipment_load_other_form")
+     */
+    public function loadOtherAddressFormAction(Request $request) 
+    {
+        $addressEntity = new Address();
+        $addressForm = $this
+            ->createForm(
+                AddressType::class,
+                $addressEntity,
+                [
+                    'action' => $this->generateUrl(
+                        'customer_dashboard_address_add_address'
+                    ),
+                    'attr' => [
+                        'id' => 'add_address'
+                    ],
+                ]
+            )
+        ;
+
+        return $this->render('customer/dashboard/shipment/load_other_form.html.twig', array(
+            'addressFrom' => $addressForm->createView(),
+        ));
+    }
+    
+    /**
+     * @Route("/get_customer_address",name="customer_dashboard_shipment_get_customer_address")
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function getCustomerAddressAction(Request $request) {
+        $phoneNumber = $request->request->get("phoneNumber");
+        $customerInfo = $this->getDoctrine()
+            ->getRepository("AppBundle:Customer")
+            ->findOneBy(['phone' => $phoneNumber]);
+        if ($customerInfo) {
+            $address = $this->getDoctrine()
+                ->getRepository("AppBundle:Address")
+                ->findBy(
+                    [
+                        'customer'=>$customerInfo->getId(),
+                        'isPublic'=>true
+                    ]
+                )
+            ;
+            if ($address) {
+                foreach ($address as $ind => $val) {
+                    $description [] = $val->getDescription();
+                    $addressId [] = $val->getId();
+                }
+                $res = array_combine($addressId, $description);
+                $res = json_encode($res);
+                return new JsonResponse($res);
+            } else {
+                $msg = "there is no address";
+                return new JsonResponse($msg);
+            }
+        } else {
+            $msg = "there is no address";
+            return new Response($msg);
+        }
+    }
+    
     /**
      * Finds and displays a Shipment entity.
      *
@@ -175,4 +267,5 @@ class ShipmentController extends Controller
             ->getForm()
             ;
     }
+
 }
