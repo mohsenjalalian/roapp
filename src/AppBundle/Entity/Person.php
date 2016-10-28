@@ -44,7 +44,7 @@ abstract class Person
     protected $fullName;
     
     /**
-     * @ORM\Column(name="password", type="string")
+     * @ORM\Column(name="password", type="string",  nullable=true)
      */
     protected $password;
 

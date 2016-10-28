@@ -47,7 +47,6 @@ class ScoreHistory
      */
     private $author;
 
-
     /**
      * Get id
      *

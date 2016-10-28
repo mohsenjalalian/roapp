@@ -1,0 +1,36 @@
+{% extends ':customer/dashboard:layout.html.twig' %}
+
+{% block main %}
+    <div>
+        <h2 class="ui header" style="display: inline">لیست آدرس ها</h2>
+        <a style="margin-right: 10px" href="{{ path('customer_dashboard_address_new') }}"><button>ایجاد آدرس جدید</button></a>
+    </div>
+
+    <table class="ui celled table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Ispublic</th>
+                <th>Description</th>
+                <th>Latitude</th>
+                <th>Longitude</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for address in addresses %}
+            <tr>
+                <td><a href="{{ path('customer_dashboard_address_show', { 'id': address.id }) }}">{{ address.id }}</a></td>
+                <td>{% if address.isPublic %}Yes{% else %}No{% endif %}</td>
+                <td>{{ address.description }}</td>
+                <td>{{ address.latitude }}</td>
+                <td>{{ address.longitude }}</td>
+                <td>
+                            <a href="{{ path('customer_dashboard_address_show', { 'id': address.id }) }}"><button>نمایش</button></a>
+                            <a href="{{ path('customer_dashboard_address_edit', { 'id': address.id }) }}"><button>ویرایش</button></a>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

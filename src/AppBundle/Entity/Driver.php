@@ -4,7 +4,6 @@ namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
-use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * Driver
@@ -15,14 +14,24 @@ class Driver extends Person
     const STATUS_FREE = 1;
     const STATUS_BUSY = 0;
     const STATUS_IN_PROGRESS = 2;
+    const STATUS_NOT_AVAILABLE = 3;
 
     /**
      * @ORM\Column(name="status", type="integer")
      */
     private $status;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="score", type="bigint", nullable=true)
+     */
+    private $score;
+
     /**
      * @inheritdoc
      */
+
     public function getRoles()
     {
         return array('ROLE_DRIVER');
@@ -61,6 +70,7 @@ class Driver extends Person
     {
         // TODO: Implement eraseCredentials() method.
     }
+
     /**
      * Set username
      *
@@ -74,12 +84,13 @@ class Driver extends Person
         
         return $this;
     }
+
     /**
      * Constructor
      */
     public function __construct()
     {
-        $this->status = 1;
+        $this->status = self::STATUS_FREE;
         $this->isActive = true;
     }
     
@@ -112,4 +123,28 @@ class Driver extends Person
         return $this->status;
     }
     
+
+    /**
+     * Set score
+     *
+     * @param string $score
+     *
+     * @return Driver
+     */
+    public function setScore($score)
+    {
+        $this->score = $score;
+
+        return $this;
+    }
+
+    /**
+     * Get score
+     *
+     * @return string
+     */
+    public function getScore()
+    {
+        return $this->score;
+    }
 }

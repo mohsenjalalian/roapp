@@ -27,9 +27,9 @@ class Address
     private $customer;
 
     /**
-     * @ORM\Column(name="is_public", type="boolean")
+     * @ORM\Column(name="is_public", type="boolean", nullable=true)
      */
-    private $isPublic;
+    private $isPublic = false;
 
     /**
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Customer")

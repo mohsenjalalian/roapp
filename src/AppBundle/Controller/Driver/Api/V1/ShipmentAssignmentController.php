@@ -25,23 +25,21 @@ class ShipmentAssignmentController extends Controller
     public function acceptAction(ShipmentAssignment $assignment)
     {
         $isAssignTimeExpire = $this->get("app.shipment_assignment")
-            ->isAssignTimeExpire($assignment);
-        if(!$isAssignTimeExpire) {
+            ->isExpiredAssignTime($assignment);
+        if($isAssignTimeExpire) {
             $this->get('app.shipment_assignment')
                 ->acceptRequest($assignment);
 
-                return new JsonResponse
-                (
+                return new JsonResponse(
                     [],
                     Response::HTTP_NO_CONTENT
                 );
         } else {
             $this->get("app.shipment_assignment")
                 ->timeOutAction($assignment);
-            return new JsonResponse
-            (
+            return new JsonResponse(
                 [],
-                Response::HTTP_REQUEST_TIMEOUT
+                Response::HTTP_GONE
             );
         }
     }
@@ -55,8 +53,8 @@ class ShipmentAssignmentController extends Controller
     public function rejectAction(ShipmentAssignment $assignment , Request $req)
     {
         $isAssignTimeExpire = $this->get("app.shipment_assignment")
-            ->isAssignTimeExpire($assignment);
-        if(!$isAssignTimeExpire) {
+            ->isExpiredAssignTime($assignment);
+        if($isAssignTimeExpire) {
             $reason = $req->getContent();
             $reason = json_decode($reason);
             $this->get("app.shipment_assignment")
@@ -69,9 +67,10 @@ class ShipmentAssignmentController extends Controller
         } else {
             $this->get("app.shipment_assignment")
                 ->timeOutAction($assignment);
+
             return new JsonResponse(
                 [],
-                Response::HTTP_REQUEST_TIMEOUT
+                Response::HTTP_GONE
             );
         }
     }

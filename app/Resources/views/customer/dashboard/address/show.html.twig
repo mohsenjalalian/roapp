@@ -1,0 +1,36 @@
+{% extends ':customer/dashboard:layout.html.twig' %}
+
+{% block main %}
+    <h2 class="ui header">آدرس</h2>
+
+    <table class="ui celled table">
+        <tbody class="headColor">
+            <tr>
+                <th>Id</th>
+                <td>{{ address.id }}</td>
+            </tr>
+            <tr>
+                <th>Ispublic</th>
+                <td>{% if address.isPublic %}Yes{% else %}No{% endif %}</td>
+            </tr>
+            <tr>
+                <th>Description</th>
+                <td>{{ address.description }}</td>
+            </tr>
+            <tr>
+                <th>Latitude</th>
+                <td>{{ address.latitude }}</td>
+            </tr>
+            <tr>
+                <th>Longitude</th>
+                <td>{{ address.longitude }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+            <a href="{{ path('customer_dashboard_address_index') }}"><button>برگشت به لیست</button></a>
+            <a href="{{ path('customer_dashboard_address_edit', { 'id': address.id }) }}"><button>ویرایش</button></a>
+            {{ form_start(delete_form) }}
+            <input type="submit" value="حذف">
+
+{% endblock %}

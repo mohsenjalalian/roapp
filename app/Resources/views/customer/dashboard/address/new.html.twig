@@ -1,0 +1,35 @@
+{% extends ':customer/dashboard:layout.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent()  }}
+    {% stylesheets 'bundles/app/stylesheets/customer/dashboard/address/style.css' %}
+    <link rel="stylesheet" href="{{ asset_url }}" />
+    {% endstylesheets %}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent()  }}
+    {% javascripts
+    'bundles/app/javascript/customer/dashboard/address/script.js'
+    %}
+    <script src="{{ asset_url }}"></script>
+    <script src="{{ getGoogleMapInitLink() }}"></script>
+    {% endjavascripts %}
+{% endblock %}
+
+{% block page_title %}
+    <h1>ثبت آدرس</h1>
+{% endblock %}
+
+{% block main %}
+    <div id="map"></div>
+    <input id="address" class="controls" type="text" placeholder="آدرس">
+    <div class="ui form">
+    {{ form_start(form) }}
+    {{ form_widget(form) }}
+    <input type="submit" value="ایجاد" />
+    {{ form_end(form) }}
+    </div>
+
+    <a href="{{ path('customer_dashboard_address_index') }}"><button>برگشت به لیست</button></a>
+{% endblock %}

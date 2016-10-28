@@ -23,7 +23,8 @@ class DriverRepository extends EntityRepository
                     'shipment' => $shipment->getId(),
                     'status' => ShipmentAssignment::STATUS_REJECTED,
                 ]
-            );
+            )
+        ;
         if ($filterDriver) {
             foreach ($filterDriver as $value) {
                 $banDriver[] = $value->getDriver()
