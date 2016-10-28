@@ -9,9 +9,6 @@ use Doctrine\ORM\Mapping as ORM;
  *
  * @ORM\Entity
  * @ORM\Table(name="score_history")
- * @ORM\InheritanceType("SINGLE_TABLE")
- * @ORM\DiscriminatorColumn(name="object_type", type="string")
- * @ORM\DiscriminatorMap({"score_history" = "ScoreHistory", "driver_score_history" = "DriverScoreHistory", "customer_score_history" = "CustomerScoreHistory"})
  * @ORM\Entity(repositoryClass="AppBundle\Repository\ScoreHistoryRepository")
  */
 class ScoreHistory
@@ -26,9 +23,9 @@ class ScoreHistory
     private $id;
 
     /**
-     * @ORM\Column(name="object_id", type="integer")
+     * @ORM\ManyToOne(targetEntity="\AppBundle\Entity\Person")
      */
-    private $objectId;
+    private $person;
 
     /**
      * @ORM\Column(name="reason", type="text")
@@ -36,27 +33,20 @@ class ScoreHistory
     private $reason;
 
     /**
-     * @ORM\Column(name="delta", type="decimal", precision=8, scale=6)
+     * @ORM\Column(name="delta", type="integer")
      */
     private $delta;
 
     /**
-     * @ORM\Column(name="date_time", type="datetime")
+     * @ORM\Column(name="created_at", type="datetime")
      */
-    private $dateTime;
+    private $createdAt;
 
     /**
-     * @ORM\ManyToMany(targetEntity="\AppBundle\Entity\Person")
+     * @ORM\ManyToOne(targetEntity="\AppBundle\Entity\Person")
      */
     private $author;
 
-    /**
-     * Constructor
-     */
-    public function __construct()
-    {
-        $this->author = new \Doctrine\Common\Collections\ArrayCollection();
-    }
 
     /**
      * Get id
@@ -66,30 +56,6 @@ class ScoreHistory
     public function getId()
     {
         return $this->id;
-    }
-
-    /**
-     * Set objectId
-     *
-     * @param integer $objectId
-     *
-     * @return ScoreHistory
-     */
-    public function setObjectId($objectId)
-    {
-        $this->objectId = $objectId;
-
-        return $this;
-    }
-
-    /**
-     * Get objectId
-     *
-     * @return integer
-     */
-    public function getObjectId()
-    {
-        return $this->objectId;
     }
 
     /**
@@ -119,7 +85,7 @@ class ScoreHistory
     /**
      * Set delta
      *
-     * @param string $delta
+     * @param integer $delta
      *
      * @return ScoreHistory
      */
@@ -133,7 +99,7 @@ class ScoreHistory
     /**
      * Get delta
      *
-     * @return string
+     * @return integer
      */
     public function getDelta()
     {
@@ -141,57 +107,71 @@ class ScoreHistory
     }
 
     /**
-     * Set dateTime
+     * Set createdAt
      *
-     * @param \DateTime $dateTime
+     * @param \DateTime $createdAt
      *
      * @return ScoreHistory
      */
-    public function setDateTime($dateTime)
+    public function setCreatedAt($createdAt)
     {
-        $this->dateTime = $dateTime;
+        $this->createdAt = $createdAt;
 
         return $this;
     }
 
     /**
-     * Get dateTime
+     * Get createdAt
      *
      * @return \DateTime
      */
-    public function getDateTime()
+    public function getCreatedAt()
     {
-        return $this->dateTime;
+        return $this->createdAt;
     }
 
     /**
-     * Add author
+     * Set person
      *
-     * @param \AppBundle\Entity\Person $author
+     * @param \AppBundle\Entity\Person $person
      *
      * @return ScoreHistory
      */
-    public function addAuthor(\AppBundle\Entity\Person $author)
+    public function setPerson(\AppBundle\Entity\Person $person = null)
     {
-        $this->author[] = $author;
+        $this->person = $person;
 
         return $this;
     }
 
     /**
-     * Remove author
+     * Get person
+     *
+     * @return \AppBundle\Entity\Person
+     */
+    public function getPerson()
+    {
+        return $this->person;
+    }
+
+    /**
+     * Set author
      *
      * @param \AppBundle\Entity\Person $author
+     *
+     * @return ScoreHistory
      */
-    public function removeAuthor(\AppBundle\Entity\Person $author)
+    public function setAuthor(\AppBundle\Entity\Person $author = null)
     {
-        $this->author->removeElement($author);
+        $this->author = $author;
+
+        return $this;
     }
 
     /**
      * Get author
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return \AppBundle\Entity\Person
      */
     public function getAuthor()
     {

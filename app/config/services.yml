@@ -16,18 +16,20 @@ services:
     app.sms:
         class: AppBundle\Utils\Sms
         arguments: ['%sms_username%', '%sms_password%', '%sms_from%']
-    app.gcm:
-        class: AppBundle\Utils\GCM
+
     app.form_error:
         class: AppBundle\Utils\FormError
+
     app.token_generator:
         class: AppBundle\Utils\TokenGenerator
+
     app.menu_builder:
         class: AppBundle\Menu\MenuBuilder
         arguments: ["@knp_menu.factory", "@service_container", "@security.authorization_checker", "@security.token_storage"]
         tags:
             - { name: knp_menu.menu_builder, method: createProfileSidebarMenu, alias: profile_side } # The alias is what is used to retrieve the menu
             - { name: knp_menu.menu_builder, method: createMainMenu, alias: main_menu } # The alias is what is used to retrieve the menu
+
     app.cost_calculator:
         class: AppBundle\Utils\CostCalculator
         arguments: ['%time_based_mapping%', '%value_based_mapping%', '%google_map%']
@@ -36,11 +38,41 @@ services:
         class: AppBundle\Utils\AssignmentShipment
         arguments:
             - "@doctrine.orm.default_entity_manager"
-            - "@app.send_notification"
+            - "@app.notification_service"
             - "@translator"
 
-    app.send_notification:
-        class: AppBundle\Utils\SendNotification
-#    service_name:
-#        class: AppBundle\Directory\ClassName
-#        arguments: ["@another_service_name", "plain_value", "%parameter_name%"]
+    app.notification_service:
+        class: AppBundle\Utils\Services\NotificationService
+        arguments:
+            - "@doctrine.orm.default_entity_manager"
+            - '%google_firebase%'
+
+    app.notification_message_factory:
+        class: AppBundle\Utils\factories\NotificationMessageFactory
+        arguments:
+            - "@doctrine.orm.default_entity_manager"
+
+    app.code_sender:
+        class: AppBundle\Utils\CodeSender
+        arguments:
+            - "@app.notification_service"
+            - "@app.sms"
+            - "@translator"
+
+    app.form_address:
+        class: AppBundle\Form\Customer\Dashboard\AddressType
+        arguments: ["@request_stack"]
+        tags:
+            - { name: form.type }
+
+    app.address_service:
+        class: AppBundle\Utils\Services\AddressService
+        arguments:
+            - "@doctrine.orm.default_entity_manager"
+
+    app.google_map_extension:
+        class: AppBundle\Twig\GoogleMapExtension
+        arguments: ['%google_map_api%']
+        public: false
+        tags:
+            - { name: twig.extension }
