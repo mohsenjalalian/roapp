@@ -32,14 +32,16 @@
                 <label>آدرس فرستنده</label>
                 <div class="" style="margin-top: 10px" id="address_show_section">
                     {% for infoAddress in address %}
-                        {% if loop.index <=4 %}
-                            <div class="" style="margin-top: 10px">
-                                {% if loop.index == 1 %}
-                                    <input checked type="radio"  name="publicAddress" value="{{ infoAddress.id }}"><span>{{ infoAddress.description }}</span>
-                                {% else %}
-                                    <input type="radio"  name="publicAddress" value="{{ infoAddress.id }}"><span>{{ infoAddress.description }}</span>
-                                {% endif %}
-                            </div>
+                        {% if infoAddress.customer.id == customerId %}
+                            {% if loop.index <=4 %}
+                                <div class="" style="margin-top: 10px">
+                                    {% if loop.index == 1 %}
+                                        <input checked type="radio"  name="publicAddress" value="{{ infoAddress.id }}"><span>{{ infoAddress.description }}</span>
+                                    {% else %}
+                                        <input type="radio"  name="publicAddress" value="{{ infoAddress.id }}"><span>{{ infoAddress.description }}</span>
+                                    {% endif %}
+                                </div>
+                            {% endif %}
                         {% endif %}
                     {% endfor %}
                 </div>
@@ -52,9 +54,11 @@
                         {#<a id="addressContinue" style="cursor: pointer"> آدرس های دیگر+</a>#}
                         <div class="otherAddress content" id="bbb">
                             {% for infoAddress in address %}
-                                {% if loop.index >=5 %}
-                                    <input id="" type="radio"  name="publicAddress" value="{{ infoAddress.id }}"><span>{{ infoAddress.description }}</span>
-                                    <br>
+                                {% if infoAddress.customer.id == customerId %}
+                                    {% if loop.index >=5 %}
+                                        <input id="" type="radio"  name="publicAddress" value="{{ infoAddress.id }}"><span>{{ infoAddress.description }}</span>
+                                        <br>
+                                    {% endif %}
                                 {% endif %}
                             {% endfor %}
                         </div>
@@ -105,8 +109,7 @@
         <div class="image content">
             <div class="description">
                 <div id="map"></div>
-                <input id="pac-input" class="controls" type="text" placeholder="Search Box">
-            </div>
+                <input id="address" class="controls" type="text" placeholder="آدرس">‍            </div>
         </div>
         <div id="load_form_place" style="margin: 20px" class="ui form">
 
@@ -135,7 +138,7 @@
         'assets/vendor/persian-datepicker/dist/js/persian-datepicker-0.4.5.min.js'
         'bundles/app/javascript/customer/dashboard/shipment/script.js'
         'bundles/app/javascript/customer/dashboard/address/script.js'
-        'https://maps.googleapis.com/maps/api/js?key=AIzaSyC0HLakyBsAdkkVV5n2-1YJNCzvK9G-QRY&language=fa&region=IR&libraries=places&callback=initMap'
+        'https://maps.googleapis.com/maps/api/js?key=AIzaSyDITF2bWZw_taLim51isEQ43IRifnoVBZ4&language=fa&region=IR&libraries=places&callback=initMap'
         %}
         <script type="text/javascript" src="{{ asset_url }}" ></script>
         {% endjavascripts %}

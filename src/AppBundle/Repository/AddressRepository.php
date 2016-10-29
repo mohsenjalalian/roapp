@@ -14,11 +14,13 @@ class AddressRepository extends EntityRepository
     public function getPublicAddressCustomer($customerId)
     {
         return $this->createQueryBuilder('a')
-            ->where('a.customer=:customerId')
+            ->andWhere('a.customer=:customerId')
             ->andWhere('a.isPublic=:public')
+            ->orWhere('a.creator=:customerId')
             ->setParameter('customerId',$customerId)
             ->setParameter('public',true)
             ->getQuery()
             ->getResult();
     }
+    
 }

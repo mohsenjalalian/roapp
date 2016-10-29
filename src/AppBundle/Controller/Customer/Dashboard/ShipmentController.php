@@ -53,7 +53,7 @@ class ShipmentController extends Controller
     {
         $shipment = new Shipment();
         $addressEntity = new Address();
-        $customerId = 1; // get current customer id
+        $customerId = 6; // get current customer id
         $address = $this->getDoctrine()
             ->getRepository("AppBundle:Address")
             ->getPublicAddressCustomer($customerId);
@@ -162,15 +162,18 @@ class ShipmentController extends Controller
             ->getRepository("AppBundle:Customer")
             ->findOneBy(['phone' => $phoneNumber]);
         if ($customerInfo) {
-            $address = $this->getDoctrine()
+           $address =  $this->getDoctrine()
                 ->getRepository("AppBundle:Address")
-                ->findBy(
-                    [
-                        'customer'=>$customerInfo->getId(),
-                        'isPublic'=>true
-                    ]
-                )
-            ;
+                ->getPublicAddressCustomer($customerInfo->getId());
+//            $address = $this->getDoctrine()
+//                ->getRepository("AppBundle:Address")
+//                ->findBy(
+//                    [
+//                        'customer'=>$customerInfo->getId(),
+//                        'isPublic'=>true
+//                    ]
+//                )
+//            ;
             if ($address) {
                 foreach ($address as $ind => $val) {
                     $description [] = $val->getDescription();

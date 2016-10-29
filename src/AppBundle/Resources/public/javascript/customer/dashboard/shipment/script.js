@@ -1,6 +1,6 @@
 $(".address_modal").on('click',function () {
     $("#load_form_place").empty();
-    $("#pac-input").val("");
+    $("#address").val("");
     var formName = $(this).attr ('name');
     if (formName == 'ownerFormModal') {
         $.ajax(
@@ -39,7 +39,7 @@ $(".address_modal").on('click',function () {
                                     var ci = arr['customerId'];
                                     var label = arr['desc'];
                                     $("#address_show_section").prepend(' <div style="margin-top:10px;margin-bottom: 10px"><input checked id="" type="radio"  name="publicAddress" value="' + ci + '"><span>' + label + '</span></div>')
-                                    $("#pac-input").val('');
+                                    $("#address").val('');
                                     $("#address_isPublic").prop('checked', false);
                                     $('.ui.modal').modal('hide');
                                 }
@@ -58,6 +58,40 @@ $(".address_modal").on('click',function () {
                 type: "GET",
                 success: function (response) {
                     $("#load_form_place").html(response);
+                    $("#add_address #address").append('<input id="reciver_customer_mobile_number"  name="mobile_reciver_number" type="hidden" value="'+phoneNumber+'">');
+                    $("#add_address").on('submit', function (event) {
+                        event.preventDefault();
+                        var fd = new FormData($('form')[1]);
+                        var formURL = $(this).attr("action");
+                        $.ajax(
+                            {
+                                url: formURL,
+                                data:fd,
+                                processData: false,
+                                contentType: false,
+                                type: "POST",
+                                success: function (response) {
+                                    var res = JSON.parse(response);
+                                    var arr = [];
+                                    $.each(res, function (ind, val) {
+                                        if (ind == 'description') {
+                                            arr['desc'] = val;
+                                        } else if (ind == 'cId') {
+                                            arr['customerId'] = val;
+                                        } else if (ind == 'isPublic') {
+                                            arr['isPublic'] = val;
+                                        }
+                                        return arr;
+                                    });
+                                    var ci = arr['customerId'];
+                                    var label = arr['desc'];
+                                    $("#reciver_info_box").prepend(' <div style="margin-top:10px;margin-bottom: 10px"><input checked id="" type="radio"  name="reciver_public_address" value="' + ci + '"><span>' + label + '</span></div>')
+                                    $("#address").val('');
+                                    // $("#address_isPublic").prop('checked', false);
+                                    $('.ui.modal').modal('hide');
+                                }
+                            });
+                    });
                 }
             });
     }
