@@ -173,7 +173,6 @@ class AddressController extends Controller
     // add address with ajax method
     public function addAddressAction(Request $request)
     {
-        //        die(dump($request->request->get('number')));
         $address = new Address();
         $currentUser = 6;
         $customer = $this->getDoctrine()
@@ -184,16 +183,21 @@ class AddressController extends Controller
         if ($form->isValid()) {
             $reciverMobile = $request->request->get('mobile_reciver_number');
             if ($reciverMobile) {
-                $address = $this->get("app.address_service")->createAddress($address, $reciverMobile, $customer);
+                $address = $this->get("app.address_service")
+                    ->createAddress($address, $reciverMobile, $customer);
             } else {
-                $address = $this->get("app.address_service")->createAddress($address, null, $customer);
+                $address = $this->get("app.address_service")
+                    ->createAddress($address, null, $customer);
             }
-            $arr = ['description' => $address->getDescription(), 'cId' => $address->getCustomer()->getId(), 'isPublic' => $address->getIsPublic()];
+            $arr = [
+                'description' => $address->getDescription(),
+                'cId' => $address->getCustomer()->getId(), 
+                'isPublic' => $address->getIsPublic()
+            ];
             $res = json_encode($arr);
 
             return new JsonResponse($res);
-            //die(dump($request->request->get('mobile_reciver_number')));
-
+            
         } else {
             die("not valid");
         }

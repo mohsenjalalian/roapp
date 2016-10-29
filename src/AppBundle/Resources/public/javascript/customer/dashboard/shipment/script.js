@@ -86,6 +86,7 @@ $(".address_modal").on('click',function () {
                                     var ci = arr['customerId'];
                                     var label = arr['desc'];
                                     $("#reciver_info_box").prepend(' <div style="margin-top:10px;margin-bottom: 10px"><input checked id="" type="radio"  name="reciver_public_address" value="' + ci + '"><span>' + label + '</span></div>')
+                                    $("#noAddress").css("display",'none');
                                     $("#address").val('');
                                     // $("#address_isPublic").prop('checked', false);
                                     $('.ui.modal').modal('hide');
@@ -104,41 +105,6 @@ $(".address_modal").on('click',function () {
     google.maps.event.trigger(map,'resize');
 
 });
-
-// $("#add_address").on('submit',function (event) {
-//     event.preventDefault();
-//     alert("qqqqqqqqq");
-//     var fd = new FormData($('form')[0]);
-//     var formURL = $(this).attr("action");
-//     $.ajax(
-//         {
-//             url : formURL,
-//             data : fd,
-//             processData: false,
-//             contentType: false,
-//             type: "POST",
-//             success:function(response) {
-//                 var res = JSON.parse(response);
-//                 var arr = [];
-//                 $.each(res,function (ind,val) {
-//                     if (ind == 'description'){
-//                         arr['desc'] = val;
-//                     } else if(ind == 'cId') {
-//                         arr['customerId'] = val;
-//                     } else if(ind == 'isPublic') {
-//                         arr['isPublic'] = val;
-//                     }
-//                     return arr;
-//                 });
-//                 var ci = arr['customerId'];
-//                 var label = arr['desc'];
-//                 $("#address_show_section").prepend(' <div style="margin-top:10px;margin-bottom: 10px"><input checked id="" type="radio"  name="publicAddress" value="'+ci+'"><span>'+label+'</span></div>')
-//                 $("#pac-input").val('');
-//                 $("#address_isPublic").prop('checked', false);
-//                 $('.ui.modal').modal('hide');
-//             }
-//         });
-// });
 $('.ui.accordion')
     .accordion();
 $(document).ready(function () {

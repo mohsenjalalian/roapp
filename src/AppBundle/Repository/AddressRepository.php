@@ -22,5 +22,20 @@ class AddressRepository extends EntityRepository
             ->getQuery()
             ->getResult();
     }
+
+    public function getPublicAddressOrCreator($customerId=null,$creatorId){
+        return $this->createQueryBuilder('a')
+            ->andWhere('a.customer=:customerId')
+            ->andWhere('a.isPublic=:public')
+            ->orWhere("a.creator=:creatorId AND a.isPublic=:noPublic AND a.customer=:customerId")
+//            ->andWhere('a.isPublic=:noPublic')
+//            ->andWhere('a.customer=:customerId')
+            ->setParameter('customerId',$customerId)
+            ->setParameter('public',true)
+            ->setParameter('creatorId',$creatorId)
+            ->setParameter('noPublic',false)
+            ->getQuery()
+            ->getResult();
+    }
     
 }

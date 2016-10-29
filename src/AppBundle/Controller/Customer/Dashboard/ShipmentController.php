@@ -157,6 +157,7 @@ class ShipmentController extends Controller
      * @return JsonResponse
      */
     public function getCustomerAddressAction(Request $request) {
+        $currentCustomer = 6;
         $phoneNumber = $request->request->get("phoneNumber");
         $customerInfo = $this->getDoctrine()
             ->getRepository("AppBundle:Customer")
@@ -164,16 +165,11 @@ class ShipmentController extends Controller
         if ($customerInfo) {
            $address =  $this->getDoctrine()
                 ->getRepository("AppBundle:Address")
-                ->getPublicAddressCustomer($customerInfo->getId());
-//            $address = $this->getDoctrine()
-//                ->getRepository("AppBundle:Address")
-//                ->findBy(
-//                    [
-//                        'customer'=>$customerInfo->getId(),
-//                        'isPublic'=>true
-//                    ]
-//                )
-//            ;
+                ->getPublicAddressOrCreator(
+                    $customerInfo->getId(),
+                    $currentCustomer
+                )
+           ;
             if ($address) {
                 foreach ($address as $ind => $val) {
                     $description [] = $val->getDescription();
