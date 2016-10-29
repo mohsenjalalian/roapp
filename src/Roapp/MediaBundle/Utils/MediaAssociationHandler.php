@@ -48,8 +48,12 @@ class MediaAssociationHandler
         $this->accessor = $container->get('property_accessor');
         $this->fs = $container->get('filesystem');
     }
-    
-    public function handle(&$entity, \ReflectionProperty $reflectionProperty) {
+
+    public function handle(&$entity, \ReflectionProperty $reflectionProperty, $mode = 'persist')
+    {
+        if (!in_array($mode, ['persist', 'load'])) {
+            throw new \Exception('Invalid media association handler mode');
+        }
 
         /** @var UploadableField $propertyAnnotation */
         $propertyAnnotation = $this->reader->getPropertyAnnotation($reflectionProperty, UploadableField::class);
@@ -72,16 +76,25 @@ class MediaAssociationHandler
             $mediaName = $propertyAnnotation->getMediaName();
             $propertyName = $reflectionProperty->getName();
             if ($hasOne) {
-                $this->hasOneHandler($entity, $mediaName, $propertyName, $associationMediaPropertyName);
+                if ($mode == 'persist') {
+                    $this->hasOnePersistHandler($entity, $mediaName, $propertyName, $associationMediaPropertyName);
+                } else {
+                    $this->hasOneLoadHandler($entity, $mediaName, $propertyName, $associationMediaPropertyName);
+                }
             } else {
-                $this->hasManyHandler($entity, $mediaName, $propertyName, $associationMediaPropertyName);
+                if ($mode == 'persist') {
+
+                    $this->hasManyPersistHandler($entity, $mediaName, $propertyName, $associationMediaPropertyName);
+                } else {
+                    $this->hasManyLoadHandler($entity, $mediaName, $propertyName, $associationMediaPropertyName);
+                }
             }
 
             $this->entityManager->flush();
         }
     }
 
-    private function hasOneHandler($entity, $mediaName, $propertyName, $associationMediaPropertyName)
+    private function hasOnePersistHandler($entity, $mediaName, $propertyName, $associationMediaPropertyName)
     {
         $mediaUploads = $this->accessor->getValue($entity, $propertyName);
         $mediaAssociation = $this->accessor->getValue($entity, $associationMediaPropertyName);
@@ -90,23 +103,22 @@ class MediaAssociationHandler
         dump($mediaAssociation);
     }
 
-    private function hasManyHandler($entity, $mediaName, $propertyName, $associationMediaPropertyName)
+    private function hasManyPersistHandler($entity, $mediaName, $propertyName, $associationMediaPropertyName)
     {
-        /** @var ArrayCollection $mediaUploads */
         $mediaUploads = $this->accessor->getValue($entity, $propertyName);
-        $mediaUploadsIterator = $mediaUploads->getIterator();
+//        $mediaUploadsIterator = $mediaUploads->getIterator();
 
         $newMedias = new ArrayCollection();
         $oldMedias = new ArrayCollection();
 
-        while ($mediaUploadsIterator->valid()) {
-            $media = $mediaUploadsIterator->current();
+        foreach ($mediaUploads as $media) {
             if ($media instanceof MediaFile) {
                 /** @var MediaFile $media */
                 $mediaEntity = new Media();
                 $mediaEntity->setCreatedAt(new \DateTime());
+                $mediaEntity->setMediaName($mediaName);
                 if ($media->getIsTemp()) {
-                    $file = $this->uploadManager->moveToPermanent($media, $mediaName);
+                    $file = $this->uploadManager->moveToPermanent($media, $mediaName, $mediaEntity);
                     $mediaEntity->setFile($file);
                 } else {
                     $mediaEntity->setFile($media);
@@ -114,13 +126,11 @@ class MediaAssociationHandler
                 $mediaEntity->setName($media->getFilename());
                 $mediaEntity->setUpdatedAt($mediaEntity->getCreatedAt());
                 $this->entityManager->persist($mediaEntity);
-                
+
                 $newMedias->add($mediaEntity);
             } else {
                 $oldMedias->add($media);
             }
-
-            $mediaUploadsIterator->next();
         }
 
         /** @var PersistentCollection $mediaAssociation */
@@ -132,6 +142,7 @@ class MediaAssociationHandler
             if (!$oldMedias->contains($mediaEntity)) {
                 $mediaAssociation->removeElement($mediaEntity);
             }
+            $mediaAssociationIterator->next();
         }
 
         $newMediasIterator = $newMedias->getIterator();
@@ -140,5 +151,35 @@ class MediaAssociationHandler
             $mediaAssociation->add($newMediaEntity);
             $newMediasIterator->next();
         }
+    }
+
+    private function hasManyLoadHandler($entity, $mediaName, $propertyName, $associationMediaPropertyName)
+    {
+        /** @var ArrayCollection $mediaEntities */
+        $mediaEntities = $this->accessor->getValue($entity, $associationMediaPropertyName);
+        /** @var ArrayCollection $mediaFiles */
+        $mediaFiles = $this->accessor->getValue($entity, $propertyName);
+
+        $this->accessor->setValue($entity, $propertyName, ['ads']);
+        
+        if ($mediaFiles == null) {
+            $mediaFiles = new ArrayCollection();
+        }
+        $mediaEntitiesIterator = $mediaEntities->getIterator();
+        
+        while ($mediaEntitiesIterator->valid()) {
+            /** @var Media $mediaEntity */
+            $mediaEntity = $mediaEntitiesIterator->current();
+            $mediaFile = new MediaFile(
+                $this->uploadManager->getFilePath($mediaName, $mediaEntity->getName(), false),
+                false,
+                $mediaEntity
+            );
+            $mediaFiles->add($mediaFile);
+
+            $mediaEntitiesIterator->next();
+        }
+
+        $this->accessor->setValue($entity, $propertyName, $mediaFiles);
     }
 }

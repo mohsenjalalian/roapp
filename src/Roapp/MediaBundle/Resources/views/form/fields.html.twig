@@ -2,6 +2,7 @@
     {% spaceless %}
         {% set attr = attr|merge({'class': (attr.class|default('') ~ ' roapp-image-upload')|trim}) %}
         {% set attr = attr|merge({'data-path': path}) %}
+        {% set attr = attr|merge({'data-link-template-url': link_template_url}) %}
         {% set attr = attr|merge({'data-directory': directory}) %}
         {% set attr = attr|merge({'data-parallel-uploads': parallel_uploads}) %}
         {% set attr = attr|merge({'data-max-filesize': max_filesize}) %}

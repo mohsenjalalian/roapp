@@ -4,6 +4,7 @@ namespace Roapp\MediaBundle\EventListener;
 
 use AppBundle\Entity\Shipment;
 use Doctrine\Bundle\DoctrineBundle\Registry;
+use Doctrine\Common\Annotations\Reader;
 use Doctrine\Common\EventSubscriber;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Event\LifecycleEventArgs;
@@ -20,9 +21,15 @@ class UploadSubscriber implements EventSubscriber
      */
     private $mediaAssociationHandler;
 
-    public function __construct(MediaAssociationHandler $mediaAssociationHandler)
+    /**
+     * @var \Doctrine\Common\Annotations\Reader
+     */
+    private $reader;
+
+    public function __construct(MediaAssociationHandler $mediaAssociationHandler, Reader $reader)
     {
         $this->mediaAssociationHandler = $mediaAssociationHandler;
+        $this->reader = $reader;
     }
 
     /**
@@ -41,7 +48,12 @@ class UploadSubscriber implements EventSubscriber
 
     public function postLoad(LifecycleEventArgs $args)
     {
-
+        $entity = $args->getEntity();
+        
+        $reflectionClass = new \ReflectionClass($entity);
+        foreach ($reflectionClass->getProperties() as $reflectionProperty) {
+            $this->mediaAssociationHandler->handle($entity, $reflectionProperty, 'load');
+        }
     }
 
     public function postUpdate(LifecycleEventArgs $args)
@@ -60,17 +72,7 @@ class UploadSubscriber implements EventSubscriber
 
         $reflectionClass = new \ReflectionClass($entity);
         foreach ($reflectionClass->getProperties() as $reflectionProperty) {
-            $this->mediaAssociationHandler->handle($entity, $reflectionProperty);
+            $this->mediaAssociationHandler->handle($entity, $reflectionProperty, 'persist');
         }
-    }
-    
-    private function handleHasOne($entity, $mediaPropertyName, $reflectionProperty)
-    {
-        
-    }
-    
-    private function handleHasMany()
-    {
-        
     }
 }
