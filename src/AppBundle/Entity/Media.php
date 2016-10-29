@@ -48,6 +48,13 @@ class Media
     private $createdAt;
 
     /**
+     * @ORM\Column(name="media_name", type="string")
+     * 
+     * @var string
+     */
+    private $mediaName;
+
+    /**
      * @ORM\Column(type="datetime")
      *
      * @var \DateTime
@@ -167,5 +174,29 @@ class Media
     public function getUpdatedAt()
     {
         return $this->updatedAt;
+    }
+
+    /**
+     * Get mediaName
+     * 
+     * @return string
+     */
+    public function getMediaName()
+    {
+        return $this->mediaName;
+    }
+
+    /**
+     * Set mediaName
+     *
+     * @param string $mediaName
+     * 
+     * @return Media
+     */
+    public function setMediaName($mediaName)
+    {
+        $this->mediaName = $mediaName;
+        
+        return $this;
     }
 }
