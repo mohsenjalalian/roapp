@@ -47,6 +47,13 @@ abstract class Person
      * @ORM\Column(name="password", type="string",  nullable=true)
      */
     protected $password;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="score", type="decimal", precision=8, scale=6, nullable=true)
+     */
+    private $score;
     
     /**
      * Get id
@@ -151,5 +158,29 @@ abstract class Person
     public function getPassword()
     {
         return $this->password;
+    }
+
+    /**
+     * Set score
+     *
+     * @param string $score
+     *
+     * @return Person
+     */
+    public function setScore($score)
+    {
+        $this->score = $score;
+
+        return $this;
+    }
+
+    /**
+     * Get score
+     *
+     * @return string
+     */
+    public function getScore()
+    {
+        return $this->score;
     }
 }
