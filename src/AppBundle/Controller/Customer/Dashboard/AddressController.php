@@ -3,6 +3,7 @@
 namespace AppBundle\Controller\Customer\Dashboard;
 
 use AppBundle\Entity\Customer;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -29,12 +30,9 @@ class AddressController extends Controller
 
         $addresses = $em->getRepository('AppBundle:Address')->findAll();
 
-        return $this->render(
-            'customer/dashboard/address/index.html.twig',
-            [
-                'addresses' => $addresses,
-            ]
-        );
+        return $this->render('customer/dashboard/address/index.html.twig', array(
+            'addresses' => $addresses,
+        ));
     }
 
     /**
@@ -46,29 +44,47 @@ class AddressController extends Controller
     public function newAction(Request $request)
     {
         $address = new Address();
+        $em = $this->getDoctrine()->getManager();
         $form = $this->createForm(AddressType::class, $address);
         $form->handleRequest($request);
         $owner = $request->query->get('owner');
-        $user = $this->getUser();
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $this->get('app.address_service')->createAddress($address, $owner, $user);
+        if ($form->isSubmitted()) {
+            $address->setCreator($this->getUser());
 
-                return $this->redirectToRoute(
-                    'customer_dashboard_address_show',
-                    [
-                        'id' => $address->getId(),
-                    ]
+            if ($owner == null) {
+                $address->setCustomer($this->getUser());
+            } else {
+                $customer = $this->getDoctrine()
+                    ->getRepository('AppBundle:Customer')
+                    ->findOneBy(
+                        array('phone' => $owner)
+                    );
+
+                if (!$customer) {
+                    $customer = new Customer();
+                    $customer->setPhone($owner);
+                    $customer->setPassword('1234');
+                    $em->persist($customer);
+                }
+                $address->setIsPublic(false);
+                $address->setCustomer($customer);
+            }
+
+            if ($form->isValid()) {
+                $em->persist($address);
+                $em->flush();
+
+                return $this->redirectToRoute('customer_dashboard_address_show',
+                    array('id' => $address->getId())
                 );
+            }
         }
 
-        return $this->render(
-            'customer/dashboard/address/new.html.twig',
-            [
-                'address' => $address,
-                'form' => $form->createView(),
-            ]
-        );
+        return $this->render('customer/dashboard/address/new.html.twig', array(
+            'address' => $address,
+            'form' => $form->createView(),
+        ));
     }
 
     /**
@@ -81,13 +97,10 @@ class AddressController extends Controller
     {
         $deleteForm = $this->createDeleteForm($address);
 
-        return $this->render(
-            'customer/dashboard/address/show.html.twig',
-            [
-                'address' => $address,
-                'delete_form' => $deleteForm->createView(),
-            ]
-        );
+        return $this->render('customer/dashboard/address/show.html.twig', array(
+            'address' => $address,
+            'delete_form' => $deleteForm->createView(),
+        ));
     }
 
     /**
@@ -107,22 +120,14 @@ class AddressController extends Controller
             $em->persist($address);
             $em->flush();
 
-            return $this->redirectToRoute(
-                'customer_dashboard_address_show',
-                [
-                    'id' => $address->getId(),
-                ]
-            );
+            return $this->redirectToRoute('address_edit', array('id' => $address->getId()));
         }
 
-        return $this->render(
-            'customer/dashboard/address/edit.html.twig',
-            [
-                'address' => $address,
-                'edit_form' => $editForm->createView(),
-                'delete_form' => $deleteForm->createView(),
-            ]
-        );
+        return $this->render('customer/dashboard/address/edit.html.twig', array(
+            'address' => $address,
+            'edit_form' => $editForm->createView(),
+            'delete_form' => $deleteForm->createView(),
+        ));
     }
 
     /**
@@ -155,15 +160,46 @@ class AddressController extends Controller
     private function createDeleteForm(Address $address)
     {
         return $this->createFormBuilder()
-            ->setAction(
-                $this->generateUrl(
-                    'customer_dashboard_address_delete',
-                    [
-                        'id' => $address->getId(),
-                    ]
-                ))
+            ->setAction($this->generateUrl('customer_dashboard_address_delete', array('id' => $address->getId())))
             ->setMethod('DELETE')
-            ->getForm()
-        ;
+            ->getForm();
+    }
+
+    /**
+     * @Route("/add_address",name="customer_dashboard_address_add_address")
+     * @param Request $request
+     * @return JsonResponse
+     */
+    // add address with ajax method
+    public function addAddressAction(Request $request)
+    {
+        $address = new Address();
+        $currentUser = 6;
+        $customer = $this->getDoctrine()
+            ->getRepository("AppBundle:Customer")
+            ->find($currentUser);
+        $form = $this->createForm(AddressType::class, $address);
+        $form->handleRequest($request);
+        if ($form->isValid()) {
+            $reciverMobile = $request->request->get('mobile_reciver_number');
+            if ($reciverMobile) {
+                $address = $this->get("app.address_service")
+                    ->createAddress($address, $reciverMobile, $customer);
+            } else {
+                $address = $this->get("app.address_service")
+                    ->createAddress($address, null, $customer);
+            }
+            $arr = [
+                'description' => $address->getDescription(),
+                'cId' => $address->getCustomer()->getId(), 
+                'isPublic' => $address->getIsPublic()
+            ];
+            $res = json_encode($arr);
+
+            return new JsonResponse($res);
+            
+        } else {
+            die("not valid");
+        }
     }
 }

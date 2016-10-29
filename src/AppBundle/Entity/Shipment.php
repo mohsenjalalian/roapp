@@ -10,8 +10,6 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(name="shipment")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\ShipmentRepository")
  * @ORM\InheritanceType(value="SINGLE_TABLE")
- * @ORM\DiscriminatorColumn(name="discriminator", type="string")
- * @ORM\DiscriminatorMap({"undefined" = "Shipment", "known" = "KnownShipment", "unknown" = "UnknownShipment"})
  */
 class Shipment
 {

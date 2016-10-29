@@ -3,10 +3,15 @@
 namespace AppBundle\Form\Customer\Dashboard;
 
 use AppBundle\Form\DataTransformer\DateTimeTransformer;
+use Doctrine\ORM\EntityRepository;
 use jDateTime;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\CallbackTransformer;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
+use Symfony\Component\Form\Extension\Core\Type\EmailType;
+use Symfony\Component\Form\Extension\Core\Type\FormType;
+use Symfony\Component\Form\Extension\Core\Type\RadioType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -36,22 +41,22 @@ class ShipmentType extends AbstractType
                     "label"=>"form.pickUpTime",
                     'translation_domain' => 'messages',
                     'attr' => ['class' => 'js-datepicker']
-                ))
+                ));
 //            ->add('createdAt', DateTimeType::class)
 //            ->add('price')
 //            ->add('type')
-            ->add('ownerAddress', null,
-                array(
-                    "label"=>"form.ownerAddress",
-                    'translation_domain' => 'messages'
-                ))
-            ->add('otherAddress', null,
-                array(
-                    "label"=>"other.address",
-                    'translation_domain' => 'messages',
-                    'mapped' => false
-                ))
-        ;
+//            ->add('ownerAddress',null,
+//                array(
+//                    "label"=>"form.ownerAddress",
+//                    'translation_domain' => 'messages',
+//                ))
+//            ->add('otherAddress', null,
+//                array(
+//                    "label"=>"other.address",
+//                    'translation_domain' => 'messages',
+//                    'mapped' => false
+//                ))
+//        ;
         $builder->get('pickUpTime')
             ->addModelTransformer(new DateTimeTransformer());
 //            ->addModelTransformer(new CallbackTransformer(

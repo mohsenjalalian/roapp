@@ -1,9 +1,7 @@
 {% extends ':customer/dashboard:layout.html.twig' %}
 
 {% block page_title %}
-   {#<h1>#}
-       {#ثبت درخواست ارسال#}
-   {#</h1>#}
+
 {% endblock %}
 
 {% block main %}
@@ -29,22 +27,68 @@
                 <div>{{ form_widget(form.value ) }}</div>
             </div>
         </div>
-        {#<div class="two field">#}
-            {#<div class="field">#}
-                {#<label>{{ form_label(form.price) }}</label>#}
-                {#<div>{{ form_widget(form.price) }}</div>#}
-            {#</div>#}
-        {#</div>#}
         <div class="two fields">
             <div class="field">
-                <label>{{ form_label(form.ownerAddress) }}</label>
-                <div>{{ form_widget(form.ownerAddress ) }}</div>
+                <label>آدرس فرستنده</label>
+                <div class="" style="margin-top: 10px" id="address_show_section">
+                    {% for infoAddress in address %}
+                        {% if infoAddress.customer.id == customerId %}
+                            {% if loop.index <=4 %}
+                                <div class="" style="margin-top: 10px">
+                                    {% if loop.index == 1 %}
+                                        <input checked type="radio"  name="publicAddress" value="{{ infoAddress.id }}"><span>{{ infoAddress.description }}</span>
+                                    {% else %}
+                                        <input type="radio"  name="publicAddress" value="{{ infoAddress.id }}"><span>{{ infoAddress.description }}</span>
+                                    {% endif %}
+                                </div>
+                            {% endif %}
+                        {% endif %}
+                    {% endfor %}
+                </div>
+                {% if address|length >= 5 %}
+                    <div class="ui accordion">
+                        <div class="title">
+                            <i class="dropdown icon"></i>
+                            <span style="color:#2b669a">آدرس های دیگر</span>
+                        </div>
+                        {#<a id="addressContinue" style="cursor: pointer"> آدرس های دیگر+</a>#}
+                        <div class="otherAddress content" id="bbb">
+                            {% for infoAddress in address %}
+                                {% if infoAddress.customer.id == customerId %}
+                                    {% if loop.index >=5 %}
+                                        <input id="" type="radio"  name="publicAddress" value="{{ infoAddress.id }}"><span>{{ infoAddress.description }}</span>
+                                        <br>
+                                    {% endif %}
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    </div>
+                {% endif %}
+                <div style="margin-top: 10px">
+                    <a class="address_modal" name="ownerFormModal" style="cursor: pointer">افزودن آدرس جدید</a>
+                </div>
             </div>
             <div class="field">
-                <label>{{ form_label(form.otherAddress) }}</label>
-                <div>{{ form_widget(form.otherAddress ) }}</div>
+                <label>شماره گیرنده</label>
+                <div>
+                    <input id="mobile_reciver"  name="reciver_mobile_number" placeholder="وارد کردن شماره تلفن همراه" type="text">
+                    <div id="reciver_address" class="ui toggle checkbox" style="margin-top: 5px">
+                        <input id="show_reciver_address_btn" name="public" type="checkbox" disabled>
+                        <label>نمایش آدرس</label>
+                    </div>
+                    <div id="reciver_info_box" style="margin-top: 15px;display: none">
+
+                    </div>
+                    <div id="noAddress"  style="margin-top:10px;display: none">
+                        <span>آدرسی وجود ندارد</span>
+                    </div>
+                    <div id="reciver_modal_box" style="margin-top: 15px">
+                        <a class="address_modal" name="otherFormModal" style="cursor: pointer;display: none">افزودن آدرس جدید</a>
+                    </div>
+                </div>
             </div>
         </div>
+
 
         <input class="ui button" type="submit" tabindex="0" value="ایجاد" />
 
@@ -56,51 +100,69 @@
             <a href="{{ path('customer_dashboard_shipment_index') }}">Back to the list</a>
         </li>
     </ul>
+
+    <div class="ui modal" id="address_modal_form">
+        <i class="close icon"></i>
+        <div class="header">
+            <span>افزودن آدرس جدید</span>
+        </div>
+        <div class="image content">
+            <div class="description">
+                <div id="map"></div>
+                <input id="address" class="controls" type="text" placeholder="آدرس">‍
+            </div>
+        </div>
+        <div id="load_form_place" style="margin: 20px" class="ui form">
+
+        </div>
+    </div>
 {% endblock %}
 
-{% block stylesheets %}
-    {{ parent()  }}
-    {% stylesheets
-    'bundles/app/stylesheets/customer/dashboard/shipment/new.css'
-    'assets/vendor/persian-datepicker/src/css/persian-datepicker.css'
-    %}
-    <link rel="stylesheet" href="{{ asset_url }}" />
+    {% block stylesheets %}
+        {{ parent()  }}
+        {% stylesheets
+        'bundles/app/stylesheets/customer/dashboard/shipment/new.css'
+        'assets/vendor/persian-datepicker/src/css/persian-datepicker.css'
+        'bundles/app/stylesheets/customer/dashboard/address/style.css'
+        %}
+        <link rel="stylesheet" href="{{ asset_url }}" />
 
-    {% endstylesheets %}
-{% endblock %}
+        {% endstylesheets %}
+    {% endblock %}
 
 
-{% block javascripts %}
-    {{ parent()  }}
+    {% block javascripts %}
+        {{ parent()  }}
 
-    {% javascripts
-    'assets/vendor/persian-datepicker/lib/persian-date.js'
-    'assets/vendor/persian-datepicker/dist/js/persian-datepicker-0.4.5.min.js'
-    %}
-    <script type="text/javascript" src="{{ asset_url }}" ></script>
-    {% endjavascripts %}
+        {% javascripts
+        'assets/vendor/persian-datepicker/lib/persian-date.js'
+        'assets/vendor/persian-datepicker/dist/js/persian-datepicker-0.4.5.min.js'
+        'bundles/app/javascript/customer/dashboard/shipment/script.js'
+        'bundles/app/javascript/customer/dashboard/address/script.js'
+        'https://maps.googleapis.com/maps/api/js?key=AIzaSyDITF2bWZw_taLim51isEQ43IRifnoVBZ4&language=fa&region=IR&libraries=places&callback=initMap'
+        %}
+        <script type="text/javascript" src="{{ asset_url }}" ></script>
+        {% endjavascripts %}
 
-    <script>
-        $(document).ready(function() {
-            $(".js-datepicker").pDatepicker(
-                    {
-                        timePicker: {
-                            enabled: true,
-                            showSeconds: true,
-                            showMeridian: true,
-                            scrollEnabled: true,
-                            showOn: 'button',
-                            buttonImageOnly: true,
-                            changeMonth: true,
-                            changeYear: true,
-                            dateFormat: 'dd-mm-yy',
-                            yearRange: "-0:+1"
+        <script>
+            $(document).ready(function() {
+                $(".js-datepicker").pDatepicker(
+                        {
+                            timePicker: {
+                                enabled: true,
+                                showSeconds: true,
+                                showMeridian: true,
+                                scrollEnabled: true,
+                                showOn: 'button',
+                                buttonImageOnly: true,
+                                changeMonth: true,
+                                changeYear: true,
+                                dateFormat: 'dd-mm-yy',
+                                yearRange: "-0:+1"
+                            }
                         }
-                    }
-            );
-        });
-    </script>
+                );
+            });
+        </script>
 
-
-
-{% endblock %}
+    {% endblock %}
