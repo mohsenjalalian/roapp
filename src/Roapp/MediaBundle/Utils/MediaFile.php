@@ -2,28 +2,56 @@
 
 namespace Roapp\MediaBundle\Utils;
 
+use AppBundle\Entity\Media;
 use Symfony\Component\HttpFoundation\File\File;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class MediaFile extends File
 {
+    /**
+     * @var boolean|null
+     */
     private $isTemp;
 
-    public function setIsTemp($isTemp) {
-        $this->isTemp = $isTemp;
-    }
+    /**
+     * @var Media
+     */
+    private $mediaEntity;
 
     public function getIsTemp()
     {
         return $this->isTemp;
     }
 
-    public function __construct($path, $isTemp = null, $checkPath = true)
+    public function __construct($path, $isTemp = null, Media $mediaEntity = null ,$checkPath = true)
     {
-        if ($isTemp) {
+        if (!is_null($isTemp)) {
+            if ($isTemp == false) {
+                if (!$mediaEntity) {
+                    throw new \Exception('For permanent media file media entity is required');
+                } else {
+                    $this->mediaEntity = $mediaEntity;
+                }
+            }
             $this->isTemp = $isTemp;
         }
 
         parent::__construct($path, $checkPath);
+    }
+
+    /**
+     * @return \AppBundle\Entity\Media
+     */
+    public function getMediaEntity() {
+        return $this->mediaEntity;
+    }
+
+    /**
+     * @param \AppBundle\Entity\Media $mediaEntity
+     * @return $this
+     */
+    public function setMediaEntity(Media $mediaEntity) {
+        $this->mediaEntity = $mediaEntity;
+        
+        return $this;
     }
 }

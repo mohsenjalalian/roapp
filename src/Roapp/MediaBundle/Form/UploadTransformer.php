@@ -2,6 +2,7 @@
 
 namespace Roapp\MediaBundle\Form;
 
+use AppBundle\Entity\Media;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManager;
 use Roapp\MediaBundle\Utils\MediaFile;
@@ -33,7 +34,23 @@ class UploadTransformer implements DataTransformerInterface
      */
     public function transform($value)
     {
-        return "";
+        if (is_array($value)) {
+            $arrayValue = $value;
+        } else {
+            throw new \Exception('Value must array or ArrayCollection');
+        }
+
+        $finalValueArray = [];
+        /** @var MediaFile $mediaFile */
+        foreach ($arrayValue as $mediaFile) {
+            if ($mediaFile->getIsTemp()) {
+                $finalValueArray[] = $mediaFile->getFilename();
+            } else {
+                $finalValueArray[] = $mediaFile->getMediaEntity()->getId();
+            }
+        }
+
+        return implode(',', $finalValueArray);
     }
 
     /**
@@ -41,14 +58,24 @@ class UploadTransformer implements DataTransformerInterface
      */
     public function reverseTransform($value)
     {
-        $mediaName = $this->form->getMediaName(); 
+
+        $mediaName = $this->form->getMediaName();
 
         $uploadManager = $this->container->get('roapp_media.upload_manager');
         $fileIdentifiers = explode(',', $value);
         $fileCollection = new ArrayCollection();
-
+        
         foreach ($fileIdentifiers as $fileIdentifier) {
-            if (preg_replace('/[^A-Za-z0-9 _ .-]/', '', $fileIdentifier)) {
+            if (is_numeric($fileIdentifier)) {
+                $mediaEntity = $this->container->get('doctrine.orm.default_entity_manager')
+                    ->getRepository('AppBundle:Media')
+                    ->find($fileIdentifier);
+
+                if (!$mediaEntity instanceof Media) {
+                    throw new \Exception('Invalid file identifier');
+                }
+                $fileCollection->add($mediaEntity);
+            } elseif (preg_replace('/[^A-Za-z0-9 _ .-]/', '', $fileIdentifier)) {
                 if ($uploadManager->exists($mediaName, $fileIdentifier)) {
                     $file = new MediaFile(
                         $uploadManager->getFilePath($mediaName, $fileIdentifier),
@@ -60,7 +87,7 @@ class UploadTransformer implements DataTransformerInterface
                     throw new \Exception('File doesn\'t exist.');
                 }
             } else {
-                // @TODO implement media entity handling
+                throw new \Exception('Invalid file identifier');
             }
         }
 
