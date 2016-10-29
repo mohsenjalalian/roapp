@@ -4,7 +4,10 @@ namespace Roapp\MediaBundle\Utils;
 
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\Session;
+use AppBundle\Entity\Media;
+use Symfony\Component\Routing\RequestContext;
 
 class UploadManager
 {
@@ -28,16 +31,32 @@ class UploadManager
      */
     private $uploads;
 
+    /**
+     * @var \Symfony\Component\HttpFoundation\RequestStack
+     */
+    private $requestStack;
+
+    /**
+     * @var string
+     */
+    private $rootDir;
+
     public function __construct(
         Session $session,
         $temporaryDirectory,
         $permanentDirectory,
-        $uploads
+        $uploads,
+        RequestStack $requestStack,
+        RequestContext $requestContext,
+        $rootDir
     ) {
         $this->session = $session;
         $this->permanentDirectory = $permanentDirectory;
         $this->temporaryDirectory = $temporaryDirectory;
         $this->uploads = $uploads;
+        $this->requestStack = $requestStack;
+        $this->requestContext = $requestContext;
+        $this->rootDir = $rootDir;
     }
 
     public function upload(UploadedFile $file, $directory)
@@ -69,9 +88,8 @@ class UploadManager
     public function getPermanentPath($directory)
     {
         return sprintf(
-            "%s/%s/%s",
+            "%s/%s",
             $this->permanentDirectory,
-            $this->session->getId(),
             $directory
         );
     }
@@ -100,18 +118,22 @@ class UploadManager
 
         return $path.'/'.$fileName;
     }
+    
+    public function getMediaPathForEntity(Media $media)
+    {
+        return $this->getFilePath($media->getMediaName(), $media->getName(), false);
+    }
 
 
-    public function exists($directory, $fileName)
+    public function exists($directory, $fileName, $temp = true)
     {
         $fs = new Filesystem();
-        $path = $this->getFilePath($directory, $fileName);
+        $path = $this->getFilePath($directory, $fileName, $temp);
 
         return $fs->exists($path);
-
     }
     
-    public function moveToPermanent(MediaFile $mediaFile, $directory)
+    public function moveToPermanent(MediaFile $mediaFile, $directory, Media $mediaEntity)
     {
         $fs = new Filesystem();
 
@@ -125,9 +147,54 @@ class UploadManager
 
         $file = new MediaFile(
             $this->getFilePath($directory, $mediaFile->getFilename(), false),
-            false
+            false,
+            $mediaEntity
         );
         
         return $file;
+    }
+
+    public function generateAbsoluteUrl(Media $media)
+    {
+        $realBasePath = realpath($this->rootDir.'/../web/');
+        $realMediaPath = realpath($this->getMediaPathForEntity($media));
+        $path = explode($realBasePath, $realMediaPath)[1];
+        
+        if (false !== strpos($path, '://') || '//' === substr($path, 0, 2)) {
+            return $path;
+        }
+
+        if (!$request = $this->requestStack->getMasterRequest()) {
+            if (null !== $this->requestContext && '' !== $host = $this->requestContext->getHost()) {
+                $scheme = $this->requestContext->getScheme();
+                $port = '';
+
+                if ('http' === $scheme && 80 != $this->requestContext->getHttpPort()) {
+                    $port = ':'.$this->requestContext->getHttpPort();
+                } elseif ('https' === $scheme && 443 != $this->requestContext->getHttpsPort()) {
+                    $port = ':'.$this->requestContext->getHttpsPort();
+                }
+
+                if ('/' !== $path[0]) {
+                    $path = rtrim($this->requestContext->getBaseUrl(), '/').'/'.$path;
+                }
+
+                return $scheme.'://'.$host.$port.$path;
+            }
+
+            return $path;
+        }
+
+        if (!$path || '/' !== $path[0]) {
+            $prefix = $request->getPathInfo();
+            $last = strlen($prefix) - 1;
+            if ($last !== $pos = strrpos($prefix, '/')) {
+                $prefix = substr($prefix, 0, $pos).'/';
+            }
+
+            return $request->getUriForPath($prefix.$path);
+        }
+
+        return $request->getSchemeAndHttpHost().$path;
     }
 }

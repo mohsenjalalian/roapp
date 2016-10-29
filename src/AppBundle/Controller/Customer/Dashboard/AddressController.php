@@ -3,7 +3,6 @@
 namespace AppBundle\Controller\Customer\Dashboard;
 
 use AppBundle\Entity\Customer;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -166,56 +165,5 @@ class AddressController extends Controller
             ->setMethod('DELETE')
             ->getForm()
         ;
-    }
-
-    /**
-     * @Route("/add_address",name="customer_dashboard_address_add_address")
-     * @param Request $request
-     * @return JsonResponse
-     */
-    // add address with ajax method
-    public function addAddressAction(Request $request){
-//        die(dump($request->request->get('number')));
-        $address = new Address();
-        $currentUser = 6;
-        $customer = $this->getDoctrine()
-            ->getRepository("AppBundle:Customer")
-            ->find($currentUser);
-        $form =$this->createForm(AddressType::class, $address);
-        $form->handleRequest($request);
-        if($form->isValid()) {
-            $reciverMobile = $request->request->get('mobile_reciver_number');
-            if($reciverMobile) {
-                $address = $this->get("app.address_service")->createAddress($address,$reciverMobile,$customer);
-            } else {
-                $address = $this->get("app.address_service")->createAddress($address,null,$customer);
-            }
-            $arr = ['description'=>$address->getDescription(),'cId'=>$address->getCustomer()->getId(),'isPublic'=>$address->getIsPublic()];
-            $res = json_encode($arr);
-
-            return new JsonResponse($res);
-//            die(dump($request->request->get('mobile_reciver_number')));
-
-//            $description = $form->get("description")->getData();
-//            $latitude = $form->get("latitude")->getData();
-//            $longtitude = $form->get("longitude")->getData();
-//            $isPublic = $form->get("isPublic")->getData();
-//            $address->setDescription($description);
-//            $address->setLatitude($latitude);
-//            $address->setLongitude($longtitude);
-//            $em = $this->getDoctrine()->getManager();
-//            $em->persist($address);
-//
-//            $em->flush();
-//            die(dump($address->getDescription()));
-//            $arr = ['description'=>$address->getDescription(),'cId'=>$address->getCustomer()->getId(),'isPublic'=>$address->getIsPublic()];
-//            $res = json_encode($arr);
-//
-//            return new JsonResponse($res);
-
-        }
-        else {
-            die("not valid");
-        }
     }
 }

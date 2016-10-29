@@ -17,6 +17,9 @@ services:
             - "%roapp_media.temporary_directory%"
             - "%roapp_media.permanent_directory%"
             - "%roapp_media.uploads%"
+            - "@request_stack"
+            - "@router.request_context"
+            - "%kernel.root_dir%"
     roapp_media.media_association_handler:
         class: Roapp\MediaBundle\Utils\MediaAssociationHandler
         arguments:
@@ -27,3 +30,4 @@ services:
             - { name: doctrine.event_subscriber, connection: default }
         arguments:
             - "@roapp_media.media_association_handler"
+            - "@annotation_reader"

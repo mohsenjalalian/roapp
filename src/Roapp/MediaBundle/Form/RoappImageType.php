@@ -71,7 +71,17 @@ class RoappImageType extends AbstractType
                 'mediaName' => $mediaName
             ]
         );
-//        dump($mediaData);
+
+        $linkTemplateUrl = $this->container->get('router')->generate(
+            '_link',
+            [
+                'prefix' => $mediaData['path'],
+                'mediaName' => $mediaName,
+                'media' => '__replaceme__'
+            ]
+        );
+        
+        $view->vars['link_template_url'] = $linkTemplateUrl;
         $view->vars['path'] = $url;
         $view->vars['directory'] = $form->getConfig()->getOption('media_name');
         $view->vars['parallel_uploads'] = $mediaData['parallel_uploads'];
