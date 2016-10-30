@@ -53,7 +53,8 @@ class ShipmentController extends Controller
     {
         $shipment = new Shipment();
         $addressEntity = new Address();
-        $customerId = 6; // get current customer id
+//        $customerId = 6; // get current customer id
+        $customerId = $this->getUser()->getId(); // get current customer id
         $address = $this->getDoctrine()
             ->getRepository("AppBundle:Address")
             ->getPublicAddressCustomer($customerId);
@@ -168,7 +169,8 @@ class ShipmentController extends Controller
      */
     public function getCustomerAddressAction(Request $request)
     {
-        $currentCustomer = 6;
+//        $currentCustomer = 6;
+        $currentCustomer = $this->getUser()->getId();
         $phoneNumber = $request->request->get("phoneNumber");
         $customerInfo = $this->getDoctrine()
             ->getRepository("AppBundle:Customer")

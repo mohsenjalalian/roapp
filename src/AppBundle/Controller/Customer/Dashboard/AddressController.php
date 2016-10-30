@@ -174,7 +174,7 @@ class AddressController extends Controller
     public function addAddressAction(Request $request)
     {
         $address = new Address();
-        $currentUser = 6;
+        $currentUser = $this->getUser()->getId();
         $customer = $this->getDoctrine()
             ->getRepository("AppBundle:Customer")
             ->find($currentUser);
