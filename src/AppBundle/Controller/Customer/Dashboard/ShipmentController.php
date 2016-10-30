@@ -70,8 +70,8 @@ class ShipmentController extends Controller
                         'customer_dashboard_address_add_address'
                     ),
                     'attr' => [
-                            'id' => 'add_address'
-                        ]
+                        'id' => 'add_address'
+                    ]
                 ]
             )
         ;
@@ -91,13 +91,16 @@ class ShipmentController extends Controller
             return $this->redirectToRoute('customer_dashboard_shipment_show', array('id' => $shipment->getId()));
         }
 
-        return $this->render('customer/dashboard/shipment/new.html.twig', array(
-            'customerId' => $customerId,
-            'addressFrom' => $addressForm->createView(),
-            'address' => $address,
-            'shipment' => $shipment,
-            'form' => $form->createView(),
-        ));
+        return $this->render(
+            'customer/dashboard/shipment/new.html.twig',
+            [
+                'customerId' => $customerId,
+                'addressFrom' => $addressForm->createView(),
+                'address' => $address,
+                'shipment' => $shipment,
+                'form' => $form->createView(),
+            ]
+        );
     }
 
     /**
@@ -120,15 +123,19 @@ class ShipmentController extends Controller
                 ]
             )
         ;
-        return $this->render('customer/dashboard/shipment/load_owner_form.html.twig', array(
-            'addressFrom' => $addressForm->createView(),
-        ));
+
+        return $this->render(
+            'customer/dashboard/shipment/load_owner_form.html.twig',
+            [
+                'addressFrom' => $addressForm->createView(),
+            ]
+        );
     }
 
     /**
      *@Route("/load_other_form",name="customer_dashboard_shipment_load_other_form")
      */
-    public function loadOtherAddressFormAction(Request $request) 
+    public function loadOtherAddressFormAction(Request $request)
     {
         $addressEntity = new Address();
         $addressForm = $this
@@ -146,30 +153,39 @@ class ShipmentController extends Controller
             )
         ;
 
-        return $this->render('customer/dashboard/shipment/load_other_form.html.twig', array(
-            'addressFrom' => $addressForm->createView(),
-        ));
+        return $this->render(
+            'customer/dashboard/shipment/load_other_form.html.twig',
+            [
+                'addressFrom' => $addressForm->createView(),
+            ]
+        );
     }
-    
+
     /**
      * @Route("/get_customer_address",name="customer_dashboard_shipment_get_customer_address")
      * @param Request $request
      * @return JsonResponse
      */
-    public function getCustomerAddressAction(Request $request) {
+    public function getCustomerAddressAction(Request $request)
+    {
         $currentCustomer = 6;
         $phoneNumber = $request->request->get("phoneNumber");
         $customerInfo = $this->getDoctrine()
             ->getRepository("AppBundle:Customer")
-            ->findOneBy(['phone' => $phoneNumber]);
+            ->findOneBy(
+                [
+                    'phone' => $phoneNumber
+                ]
+            )
+        ;
         if ($customerInfo) {
-           $address =  $this->getDoctrine()
+            $address =  $this->getDoctrine()
                 ->getRepository("AppBundle:Address")
                 ->getPublicAddressOrCreator(
                     $customerInfo->getId(),
                     $currentCustomer
                 )
-           ;
+            ;
             if ($address) {
                 foreach ($address as $ind => $val) {
                     $description [] = $val->getDescription();
@@ -177,17 +193,20 @@ class ShipmentController extends Controller
                 }
                 $res = array_combine($addressId, $description);
                 $res = json_encode($res);
+
                 return new JsonResponse($res);
             } else {
                 $msg = "there is no address";
+
                 return new JsonResponse($msg);
             }
         } else {
             $msg = "there is no address";
+
             return new Response($msg);
         }
     }
-    
+
     /**
      * Finds and displays a Shipment entity.
      *
