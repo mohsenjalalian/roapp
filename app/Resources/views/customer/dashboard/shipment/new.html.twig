@@ -139,9 +139,9 @@
         'assets/vendor/persian-datepicker/dist/js/persian-datepicker-0.4.5.min.js'
         'bundles/app/javascript/customer/dashboard/shipment/script.js'
         'bundles/app/javascript/customer/dashboard/address/script.js'
-        'https://maps.googleapis.com/maps/api/js?key=AIzaSyDITF2bWZw_taLim51isEQ43IRifnoVBZ4&language=fa&region=IR&libraries=places&callback=initMap'
         %}
         <script type="text/javascript" src="{{ asset_url }}" ></script>
+        <script src="{{ getGoogleMapInitLink() }}"></script>
         {% endjavascripts %}
 
         <script>

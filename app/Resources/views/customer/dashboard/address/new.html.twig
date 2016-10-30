@@ -11,7 +11,6 @@
     {{ parent()  }}
     {% javascripts
     'bundles/app/javascript/customer/dashboard/address/script.js'
-    'https://maps.googleapis.com/maps/api/js?key=AIzaSyAVHhOs42kp45lE5xJTOI3o2GKMO5hgqV8&language=fa&region=IR&libraries=places&callback=initMap'
     %}
     <script src="{{ asset_url }}"></script>
     <script src="{{ getGoogleMapInitLink() }}"></script>
