@@ -21,11 +21,11 @@ security:
         customer_provider:
             entity:
                 class: AppBundle:Customer
-                property: username
+                property: phone
         driver_provider:
             entity:
                 class: AppBundle:Driver
-                property: email
+                property: phone
         in_memory:
             memory: ~
 
