@@ -1,6 +1,7 @@
 <?php
 
 namespace AppBundle\Repository;
+use AppBundle\Entity\Customer;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Security\User\UserLoaderInterface;
 
@@ -23,5 +24,28 @@ class CustomerRepository extends EntityRepository implements UserLoaderInterface
             ->setParameter('phone', $username)
             ->getQuery()
             ->getOneOrNullResult();
+    }
+
+    public function findOrCreateByPhone($phoneNumber)
+    {
+        $customer  = $this->findBy(
+            [
+                'phone' => $phoneNumber
+            ]
+        );
+        if ($customer) {
+            return $customer[0];
+        } else {
+            $customerObj = new Customer();
+            $customerObj->setPhone($phoneNumber);
+            $customerObj->setPassword("1234");
+            $customerObj->setIsActive(true);
+            $em = $this->getEntityManager();
+            $em->persist($customerObj);
+            
+            $em->flush();
+
+            return $customerObj;
+        }
     }
 }

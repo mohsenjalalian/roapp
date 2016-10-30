@@ -3,6 +3,7 @@
 namespace AppBundle\Controller\Customer\Dashboard;
 
 use AppBundle\Entity\Address;
+use AppBundle\Entity\Customer;
 use AppBundle\Form\Customer\Dashboard\AddressType;
 use AppBundle\Form\Customer\Dashboard\ShipmentType;
 use DateTime;
@@ -53,7 +54,6 @@ class ShipmentController extends Controller
     {
         $shipment = new Shipment();
         $addressEntity = new Address();
-//        $customerId = 6; // get current customer id
         $customerId = $this->getUser()->getId(); // get current customer id
         $address = $this->getDoctrine()
             ->getRepository("AppBundle:Address")
@@ -77,14 +77,46 @@ class ShipmentController extends Controller
             )
         ;
         $form->handleRequest($request);
-        if ($form->isSubmitted()) {
+        if ($form->isSubmitted() && $form->isValid()) {
+            $ownerAddressId =  $request->request->get('publicAddress');
+            $otherPhoneNumber = $form->get('other')->getData();
+            $otherAddressId = $request->request->get('reciver_public_address');
+            $ownerAddress = $this->getDoctrine()
+                ->getRepository("AppBundle:Address")
+                ->find($ownerAddressId)
+            ;
+            
+            /** @var Customer $customer */
+            $customer = $this->getDoctrine()
+                ->getRepository('AppBundle:Customer')
+                ->findOrCreateByPhone($otherPhoneNumber);
+            
+            $shipment->setOther($customer);
+            $shipment->setOwnerAddress($ownerAddress);
+
+            if ($otherAddressId) {
+                $otherAddress = $this->getDoctrine()
+                    ->getRepository("AppBundle:Address")
+                    ->find($otherAddressId)
+                ;
+                $shipment->setOtherAddress($otherAddress);
+            }
+            
             $description = $form->get("description")
                 ->getData();
             $value = $form->get("value")
                 ->getData();
+            $pickUpTime = $form->get('pickUpTime')
+                ->getData();
+            $createdAt = new \DateTime();
             $shipment->setDescription($description);
             $shipment->setValue($value);
+            $shipment->setPickUpTime($pickUpTime);
+            $shipment->setCreatedAt($createdAt);
+            $shipment->setStatus(Shipment::STATUS_NOT_ASSIGNED);
+            $shipment->setType("send");
 
+            
             $em = $this->getDoctrine()->getManager();
             $em->persist($shipment);
             $em->flush();
@@ -169,7 +201,6 @@ class ShipmentController extends Controller
      */
     public function getCustomerAddressAction(Request $request)
     {
-//        $currentCustomer = 6;
         $currentCustomer = $this->getUser()->getId();
         $phoneNumber = $request->request->get("phoneNumber");
         $customerInfo = $this->getDoctrine()

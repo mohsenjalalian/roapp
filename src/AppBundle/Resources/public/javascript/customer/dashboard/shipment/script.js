@@ -48,7 +48,7 @@ $(".address_modal").on('click',function () {
                 }
             });
     } else {
-        var phoneNumber = $("#mobile_reciver").val();
+        var phoneNumber = $("#shipment_other").val();
         $.ajax(
             {
                 url: "load_other_form",
@@ -58,7 +58,7 @@ $(".address_modal").on('click',function () {
                 type: "GET",
                 success: function (response) {
                     $("#load_form_place").html(response);
-                    $("#add_address #address").append('<input id="reciver_customer_mobile_number"  name="mobile_reciver_number" type="hidden" value="'+phoneNumber+'">');
+                    $("#add_address #address").append('<input id="reciver_customer_mobile_number"  name="shipment_otherAddress_number" type="hidden" value="'+phoneNumber+'">');
                     $("#add_address").on('submit', function (event) {
                         event.preventDefault();
                         var fd = new FormData($('form')[1]);
@@ -108,7 +108,7 @@ $(".address_modal").on('click',function () {
 $('.ui.accordion')
     .accordion();
 $(document).ready(function () {
-    $("#mobile_reciver").on('keyup',function () {
+    $("#shipment_other").on('keyup',function () {
         $('a[name*=otherFormModal]').css("display","none");
         if($(this).val().length === 0) {
             $('#show_reciver_address_btn').prop('checked', false);
@@ -120,7 +120,7 @@ $(document).ready(function () {
             $("#show_reciver_address_btn").prop('disabled', false);
             if($('#show_reciver_address_btn').prop('checked')==true){
                 $('a[name*=otherFormModal]').css("display","inline");
-                var phoneNumber = $("#mobile_reciver").val();
+                var phoneNumber = $("#shipment_other").val();
                 $("#reciver_info_box").empty();
                 $.ajax({
                     url: 'get_customer_address',
@@ -151,7 +151,7 @@ $(document).ready(function () {
     $("#show_reciver_address_btn").on('click',function () {
         $('a[name*=otherFormModal]').css("display","none");
         if($('#show_reciver_address_btn').prop('checked')==true) {
-            var phoneNumber = $("#mobile_reciver").val();
+            var phoneNumber = $("#shipment_other").val();
             // var l = window.location;
             // var base_url = l.protocol + "//" + l.host + "/" + l.pathname.split('/')[1];
             // console.log(base_url+"/web/app_dev.php/customer/dashboard/");
