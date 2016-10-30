@@ -1,25 +1,83 @@
-
+{% extends ':customer/dashboard:base.html.twig' %}
 
  {% block body %}
 
-     {% if error %}
-         <div>{{ error.messageKey|trans(error.messageData, 'security') }}</div>
-     {% endif %}
+     {#{% if error %}#}
+         {#<div>{{ error.messageKey|trans(error.messageData, 'security') }}</div>#}
+     {#{% endif %}#}
 
-     <form action="{{ path('login') }}" method="post">
-         <label for="username">Username:</label>
-         <input type="text" id="username" name="_username" value="{{ last_username }}" />
+     {#<form action="{{ path('login') }}" method="post">#}
+         {#<label for="username">Username:</label>#}
+         {#<input type="text" id="username" name="_username" value="{{ last_username }}" />#}
 
-         <label for="password">Password:</label>
-         <input type="password" id="password" name="_password" />
+         {#<label for="password">Password:</label>#}
+         {#<input type="password" id="password" name="_password" />#}
 
-         {#
-             If you want to control the URL the user
-             is redirected to on success (more details below)
-             <input type="hidden" name="_target_path" value="/account" />
-         #}
+         {##}
+             {#If you want to control the URL the user#}
+             {#is redirected to on success (more details below)#}
+             {#<input type="hidden" name="_target_path" value="/account" />#}
+         {##}
 
-         <button type="submit">login</button>
-     </form>
+         {#<button type="submit">login</button>#}
+     {#</form>#}
+
+     <div class="ui middle aligned center aligned grid">
+         <div class="column">
+             <h2 class="ui teal image header">
+                 <div class="content">
+                     ورود به سامانه
+                 </div>
+             </h2>
+             <div class="ui error">
+                 {% if error %}
+                    <div>{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+                 {% endif %}
+             </div>
+             <form action="{{ path('login') }}" method="post" class="ui large form">
+                 <div class="ui stacked segment">
+                     <div class="field">
+                         <div class="ui left icon input">
+                             <i class="user icon"></i>
+                             <input type="text" id="username" name="_username" value="{{ last_username }}" placeholder="پست الکترونیکی" />
+                         </div>
+                     </div>
+                     <input type="hidden" name="_target_path" value="/account" />
+                     <div class="field">
+                         <div class="ui left icon input">
+                             <i class="lock icon"></i>
+                             <input type="password" id="password" name="_password" placeholder="رمز عبور"/>
+                         </div>
+                     </div>
+                     <button type="submit" class="ui fluid large teal submit button">ورورد</button>
+                 </div>
+
+                 <div class="ui error message">asdasdad</div>
+
+             </form>
+
+             <div class="ui message">
+                 عضو نیستید؟ <a href="#">ثبت نام کنید</a>
+             </div>
+         </div>
+     </div>
 
  {% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style type="text/css">
+        body {
+            background-color: #DADADA;
+        }
+        body > .grid {
+            height: 100%;
+        }
+        .image {
+            margin-top: -100px;
+        }
+        .column {
+            max-width: 450px;
+        }
+    </style>
+{% endblock %}
