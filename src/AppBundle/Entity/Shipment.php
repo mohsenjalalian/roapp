@@ -9,7 +9,6 @@ use Doctrine\ORM\Mapping as ORM;
  *
  * @ORM\Table(name="shipment")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\ShipmentRepository")
- * @ORM\InheritanceType(value="SINGLE_TABLE")
  */
 class Shipment
 {
