@@ -31,6 +31,16 @@ class Shipment
     protected $ownerAddress;
 
     /**
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Address" )
+     */
+    protected $otherAddress;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Customer" )
+     */
+    protected $other;
+
+    /**
      * @ORM\Column(type="text", name="description")
      */
     protected $description;
@@ -56,7 +66,7 @@ class Shipment
     protected $createdAt;
 
     /**
-     * @ORM\Column(type="decimal", name="price")
+     * @ORM\Column(type="decimal", name="price",nullable=true)
      */
     protected $price;
 
@@ -353,5 +363,53 @@ class Shipment
     public function getAssignments()
     {
         return $this->assignments;
+    }
+
+    /**
+     * Set otherAddress
+     *
+     * @param \AppBundle\Entity\Address $otherAddress
+     *
+     * @return Shipment
+     */
+    public function setOtherAddress(\AppBundle\Entity\Address $otherAddress = null)
+    {
+        $this->otherAddress = $otherAddress;
+
+        return $this;
+    }
+
+    /**
+     * Get otherAddress
+     *
+     * @return \AppBundle\Entity\Address
+     */
+    public function getOtherAddress()
+    {
+        return $this->otherAddress;
+    }
+
+    /**
+     * Set other
+     *
+     * @param \AppBundle\Entity\Customer $other
+     *
+     * @return Shipment
+     */
+    public function setOther(\AppBundle\Entity\Customer $other = null)
+    {
+        $this->other = $other;
+
+        return $this;
+    }
+
+    /**
+     * Get other
+     *
+     * @return \AppBundle\Entity\Customer
+     */
+    public function getOther()
+    {
+        return $this->other;
     }
 }
