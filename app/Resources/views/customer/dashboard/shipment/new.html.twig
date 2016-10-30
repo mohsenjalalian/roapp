@@ -69,9 +69,11 @@
                 </div>
             </div>
             <div class="field">
-                <label>شماره گیرنده</label>
+                {#<label>شماره گیرنده</label>#}
+                <label>{{ form_label(form.other) }}</label>
                 <div>
-                    <input id="mobile_reciver"  name="reciver_mobile_number" placeholder="وارد کردن شماره تلفن همراه" type="text">
+                    {{ form_widget(form.other) }}
+                    {#<input id="mobile_reciver"  name="reciver_mobile_number" placeholder="وارد کردن شماره تلفن همراه" type="text">#}
                     <div id="reciver_address" class="ui toggle checkbox" style="margin-top: 5px">
                         <input id="show_reciver_address_btn" name="public" type="checkbox" disabled>
                         <label>نمایش آدرس</label>
