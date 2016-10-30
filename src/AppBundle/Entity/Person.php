@@ -13,7 +13,8 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  * @ORM\InheritanceType("SINGLE_TABLE")
  * @ORM\DiscriminatorColumn(name="type", type="string")
  * @ORM\DiscriminatorMap({"customer" = "Customer", "driver" = "Driver" , "operator" = "Operator"})
- * @UniqueEntity(fields="phone", message="Phone already taken")
+ * @UniqueEntity(fields="phone", message="شماره تلفن وارد شده تکراری است.")
+ * @UniqueEntity(fields="email", message="پست الکترونیکی وارد شده تکراری است.")
  */
 abstract class Person
 {
@@ -53,7 +54,19 @@ abstract class Person
      *
      * @ORM\Column(name="score", type="decimal", precision=8, scale=6, nullable=true)
      */
-    private $score;
+    protected $score;
+
+    /**
+     * @var string
+     * @ORM\Column(name="remember_token", type="string", nullable=true)
+     */
+    protected $rememberToken;
+
+    /**
+     * @var string
+     * @ORM\Column(name="activation_token", type="string", nullable=true)
+     */
+    protected $activationToken;
     
     /**
      * Get id
@@ -182,5 +195,53 @@ abstract class Person
     public function getScore()
     {
         return $this->score;
+    }
+
+    /**
+     * Set rememberToken
+     *
+     * @param string $rememberToken
+     *
+     * @return Person
+     */
+    public function setRememberToken($rememberToken)
+    {
+        $this->rememberToken = $rememberToken;
+
+        return $this;
+    }
+
+    /**
+     * Get rememberToken
+     *
+     * @return string
+     */
+    public function getRememberToken()
+    {
+        return $this->rememberToken;
+    }
+
+    /**
+     * Set activationToken
+     *
+     * @param string $activationToken
+     *
+     * @return Person
+     */
+    public function setActivationToken($activationToken)
+    {
+        $this->activationToken = $activationToken;
+
+        return $this;
+    }
+
+    /**
+     * Get activationToken
+     *
+     * @return string
+     */
+    public function getActivationToken()
+    {
+        return $this->activationToken;
     }
 }

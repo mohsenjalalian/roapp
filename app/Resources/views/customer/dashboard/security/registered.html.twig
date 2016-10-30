@@ -1,0 +1,40 @@
+{% extends ':customer/dashboard:base.html.twig' %}
+
+{% block body %}
+
+
+    <div class="ui middle aligned center aligned grid">
+        <div class="column">
+            <h2 class="ui teal image header">
+                <div class="content">
+                    ثبت نام انجام شد.
+                </div>
+            </h2>
+            <div class="ui stacked segment">
+.                ایمیلی جهت فعال سازی برای شما ارسال شد. لطفا برای ادامه روی لینک فعال سازی ارسال شده کلیک کنید
+            </div>
+        </div>
+    </div>
+
+
+
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+
+    <style type="text/css">
+        body {
+            background-color: #DADADA;
+        }
+        body > .grid {
+            height: 100%;
+        }
+        .image {
+            margin-top: -100px;
+        }
+        .column {
+            max-width: 450px;
+        }
+    </style>
+{% endblock %}

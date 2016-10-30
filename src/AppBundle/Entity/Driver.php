@@ -22,13 +22,6 @@ class Driver extends Person
     private $status;
 
     /**
-     * @var string
-     *
-     * @ORM\Column(name="score", type="bigint", nullable=true)
-     */
-    private $score;
-
-    /**
      * @inheritdoc
      */
 
@@ -121,30 +114,5 @@ class Driver extends Person
     public function getStatus()
     {
         return $this->status;
-    }
-    
-
-    /**
-     * Set score
-     *
-     * @param string $score
-     *
-     * @return Driver
-     */
-    public function setScore($score)
-    {
-        $this->score = $score;
-
-        return $this;
-    }
-
-    /**
-     * Get score
-     *
-     * @return string
-     */
-    public function getScore()
-    {
-        return $this->score;
     }
 }

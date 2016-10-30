@@ -1,4 +1,4 @@
-{% extends ':customer/dashboard:base.html.twig' %}
+
 
  {% block body %}
 
@@ -34,7 +34,7 @@
                     <div>{{ error.messageKey|trans(error.messageData, 'security') }}</div>
                  {% endif %}
              </div>
-             <form action="{{ path('login') }}" method="post" class="ui large form">
+             <form action="{{ path('app_customer_dashboard_security_login') }}" method="post" class="ui large form">
                  <div class="ui stacked segment">
                      <div class="field">
                          <div class="ui left icon input">
