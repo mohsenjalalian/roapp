@@ -90,7 +90,7 @@ class SecurityController extends Controller
             ->getRepository('AppBundle:Customer')
             ->findOneBy([
                 'activationToken' => $activationToken,
-                'isActive' => true
+                'isActive' => false
             ]);
 
         if (!$customer instanceof Customer) {
