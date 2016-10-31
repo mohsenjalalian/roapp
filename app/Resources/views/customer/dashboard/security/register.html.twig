@@ -1,0 +1,101 @@
+{% extends ':customer/dashboard:base.html.twig' %}
+
+{% block body %}
+
+
+    <div class="ui middle aligned center aligned grid">
+        <div class="column">
+            <h2 class="ui teal image header">
+                <div class="content">
+                    ثبت نام
+                </div>
+            </h2>
+            {{ form_start(form, {'attr': {'class': 'ui large form error', 'id': 'register-form'}}) }}
+            <div class="ui stacked segment">
+                <div class="field">
+                    <div class="ui left icon input">
+                        <i class="user icon"></i>
+                        {{ form_widget(form.phone, {'attr': {'placeholder': 'تلفن'}}) }}
+                    </div>
+                    {% if form.phone.vars.errors|length %}
+                        <div class="ui error message">
+                            {{ form_errors(form.phone) }}
+                        </div>
+                    {% endif %}
+                </div>
+                <div class="field">
+                    <div class="ui left icon input">
+                        <i class="user icon"></i>
+                        {{ form_widget(form.fullName, {'attr': {'placeholder': 'نام و نام خانوادگی'}}) }}
+                    </div>
+                    {% if form.fullName.vars.errors|length %}
+                        <div class="ui error message">
+                            {{ form_errors(form.fullName) }}
+                        </div>
+                    {% endif %}
+                </div>
+                <div class="field">
+                    <div class="ui left icon input">
+                        <i class="user icon"></i>
+                        {{ form_widget(form.email, {'attr': {'placeholder': 'پست الکترونیکی'}}) }}
+                    </div>
+                    {% if form.email.vars.errors|length %}
+                        <div class="ui error message">
+                            {{ form_errors(form.email) }}
+                        </div>
+                    {% endif %}
+                </div>
+                <div class="field">
+                    <div class="ui left icon input">
+                        <i class="user icon"></i>
+                        {{ form_widget(form.password.first, {'attr': {'placeholder': 'رمز عبور'}}) }}
+                    </div>
+                    {% if form.password.first.vars.errors|length %}
+                        <div class="ui error message">
+                            {{ form_errors(form.password.first) }}
+                        </div>
+                    {% endif %}
+                </div>
+                <div class="field">
+                    <div class="ui left icon input">
+                        <i class="user icon"></i>
+                        {{ form_widget(form.password.second, {'attr': {'placeholder': 'تکرار رمز عبور'}}) }}
+                    </div>
+                    {% if form.password.second.vars.errors|length %}
+                        <div class="ui error message">
+                            {{ form_errors(form.password.second) }}
+                        </div>
+                    {% endif %}
+                </div>
+                <button type="submit" class="ui fluid large teal submit button">ثبت نام</button>
+            </div>
+            {{ form_end(form) }}
+
+            <div class="ui message">
+                عضو هستید؟ <a href="#">ورود</a>
+            </div>
+        </div>
+    </div>
+
+
+
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+
+    <style type="text/css">
+        body {
+            background-color: #DADADA;
+        }
+        body > .grid {
+            height: 100%;
+        }
+        .image {
+            margin-top: -100px;
+        }
+        .column {
+            max-width: 450px;
+        }
+    </style>
+{% endblock %}
