@@ -159,8 +159,6 @@ class MediaAssociationHandler
         $mediaEntities = $this->accessor->getValue($entity, $associationMediaPropertyName);
         /** @var ArrayCollection $mediaFiles */
         $mediaFiles = $this->accessor->getValue($entity, $propertyName);
-
-        $this->accessor->setValue($entity, $propertyName, ['ads']);
         
         if ($mediaFiles == null) {
             $mediaFiles = new ArrayCollection();

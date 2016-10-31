@@ -22,6 +22,7 @@ class AppKernel extends Kernel
             new Vich\UploaderBundle\VichUploaderBundle(),
             new Knp\Bundle\MenuBundle\KnpMenuBundle(),
             new Knp\Bundle\PaginatorBundle\KnpPaginatorBundle(),
+            new Roapp\MediaBundle\RoappMediaBundle(),
         ];
 
         if (in_array($this->getEnvironment(), ['dev', 'test'], true)) {

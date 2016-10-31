@@ -42,6 +42,7 @@ twig:
     strict_variables: "%kernel.debug%"
     form_themes:
         - 'form/form_semantic_layout.html.twig'
+        - 'RoappMediaBundle:form:fields.html.twig'
         - 'VichUploaderBundle:Form:fields.html.twig'
 
 
@@ -212,3 +213,10 @@ vich_uploader:
 knp_menu:
     # use "twig: false" to disable the Twig extension and the TwigRenderer
     twig: ~
+
+roapp_media:
+    temporary_directory: "%kernel.root_dir%/../var/uploads"
+    permanent_directory: "%kernel.root_dir%/../web/uploads/roapp_media"
+    uploads:
+        shipment_image:
+            path: customer/dashboard

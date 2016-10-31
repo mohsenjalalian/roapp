@@ -90,6 +90,12 @@
                 </div>
             </div>
         </div>
+
+        <div class="field">
+            <label>{{ form_label(form.photoFiles) }}</label>
+            <div>{{ form_widget(form.photoFiles, {'attr': {'class': 'roapp-image-upload'}}) }}</div>
+        </div>
+
         <input  class="ui button creator_shipment" type="submit" tabindex="0" value="ایجاد سفارش" disabled />
         {{ form_rest(form) }}
     </form>
@@ -125,9 +131,10 @@
     {% block stylesheets %}
         {{ parent()  }}
         {% stylesheets
-        'bundles/app/stylesheets/customer/dashboard/shipment/new.css'
-        'assets/vendor/persian-datepicker/src/css/persian-datepicker.css'
-        'bundles/app/stylesheets/customer/dashboard/address/style.css'
+            'bundles/app/stylesheets/customer/dashboard/shipment/new.css'
+            'assets/vendor/persian-datepicker/src/css/persian-datepicker.css'
+            'bundles/app/stylesheets/customer/dashboard/address/style.css'
+            'assets/vendor/dropzone/dist/dropzone.css'
         %}
         <link rel="stylesheet" href="{{ asset_url }}" />
 
@@ -139,10 +146,12 @@
         {{ parent()  }}
 
         {% javascripts
-        'assets/vendor/persian-datepicker/lib/persian-date.js'
-        'assets/vendor/persian-datepicker/dist/js/persian-datepicker-0.4.5.min.js'
-        'bundles/app/javascript/customer/dashboard/shipment/script.js'
-        'bundles/app/javascript/customer/dashboard/address/script.js'
+            'assets/vendor/persian-datepicker/lib/persian-date.js'
+            'assets/vendor/persian-datepicker/dist/js/persian-datepicker-0.4.5.min.js'
+            'bundles/app/javascript/customer/dashboard/shipment/script.js'
+            'bundles/app/javascript/customer/dashboard/address/script.js'
+            'assets/vendor/dropzone/dist/min/dropzone.min.js'
+            'bundles/roappmedia/roapp-upload.js'
         %}
         <script type="text/javascript" src="{{ asset_url }}" ></script>
         <script src="{{ getGoogleMapInitLink() }}"></script>
