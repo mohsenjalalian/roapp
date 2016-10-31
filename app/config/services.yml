@@ -75,3 +75,6 @@ services:
         public: false
         tags:
             - { name: twig.extension }
+
+    app.jdate_service:
+            class: AppBundle\Utils\Services\JdateService

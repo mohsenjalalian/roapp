@@ -209,16 +209,14 @@ class ShipmentController extends Controller
                 [
                     'phone' => $phoneNumber
                 ]
-            )
-        ;
+            );
         if ($customerInfo) {
-            $address =  $this->getDoctrine()
+            $address = $this->getDoctrine()
                 ->getRepository("AppBundle:Address")
                 ->getPublicAddressOrCreator(
                     $customerInfo->getId(),
                     $currentCustomer
-                )
-            ;
+                );
             if ($address) {
                 foreach ($address as $ind => $val) {
                     $description [] = $val->getDescription();
@@ -240,6 +238,32 @@ class ShipmentController extends Controller
         }
     }
 
+    /**
+     *@Route("/calc_shipment_price",name="customer_dashboard_shipment_calc_shipment_price")
+     */
+    public function calcShipmentPriceAction(Request $request)
+    {
+        $ownerAddressId = $request->request->get('ownerAddressId');
+        $otherAddressId = $request->request->get('otherAddressId');
+        $shipmentValue = $request->request->get('shipmentValue');
+        $shipmentPickUpTime = $request->request->get('shipmentPickUpTime');
+        $shipmentPickUpTime = $this->get("app.jdate_service")->convertToGregorian($shipmentPickUpTime);
+        $ownerAddress = $this->getDoctrine()
+            ->getRepository("AppBundle:Address")
+            ->find($ownerAddressId);
+        $otherAddress = $this->getDoctrine()
+            ->getRepository("AppBundle:Address")
+            ->find($otherAddressId);
+        $shipmentCost = $this->get("app.cost_calculator")
+            ->getCost(
+                $ownerAddress,
+                $otherAddress,
+                $shipmentValue,
+                $shipmentPickUpTime
+            );
+        
+        return new Response($shipmentCost);
+    }
     /**
      * Finds and displays a Shipment entity.
      *
