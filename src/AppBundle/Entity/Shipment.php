@@ -3,6 +3,7 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Roapp\MediaBundle\Annotation\UploadableField;
 
 /**
  * Shipment
@@ -83,6 +84,12 @@ class Shipment
      *      )
      */
     protected $photos;
+
+    /**
+     * @var
+     * @UploadableField(mappedAttribute="photos", mediaName="shipment_image")
+     */
+    protected $photoFiles;
 
     /**
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\ShipmentAssignment",mappedBy="shipment")
@@ -295,6 +302,7 @@ class Shipment
     public function __construct()
     {
         $this->photos = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->photoFiles = [];
     }
 
     /**
@@ -411,5 +419,43 @@ class Shipment
     public function getOther()
     {
         return $this->other;
+    }
+
+    /**
+     * Add photo
+     *
+     * @param \AppBundle\Entity\Media $photo
+     *
+     * @return Shipment
+     */
+    public function addPhotoFile($photoFile)
+    {
+        $this->photoFiles[] = $photoFile;
+
+        return $this;
+    }
+
+    /**
+     * Remove photo
+     *
+     * @param $photo
+     */
+    public function removePhotoFile($photoFile)
+    {
+        $index = array_search($photoFile, $this->photoFiles);
+
+        if ($index != false) {
+            unset($this->photoFiles[$index]);
+        }
+    }
+
+    /**
+     * Get photos
+     *
+     * @return array
+     */
+    public function getPhotoFiles()
+    {
+        return $this->photoFiles;
     }
 }

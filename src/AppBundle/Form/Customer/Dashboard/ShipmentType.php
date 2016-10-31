@@ -5,6 +5,7 @@ namespace AppBundle\Form\Customer\Dashboard;
 use AppBundle\Form\DataTransformer\DateTimeTransformer;
 use Doctrine\ORM\EntityRepository;
 use jDateTime;
+use Roapp\MediaBundle\Form\RoappImageType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Console\Input\Input;
 use Symfony\Component\Form\AbstractType;
@@ -52,6 +53,7 @@ class ShipmentType extends AbstractType
                     'translation_domain' => 'messages',
                     'mapped' => false
                 ))
+            ->add('photoFiles', RoappImageType::class)
         ;
         $builder->get('pickUpTime')
             ->addModelTransformer(new DateTimeTransformer());

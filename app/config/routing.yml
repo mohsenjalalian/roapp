@@ -26,3 +26,6 @@ app.operator.dashboard:
     resource: "@AppBundle/Controller/Operator/Dashboard/"
     prefix:   /operator/dashboard/
 
+roapp.media_bundle:
+    resource: "@RoappMediaBundle/Controller//"
+    prefix:   /
