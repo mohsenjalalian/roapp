@@ -90,20 +90,22 @@
                 </div>
             </div>
         </div>
-
-
-        <input class="ui button" type="submit" tabindex="0" value="ایجاد" />
-
+        <input  class="ui button creator_shipment" type="submit" tabindex="0" value="ایجاد سفارش" disabled />
         {{ form_rest(form) }}
     </form>
-
+    <h4 class="ui horizontal divider header">
+        <span>محاسبه قیمت </span>
+    </h4>
+    <div style="margin-top: 10px;margin-bottom: 10px">
+        <button id="calculate_price" class="positive ui button">محاسبه ی قیمت</button>
+    </div>
     <ul>
         <li>
             <a href="{{ path('customer_dashboard_shipment_index') }}">Back to the list</a>
         </li>
     </ul>
 
-    <div class="ui modal" id="address_modal_form">
+    <div style="margin-bottom: 10px" class="ui modal" id="address_modal_form">
         <i class="close icon"></i>
         <div class="header">
             <span>افزودن آدرس جدید</span>

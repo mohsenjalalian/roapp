@@ -197,4 +197,9 @@ $(document).ready(function () {
         google.maps.event.trigger(map,'resize')
     });
 });
+// claculate price when click on calc button
+$("#calculate_price").on('click',function (e) {
+ e.preventDefault();
+ $('.creator_shipment').prop('disabled',false);
+});
 
