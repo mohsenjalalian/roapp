@@ -199,7 +199,28 @@ $(document).ready(function () {
 });
 // claculate price when click on calc button
 $("#calculate_price").on('click',function (e) {
- e.preventDefault();
- $('.creator_shipment').prop('disabled',false);
+    e.preventDefault();
+    var ownerAddressId = $('input[name=publicAddress]:checked').val();
+    var otherAddressId = $('input[name=reciver_public_address]:checked').val();
+    var shipmentValue = $("#shipment_value").val();
+    var shipmentPickUpTime = $("#shipment_pickUpTime").val();
+
+    $.ajax({
+        url: 'calc_shipment_price',
+        data: {
+            ownerAddressId:ownerAddressId,
+            otherAddressId:otherAddressId,
+            shipmentValue:shipmentValue,
+            shipmentPickUpTime:shipmentPickUpTime
+        },
+        type: "POST",
+        success: function (response){
+            $("#calculate_price").html("قیمت کل :");
+            $("#cost_show").html(response);
+            $("#cost_show").css('display','inline');
+            $('.creator_shipment').prop('disabled',false);
+        }
+    });
+ // $('.creator_shipment').prop('disabled',false);
 });
 
