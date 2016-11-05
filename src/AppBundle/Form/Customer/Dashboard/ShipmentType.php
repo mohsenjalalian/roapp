@@ -36,6 +36,7 @@ class ShipmentType extends AbstractType
             ->add('value', null,
                 array(
                     "label"=>"ارزش بسته",
+                    'attr' => ['class' => 'calc_price_item'],
                     'translation_domain' => 'messages'
                 ))
 
@@ -49,7 +50,7 @@ class ShipmentType extends AbstractType
             ->add('other',TextType::class,
                 array(
                     "label"=>"شماره گیرنده",
-                    'attr' => ['placeHolder'=> 'لطفا شماره تلفن همراه مورد نظر خود را وارد نمایید.'],
+                    'attr' => ['placeHolder'=> 'لطفا شماره تلفن همراه مورد نظر خود را وارد نمایید.', 'class' => 'calc_price_item'],
                     'translation_domain' => 'messages',
                     'mapped' => false
                 ))

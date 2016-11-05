@@ -181,7 +181,9 @@ class AddressController extends Controller
         $form = $this->createForm(AddressType::class, $address);
         $form->handleRequest($request);
         if ($form->isValid()) {
-            $reciverMobile = $request->request->get('mobile_reciver_number');
+//            dump($request->request->get('shipment_otherAddress_number'));
+           $reciverMobile = $request->request->get('shipment_otherAddress_number');
+//            $reciverMobile = $request->request->get('mobile_reciver_number');
             if ($reciverMobile) {
                 $address = $this->get("app.address_service")
                     ->createAddress($address, $reciverMobile, $customer);

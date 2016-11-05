@@ -85,7 +85,7 @@ $(".address_modal").on('click',function () {
                                     });
                                     var ci = arr['customerId'];
                                     var label = arr['desc'];
-                                    $("#reciver_info_box").prepend(' <div style="margin-top:10px;margin-bottom: 10px"><input checked id="" type="radio"  name="reciver_public_address" value="' + ci + '"><span>' + label + '</span></div>')
+                                    $("#reciver_info_box").prepend(' <div style="margin-top:10px;margin-bottom: 10px"><input id="" type="radio" name="reciver_public_address" value="' + ci + '"><span>' + label + '</span></div>')
                                     $("#noAddress").css("display",'none');
                                     $("#address").val('');
                                     // $("#address_isPublic").prop('checked', false);
@@ -128,13 +128,14 @@ $(document).ready(function () {
                     type: "POST",
                     success: function (response) {
                         if (response == "there is no address"){
+                            dataReady();
                             $("#noAddress").css("display",'block');
                         } else {
                             var res = JSON.parse(response);
                             $.each(res, function (ind, val) {
                                 $("#reciver_info_box").prepend(
                                     ' <div style="margin-top:10px">' +
-                                    '<input type="radio"  name="reciver_public_address"  value="' + ind + '">' +
+                                    '<input  type="radio"  name="reciver_public_address"  value="' + ind + '">' +
                                     '<span>' + val + '</span>' +
                                     '</div>'
                                 )
@@ -162,6 +163,7 @@ $(document).ready(function () {
                 type: "POST",
                 success: function (response) {
                     if (response == "there is no address"){
+                        dataReady();
                         $("#noAddress").css("display",'block');
                         $('a[name*=otherFormModal]').css("display","inline");
                     } else {
@@ -197,30 +199,78 @@ $(document).ready(function () {
         google.maps.event.trigger(map,'resize')
     });
 });
-// claculate price when click on calc button
-$("#calculate_price").on('click',function (e) {
-    e.preventDefault();
+
+// claculate price with ajax method
+$(".calc_price_item").on('change', function () {
+    // alert("changed");
+    if (dataReady()) {
+        var ownerAddressId = $('input[name=publicAddress]:checked').val();
+        var otherAddressId = $('input[name=reciver_public_address]:checked').val();
+        var shipmentValue = $("#shipment_value").val();
+        var shipmentPickUpTime = $("#shipment_pickUpTime").val();
+        $.ajax({
+            url: 'calc_shipment_price',
+            data: {
+                ownerAddressId: ownerAddressId,
+                otherAddressId: otherAddressId,
+                shipmentValue: shipmentValue,
+                shipmentPickUpTime: shipmentPickUpTime
+            },
+            type: "POST",
+            success: function (response) {
+                $("#calculate_price").html("<b>قیمت کل :</b>");
+                $("#cost_show").html(response);
+                $("#cost_show").css('display', 'inline');
+                $('.creator_shipment').prop('disabled', false);
+            }
+        });
+    } else {
+        $("#cost_show").html("---")
+        $("#cost_show").css('display', 'inline');
+        $('.creator_shipment').prop('disabled', true);
+    }
+});
+function isExistAddress() {
+    var phoneNumber = $("#shipment_other").val();
+    $.ajax({
+        url: 'get_customer_address',
+        data: {phoneNumber: phoneNumber},
+        type: "POST",
+        success: function (response) {
+            if(response == "there is no address") {
+                window.globalVar = "no" ;
+            } else {
+                window.globalVar = "yes" ;
+            }
+        }
+    });
+
+    return globalVar;
+}
+function dataReady() {
+    if ($("#shipment_other").val().length == 0) {
+        $('input[name=reciver_public_address]:checked').val("");
+        return false;
+    }
+    if (isExistAddress() == "no"){
+        if (!$('input[name=reciver_public_address]:checked').val()) {
+            $('input[name=reciver_public_address]:checked').val("");
+            return false;
+        }
+    }
+    if ($('#show_reciver_address_btn').prop('checked')==false) {
+        $('input[name=reciver_public_address]:checked').val("");
+        return false;
+    }
     var ownerAddressId = $('input[name=publicAddress]:checked').val();
     var otherAddressId = $('input[name=reciver_public_address]:checked').val();
     var shipmentValue = $("#shipment_value").val();
     var shipmentPickUpTime = $("#shipment_pickUpTime").val();
+    if (ownerAddressId.length != 0 && otherAddressId.length != 0 && shipmentValue.length !=0 && shipmentPickUpTime.length != 0) {
+        return true;
+    } else {
+        return false;
+    }
+}
 
-    $.ajax({
-        url: 'calc_shipment_price',
-        data: {
-            ownerAddressId:ownerAddressId,
-            otherAddressId:otherAddressId,
-            shipmentValue:shipmentValue,
-            shipmentPickUpTime:shipmentPickUpTime
-        },
-        type: "POST",
-        success: function (response){
-            $("#calculate_price").html("قیمت کل :");
-            $("#cost_show").html(response);
-            $("#cost_show").css('display','inline');
-            $('.creator_shipment').prop('disabled',false);
-        }
-    });
- // $('.creator_shipment').prop('disabled',false);
-});
 

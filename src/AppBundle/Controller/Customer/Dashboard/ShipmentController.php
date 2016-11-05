@@ -254,6 +254,19 @@ class ShipmentController extends Controller
         $otherAddress = $this->getDoctrine()
             ->getRepository("AppBundle:Address")
             ->find($otherAddressId);
+        if($otherAddress == null){
+            $em = $this->getDoctrine()
+                ->getRepository("AppBundle:Address");
+            $qb = $em->createQueryBuilder('p')
+                ->where('p.customer=:reciverId')
+                ->setParameter('reciverId',$otherAddressId)
+                ->orderBy('p.id','DESC')
+                ->getQuery()
+                ->getResult();
+            $otherAddress = $this->getDoctrine()
+                ->getRepository("AppBundle:Address")
+                ->find($qb[0]->getId());
+        }
         $shipmentCost = $this->get("app.cost_calculator")
             ->getCost(
                 $ownerAddress,
