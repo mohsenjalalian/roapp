@@ -85,12 +85,11 @@ class ShipmentController extends Controller
                 ->getRepository("AppBundle:Address")
                 ->find($ownerAddressId)
             ;
-            
             /** @var Customer $customer */
             $customer = $this->getDoctrine()
                 ->getRepository('AppBundle:Customer')
                 ->findOrCreateByPhone($otherPhoneNumber);
-            
+
             $shipment->setOther($customer);
             $shipment->setOwnerAddress($ownerAddress);
 
@@ -101,22 +100,25 @@ class ShipmentController extends Controller
                 ;
                 $shipment->setOtherAddress($otherAddress);
             }
-            
+
             $description = $form->get("description")
                 ->getData();
             $value = $form->get("value")
                 ->getData();
             $pickUpTime = $form->get('pickUpTime')
                 ->getData();
+            $shipmentPrice = $request
+                ->request->get('price_shipment');
+
             $createdAt = new \DateTime();
             $shipment->setDescription($description);
             $shipment->setValue($value);
+            $shipment->setPrice(floatval($shipmentPrice));
             $shipment->setPickUpTime($pickUpTime);
             $shipment->setCreatedAt($createdAt);
             $shipment->setStatus(Shipment::STATUS_NOT_ASSIGNED);
             $shipment->setType("send");
 
-            
             $em = $this->getDoctrine()->getManager();
             $em->persist($shipment);
             $em->flush();
@@ -139,6 +141,7 @@ class ShipmentController extends Controller
     /**
      * @Route("/load_owner_form",name="customer_dashboard_shipment_load_owner_form")
      */
+    // load owner address form for show in modalBox
     public function loadOwnerAddressFormAction()
     {
         $addressEntity = new Address();
@@ -166,8 +169,11 @@ class ShipmentController extends Controller
     }
 
     /**
-     *@Route("/load_other_form",name="customer_dashboard_shipment_load_other_form")
+     * @Route("/load_other_form",name="customer_dashboard_shipment_load_other_form")
+     * @param Request $request
+     * @return Response
      */
+    // load reciver address form for show in modalBox
     public function loadOtherAddressFormAction(Request $request)
     {
         $addressEntity = new Address();
@@ -199,6 +205,7 @@ class ShipmentController extends Controller
      * @param Request $request
      * @return JsonResponse
      */
+    // fetch customer Address from DB
     public function getCustomerAddressAction(Request $request)
     {
         $currentCustomer = $this->getUser()->getId();
@@ -210,6 +217,7 @@ class ShipmentController extends Controller
                     'phone' => $phoneNumber
                 ]
             );
+        // check does customer exist with entered phone number ??
         if ($customerInfo) {
             $address = $this->getDoctrine()
                 ->getRepository("AppBundle:Address")
@@ -217,6 +225,7 @@ class ShipmentController extends Controller
                     $customerInfo->getId(),
                     $currentCustomer
                 );
+            // check customer has any address ??
             if ($address) {
                 foreach ($address as $ind => $val) {
                     $description [] = $val->getDescription();
@@ -239,21 +248,38 @@ class ShipmentController extends Controller
     }
 
     /**
-     *@Route("/calc_shipment_price",name="customer_dashboard_shipment_calc_shipment_price")
+     * @Route("/calc_shipment_price",name="customer_dashboard_shipment_calc_shipment_price")
+     * @param Request $request
+     * @return Response
      */
+    // calculation shipment's price 
     public function calcShipmentPriceAction(Request $request)
     {
         $ownerAddressId = $request->request->get('ownerAddressId');
         $otherAddressId = $request->request->get('otherAddressId');
         $shipmentValue = $request->request->get('shipmentValue');
         $shipmentPickUpTime = $request->request->get('shipmentPickUpTime');
-        $shipmentPickUpTime = $this->get("app.jdate_service")->convertToGregorian($shipmentPickUpTime);
+        $shipmentPickUpTime = $this->get("app.jdate_service")
+            ->convertToGregorian($shipmentPickUpTime);
         $ownerAddress = $this->getDoctrine()
             ->getRepository("AppBundle:Address")
             ->find($ownerAddressId);
         $otherAddress = $this->getDoctrine()
             ->getRepository("AppBundle:Address")
             ->find($otherAddressId);
+        if($otherAddress == null){
+            $em = $this->getDoctrine()
+                ->getRepository("AppBundle:Address");
+            $qb = $em->createQueryBuilder('p')
+                ->where('p.customer=:reciverId')
+                ->setParameter('reciverId',$otherAddressId)
+                ->orderBy('p.id','DESC')
+                ->getQuery()
+                ->getResult();
+            $otherAddress = $this->getDoctrine()
+                ->getRepository("AppBundle:Address")
+                ->find($qb[0]->getId());
+        }
         $shipmentCost = $this->get("app.cost_calculator")
             ->getCost(
                 $ownerAddress,
@@ -261,7 +287,7 @@ class ShipmentController extends Controller
                 $shipmentValue,
                 $shipmentPickUpTime
             );
-        
+
         return new Response($shipmentCost);
     }
     /**

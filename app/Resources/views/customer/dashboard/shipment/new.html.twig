@@ -20,7 +20,7 @@
         <div class="two fields">
             <div class="field">
                 <label>{{ form_label(form.pickUpTime) }}</label>
-                <div style="direction: rtl !important;">{{ form_widget(form.pickUpTime ) }}</div>
+                <div class="calc_price_item" style="direction: rtl !important;">{{ form_widget(form.pickUpTime ) }}</div>
             </div>
             <div class="field">
                 <label>{{ form_label(form.value) }}</label>
@@ -30,7 +30,7 @@
         <div class="two fields">
             <div class="field">
                 <label>آدرس فرستنده</label>
-                <div class="" style="margin-top: 10px" id="address_show_section">
+                <div class="calc_price_item" style="margin-top: 10px" id="address_show_section">
                     {% for infoAddress in address %}
                         {% if infoAddress.customer.id == customerId %}
                             {% if loop.index <=4 %}
@@ -52,7 +52,7 @@
                             <span style="color:#2b669a">آدرس های دیگر</span>
                         </div>
                         {#<a id="addressContinue" style="cursor: pointer"> آدرس های دیگر+</a>#}
-                        <div class="otherAddress content" id="bbb">
+                        <div class="otherAddress content calc_price_item" id="bbb">
                             {% for infoAddress in address %}
                                 {% if infoAddress.customer.id == customerId %}
                                     {% if loop.index >=5 %}
@@ -75,10 +75,10 @@
                     {{ form_widget(form.other) }}
                     {#<input id="mobile_reciver"  name="reciver_mobile_number" placeholder="وارد کردن شماره تلفن همراه" type="text">#}
                     <div id="reciver_address" class="ui toggle checkbox" style="margin-top: 5px">
-                        <input id="show_reciver_address_btn" name="public" type="checkbox" disabled>
+                        <input class="calc_price_item"  id="show_reciver_address_btn" name="public" type="checkbox" disabled>
                         <label>نمایش آدرس</label>
                     </div>
-                    <div id="reciver_info_box" style="margin-top: 15px;display: none">
+                    <div id="reciver_info_box" class="calc_price_item" style="margin-top: 15px;display: none">
 
                     </div>
                     <div id="noAddress"  style="margin-top:10px;display: none">
@@ -99,18 +99,18 @@
             <span>محاسبه قیمت و ایجاد سفارش</span>
         </h4>
         <div style="margin-top: 10px;margin-bottom: 10px">
-            <button id="calculate_price" class="positive ui button">محاسبه ی قیمت</button>
-            <h5 id="cost_show" style="display: none"></h5>
+            <span id="calculate_price" style="color: red" class=""><b>قیمت کل :</b></span>
+            <h5 id="cost_show" style="display: inline">---</h5>
+        </div>
+        <div class="price_send">
+
         </div>
         <input  class="ui button creator_shipment" type="submit" tabindex="0" value="ایجاد سفارش" disabled />
         {{ form_rest(form) }}
     </form>
-    <ul>
-        <li>
-            <a href="{{ path('customer_dashboard_shipment_index') }}">Back to the list</a>
-        </li>
-    </ul>
-
+    <div style="margin-top: 10px">
+        <a href="{{ path('customer_dashboard_shipment_index') }}"><button class="ui grey button">بازگشت</button></a>
+    </div>
     <div style="margin-bottom: 10px" class="ui modal" id="address_modal_form">
         <i class="close icon"></i>
         <div class="header">

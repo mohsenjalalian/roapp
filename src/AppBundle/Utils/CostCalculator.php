@@ -61,35 +61,34 @@ class CostCalculator
      * @return int
      */
     public function getCost(Address $origin, Address $destination, $shipmentValue, \DateTime $orderDateTime) {
-        $client = new Client(['base_uri' => $this->googleMapSettings['distance_matrix']['url']]);
-        $result = $client->request(
-            'GET',
-            $this->googleMapSettings['distance_matrix']['output_format'],
-            [
-                'query' => [
-                    'origins' => $this->formatLatLong($origin),
-                    'destinations' => $this->formatLatLong($destination),
-                    'key' => $this->googleMapSettings['distance_matrix']['api_key']
-                ]
-            ]
-        )->getBody()
-            ->getContents();
-        $result = json_encode($result);
+//        $client = new Client(['base_uri' => $this->googleMapSettings['distance_matrix']['url']]);
+//        $result = $client->request(
+//            'GET',
+//            $this->googleMapSettings['distance_matrix']['output_format'],
+//            [
+//                'query' => [
+//                    'origins' => $this->formatLatLong($origin),
+//                    'destinations' => $this->formatLatLong($destination),
+//                    'key' => $this->googleMapSettings['distance_matrix']['api_key']
+//                ]
+//            ]
+//        )->getBody()
+//            ->getContents();
+//        $result = json_encode($result);
+//        $topLevelStatus = $result['status'];
+//        $elementLevelStatus = $result['rows'][0]['elements'][0]['status'];
+//        $distance = null;
+//        $duration = null;
+//        if ($topLevelStatus == self::TOP_LEVEL_STATUS_OK & $elementLevelStatus == self::ELEMENT_LEVEL_STATUS_OK) {
+//            $distance = $result['rows'][0]['elements'][0]['distance']['value']; // In meter
+//            $duration = $result['rows'][0]['elements'][0]['duration']['value']; // In second
+//        } else {
+//            throw new \Exception('Invalid map response.');
+//        }
+//
+//        // @todo Write cost calculation algorithm right here and return
 
-        $topLevelStatus = $result['status'];
-        $elementLevelStatus = $result['rows'][0]['elements'][0]['status'];
-        $distance = null;
-        $duration = null;
-        if ($topLevelStatus == self::TOP_LEVEL_STATUS_OK & $elementLevelStatus == self::ELEMENT_LEVEL_STATUS_OK) {
-            $distance = $result['rows'][0]['elements'][0]['distance']['value']; // In meter
-            $duration = $result['rows'][0]['elements'][0]['duration']['value']; // In second
-        } else {
-            throw new \Exception('Invalid map response.');
-        }
-
-        // @todo Write cost calculation algorithm right here and return
-
-        return 1000;
+        return mt_rand(500,10000);
     }
 
     /**
