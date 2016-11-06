@@ -102,15 +102,15 @@
             <span id="calculate_price" style="color: red" class=""><b>قیمت کل :</b></span>
             <h5 id="cost_show" style="display: inline">---</h5>
         </div>
+        <div class="price_send">
+
+        </div>
         <input  class="ui button creator_shipment" type="submit" tabindex="0" value="ایجاد سفارش" disabled />
         {{ form_rest(form) }}
     </form>
-    <ul>
-        <li>
-            <a href="{{ path('customer_dashboard_shipment_index') }}">Back to the list</a>
-        </li>
-    </ul>
-
+    <div style="margin-top: 10px">
+        <a href="{{ path('customer_dashboard_shipment_index') }}"><button class="ui grey button">بازگشت</button></a>
+    </div>
     <div style="margin-bottom: 10px" class="ui modal" id="address_modal_form">
         <i class="close icon"></i>
         <div class="header">
