@@ -62,9 +62,9 @@ class UploadTransformer implements DataTransformerInterface
         $mediaName = $this->form->getMediaName();
 
         $uploadManager = $this->container->get('roapp_media.upload_manager');
-        $fileIdentifiers = explode(',', $value);
+//        $fileIdentifiers = explode(',', $value);
+        $fileIdentifiers = array_filter( explode(",", $value ));
         $fileCollection = new ArrayCollection();
-        
         foreach ($fileIdentifiers as $fileIdentifier) {
             if (is_numeric($fileIdentifier)) {
                 $mediaEntity = $this->container->get('doctrine.orm.default_entity_manager')
