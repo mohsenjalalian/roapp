@@ -1,0 +1,17 @@
+image: php:7.1-rc
+before_script:
+    - apt-get update -qq && apt-get install -y -qq git
+    - curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+
+stages:
+    - build
+    - test
+    - deploy
+
+check_phpcs:
+    script:
+        - pear install PHP_CodeSniffer
+        - git clone https://github.com/leaphub/phpcs-symfony2-standard.git /usr/local/lib/php/PHP/CodeSniffer/Standards/Symfony2
+        - phpcs --config-set default_standard /usr/local/lib/php/PHP/CodeSniffer/Standards/Symfony2
+        - phpcs --standard=Symfony2 --extensions=php src/
+    stage: build
