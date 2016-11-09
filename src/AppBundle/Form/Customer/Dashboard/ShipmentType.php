@@ -17,6 +17,8 @@ use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\Form\Extension\Core\Type\RadioType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class ShipmentType extends AbstractType
@@ -46,14 +48,20 @@ class ShipmentType extends AbstractType
                     'translation_domain' => 'messages',
                     'attr' => ['class' => 'js-datepicker']
                 ))
+            ->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
+                $shipment = $event->getData();
+                $form = $event->getForm();
+                if ($shipment->getId() === null) {
+                    $form->add('other',TextType::class,
+                        array(
+                            "label"=>"شماره گیرنده",
+                            'attr' => ['placeHolder'=> 'لطفا شماره تلفن همراه مورد نظر خود را وارد نمایید.', 'class' => 'calc_price_item'],
+                            'translation_domain' => 'messages',
+                            'mapped' => false
+                        ));
+                }
+            })
 
-            ->add('other',TextType::class,
-                array(
-                    "label"=>"شماره گیرنده",
-                    'attr' => ['placeHolder'=> 'لطفا شماره تلفن همراه مورد نظر خود را وارد نمایید.', 'class' => 'calc_price_item'],
-                    'translation_domain' => 'messages',
-                    'mapped' => false
-                ))
             ->add('photoFiles', RoappImageType::class)
         ;
         $builder->get('pickUpTime')
