@@ -20,7 +20,7 @@
         <tbody>
         {% for shipment in shipments %}
             <tr>
-                <td><a href="{{ path('customer_dashboard_shipment_show', { 'id': shipment.id }) }}">{{ shipment.id }}</a></td>
+                <td><a href="{{ path('app_customer_dashboard_shipment_show', { 'id': shipment.id }) }}">{{ shipment.id }}</a></td>
                 <td>{{ shipment.description }}</td>
                 <td>{{ shipment.value }}</td>
                 <td>{{ shipment.status }}</td>
@@ -31,10 +31,10 @@
                 <td>
                     <ul>
                         <li>
-                            <a href="{{ path('customer_dashboard_shipment_show', { 'id': shipment.id }) }}">show</a>
+                            <a href="{{ path('app_customer_dashboard_shipment_show', { 'id': shipment.id }) }}">show</a>
                         </li>
                         <li>
-                            <a href="{{ path('customer_dashboard_shipment_edit', { 'id': shipment.id }) }}">edit</a>
+                            <a href="{{ path('app_customer_dashboard_shipment_edit', { 'id': shipment.id }) }}">edit</a>
                         </li>
                     </ul>
                 </td>
@@ -45,7 +45,7 @@
 
     <ul>
         <li>
-            <a href="{{ path('customer_dashboard_shipment_new') }}">Create a new entry</a>
+            <a href="{{ path('app_customer_dashboard_shipment_new') }}">Create a new entry</a>
         </li>
     </ul>
 {% endblock %}

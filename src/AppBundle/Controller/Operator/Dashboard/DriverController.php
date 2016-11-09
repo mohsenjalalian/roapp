@@ -3,6 +3,7 @@
 namespace AppBundle\Controller\Operator\Dashboard;
 
 use AppBundle\Entity\Shipment;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -14,6 +15,7 @@ use AppBundle\Form\DriverType;
  * Class DriverListController
  * @package AppBundle\Controller\Operator\Dashboard
  * @Route("/driver")
+ * @Security("has_role('ROLE_USER')")
  */
 class DriverController extends Controller
 {

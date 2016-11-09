@@ -46,7 +46,7 @@ security:
                 check_path: /customer/dashboard/login
             logout:
                 path: /customer/dashboard/logout
-                target: /customer/dashboard
+                target: /customer/dashboard/login
             provider: customer_provider
 
         driver_dashboard:
@@ -77,7 +77,7 @@ security:
                 check_path: /operator/dashboard/login
             logout:
                 path: /operator/dashboard/logout
-                target: /operator/dashboard
+                target: /operator/dashboard/login
             provider: operator_provider
             remember_me:
                 secret:   '%secret%'

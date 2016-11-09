@@ -6,6 +6,7 @@ use AppBundle\Entity\Customer;
 
 use AppBundle\Form\Customer\Dashboard\RegisterType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -20,6 +21,9 @@ class SecurityController extends Controller
      */
     public function loginAction(Request $request)
     {
+        if($this->isGranted("ROLE_CUSTOMER")){
+            return $this->redirectToRoute("app_customer_dashboard_shipment_index");
+        }
 
         $authenticationUtils = $this->get('security.authentication_utils');
 

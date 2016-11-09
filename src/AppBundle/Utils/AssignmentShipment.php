@@ -5,7 +5,7 @@ namespace AppBundle\Utils;
 use AppBundle\Entity\ShipmentAssignment;
 use AppBundle\Entity\Driver;
 use AppBundle\Entity\Task;
-use AppBundle\Utils\NotificationService;
+use AppBundle\Utils\Services\NotificationService;
 use Doctrine\ORM\EntityManager;
 use AppBundle\Entity\Shipment;
 use Symfony\Component\Translation\Translator;

@@ -6,7 +6,7 @@
 
 {% block main %}
 
-    <form action="{{ path('customer_dashboard_shipment_new') }}" method="POST" class="ui form">
+    <form action="{{ path('app_customer_dashboard_shipment_new') }}" method="POST" class="ui form">
 
         {{ form_errors(form) }}
 
@@ -109,7 +109,7 @@
         {{ form_rest(form) }}
     </form>
     <div style="margin-top: 10px">
-        <a href="{{ path('customer_dashboard_shipment_index') }}"><button class="ui grey button">بازگشت</button></a>
+        <a href="{{ path('app_customer_dashboard_shipment_index') }}"><button class="ui grey button">بازگشت</button></a>
     </div>
     <div style="margin-bottom: 10px" class="ui modal" id="address_modal_form">
         <i class="close icon"></i>

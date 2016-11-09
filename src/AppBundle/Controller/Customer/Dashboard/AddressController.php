@@ -3,6 +3,7 @@
 namespace AppBundle\Controller\Customer\Dashboard;
 
 use AppBundle\Entity\Customer;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -15,6 +16,7 @@ use AppBundle\Form\Customer\Dashboard\AddressType;
  * Address controller.
  *
  * @Route("/address")
+ * @Security("has_role('ROLE_CUSTOMER')")
  */
 class AddressController extends Controller
 {

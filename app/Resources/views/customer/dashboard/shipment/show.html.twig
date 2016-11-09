@@ -42,10 +42,10 @@
 
     <ul>
         <li>
-            <a href="{{ path('customer_dashboard_shipment_index') }}">Back to the list</a>
+            <a href="{{ path('app_customer_dashboard_shipment_index') }}">Back to the list</a>
         </li>
         <li>
-            <a href="{{ path('customer_dashboard_shipment_edit', { 'id': shipment.id }) }}">Edit</a>
+            <a href="{{ path('app_customer_dashboard_shipment_edit', { 'id': shipment.id }) }}">Edit</a>
         </li>
         <li>
             {{ form_start(delete_form) }}
