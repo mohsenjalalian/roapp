@@ -99,18 +99,19 @@ class MediaAssociationHandler
         $mediaUploads = $this->accessor->getValue($entity, $propertyName);
         $mediaAssociation = $this->accessor->getValue($entity, $associationMediaPropertyName);
 
-        dump($mediaUploads);
-        dump($mediaAssociation);
     }
 
     private function hasManyPersistHandler($entity, $mediaName, $propertyName, $associationMediaPropertyName)
     {
-        $mediaUploads = $this->accessor->getValue($entity, $propertyName);
-//        $mediaUploadsIterator = $mediaUploads->getIterator();
 
+        $mediaUploads = $this->accessor->getValue($entity, $propertyName);
+        /* @TODO please resolve mediaUploads value   */
+        if($mediaUploads == null){
+            $mediaUploads = [];
+        }
+//        $mediaUploadsIterator = $mediaUploads->getIterator();
         $newMedias = new ArrayCollection();
         $oldMedias = new ArrayCollection();
-
         foreach ($mediaUploads as $media) {
             if ($media instanceof MediaFile) {
                 /** @var MediaFile $media */

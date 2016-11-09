@@ -36,6 +36,8 @@ class UploadTransformer implements DataTransformerInterface
     {
         if (is_array($value)) {
             $arrayValue = $value;
+        } elseif ($value == null) {
+            $arrayValue = [];
         } else {
             throw new \Exception('Value must array or ArrayCollection');
         }
