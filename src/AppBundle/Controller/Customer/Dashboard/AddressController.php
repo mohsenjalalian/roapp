@@ -25,15 +25,28 @@ class AddressController extends Controller
      *
      * @Route("/", name="customer_dashboard_address_index")
      * @Method("GET")
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function indexAction()
+    public function indexAction(Request $request)
     {
         $em = $this->getDoctrine()->getManager();
 
-        $addresses = $em->getRepository('AppBundle:Address')->findAll();
+        $query = $em->getRepository('AppBundle:Address')
+            ->createQueryBuilder('a')
+            ->where('a.customer =:user_id')
+            ->setParameter('user_id',$this->getUser()->getId())
+            ->getQuery();
+
+        $paginator  = $this->get('knp_paginator');
+        $pagination = $paginator->paginate(
+            $query, /* query NOT result */
+            $request->query->getInt('page', 1)/*page number*/,
+            5/*limit per page*/
+        );
 
         return $this->render('customer/dashboard/address/index.html.twig', array(
-            'addresses' => $addresses,
+            'pagination' => $pagination,
         ));
     }
 

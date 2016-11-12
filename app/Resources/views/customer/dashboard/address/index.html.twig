@@ -9,22 +9,22 @@
     <table class="ui celled table">
         <thead>
             <tr>
-                <th>Id</th>
-                <th>Ispublic</th>
-                <th>Description</th>
-                <th>Latitude</th>
-                <th>Longitude</th>
-                <th>Actions</th>
+                <th>{{ knp_pagination_sortable(pagination, 'Id','a.id') }}</th>
+                <th{% if pagination.isSorted('a.isPublic') %} class="sorted"{% endif %}>{{ knp_pagination_sortable(pagination, 'وضعیت نمایش', 'a.isPublic') }}</th>
+                <th{% if pagination.isSorted('a.description') %} class="sorted"{% endif %}>{{ knp_pagination_sortable(pagination, 'آدرس', 'a.description') }}</th>
+                {#<th>Latitude</th>#}
+                {#<th>Longitude</th>#}
+                <th>عملیات</th>
             </tr>
         </thead>
         <tbody>
-        {% for address in addresses %}
+        {% for address in pagination %}
             <tr>
                 <td><a href="{{ path('customer_dashboard_address_show', { 'id': address.id }) }}">{{ address.id }}</a></td>
-                <td>{% if address.isPublic %}Yes{% else %}No{% endif %}</td>
+                <td>{% if address.isPublic %}عمومی{% else %}محرمانه{% endif %}</td>
                 <td>{{ address.description }}</td>
-                <td>{{ address.latitude }}</td>
-                <td>{{ address.longitude }}</td>
+                {#<td>{{ address.latitude }}</td>#}
+                {#<td>{{ address.longitude }}</td>#}
                 <td>
                             <a href="{{ path('customer_dashboard_address_show', { 'id': address.id }) }}"><button>نمایش</button></a>
                             <a href="{{ path('customer_dashboard_address_edit', { 'id': address.id }) }}"><button>ویرایش</button></a>
@@ -33,4 +33,9 @@
         {% endfor %}
         </tbody>
     </table>
+    <div class="ui one column stackable center aligned page grid navigation">
+        <div class="pagination menu column twelve wide ui" style="font-size: 18px">
+            {{ knp_pagination_render(pagination) }}
+        </div>
+    </div>
 {% endblock %}

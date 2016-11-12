@@ -10,21 +10,21 @@
                 <td>{{ address.id }}</td>
             </tr>
             <tr>
-                <th>Ispublic</th>
-                <td>{% if address.isPublic %}Yes{% else %}No{% endif %}</td>
+                <th>وضعیت نمایش</th>
+                <td>{% if address.isPublic %}عمومی{% else %}محرمانه{% endif %}</td>
             </tr>
             <tr>
-                <th>Description</th>
+                <th>آدرس</th>
                 <td>{{ address.description }}</td>
             </tr>
-            <tr>
-                <th>Latitude</th>
-                <td>{{ address.latitude }}</td>
-            </tr>
-            <tr>
-                <th>Longitude</th>
-                <td>{{ address.longitude }}</td>
-            </tr>
+            {#<tr>#}
+                {#<th>Latitude</th>#}
+                {#<td>{{ address.latitude }}</td>#}
+            {#</tr>#}
+            {#<tr>#}
+                {#<th>Longitude</th>#}
+                {#<td>{{ address.longitude }}</td>#}
+            {#</tr>#}
         </tbody>
     </table>
 

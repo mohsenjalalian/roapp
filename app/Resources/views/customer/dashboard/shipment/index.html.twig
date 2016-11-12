@@ -1,51 +1,46 @@
-{% extends 'base.html.twig' %}
+{% extends ':customer/dashboard:layout.html.twig' %}
 
-{% block body %}
-    <h1>Shipment list</h1>
-
-    <table>
+{% block main %}
+    <div>
+        <h2 class="ui header" style="display: inline">لیست سفارشات {{ app.user.fullName }}</h2>
+        <a style="margin-right: 10px" href="{{ path('app_customer_dashboard_shipment_new') }}"><button>ایجاد آدرس جدید</button></a>
+    </div>
+    <table class="ui celled table" >
         <thead>
-            <tr>
-                <th>Id</th>
-                <th>Description</th>
-                <th>Value</th>
-                <th>Status</th>
-                <th>Pickuptime</th>
-                <th>Createdat</th>
-                <th>Price</th>
-                <th>Type</th>
-                <th>Actions</th>
-            </tr>
+        <tr>
+            <th>{{ knp_pagination_sortable(pagination, 'id','s.id') }}</th>
+            <th {% if pagination.isSorted('s.description') %} class="sorted"{% endif %}>{{ knp_pagination_sortable(pagination, 'توضیحات', 's.description') }}</th>
+            <th{% if pagination.isSorted('s.value') %} class="sorted"{% endif %}>{{ knp_pagination_sortable(pagination, 'ارزش بسته', 's.value') }}</th>
+            <th{% if pagination.isSorted('s.status') %} class="sorted"{% endif %}>{{ knp_pagination_sortable(pagination, 'وضعیت', 's.status') }}</th>
+            <th{% if pagination.isSorted('s.pickUptime') %} class="sorted"{% endif %}>{{ knp_pagination_sortable(pagination, 'زمان تحویل سفارش', 's.pickUpTime') }}</th>
+            <th{% if pagination.isSorted('s.createdAt') %} class="sorted"{% endif %}>{{ knp_pagination_sortable(pagination, 'زمان ایجاد سفارش', 's.createdAt') }}</th>
+            <th{% if pagination.isSorted('s.price') %} class="sorted"{% endif %}>{{ knp_pagination_sortable(pagination, 'قیمت تحویل سفارش', 's.price') }}</th>
+            <th{% if pagination.isSorted('s.type') %} class="sorted"{% endif %}>{{ knp_pagination_sortable(pagination, 'نوع سفارش', 's.type') }}</th>
+            <th>Actions</th>
+        </tr>
         </thead>
         <tbody>
-        {% for shipment in shipments %}
+        {% for shipment in pagination %}
             <tr>
                 <td><a href="{{ path('app_customer_dashboard_shipment_show', { 'id': shipment.id }) }}">{{ shipment.id }}</a></td>
                 <td>{{ shipment.description }}</td>
                 <td>{{ shipment.value }}</td>
                 <td>{{ shipment.status }}</td>
-                <td>{% if shipment.pickUpTime %}{{ shipment.pickUpTime|date('Y-m-d H:i:s') }}{% endif %}</td>
-                <td>{% if shipment.createdAt %}{{ shipment.createdAt|date('Y-m-d H:i:s') }}{% endif %}</td>
+                <td>{% if shipment.pickUpTime %}{{ shipment.pickUpTime|date('Y-m-d') }}{% endif %}</td>
+                <td>{% if shipment.createdAt %}{{ shipment.createdAt|date('Y-m-d') }}{% endif %}</td>
                 <td>{{ shipment.price }}</td>
                 <td>{{ shipment.type }}</td>
                 <td>
-                    <ul>
-                        <li>
-                            <a href="{{ path('app_customer_dashboard_shipment_show', { 'id': shipment.id }) }}">show</a>
-                        </li>
-                        <li>
-                            <a href="{{ path('app_customer_dashboard_shipment_edit', { 'id': shipment.id }) }}">edit</a>
-                        </li>
-                    </ul>
+                    <a href="{{ path('app_customer_dashboard_shipment_show', { 'id': shipment.id }) }}"><button>نمایش</button></a>
+                    <a href="{{ path('app_customer_dashboard_shipment_edit', { 'id': shipment.id }) }}"><button>ویرایش</button></a>
                 </td>
             </tr>
         {% endfor %}
         </tbody>
     </table>
-
-    <ul>
-        <li>
-            <a href="{{ path('app_customer_dashboard_shipment_new') }}">Create a new entry</a>
-        </li>
-    </ul>
+    <div class="ui one column stackable center aligned page grid navigation">
+        <div class="pagination menu column twelve wide ui" style="font-size: 18px">
+            {{ knp_pagination_render(pagination) }}
+        </div>
+    </div>
 {% endblock %}

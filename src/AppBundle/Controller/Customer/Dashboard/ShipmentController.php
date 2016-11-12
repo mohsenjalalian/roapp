@@ -33,14 +33,31 @@ class ShipmentController extends Controller
      * @Route("/", name="app_customer_dashboard_shipment_index")
      * @Method("GET")
      */
-    public function indexAction()
+    public function indexAction(Request $request)
     {
         $em = $this->getDoctrine()->getManager();
 
-        $shipments = $em->getRepository('AppBundle:Shipment')->findAll();
+        $query = $em->getRepository('AppBundle:Shipment')
+            ->createQueryBuilder('s')
+            ->join('s.ownerAddress','ow')
+            ->join('ow.customer','oc')
+            ->where('oc.id =:user_id')
+            ->setParameter('user_id',$this->getUser()->getId())
+            ->orderBy('s.pickUpTime','Desc')
+            ->getQuery();
+        
+        $paginator  = $this->get('knp_paginator');
+        $pagination = $paginator->paginate(
+            $query, /* query NOT result */
+            $request->query->getInt('page', 1)/*page number*/,
+            5/*limit per page*/
+        );
+        
+        //        $shipments = $em->getRepository('AppBundle:Shipment')->findAll();
 
         return $this->render(':customer/dashboard/shipment:index.html.twig', array(
-            'shipments' => $shipments,
+//            'shipments' => $qb,
+            'pagination' => $pagination,
         ));
     }
 
@@ -301,7 +318,6 @@ class ShipmentController extends Controller
     public function showAction(Shipment $shipment)
     {
         $deleteForm = $this->createDeleteForm($shipment);
-
         return $this->render('customer/dashboard/shipment/show.html.twig', array(
             'shipment' => $shipment,
             'delete_form' => $deleteForm->createView(),
