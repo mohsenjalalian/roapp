@@ -2,6 +2,7 @@
 
 namespace AppBundle\Controller\Operator\Dashboard;
 
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -12,6 +13,7 @@ use AppBundle\Entity\Driver;
  * Class AssignShipmentController
  * @package AppBundle\Controller\Operator\Dashboard
  * @Route("/shipment_assignment")
+ * @Security("has_role('ROLE_USER')")
  */
 class ShipmentAssignmentController extends Controller
 {

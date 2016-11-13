@@ -16,6 +16,9 @@ class SecurityController extends Controller
      */
     public function loginAction(Request $request)
     {
+        if ($this->isGranted('ROLE_USER')) {
+            return $this->redirectToRoute("app_operator_dashboard_shipment_list");
+        }
         $authenticationUtils = $this->get('security.authentication_utils');
         $error = $authenticationUtils->getLastAuthenticationError();
         $lastUsername = $authenticationUtils->getLastUsername();
@@ -32,8 +35,10 @@ class SecurityController extends Controller
     /**
      * @Route("/logout", name="app_operator_dashboard_security_logout")
      * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function logoutAction(Request $request)
     {
+        return $this->render(':operator/dashboard/security:login.html.twig');
     }
 }

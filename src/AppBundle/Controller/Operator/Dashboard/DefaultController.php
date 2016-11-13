@@ -1,6 +1,6 @@
 <?php
 
-namespace AppBundle\Controller\Customer\Dashboard;
+namespace AppBundle\Controller\Operator\Dashboard;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -9,8 +9,8 @@ use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Class DefaultController
- * @package AppBundle\Controller\Customer\Dashboard
- * @Security("has_role('ROLE_CUSTOMER')")
+ * @package AppBundle\Controller\Operator\Dashboard
+ * @Security("has_role('ROLE_USER')")
  */
 class DefaultController extends Controller
 {
@@ -19,8 +19,7 @@ class DefaultController extends Controller
      */
     public function indexAction()
     {
-//        return $this->render(':customer/dashboard/default:index.html.twig');
-        return $this->redirectToRoute("app_customer_dashboard_shipment_index");
-
+//        return $this->render(':operator/dashboard/default:index.html.twig');
+          return $this->redirectToRoute("app_operator_dashboard_driver_list");
     }
 }

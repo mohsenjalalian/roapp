@@ -9,6 +9,7 @@ use AppBundle\Form\Customer\Dashboard\ShipmentType;
 use DateTime;
 use jDateTime;
 //use Symfony\Component\BrowserKit\Response;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -22,30 +23,48 @@ use Symfony\Component\Validator\Constraints\Url;
  * Shipment controller.
  *
  * @Route("/shipment")
+ * @Security("has_role('ROLE_CUSTOMER')")
  */
 class ShipmentController extends Controller
 {
     /**
      * Lists all Shipment entities.
      *
-     * @Route("/", name="customer_dashboard_shipment_index")
+     * @Route("/", name="app_customer_dashboard_shipment_index")
      * @Method("GET")
      */
-    public function indexAction()
+    public function indexAction(Request $request)
     {
         $em = $this->getDoctrine()->getManager();
 
-        $shipments = $em->getRepository('AppBundle:Shipment')->findAll();
+        $query = $em->getRepository('AppBundle:Shipment')
+            ->createQueryBuilder('s')
+            ->join('s.ownerAddress','ow')
+            ->join('ow.customer','oc')
+            ->where('oc.id =:user_id')
+            ->setParameter('user_id',$this->getUser()->getId())
+            ->orderBy('s.pickUpTime','Desc')
+            ->getQuery();
+        
+        $paginator  = $this->get('knp_paginator');
+        $pagination = $paginator->paginate(
+            $query, /* query NOT result */
+            $request->query->getInt('page', 1)/*page number*/,
+            5/*limit per page*/
+        );
+        
+        //        $shipments = $em->getRepository('AppBundle:Shipment')->findAll();
 
         return $this->render(':customer/dashboard/shipment:index.html.twig', array(
-            'shipments' => $shipments,
+//            'shipments' => $qb,
+            'pagination' => $pagination,
         ));
     }
 
     /**
      * Creates a new Shipment entity.
      *
-     * @Route("/new", name="customer_dashboard_shipment_new")
+     * @Route("/new", name="app_customer_dashboard_shipment_new")
      * @Method({"GET", "POST"})
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
@@ -123,7 +142,7 @@ class ShipmentController extends Controller
             $em->persist($shipment);
             $em->flush();
 
-            return $this->redirectToRoute('customer_dashboard_shipment_show', array('id' => $shipment->getId()));
+            return $this->redirectToRoute('app_customer_dashboard_shipment_show', array('id' => $shipment->getId()));
         }
 
         return $this->render(
@@ -139,7 +158,7 @@ class ShipmentController extends Controller
     }
 
     /**
-     * @Route("/load_owner_form",name="customer_dashboard_shipment_load_owner_form")
+     * @Route("/load_owner_form",name="app_customer_dashboard_shipment_load_owner_form")
      */
     // load owner address form for show in modalBox
     public function loadOwnerAddressFormAction()
@@ -169,7 +188,7 @@ class ShipmentController extends Controller
     }
 
     /**
-     * @Route("/load_other_form",name="customer_dashboard_shipment_load_other_form")
+     * @Route("/load_other_form",name="app_customer_dashboard_shipment_load_other_form")
      * @param Request $request
      * @return Response
      */
@@ -201,7 +220,7 @@ class ShipmentController extends Controller
     }
 
     /**
-     * @Route("/get_customer_address",name="customer_dashboard_shipment_get_customer_address")
+     * @Route("/get_customer_address",name="app_customer_dashboard_shipment_get_customer_address")
      * @param Request $request
      * @return JsonResponse
      */
@@ -248,7 +267,7 @@ class ShipmentController extends Controller
     }
 
     /**
-     * @Route("/calc_shipment_price",name="customer_dashboard_shipment_calc_shipment_price")
+     * @Route("/calc_shipment_price",name="app_customer_dashboard_shipment_calc_shipment_price")
      * @param Request $request
      * @return Response
      */
@@ -293,13 +312,12 @@ class ShipmentController extends Controller
     /**
      * Finds and displays a Shipment entity.
      *
-     * @Route("/{id}", name="customer_dashboard_shipment_show")
+     * @Route("/{id}", name="app_customer_dashboard_shipment_show")
      * @Method("GET")
      */
     public function showAction(Shipment $shipment)
     {
         $deleteForm = $this->createDeleteForm($shipment);
-
         return $this->render('customer/dashboard/shipment/show.html.twig', array(
             'shipment' => $shipment,
             'delete_form' => $deleteForm->createView(),
@@ -309,7 +327,7 @@ class ShipmentController extends Controller
     /**
      * Displays a form to edit an existing Shipment entity.
      *
-     * @Route("/{id}/edit", name="customer_dashboard_shipment_edit")
+     * @Route("/{id}/edit", name="app_customer_dashboard_shipment_edit")
      * @Method({"GET", "POST"})
      */
     public function editAction(Request $request, Shipment $shipment)
@@ -323,7 +341,7 @@ class ShipmentController extends Controller
             $em->persist($shipment);
             $em->flush();
 
-            return $this->redirectToRoute('customer_dashboard_shipment_edit', array('id' => $shipment->getId()));
+            return $this->redirectToRoute('app_customer_dashboard_shipment_edit', array('id' => $shipment->getId()));
         }
 
         return $this->render('customer/dashboard/shipment/edit.html.twig', array(
@@ -336,7 +354,7 @@ class ShipmentController extends Controller
     /**
      * Deletes a Shipment entity.
      *
-     * @Route("/{id}", name="customer_dashboard_shipment_delete")
+     * @Route("/{id}", name="app_customer_dashboard_shipment_delete")
      * @Method("DELETE")
      */
     public function deleteAction(Request $request, Shipment $shipment)
@@ -350,7 +368,7 @@ class ShipmentController extends Controller
             $em->flush();
         }
 
-        return $this->redirectToRoute('customer_dashboard_shipment_index');
+        return $this->redirectToRoute('app_customer_dashboard_shipment_index');
     }
 
     /**
@@ -363,7 +381,7 @@ class ShipmentController extends Controller
     private function createDeleteForm(Shipment $shipment)
     {
         return $this->createFormBuilder()
-            ->setAction($this->generateUrl('customer_dashboard_shipment_delete', array('id' => $shipment->getId())))
+            ->setAction($this->generateUrl('app_customer_dashboard_shipment_delete', array('id' => $shipment->getId())))
             ->setMethod('DELETE')
             ->getForm()
             ;

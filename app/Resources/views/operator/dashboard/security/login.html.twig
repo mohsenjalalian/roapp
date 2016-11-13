@@ -1,30 +1,71 @@
 {% extends ':operator/dashboard:layout.html.twig' %}
 
- {% block main %}
-
-     {% if error %}
-         <div>{{ error.messageKey|trans(error.messageData, 'security') }}</div>
-     {% endif %}
-     <div class="ui grid">
-         <div class="four wide column">
-         <form class="ui form" action="{{ path('app_operator_dashboard_security_login') }}" method="post">
-             <label for="username">نام کاربری :</label>
-             <input type="text" id="username" name="_username" value="{{ last_username }}" /><br>
-             <label for="password">رمز عبور :</label>
-             <input type="password" id="password" name="_password" /> <br>
-             <div class="ui inverted divider"></div>
-             <label for="remember_me">مرا به خاطر بسپار</label>
-             <input type="checkbox" id="remember_me" name="_remember_me" checked /><br>
-             {#
-                 If you want to control the URL the user
-                 is redirected to on success (more details below)
-                 <input type="hidden" name="_target_path" value="/account" />
-             #}
-
-             <button style="color: black" type="submit">ورود</button>
+ {% block body %}
+     <div class="ui middle aligned center aligned grid">
+         <div class="column">
+             <h2 class="ui teal image header">
+                 <div class="content">
+                     ورود به سامانه
+                 </div>
+             </h2>
+             {#{% if error %}#}
+             {#<div>{{ error.messageKey|trans(error.messageData, 'security') }}</div>#}
+             {#{% endif %}#}
+             <div class="ui error">
+                 {% if error %}
+                     <div>{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+                 {% endif %}
              </div>
-         </form>
+             <form class="ui form" action="{{ path('app_operator_dashboard_security_login') }}" method="post">
+                 <div class="ui stacked segment">
+                     <div class="field">
+                         <div class="ui left icon input">
+                             <i class="user icon"></i>
+                             <input type="text" id="username" name="_username" value="{{ last_username }}" placeholder="پست الکترونیکی" />
+                         </div>
+                     </div>
+                     <input type="hidden" name="_target_path" value="{{ url('app_operator_dashboard_shipment_list') }}" />
+                     <div class="field">
+                         <div class="ui left icon input">
+                             <i class="lock icon"></i>
+                             <input type="password" id="password" name="_password" placeholder="رمز عبور"/>
+                         </div>
+                     </div>
+                     <button type="submit" class="ui fluid large teal submit button">ورود</button>
+                     {#<button style="color: black" type="submit">ورود</button>#}
+                         {#<label for="username">نام کاربری :</label>#}
+                         {#<input type="text" id="username" name="_username" value="{{ last_username }}" />#}
+                         {#<label for="password">رمز عبور :</label>#}
+                         {#<input type="password" id="password" name="_password" /> <br>#}
+                         {#<div class="ui inverted divider"></div>#}
+                         {#<label for="remember_me">مرا به خاطر بسپار</label>#}
+                         {#<input type="checkbox" id="remember_me" name="_remember_me" checked /><br>#}
+                     </div>
+                 <div class="ui error message">asdasdad</div>
+             </form>
+             <div class="ui message">
+                 عضو نیستید؟ <a href="#">ثبت نام کنید</a>
+             </div>
          </div>
      </div>
 
+
  {% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style type="text/css">
+        body {
+            background-color: #DADADA;
+        }
+        body > .grid {
+            height: 100%;
+        }
+        .image {
+            margin-top: -100px;
+        }
+        .column {
+            max-width: 450px;
+        }
+    </style>
+{% endblock %}
