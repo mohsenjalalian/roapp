@@ -65,7 +65,7 @@ gulp.task('build-docs', 'Build all files and add to SUI Docs', buildDocs);
 /*--------------
       RTL
 ---------------*/
-
+config.rtl = true;
 if(config.rtl) {
   gulp.task('watch-rtl', 'Watch files as RTL', watchRTL);
   gulp.task('build-rtl', 'Build all files as RTL', buildRTL);
