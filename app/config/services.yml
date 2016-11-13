@@ -4,6 +4,7 @@ parameters:
     sms_username: 9125995014
     sms_password: 7436
     sms_from: 50002016008194
+    google_map_api: AIzaSyDITF2bWZw_taLim51isEQ43IRifnoVBZ4
 #    parameter_name: value
 
 services:
