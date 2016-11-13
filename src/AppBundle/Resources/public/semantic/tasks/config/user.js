@@ -28,7 +28,7 @@ var
 
 try {
   // looks for config file across all parent directories
-  userConfig = requireDotFile('semantic.json');
+  userConfig = require('../../semantic.json');
 }
 catch(error) {
   if(error.code === 'MODULE_NOT_FOUND') {
@@ -41,6 +41,9 @@ gulpConfig = (!userConfig)
   ? extend(true, {}, defaults)
   : extend(false, {}, defaults, userConfig)
 ;
+
+console.log(defaults);
+console.log(userConfig);
 
 /*******************************
        Add Derived Values
