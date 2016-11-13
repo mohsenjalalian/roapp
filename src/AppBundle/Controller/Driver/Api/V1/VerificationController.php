@@ -138,7 +138,7 @@ class VerificationController extends Controller
                 $this->get('translator')->trans('Your verification code is:') . $randomVerificationNumber
             );
 
-            return new Response(null, Response::HTTP_NO_CONTENT);
+            return new Response(null,Response::HTTP_NO_CONTENT);
         }
 
         return new Response($this->get('jms_serializer')->serialize($form->getErrors(), 'json'), Response::HTTP_BAD_REQUEST);
@@ -155,11 +155,11 @@ class VerificationController extends Controller
      */
     public function verification_report(Request $request)
     {
+
         $data = json_decode($request->getContent(), true);
         
         $form = $this->createForm(VerificationReportType::class);
         $form->submit($data);
-
         if ($form->isValid()) {
             $driverDevice = $this->getDoctrine()
                 ->getRepository('AppBundle:PersonDevice')
@@ -190,7 +190,7 @@ class VerificationController extends Controller
                 $em->persist($driverDeviceHistory);
                 $em->flush();
 
-                return new Response('invalid verification', Response::HTTP_NOT_FOUND);
+                return new Response('invalid verification', Response::HTTP_BAD_REQUEST);
             }
 
             $token = $this->get('app.token_generator')
@@ -213,11 +213,9 @@ class VerificationController extends Controller
             $em->persist($driverDeviceHistory);
 
             $em->flush();
-            
-            return new JsonResponse(
-                [
-                    'token' => $token
-                ]
+
+            return new Response(
+                    $token
             );
         }
 
