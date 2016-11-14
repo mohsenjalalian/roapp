@@ -27,8 +27,8 @@
                     <td>انتصاب نشده</td>
                     <td>{{ shipment.ownerAddress.latitude }}</td>
                     <td>{{ shipment.ownerAddress.longitude }}</td>
-                    <td><a href="{{ path("app_operator_dashboard_driver_list") }}/{{ shipment.id }}"><button>انتصاب به راننده</button></a></td>
-                    <td><button value="{{ shipment.id }}" class="reject_shipment_button">نپذیرفتن سفارش</button></td>
+                    <td><a href="{{ path("app_operator_dashboard_driver_list") }}/{{ shipment.id }}"><button>انتصاب</button></a></td>
+                    <td><button value="{{ shipment.id }}" class="reject_shipment_button">رد</button></td>
                 </tr>
             {% endif %}
         {% endfor %}
