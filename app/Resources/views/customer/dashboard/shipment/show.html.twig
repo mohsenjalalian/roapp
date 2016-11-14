@@ -19,7 +19,7 @@
         </tr>
         <tr>
             <th>Status</th>
-            <td>{{ shipment.status }}</td>
+            <td id="shipment_status_customer">{{ shipment.status }}</td>
         </tr>
         <tr>
             <th>Pickuptime</th>
@@ -39,7 +39,7 @@
         </tr>
         </tbody>
     </table>
-    <div class="ui modal small">
+    <div id="cancel_modal_customer" class="ui modal small">
         {#<div class="header">Header</div>#}
         <div class="content">
             <h3>مطمئن هستید ؟</h3>
@@ -50,10 +50,23 @@
             <div style="float: right" class="ui cancel button">خیر</div>
         </div>
     </div>
+    <div id="fail_modal_customer" class="ui modal small">
+        <div class="header">دلیل لغو سفارش</div>
+        <div class="content">
+            <div class="ui form field">
+                <textarea id="fail_customer_reason" placeholder="دلیل لغو سفارش را خود را یادداشت نمایید" rows="2"></textarea>
+            </div>
+        </div>
+        <div  class="actions">
+            <div id="accept_fail_button_customer" style="float: right;margin-bottom: 20px" class="ui approve button">تایید</div>
+            <div style="float: right" class="ui cancel button">کنسل</div>
+        </div>
+    </div>
     <a href="{{ path('app_customer_dashboard_shipment_index') }}"><button>برگشت به لیست</button></a>
-    <a href="{{ path('app_customer_dashboard_shipment_edit', { 'id': shipment.id }) }}"><button>ویرایش</button></a>
-    {% if shipment.status != 3 %}
+    {% if shipment.status != 3 and shipment.status != 5 and shipment.status != 4 %}
+        <a id="edit_button_customer_shipment" href="{{ path('app_customer_dashboard_shipment_edit', { 'id': shipment.id }) }}"><button>ویرایش</button></a>
         <a id="cancel_button"><button>کنسل</button></a>
+        <a id="fail_button_customer"><button>لغو</button></a>
     {% endif %}
     {{ form_start(delete_form) }}
     <input type="submit" value="حذف">
@@ -63,6 +76,7 @@
 
         {% javascripts
         'bundles/app/javascript/customer/dashboard/shipment/cancel_shipment.js'
+        'bundles/app/javascript/customer/dashboard/shipment/fail_shipment.js'
         %}
         <script type="text/javascript" src="{{ asset_url }}" ></script>
         {% endjavascripts %}

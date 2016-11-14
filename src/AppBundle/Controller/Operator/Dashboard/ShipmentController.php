@@ -184,6 +184,12 @@ class ShipmentController extends Controller
         $em->persist($shipment);
 
         $em->flush();
+//        send notification to customer
+        $customerId = $shipment->getOwnerAddress()
+            ->getCustomer()
+            ->getId();
+        $logger = $this->get('logger');
+        $logger->info('send notification to'." ".$customerId);
 
         return new Response($shipmentId);
     }

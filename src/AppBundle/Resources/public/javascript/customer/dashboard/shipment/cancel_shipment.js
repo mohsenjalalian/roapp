@@ -3,7 +3,7 @@
  */
 $(document).ready(function () {
     $("#cancel_button").on('click',function () {
-        $('.small.modal')
+        $('#cancel_modal_customer')
             .modal('show')
         ;
     });
@@ -14,7 +14,10 @@ $(document).ready(function () {
             data: {id:shipmentID},
             type: "POST",
             success: function (response) {
+                $("#shipment_status_customer").html("کنسل");
+                $("#fail_button_customer").css("display","none");
                 $("#cancel_button").css("display","none");
+                $("#edit_button_customer_shipment").css("display","none");
             }
         });
     })
