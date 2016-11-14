@@ -387,4 +387,21 @@ class ShipmentController extends Controller
             ;
     }
 
+    /**
+     * @Route("/cancel_shipment", name="app_customer_dashboard_shipment_cancel_shipment")
+     */
+    public function cancelShipmentAction(Request $request)
+    {
+        $shipmentId = $request->request->get("id");
+        $em = $this->getDoctrine()->getManager();
+        $shipment = $this->getDoctrine()
+            ->getRepository("AppBundle:Shipment")
+            ->find($shipmentId);
+        $shipment->setStatus(Shipment::STATUS_ASSIGNMENT_CANCEL);
+        $em->persist($shipment);
+
+        $em->flush();
+
+        return new Response("true");
+    }
 }
