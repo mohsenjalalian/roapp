@@ -1,5 +1,16 @@
 {% extends ':customer/dashboard:layout.html.twig' %}
 
+{% block javascripts %}
+    {{ parent()  }}
+    {% javascripts
+    'assets/vendor/socket.io-client/socket.io.js'
+    'bundles/app/javascript/customer/dashboard/shipment/show/script.js'
+    %}
+    <script src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+{% endblock %}
+
+
 {% block main %}
     <h2 class="ui header">سفارش</h2>
 

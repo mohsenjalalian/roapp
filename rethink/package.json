@@ -1,0 +1,9 @@
+{
+  "name": "rethink",
+  "version": "0.0.1",
+  "dependencies": {
+    "express": "^4.10.2",
+    "rethinkdb": "^2.3.3",
+    "socket.io": "^1.5.1"
+  }
+}

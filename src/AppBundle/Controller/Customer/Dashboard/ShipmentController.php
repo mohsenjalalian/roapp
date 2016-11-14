@@ -19,6 +19,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use AppBundle\Entity\Shipment;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Validator\Constraints\Url;
+use r;
 
 /**
  * Shipment controller.
@@ -142,6 +143,17 @@ class ShipmentController extends Controller
             $em = $this->getDoctrine()->getManager();
             $em->persist($shipment);
             $em->flush();
+
+            $conn = r\connect('localhost');
+            $driverToken = uniqid();
+            $trackingToken = uniqid();
+            $document = [
+                'shipment_id' => $shipment->getId(),
+                'driverToken' => $driverToken,
+                '$trackingToken' => $trackingToken,
+            ];
+            r\db("roapp")->table("shipment")->insert($document)
+                ->run($conn);
 
             return $this->redirectToRoute('app_customer_dashboard_shipment_show', array('id' => $shipment->getId()));
         }
