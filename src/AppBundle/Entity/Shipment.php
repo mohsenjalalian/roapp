@@ -17,6 +17,7 @@ class Shipment
     const STATUS_NOT_ASSIGNED = 0;
     const STATUS_ASSIGNMENT_SENT = 2;
     const STATUS_ASSIGNMENT_CANCEL = 3;
+    const STATUS_ASSIGNMENT_REJECT = 4;
     
     /**
      * @var int

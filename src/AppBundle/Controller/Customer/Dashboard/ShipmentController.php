@@ -389,6 +389,8 @@ class ShipmentController extends Controller
 
     /**
      * @Route("/cancel_shipment", name="app_customer_dashboard_shipment_cancel_shipment")
+     * @param Request $request
+     * @return Response
      */
     public function cancelShipmentAction(Request $request)
     {

@@ -19,7 +19,7 @@
         <tbody>
         {% for shipment in pagination %}
             {% if shipment.status != 1 and shipment.status != 2 %}
-                <tr>
+                <tr class="shipment_assign_list{{ shipment.id }}">
                     <td>{{ shipment.id }}</td>
                     <td>{{ shipment.ownerAddress.creator.username }}</td>
                     <td>{{ shipment.pickUpTime|date('Y-m-d H:i:s') }}</td>
@@ -28,23 +28,33 @@
                     <td>{{ shipment.ownerAddress.latitude }}</td>
                     <td>{{ shipment.ownerAddress.longitude }}</td>
                     <td><a href="{{ path("app_operator_dashboard_driver_list") }}/{{ shipment.id }}"><button>انتصاب به راننده</button></a></td>
+                    <td><button value="{{ shipment.id }}" class="reject_shipment_button">نپذیرفتن سفارش</button></td>
                 </tr>
             {% endif %}
         {% endfor %}
         </tbody>
     </table>
-    {% if pagination.getTotalItemCount > 10 %}
+    <div class="ui modal small">
+        <input class="type" type="hidden">
+        {#<div class="header">Header</div>#}
+        <div class="content">
+            <h3>مطمئن هستید ؟</h3>
+        </div>
+        <div  class="actions">
+            <div id="accept_reject_button" style="float: right;margin-bottom: 20px" class="ui approve button" data-value="">بلی</div>
+            <div style="float: right" class="ui cancel button">خیر</div>
+        </div>
+    </div>
         <div class="ui one column stackable center aligned page grid navigation">
             <div class="pagination menu column twelve wide ui" style="font-size: 18px">
                 {{ knp_pagination_render(pagination) }}
             </div>
         </div>
-
-    {% endif  %}
     {% block javascripts %}
         {% javascripts
         'assets/vendor/jquery/dist/jquery.js'
         '@semantic_base_js'
+        'bundles/app/javascript/operator/dashboard/shipment/reject_shipment.js'
         %}
         <script type="text/javascript" src="{{ asset_url }}" ></script>
         {% endjavascripts %}
