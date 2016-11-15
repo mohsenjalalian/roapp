@@ -33,7 +33,7 @@ class DriverController extends Controller
             ->getRepository("AppBundle:Driver")
             ->find($driverId);
         if ($driver) {
-            if ($data->availabel) {
+            if ($data->available) {
                 $driver->setStatus(Driver::STATUS_FREE);
                 $em->persist($driver);
 
