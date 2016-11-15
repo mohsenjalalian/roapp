@@ -16,7 +16,10 @@ class Shipment
     const STATUS_ASSIGNED = 1;
     const STATUS_NOT_ASSIGNED = 0;
     const STATUS_ASSIGNMENT_SENT = 2;
-    
+    const STATUS_ASSIGNMENT_CANCEL = 3;
+    const STATUS_ASSIGNMENT_REJECT = 4;
+    const STATUS_ASSIGNMENT_FAIL = 5;
+
     /**
      * @var int
      *
@@ -75,6 +78,11 @@ class Shipment
      * @ORM\Column(type="string", name="shipment_type")
      */
     protected $type;
+
+    /**
+     * @ORM\Column(type="string", name="shipment_reason", nullable=true)
+     */
+    protected $reason;
 
     /**
      * @ORM\ManyToMany(targetEntity="AppBundle\Entity\Media")
@@ -457,5 +465,29 @@ class Shipment
     public function getPhotoFiles()
     {
         return $this->photoFiles;
+    }
+
+    /**
+     * Set reason
+     *
+     * @param string $reason
+     *
+     * @return Shipment
+     */
+    public function setReason($reason)
+    {
+        $this->reason = $reason;
+
+        return $this;
+    }
+
+    /**
+     * Get reason
+     *
+     * @return string
+     */
+    public function getReason()
+    {
+        return $this->reason;
     }
 }

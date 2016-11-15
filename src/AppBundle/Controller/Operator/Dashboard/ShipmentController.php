@@ -9,6 +9,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use AppBundle\Entity\Shipment;
 use AppBundle\Form\ShipmentType;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Class ShipmentController
@@ -146,6 +147,8 @@ class ShipmentController extends Controller
         $query = $this->getDoctrine()
             ->getRepository('AppBundle:Shipment')
             ->createQueryBuilder('s')
+            ->where('s.status=:notAssign')
+            ->setParameter('notAssign',0)
             ->orderBy('s.pickUpTime', 'Asc')
             ->getQuery()
         ;
@@ -163,5 +166,31 @@ class ShipmentController extends Controller
                 'pagination' => $pagination
             ]
         );
+    }
+
+    /**
+     * @Route("/reject",name="app_operator_dashboard_shipment_reject")
+     * @param Request $request
+     * @return Response
+     */
+    public function rejectAction(Request $request)
+    {
+        $shipmentId = $request->request->get("id");
+        $em = $this->getDoctrine()->getManager();
+        $shipment = $this->getDoctrine()
+            ->getRepository("AppBundle:Shipment")
+            ->find($shipmentId);
+        $shipment->setStatus(Shipment::STATUS_ASSIGNMENT_REJECT);
+        $em->persist($shipment);
+
+        $em->flush();
+//        send notification to customer
+        $customerId = $shipment->getOwnerAddress()
+            ->getCustomer()
+            ->getId();
+        $logger = $this->get('logger');
+        $logger->info('send notification to'." ".$customerId);
+
+        return new Response($shipmentId);
     }
 }
