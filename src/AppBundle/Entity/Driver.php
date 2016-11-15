@@ -3,13 +3,14 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Driver
  * @ORM\Entity(repositoryClass="AppBundle\Repository\DriverRepository")
  */
-class Driver extends Person
+class Driver extends Person implements UserInterface
 {
     const STATUS_FREE = 1;
     const STATUS_BUSY = 0;
