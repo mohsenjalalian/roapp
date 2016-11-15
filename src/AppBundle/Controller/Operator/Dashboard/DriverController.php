@@ -186,6 +186,8 @@ class DriverController extends Controller
             $query = $this->getDoctrine()
                 ->getRepository('AppBundle:Driver')
                 ->createQueryBuilder('d')
+                ->where("d.status=:free")
+                ->setParameter('free', Driver::STATUS_FREE)
                 ->orderBy('d.fullName', 'Asc')
                 ->getQuery()
             ;
