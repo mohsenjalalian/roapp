@@ -3,6 +3,7 @@
 namespace AppBundle\Controller\Driver\Api\V1;
 
 use AppBundle\Entity\ShipmentAssignment;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -19,6 +20,7 @@ class ShipmentAssignmentController extends Controller
 
     /**
      * @Route("/{assignment}/accept")
+     * @Security("is_granted('IS_AUTHENTICATED_ANONYMOUSLY')")
      * @param ShipmentAssignment $assignment
      * @return JsonResponse
      */

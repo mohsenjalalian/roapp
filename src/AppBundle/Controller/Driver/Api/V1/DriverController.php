@@ -4,6 +4,7 @@ namespace AppBundle\Controller\Driver\Api\V1;
 
 use AppBundle\Entity\Driver;
 use AppBundle\Entity\Shipment;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -12,6 +13,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
 /**
  * Class DriverController
+ * @Security("is_granted('IS_AUTHENTICATED_ANONYMOUSLY')")
  * @package AppBundle\Controller\Driver\Api\V1
  * @Route("/driver")
  */
