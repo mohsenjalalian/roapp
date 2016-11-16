@@ -312,6 +312,48 @@ class ShipmentController extends Controller
     }
 
     /**
+     * @Route("/cancel_shipment", name="app_customer_dashboard_shipment_cancel_shipment")
+     * @param Request $request
+     * @return Response
+     */
+    public function cancelShipmentAction(Request $request)
+    {
+        $shipmentId = $request->request->get("id");
+        $em = $this->getDoctrine()->getManager();
+        $shipment = $this->getDoctrine()
+            ->getRepository("AppBundle:Shipment")
+            ->find($shipmentId);
+        $shipment->setStatus(Shipment::STATUS_ASSIGNMENT_CANCEL);
+        $em->persist($shipment);
+
+        $em->flush();
+
+        return new Response("true");
+    }
+
+    /**
+     * @Route("/fail_shipment", name="app_customer_dashboard_shipment_fail_shipment")
+     * @param Request $request
+     * @return Response
+     */
+    public function failShipmentAction(Request $request)
+    {
+        $shipmentId = $request->request->get("id");
+        $failReason = $request->request->get("reason");
+        $em = $this->getDoctrine()->getManager();
+        $shipment = $this->getDoctrine()
+            ->getRepository("AppBundle:Shipment")
+            ->find($shipmentId);
+        $shipment->setStatus(Shipment::STATUS_ASSIGNMENT_FAIL);
+        $shipment->setReason($failReason);
+        $em->persist($shipment);
+
+        $em->flush();
+
+        return new Response("true");
+    }
+
+    /**
      * Finds and displays a Shipment entity.
      *
      * @Route("/{id}", name="app_customer_dashboard_shipment_show")
@@ -423,45 +465,4 @@ class ShipmentController extends Controller
             ;
     }
 
-    /**
-     * @Route("/cancel_shipment", name="app_customer_dashboard_shipment_cancel_shipment")
-     * @param Request $request
-     * @return Response
-     */
-    public function cancelShipmentAction(Request $request)
-    {
-        $shipmentId = $request->request->get("id");
-        $em = $this->getDoctrine()->getManager();
-        $shipment = $this->getDoctrine()
-            ->getRepository("AppBundle:Shipment")
-            ->find($shipmentId);
-        $shipment->setStatus(Shipment::STATUS_ASSIGNMENT_CANCEL);
-        $em->persist($shipment);
-
-        $em->flush();
-
-        return new Response("true");
-    }
-
-    /**
-     * @Route("/fail_shipment", name="app_customer_dashboard_shipment_fail_shipment")
-     * @param Request $request
-     * @return Response
-     */
-    public function failShipmentAction(Request $request)
-    {
-        $shipmentId = $request->request->get("id");
-        $failReason = $request->request->get("reason");
-        $em = $this->getDoctrine()->getManager();
-        $shipment = $this->getDoctrine()
-            ->getRepository("AppBundle:Shipment")
-            ->find($shipmentId);
-        $shipment->setStatus(Shipment::STATUS_ASSIGNMENT_FAIL);
-        $shipment->setReason($failReason);
-        $em->persist($shipment);
-
-        $em->flush();
-
-        return new Response("true");
-    }
 }

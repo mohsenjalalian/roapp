@@ -42,7 +42,7 @@ services:
             - "@translator"
 
     app.notification_service:
-        class: AppBundle\Utils\Services\NotificationService
+        class: AppBundle\Utils\NotificationService
         arguments:
             - "@doctrine.orm.default_entity_manager"
             - '%google_firebase%'

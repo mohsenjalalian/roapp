@@ -18,6 +18,7 @@ $(document).ready(function () {
                 $("#fail_button_customer").css("display","none");
                 $("#cancel_button").css("display","none");
                 $("#edit_button_customer_shipment").css("display","none");
+                $("#valid_code_form_section").remove();
             }
         });
     })
