@@ -6,6 +6,7 @@ use AppBundle\Entity\Address;
 use AppBundle\Entity\Customer;
 use AppBundle\Form\Customer\Dashboard\AddressType;
 use AppBundle\Form\Customer\Dashboard\ShipmentType;
+use AppBundle\Form\Customer\Dashboard\ValidationCodeType;
 use DateTime;
 use jDateTime;
 //use Symfony\Component\BrowserKit\Response;
@@ -309,18 +310,53 @@ class ShipmentController extends Controller
 
         return new Response($shipmentCost);
     }
+
     /**
      * Finds and displays a Shipment entity.
      *
      * @Route("/{id}", name="app_customer_dashboard_shipment_show")
-     * @Method("GET")
+     * @param Request $request
+     * @param Shipment $shipment
+     * @return Response
      */
-    public function showAction(Shipment $shipment)
+    public function showAction(Request $request, Shipment $shipment)
     {
+        $em = $this->getDoctrine()->getManager();
+        $form = $this->createForm(ValidationCodeType::class);
+        $form->handleRequest($request);
+        if ($form->isSubmitted()) {
+            $shipmentId = $request->request->get("shipment_id");
+            $driverExchangeCode = $form->get("exchange_code")->getData();
+            $shipmentAssignment = $this->getDoctrine()
+                ->getRepository("AppBundle:ShipmentAssignment")
+                ->findBy(
+                    [
+                        'shipment' => $shipmentId,
+                        'driverExchangeCode' => $driverExchangeCode
+                    ]
+                )
+            ;
+            if ($shipmentAssignment) {
+                $reciverExchangeCode = $shipmentAssignment[0]->getReciverExchangeCode();
+                // send code via sms to reciver
+                $log = $this->get("logger");
+                $log->info($reciverExchangeCode." sent to reciver customer");
+                $shipmentAssignment[0]->getShipment()
+                    ->setStatus(Shipment::STATUS_PICKED_UP);
+                $em ->persist($shipmentAssignment[0]);
+
+                $em->flush();
+                return new Response("yes");
+            } else {
+                return new Response("no"); 
+            }
+
+        }
         $deleteForm = $this->createDeleteForm($shipment);
         return $this->render('customer/dashboard/shipment/show.html.twig', array(
             'shipment' => $shipment,
             'delete_form' => $deleteForm->createView(),
+            'form' => $form->createView()
         ));
     }
 

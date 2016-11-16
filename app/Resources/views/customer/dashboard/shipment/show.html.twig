@@ -71,12 +71,33 @@
     {{ form_start(delete_form) }}
     <input type="submit" value="حذف">
     {{ form_end(delete_form) }}
+    <div id="valid_code_form_section">
+    {% if shipment.status == 3 %}
+            <div class="ui horizontal divider header">ارسال کد دریافتی</div>
+            <div id="send_code_button" class="ui form">
+                {{ form_start(form) }}
+                <div class="four wide field">
+                    <label>{{ form_label(form.exchange_code) }}</label>
+                    <div>{{ form_widget(form.exchange_code ) }}</div>
+                </div>
+                <div class="field">
+                    <input type="hidden" style="" value="{{ shipment.id }}" name="shipment_id" />
+                </div>
+                <div class="field">
+                    <input id="" type="submit" style="" value="ارسال" />
+                </div>
+                {{ form_end(form) }}
+            </div>
+        </div>
+    {% endif %}
+
     {% block javascripts %}
         {{ parent()  }}
 
         {% javascripts
         'bundles/app/javascript/customer/dashboard/shipment/cancel_shipment.js'
         'bundles/app/javascript/customer/dashboard/shipment/fail_shipment.js'
+        'bundles/app/javascript/customer/dashboard/shipment/validation_code.js'
         %}
         <script type="text/javascript" src="{{ asset_url }}" ></script>
         {% endjavascripts %}

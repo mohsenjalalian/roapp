@@ -3,6 +3,7 @@
 namespace AppBundle\Controller\Driver\Api\V1;
 
 use AppBundle\Entity\ShipmentAssignment;
+use AppBundle\Utils\AssignmentShipment;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
@@ -31,10 +32,11 @@ class ShipmentAssignmentController extends Controller
         if($isAssignTimeExpire) {
             $this->get('app.shipment_assignment')
                 ->acceptRequest($assignment);
-
+            $driverExchangeCode = $assignment->getDriverExchangeCode();
                 return new JsonResponse(
-                    [],
-                    Response::HTTP_NO_CONTENT
+                    [
+                        'driverExchangeCode' => $driverExchangeCode
+                    ]
                 );
         } else {
             $this->get("app.shipment_assignment")
