@@ -3,6 +3,7 @@
 namespace AppBundle\Controller\Driver\Api\V1;
 
 use AppBundle\Entity\Shipment;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -18,6 +19,7 @@ class ShipmentController extends Controller
 {
     /**
      * @Route("/fail")
+     * @Security("is_granted('IS_AUTHENTICATED_ANONYMOUSLY')")
      * @param Request $request
      * @return JsonResponse
      * driver can fail shipment
@@ -47,5 +49,44 @@ class ShipmentController extends Controller
                 Response::HTTP_BAD_REQUEST
             );
         }
+    }
+
+    /**
+     * @Route("/validation_code")
+     * @Security("is_granted('IS_AUTHENTICATED_ANONYMOUSLY')")
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function validateCode(Request $request)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $data = json_decode($request->getContent());
+        $assignmentId = $data->assignmentId;
+        $reciverCode = $data->reciverCode;
+        $assignment = $this->getDoctrine()
+            ->getRepository("AppBundle:ShipmentAssignment")
+            ->find($assignmentId);
+        if ($assignment->getReciverExchangeCode() == $reciverCode) {
+            $assignment->getShipment()
+                ->setStatus(Shipment::STATUS_DELIVERED);
+            $em->persist($assignment);
+
+            $em->flush();
+
+            // send sms to sender customer
+            $log = $this->get("logger");
+            $log->info("your package deliver to destination")
+                
+            return new JsonResponse(
+                [],
+                Response::HTTP_OK
+            );
+        } else {
+            return new JsonResponse(
+                [],
+                Response::HTTP_BAD_REQUEST
+            );
+        }
+
     }
 }
