@@ -5,7 +5,7 @@ namespace AppBundle\Utils;
 use AppBundle\Entity\ShipmentAssignment;
 use AppBundle\Entity\Driver;
 use AppBundle\Entity\Task;
-use AppBundle\Utils\Services\NotificationService;
+use AppBundle\Utils\NotificationService;
 use Doctrine\ORM\EntityManager;
 use AppBundle\Entity\Shipment;
 use Symfony\Component\Translation\Translator;
@@ -19,7 +19,7 @@ class AssignmentShipment
     private $entityManager;
 
     /**
-     * @var notificationService
+     * @var NotificationService
      */
     private $notificationService;
 
@@ -58,7 +58,7 @@ class AssignmentShipment
             [
                 'title' => 'درخواست تحویل سفارش',
                 'body' => 'سفارش با مشخصات زیر آماده ارسال می باشد',
-                'topic' => 'charge',
+//                'topic' => 'driver',
                 'parameters' => [
                         'assignmentId' => $assignmentObj->getId(),
                         'type' => 'test'
@@ -150,6 +150,10 @@ class AssignmentShipment
             ->setReason(
                 $this->translations->trans("accept shipment")
             );
+        $assignment
+            ->setDriverExchangeCode($this->generateExchangeCode());
+        $assignment
+            ->setReciverExchangeCode($this->generateExchangeCode());
         // create two tasks with diffrent types
         $this->createTasks($assignment->getShipment());
 
@@ -187,4 +191,14 @@ class AssignmentShipment
         $em->persist($assignment);
         $em->flush();
     }
+    
+    function generateExchangeCode($length = 6) {
+            $characters = '0123456789';
+            $charactersLength = strlen($characters);
+            $randomCode = '';
+            for ($i = 0; $i < $length; $i++) {
+                $randomCode .= $characters[rand(0, $charactersLength - 1)];
+            }
+            return intval($randomCode);
+        }
 }
