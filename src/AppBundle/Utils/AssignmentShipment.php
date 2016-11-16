@@ -54,15 +54,42 @@ class AssignmentShipment
     }
     public function initDataForSend(ShipmentAssignment $assignmentObj)
     {
+        $ownerLatitude = $assignmentObj->getShipment()
+            ->getOwnerAddress()
+            ->getLatitude();
+        $ownerLongitude = $assignmentObj->getShipment()
+            ->getOwnerAddress()
+            ->getLongitude();
+        $ownerDescription =  $assignmentObj->getShipment()
+            ->getOwnerAddress()
+            ->getDescription();
+        $otherLatitude = $assignmentObj->getShipment()
+            ->getOtherAddress()
+            ->getLatitude();
+        $otherLongitude = $assignmentObj->getShipment()
+            ->getOtherAddress()
+            ->getLongitude();
+        $otherDescription = $assignmentObj->getShipment()
+            ->getOtherAddress()
+            ->getDescription();
+        $driverId = $assignmentObj->getDriver()
+            ->getId();
+        $personDevice = $this->entityManager
+            ->getRepository('AppBundle:PersonDevice')
+            ->findBy(['person' => $driverId]);
+        $registerId = $personDevice[0]->getNotificationToken();
         $data =
             [
-                'title' => 'درخواست تحویل سفارش',
-                'body' => 'سفارش با مشخصات زیر آماده ارسال می باشد',
-//                'topic' => 'driver',
+                'registerId' => $registerId,
                 'parameters' => [
-                        'assignmentId' => $assignmentObj->getId(),
-                        'type' => 'test'
-                    ]
+                    'assignmentId' => $assignmentObj->getId(),
+                    'sourceAddress' => $ownerDescription,
+                    'sourceLat' => $ownerLatitude,
+                    'sourceLng' => $ownerLongitude,
+                    'destinationAddress' => $otherDescription,
+                    'destinationLat' => $otherLatitude,
+                    'destinationLng' => $otherLongitude,
+                ]
             ];
 
         return $data;
@@ -191,14 +218,14 @@ class AssignmentShipment
         $em->persist($assignment);
         $em->flush();
     }
-    
+
     function generateExchangeCode($length = 6) {
-            $characters = '0123456789';
-            $charactersLength = strlen($characters);
-            $randomCode = '';
-            for ($i = 0; $i < $length; $i++) {
-                $randomCode .= $characters[rand(0, $charactersLength - 1)];
-            }
-            return intval($randomCode);
+        $characters = '0123456789';
+        $charactersLength = strlen($characters);
+        $randomCode = '';
+        for ($i = 0; $i < $length; $i++) {
+            $randomCode .= $characters[rand(0, $charactersLength - 1)];
         }
+        return intval($randomCode);
+    }
 }
