@@ -2,6 +2,7 @@
 
 namespace AppBundle\Controller\Driver\Api\V1;
 
+use AppBundle\Entity\Driver;
 use AppBundle\Entity\Shipment;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -75,8 +76,7 @@ class ShipmentController extends Controller
 
             // send sms to sender customer
             $log = $this->get("logger");
-            $log->info("your package deliver to destination")
-                
+            $log->info("your package deliver to destination");
             return new JsonResponse(
                 [],
                 Response::HTTP_OK
@@ -87,6 +87,53 @@ class ShipmentController extends Controller
                 Response::HTTP_BAD_REQUEST
             );
         }
+    }
 
+    /**
+     * @Route("/change_status")
+     * @Security("is_granted('IS_AUTHENTICATED_ANONYMOUSLY')")
+     * @param Request $request
+     * @return JsonResponse|void
+     */
+
+    public function changeStatus(Request $request)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $data = json_decode($request->getContent());
+        $assignmentId = $data->assignmentId;
+        $assignment = $this->getDoctrine()
+            ->getRepository("AppBundle:ShipmentAssignment")
+            ->find($assignmentId);
+        if ($assignment) {
+            switch ($data->status) {
+                case 1 : // status = on pick up
+                    $assignment->getShipment()
+                        ->setStatus(Shipment::STATUS_ON_PICK_UP);
+                    break;
+                case 2 : // status =  on delivery
+                    $assignment->getShipment()
+                        ->setStatus(Shipment::STATUS_ON_DELIVERY);
+                    break;
+                case 3 : // status = finish
+                    $assignment->getShipment()
+                        ->setStatus(Shipment::STATUS_FINISH);
+                    $assignment->getDriver()
+                        ->setStatus(Driver::STATUS_FREE);
+                    break;
+            }
+            $em->persist($assignment);
+
+            $em->flush();
+
+            return new JsonResponse(
+                [],
+                Response::HTTP_NO_CONTENT
+            );
+        } else {
+            return new JsonResponse(
+                [],
+                Response::HTTP_BAD_REQUEST
+            );
+        }
     }
 }
