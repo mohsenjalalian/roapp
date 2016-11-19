@@ -4,6 +4,7 @@ namespace AppBundle\Controller\Driver\Api\V1;
 
 use AppBundle\Entity\Driver;
 use AppBundle\Entity\Shipment;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -20,6 +21,7 @@ class ShipmentController extends Controller
 {
     /**
      * @Route("/fail")
+     * @Method("POST")
      * @Security("is_granted('IS_AUTHENTICATED_ANONYMOUSLY')")
      * @param Request $request
      * @return JsonResponse
@@ -54,6 +56,7 @@ class ShipmentController extends Controller
 
     /**
      * @Route("/validation_code")
+     * @Method("POST")
      * @Security("is_granted('IS_AUTHENTICATED_ANONYMOUSLY')")
      * @param Request $request
      * @return JsonResponse
@@ -75,8 +78,8 @@ class ShipmentController extends Controller
             $em->flush();
 
             // send sms to sender customer
-            $log = $this->get("logger");
-            $log->info("your package deliver to destination");
+            $logger = $this->get("logger");
+            $logger->info("your package deliver to destination");
             return new JsonResponse(
                 [],
                 Response::HTTP_OK
@@ -91,11 +94,11 @@ class ShipmentController extends Controller
 
     /**
      * @Route("/change_status")
+     * @Method("POST")
      * @Security("is_granted('IS_AUTHENTICATED_ANONYMOUSLY')")
      * @param Request $request
      * @return JsonResponse|void
      */
-
     public function changeStatus(Request $request)
     {
         $em = $this->getDoctrine()->getManager();

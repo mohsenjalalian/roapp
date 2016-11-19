@@ -346,9 +346,13 @@ class ShipmentController extends Controller
             ->find($shipmentId);
         $shipment->setStatus(Shipment::STATUS_ASSIGNMENT_FAIL);
         $shipment->setReason($failReason);
-        $em->persist($shipment);
 
+        $em->persist($shipment);
         $em->flush();
+
+        //send message to driver and operator
+        $logger = $this->get('logger');
+        $logger->info("the shipment failed by customer");
 
         return new Response("true");
     }
@@ -366,7 +370,7 @@ class ShipmentController extends Controller
         $em = $this->getDoctrine()->getManager();
         $form = $this->createForm(ValidationCodeType::class);
         $form->handleRequest($request);
-        if ($form->isSubmitted()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $shipmentId = $request->request->get("shipment_id");
             $driverExchangeCode = $form->get("exchange_code")->getData();
             $shipmentAssignment = $this->getDoctrine()
@@ -381,16 +385,17 @@ class ShipmentController extends Controller
             if ($shipmentAssignment) {
                 $reciverExchangeCode = $shipmentAssignment[0]->getReciverExchangeCode();
                 // send code via sms to reciver
-                $log = $this->get("logger");
-                $log->info($reciverExchangeCode." sent to reciver customer");
+                $logger = $this->get("logger");
+                $logger->info($reciverExchangeCode." sent to reciver customer");
                 $shipmentAssignment[0]->getShipment()
                     ->setStatus(Shipment::STATUS_PICKED_UP);
-                $em ->persist($shipmentAssignment[0]);
 
+                $em ->persist($shipmentAssignment[0]);
                 $em->flush();
-                return new Response("yes");
+
+                return new JsonResponse(true);
             } else {
-                return new Response("no"); 
+                return new JsonResponse(false);
             }
 
         }
@@ -434,6 +439,9 @@ class ShipmentController extends Controller
      *
      * @Route("/{id}", name="app_customer_dashboard_shipment_delete")
      * @Method("DELETE")
+     * @param Request $request
+     * @param Shipment $shipment
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
     public function deleteAction(Request $request, Shipment $shipment)
     {

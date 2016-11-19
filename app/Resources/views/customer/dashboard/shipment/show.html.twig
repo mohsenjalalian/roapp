@@ -63,7 +63,7 @@
         </div>
     </div>
     <a href="{{ path('app_customer_dashboard_shipment_index') }}"><button>برگشت به لیست</button></a>
-    {% if shipment.status == 0 %}
+    {% if shipment.status == constant('STATUS_NOT_ASSIGNED',shipment) %}
         <a id="edit_button_customer_shipment" href="{{ path('app_customer_dashboard_shipment_edit', { 'id': shipment.id }) }}"><button>ویرایش</button></a>
     {% endif %}
     {% if shipment.status != constant('STATUS_ASSIGNMENT_CANCEL',shipment) and shipment.status != constant('STATUS_ASSIGNMENT_FAIL',shipment) and shipment.status != constant('STATUS_ASSIGNMENT_REJECT',shipment) %}

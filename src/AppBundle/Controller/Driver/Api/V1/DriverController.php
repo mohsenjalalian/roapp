@@ -4,6 +4,7 @@ namespace AppBundle\Controller\Driver\Api\V1;
 
 use AppBundle\Entity\Driver;
 use AppBundle\Entity\Shipment;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -21,6 +22,7 @@ class DriverController extends Controller
 {
     /**
      * @Route("/change_status")
+     * @Method("POST")
      * @param Request $request
      * @return JsonResponse
      */

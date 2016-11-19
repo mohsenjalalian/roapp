@@ -11,8 +11,9 @@ $(document).ready(function () {
                processData: false,
                contentType: false,
                type: "POST",
-               success: function (response) {
-                   if (response == "yes") {
+               success: function (response){
+                   var result = JSON.parse(response);
+                   if (result) {
                        $("#valid_code_form_section").empty();
                        $("#valid_code_form_section").append("<div class='ui compact segment' style='margin-top: 10px;'><h5 style='color: green;'>کد معتبر می باشد</h5></div>").show().delay(5000).fadeOut();
                    } else {
