@@ -157,9 +157,9 @@ class AssignmentShipment
         $currentTime = new \DateTime();
         $expireTime = $assignment->getExpireTime();
         if ($currentTime <= $expireTime) {
-            return false;
-        } else {
             return true;
+        } else {
+            return false;
         }
     }
     public function acceptRequest(ShipmentAssignment $assignment)
