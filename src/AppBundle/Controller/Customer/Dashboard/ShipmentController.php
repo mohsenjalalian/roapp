@@ -149,10 +149,12 @@ class ShipmentController extends Controller
             $trackingToken = uniqid();
             $document = [
                 'shipment_id' => $shipment->getId(),
-                'driverToken' => $driverToken,
-                '$trackingToken' => $trackingToken,
+                'driver_token' => $driverToken,
+                'tracking_token' => $trackingToken,
             ];
-            r\db("roapp")->table("shipment")->insert($document)
+            r\db("roapp")
+                ->table("shipment")
+                ->insert($document)
                 ->run($conn);
 
             return $this->redirectToRoute('app_customer_dashboard_shipment_show', array('id' => $shipment->getId()));
@@ -412,9 +414,22 @@ class ShipmentController extends Controller
             }
 
         }
+        $conn = r\connect('localhost', '28015', 'roapp', '09126354397');
+        $t = r\table('shipment')
+            ->filter(
+                [
+                    'shipment_id' => $shipment->getId(),
+                ]
+            )
+            ->run($conn);
+        /** @var \ArrayObject $current */
+        $current = $t->current();
+        $trackingToken = $current->getArrayCopy()['tracking_token'];
+
         $deleteForm = $this->createDeleteForm($shipment);
         return $this->render('customer/dashboard/shipment/show.html.twig', array(
             'shipment' => $shipment,
+            'tracking_token' =>$trackingToken,
             'delete_form' => $deleteForm->createView(),
             'form' => $form->createView()
         ));
@@ -471,6 +486,55 @@ class ShipmentController extends Controller
     }
 
     /**
+     * @Route("/load_map",name="app_customer_dashboard_shipment_load_map")
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function loadMapAction (Request $request) {
+
+        $conn = r\connect('localhost', '28015', 'roapp', '09126354397');
+        $result = r\table('shipment')
+            ->filter(
+                [
+                    'tracking_token' => $request->get('token')
+                ]
+            )
+            ->run($conn);
+        /** @var \ArrayObject $current */
+        $current = $result->current();
+        $id = $current->getArrayCopy()['id'];
+        $cursor = r\table('driver_location')
+            ->filter(
+                [
+                    'shipment_id' => $id,
+                ]
+            )
+            ->limit(4)
+            ->run($conn);
+
+        $last_location = r\table('driver_location')
+            ->filter(
+                [
+                    'shipment_id' => $id,
+                ]
+            )
+            ->orderBy(r\desc('date_time'))
+            ->limit(1)
+            ->run($conn);
+
+        $counter = 0;
+        foreach ($cursor as $value) {
+            $output[$counter]['lat'] = $value->getArrayCopy()['lat'];
+            $output[$counter]['lng'] = $value->getArrayCopy()['lng'];
+            $output[$counter]['lastLat'] = $last_location[0]->getArrayCopy()['lat'];
+            $output[$counter]['lastLng'] = $last_location[0]->getArrayCopy()['lng'];
+            $counter = $counter+1;
+        }
+
+        return new JsonResponse($output );
+    }
+
+    /**
      * Creates a form to delete a Shipment entity.
      *
      * @param Shipment $shipment The Shipment entity
@@ -485,5 +549,4 @@ class ShipmentController extends Controller
             ->getForm()
             ;
     }
-
 }

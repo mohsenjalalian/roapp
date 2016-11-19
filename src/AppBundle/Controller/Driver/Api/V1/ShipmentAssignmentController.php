@@ -11,6 +11,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
+use r;
 
 /**
  * Class AssignmentShipmentController
@@ -42,10 +43,23 @@ class ShipmentAssignmentController extends Controller
                 ]
             );
         } else {
+            $conn = r\connect('localhost', '28015', 'roapp', '09126354397');
+            $result = r\table('shipment')
+                ->filter(
+                    [
+                        'shipment_id' => $assignment->getShipment()->getId()
+                    ]
+                )
+                ->run($conn);
+            /** @var \ArrayObject $current */
+            $current = $result->current();
+            $driverToken = $current->getArrayCopy()['driver_token'];
             $this->get("app.shipment_assignment")
                 ->timeOutAction($assignment);
             return new JsonResponse(
-                [],
+                [
+                    'driver_token' =>$driverToken,
+                ],
                 Response::HTTP_GONE
             );
         }
