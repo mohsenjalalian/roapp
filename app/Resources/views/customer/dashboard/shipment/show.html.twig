@@ -66,7 +66,7 @@
     {% if shipment.status == 0 %}
         <a id="edit_button_customer_shipment" href="{{ path('app_customer_dashboard_shipment_edit', { 'id': shipment.id }) }}"><button>ویرایش</button></a>
     {% endif %}
-    {% if shipment.status != 3 and shipment.status != 5 and shipment.status != 4 %}
+    {% if shipment.status != constant('STATUS_ASSIGNMENT_CANCEL',shipment) and shipment.status != constant('STATUS_ASSIGNMENT_FAIL',shipment) and shipment.status != constant('STATUS_ASSIGNMENT_REJECT',shipment) %}
         <a id="cancel_button"><button>کنسل</button></a>
         <a id="fail_button_customer"><button>لغو</button></a>
     {% endif %}
@@ -74,7 +74,7 @@
     <input type="submit" value="حذف">
     {{ form_end(delete_form) }}
     <div id="valid_code_form_section">
-    {% if shipment.status == 6 %}
+    {% if shipment.status == constant('STATUS_ON_PICK_UP',shipment) %}
             <div class="ui horizontal divider header">ارسال کد دریافتی</div>
             <div id="send_code_button" class="ui form">
                 {{ form_start(form) }}
