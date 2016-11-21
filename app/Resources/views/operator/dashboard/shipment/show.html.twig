@@ -41,10 +41,10 @@
     </table>
     <div>
         <a style="color: black" href="{{ path('app_operator_dashboard_shipment_index') }}"><button>لیست کل سفارشات</button></a>
-        <a style="color: black" href="{{ path('app_operator_dashboard_shipment_edit', { 'id': shipment.id }) }}"><button>ویرایش</button></a>
-        {{ form_start(delete_form) }}
-        <input type="submit" value="حذف">
-        {{ form_end(delete_form) }}
+        {#<a style="color: black" href="{{ path('app_operator_dashboard_shipment_edit', { 'id': shipment.id }) }}"><button>ویرایش</button></a>#}
+        {#{{ form_start(delete_form) }}#}
+        {#<input type="submit" value="حذف">#}
+        {#{{ form_end(delete_form) }}#}
     </div>
     {% block stylesheets %}
         {{ parent()  }}

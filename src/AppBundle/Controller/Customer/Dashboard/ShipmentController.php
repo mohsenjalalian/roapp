@@ -361,6 +361,7 @@ class ShipmentController extends Controller
      * Finds and displays a Shipment entity.
      *
      * @Route("/{id}", name="app_customer_dashboard_shipment_show")
+     * @Method({"GET","POST"})
      * @param Request $request
      * @param Shipment $shipment
      * @return Response

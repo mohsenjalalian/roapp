@@ -24,7 +24,7 @@ class ShipmentType extends AbstractType
             ->add('price')
             ->add('type')
             ->add('ownerAddress')
-            ->add('photos')
+//            ->add('photos')
         ;
     }
     
