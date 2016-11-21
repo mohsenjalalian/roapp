@@ -3,6 +3,8 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping\JoinColumn;
+use Doctrine\ORM\Mapping\OneToOne;
 use Roapp\MediaBundle\Annotation\UploadableField;
 
 /**
@@ -97,6 +99,12 @@ class Shipment
      * @ORM\Column(type="string", name="shipment_reason", nullable=true)
      */
     protected $reason;
+
+    /**
+     * @OneToOne(targetEntity="AppBundle\Entity\Invoice")
+     * @JoinColumn(name="invoice_id", referencedColumnName="id")
+     */
+    private $invoice;
 
     /**
      * @ORM\ManyToMany(targetEntity="AppBundle\Entity\Media")
@@ -503,5 +511,29 @@ class Shipment
     public function getReason()
     {
         return $this->reason;
+    }
+
+    /**
+     * Set invoice
+     *
+     * @param \AppBundle\Entity\Invoice $invoice
+     *
+     * @return Shipment
+     */
+    public function setInvoice(\AppBundle\Entity\Invoice $invoice = null)
+    {
+        $this->invoice = $invoice;
+
+        return $this;
+    }
+
+    /**
+     * Get invoice
+     *
+     * @return \AppBundle\Entity\Invoice
+     */
+    public function getInvoice()
+    {
+        return $this->invoice;
     }
 }
