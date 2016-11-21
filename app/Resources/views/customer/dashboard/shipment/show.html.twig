@@ -63,34 +63,44 @@
         </div>
     </div>
     <a href="{{ path('app_customer_dashboard_shipment_index') }}"><button>برگشت به لیست</button></a>
-    {% if shipment.status == constant('STATUS_NOT_ASSIGNED',shipment) %}
+    {% if
+    shipment.status == constant('STATUS_NOT_ASSIGNED',shipment) or
+    shipment.status == constant('STATUS_ASSIGNMENT_SENT',shipment) or
+    shipment.status == constant('STATUS_ASSIGNMENT_REJECT',shipment)
+    %}
         <a id="edit_button_customer_shipment" href="{{ path('app_customer_dashboard_shipment_edit', { 'id': shipment.id }) }}"><button>ویرایش</button></a>
-    {% endif %}
-    {% if shipment.status != constant('STATUS_ASSIGNMENT_CANCEL',shipment) and shipment.status != constant('STATUS_ASSIGNMENT_FAIL',shipment) and shipment.status != constant('STATUS_ASSIGNMENT_REJECT',shipment) %}
         <a id="cancel_button"><button>کنسل</button></a>
+    {% endif %}
+    {% if
+    shipment.status == constant('STATUS_ASSIGNED',shipment) or
+    shipment.status == constant('STATUS_ON_PICK_UP',shipment) or
+    shipment.status == constant('STATUS_PICKED_UP',shipment) or
+    shipment.status == constant('STATUS_ON_DELIVERY',shipment)
+    %}
+        {#<a id="cancel_button"><button>کنسل</button></a>#}
         <a id="fail_button_customer"><button>لغو</button></a>
     {% endif %}
     {{ form_start(delete_form) }}
     <input type="submit" value="حذف">
     {{ form_end(delete_form) }}
     <div id="valid_code_form_section">
-    {% if shipment.status == constant('STATUS_ON_PICK_UP',shipment) %}
-            <div class="ui horizontal divider header">ارسال کد دریافتی</div>
-            <div id="send_code_button" class="ui form">
-                {{ form_start(form) }}
-                <div class="four wide field">
-                    <label>{{ form_label(form.exchange_code) }}</label>
-                    <div>{{ form_widget(form.exchange_code ) }}</div>
-                </div>
-                <div class="field">
-                    <input type="hidden" style="" value="{{ shipment.id }}" name="shipment_id" />
-                </div>
-                <div class="field">
-                    <input id="" type="submit" style="" value="ارسال" />
-                </div>
-                {{ form_end(form) }}
+        {% if shipment.status == constant('STATUS_ON_PICK_UP',shipment) %}
+        <div class="ui horizontal divider header">ارسال کد دریافتی</div>
+        <div id="send_code_button" class="ui form">
+            {{ form_start(form) }}
+            <div class="four wide field">
+                <label>{{ form_label(form.exchange_code) }}</label>
+                <div>{{ form_widget(form.exchange_code ) }}</div>
             </div>
+            <div class="field">
+                <input type="hidden" style="" value="{{ shipment.id }}" name="shipment_id" />
+            </div>
+            <div class="field">
+                <input id="" type="submit" style="" value="ارسال" />
+            </div>
+            {{ form_end(form) }}
         </div>
+    </div>
     {% endif %}
 
     {% block javascripts %}
