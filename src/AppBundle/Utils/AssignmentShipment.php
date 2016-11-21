@@ -5,7 +5,7 @@ namespace AppBundle\Utils;
 use AppBundle\Entity\ShipmentAssignment;
 use AppBundle\Entity\Driver;
 use AppBundle\Entity\Task;
-use AppBundle\Utils\Services\NotificationService;
+use AppBundle\Utils\NotificationService;
 use Doctrine\ORM\EntityManager;
 use AppBundle\Entity\Shipment;
 use Symfony\Component\Translation\Translator;
@@ -19,7 +19,7 @@ class AssignmentShipment
     private $entityManager;
 
     /**
-     * @var notificationService
+     * @var NotificationService
      */
     private $notificationService;
 
@@ -54,15 +54,42 @@ class AssignmentShipment
     }
     public function initDataForSend(ShipmentAssignment $assignmentObj)
     {
+        $ownerLatitude = $assignmentObj->getShipment()
+            ->getOwnerAddress()
+            ->getLatitude();
+        $ownerLongitude = $assignmentObj->getShipment()
+            ->getOwnerAddress()
+            ->getLongitude();
+        $ownerDescription =  $assignmentObj->getShipment()
+            ->getOwnerAddress()
+            ->getDescription();
+        $otherLatitude = $assignmentObj->getShipment()
+            ->getOtherAddress()
+            ->getLatitude();
+        $otherLongitude = $assignmentObj->getShipment()
+            ->getOtherAddress()
+            ->getLongitude();
+        $otherDescription = $assignmentObj->getShipment()
+            ->getOtherAddress()
+            ->getDescription();
+        $driverId = $assignmentObj->getDriver()
+            ->getId();
+        $personDevice = $this->entityManager
+            ->getRepository('AppBundle:PersonDevice')
+            ->findBy(['person' => $driverId]);
+        $registerId = $personDevice[0]->getNotificationToken();
         $data =
             [
-                'title' => 'درخواست تحویل سفارش',
-                'body' => 'سفارش با مشخصات زیر آماده ارسال می باشد',
-                'topic' => 'charge',
+                'registerId' => $registerId,
                 'parameters' => [
-                        'assignmentId' => $assignmentObj->getId(),
-                        'type' => 'test'
-                    ]
+                    'assignmentId' => $assignmentObj->getId(),
+                    'sourceAddress' => $ownerDescription,
+                    'sourceLat' => $ownerLatitude,
+                    'sourceLng' => $ownerLongitude,
+                    'destinationAddress' => $otherDescription,
+                    'destinationLat' => $otherLatitude,
+                    'destinationLng' => $otherLongitude,
+                ]
             ];
 
         return $data;
@@ -130,9 +157,9 @@ class AssignmentShipment
         $currentTime = new \DateTime();
         $expireTime = $assignment->getExpireTime();
         if ($currentTime <= $expireTime) {
-            return false;
-        } else {
             return true;
+        } else {
+            return false;
         }
     }
     public function acceptRequest(ShipmentAssignment $assignment)
@@ -150,6 +177,10 @@ class AssignmentShipment
             ->setReason(
                 $this->translations->trans("accept shipment")
             );
+        $assignment
+            ->setDriverExchangeCode($this->generateExchangeCode());
+        $assignment
+            ->setReciverExchangeCode($this->generateExchangeCode());
         // create two tasks with diffrent types
         $this->createTasks($assignment->getShipment());
 
@@ -186,5 +217,15 @@ class AssignmentShipment
 
         $em->persist($assignment);
         $em->flush();
+    }
+
+    function generateExchangeCode($length = 6) {
+        $characters = '0123456789';
+        $charactersLength = strlen($characters);
+        $randomCode = '';
+        for ($i = 0; $i < $length; $i++) {
+            $randomCode .= $characters[rand(0, $charactersLength - 1)];
+        }
+        return intval($randomCode);
     }
 }

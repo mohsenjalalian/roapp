@@ -1,21 +1,72 @@
-{% extends 'base.html.twig' %}
+{% extends ':customer/dashboard:layout.html.twig' %}
 
-{% block body %}
-    <h1>Shipment edit</h1>
+{% block main %}
+    <h1>ویرایش سفارش</h1>
+    <div class="ui form">
+        {{ form_start(edit_form) }}
+        <div class="field">
+            <label>{{ form_label(edit_form.description) }}</label>
+            <div>{{ form_widget(edit_form.description ) }}</div>
+        </div>
 
-    {{ form_start(edit_form) }}
-        {{ form_widget(edit_form) }}
-        <input type="submit" value="Edit" />
-    {{ form_end(edit_form) }}
+        <div class="two fields">
+            <div class="field">
+                <label>{{ form_label(edit_form.pickUpTime) }}</label>
+                <div style="direction: rtl !important;">{{ form_widget(edit_form.pickUpTime ) }}</div>
+            </div>
+            <div class="field">
+                <label>{{ form_label(edit_form.value) }}</label>
+                <div>{{ form_widget(edit_form.value ) }}</div>
+            </div>
+        </div>
+        {#{{ form_widget(edit_form) }}#}
+        <input type="submit" value="ویرایش" />
+        {{ form_end(edit_form) }}
+    </div>
+    <div style="margin-top: 10px">
+        <a href="{{ path('app_customer_dashboard_shipment_index') }}"><button>لیست کل سفارشات</button></a>
+        {{ form_start(delete_form) }}
+        <input type="submit" value="حذف">
+        {{ form_end(delete_form) }}
+    </div>
+{% endblock %}
 
-    <ul>
-        <li>
-            <a href="{{ path('app_customer_dashboard_shipment_index') }}">Back to the list</a>
-        </li>
-        <li>
-            {{ form_start(delete_form) }}
-                <input type="submit" value="Delete">
-            {{ form_end(delete_form) }}
-        </li>
-    </ul>
+   {% block stylesheets %}
+       {{ parent()  }}
+       {% stylesheets
+       'assets/vendor/persian-datepicker/src/css/persian-datepicker.css'
+       %}
+       <link rel="stylesheet" href="{{ asset_url }}" />
+       {% endstylesheets %}
+   {% endblock %}
+
+{% block javascripts %}
+        {{ parent()  }}
+    {% javascripts
+    'assets/vendor/persian-datepicker/lib/persian-date.js'
+    'assets/vendor/persian-datepicker/dist/js/persian-datepicker-0.4.5.min.js'
+    %}
+    <script type="text/javascript" src="{{ asset_url }}" ></script>
+    <script src="{{ getGoogleMapInitLink() }}"></script>
+    {% endjavascripts %}
+    <script>
+        $(document).ready(function() {
+            $(".js-datepicker").pDatepicker(
+                    {
+                        timePicker: {
+                            enabled: true,
+                            showSeconds: true,
+                            showMeridian: true,
+                            scrollEnabled: true,
+                            showOn: 'button',
+                            buttonImageOnly: true,
+                            changeMonth: true,
+                            changeYear: true,
+                            dateFormat: 'dd-mm-yy',
+                            yearRange: "-0:+1"
+                        }
+                    }
+            );
+        });
+    </script>
 {% endblock %}

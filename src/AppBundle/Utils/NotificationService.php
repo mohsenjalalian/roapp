@@ -13,17 +13,14 @@ class NotificationService
             'Authorization:key = AIzaSyBJaQ9dbnGXZbWoNu70nibNsUajGUj2GpA',
             'Content-Type: application/json'
         ];
-        $title = $data['title'];
-        $text = $data['body'];
-        $topic = $data['topic'];
-        $parameters = serialize($data['parameters']);
+        $registerId = $data['registerId'];
+        $parameters = $data['parameters'];
         $fields = [
-            'notification' => [
-                'title' => $title,
-                'body' => $text,
-                'tag' => $parameters
+            'data' => [
+                'body' => $parameters,
+                'tag' => 'assignment'
             ],
-            'to' => '/topics/'.$topic
+            'registration_ids' => [$registerId]
         ];
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $sendUrl);

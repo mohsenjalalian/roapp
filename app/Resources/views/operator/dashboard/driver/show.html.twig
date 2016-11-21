@@ -22,9 +22,9 @@
         </tr>
         <tr>
             <th>وضعیت فعالیت</th>
-            {% if driver.status == 1 %}
+            {% if driver.status == constant('STATUS_FREE',driver) %}
                 <td>آزاد</td>
-            {% elseif driver.status == 0 %}
+            {% elseif driver.status == constant('STATUS_BUSY',driver) %}
                 <td>مشغول</td>
             {% else %}
                 <td>درحال بررسی درخواست</td>
@@ -38,10 +38,10 @@
     </table>
     <div>
         <a style="color: black" href="{{ path('app_operator_dashboard_driver_index') }}"><button>لیست کل راننده ها</button></a>
-        <a style="color: black" href="{{ path('app_operator_dashboard_driver_edit', { 'id': driver.id }) }}"><button>ویرایش</button></a>
-        {{ form_start(delete_form) }}
-        <input type="submit" value="حذف">
-        {{ form_end(delete_form) }}
+        {#<a style="color: black" href="{{ path('app_operator_dashboard_driver_edit', { 'id': driver.id }) }}"><button>ویرایش</button></a>#}
+        {#{{ form_start(delete_form) }}#}
+        {#<input type="submit" value="حذف">#}
+        {#{{ form_end(delete_form) }}#}
     </div>
     {% block stylesheets %}
         {{ parent()  }}

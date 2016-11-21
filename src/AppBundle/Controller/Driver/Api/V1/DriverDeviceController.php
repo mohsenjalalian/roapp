@@ -69,11 +69,7 @@ class DriverDeviceController extends Controller
             $em->persist($driverDeviceHistory);
 
             $em->flush();
-
-//            $arr = array('a' => 1, 'b' => 2, 'c' => 3, 'd' => 4, 'e' => 5);
-//            $rr = json_encode($r);
-//            $obj = new stdClass();
-
+            
             return new JsonResponse(null,Response::HTTP_NO_CONTENT);
         }
 

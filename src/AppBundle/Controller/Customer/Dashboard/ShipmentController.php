@@ -6,6 +6,7 @@ use AppBundle\Entity\Address;
 use AppBundle\Entity\Customer;
 use AppBundle\Form\Customer\Dashboard\AddressType;
 use AppBundle\Form\Customer\Dashboard\ShipmentType;
+use AppBundle\Form\Customer\Dashboard\ValidationCodeType;
 use DateTime;
 use jDateTime;
 //use Symfony\Component\BrowserKit\Response;
@@ -309,83 +310,6 @@ class ShipmentController extends Controller
 
         return new Response($shipmentCost);
     }
-    /**
-     * Finds and displays a Shipment entity.
-     *
-     * @Route("/{id}", name="app_customer_dashboard_shipment_show")
-     * @Method("GET")
-     */
-    public function showAction(Shipment $shipment)
-    {
-        $deleteForm = $this->createDeleteForm($shipment);
-        return $this->render('customer/dashboard/shipment/show.html.twig', array(
-            'shipment' => $shipment,
-            'delete_form' => $deleteForm->createView(),
-        ));
-    }
-
-    /**
-     * Displays a form to edit an existing Shipment entity.
-     *
-     * @Route("/{id}/edit", name="app_customer_dashboard_shipment_edit")
-     * @Method({"GET", "POST"})
-     */
-    public function editAction(Request $request, Shipment $shipment)
-    {
-        $deleteForm = $this->createDeleteForm($shipment);
-        $editForm = $this->createForm(ShipmentType::class, $shipment);
-        $editForm->handleRequest($request);
-
-        if ($editForm->isSubmitted() && $editForm->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($shipment);
-            $em->flush();
-
-            return $this->redirectToRoute('app_customer_dashboard_shipment_edit', array('id' => $shipment->getId()));
-        }
-
-        return $this->render('customer/dashboard/shipment/edit.html.twig', array(
-            'shipment' => $shipment,
-            'edit_form' => $editForm->createView(),
-            'delete_form' => $deleteForm->createView(),
-        ));
-    }
-
-    /**
-     * Deletes a Shipment entity.
-     *
-     * @Route("/{id}", name="app_customer_dashboard_shipment_delete")
-     * @Method("DELETE")
-     */
-    public function deleteAction(Request $request, Shipment $shipment)
-    {
-        $form = $this->createDeleteForm($shipment);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $em->remove($shipment);
-            $em->flush();
-        }
-
-        return $this->redirectToRoute('app_customer_dashboard_shipment_index');
-    }
-
-    /**
-     * Creates a form to delete a Shipment entity.
-     *
-     * @param Shipment $shipment The Shipment entity
-     *
-     * @return \Symfony\Component\Form\Form The form
-     */
-    private function createDeleteForm(Shipment $shipment)
-    {
-        return $this->createFormBuilder()
-            ->setAction($this->generateUrl('app_customer_dashboard_shipment_delete', array('id' => $shipment->getId())))
-            ->setMethod('DELETE')
-            ->getForm()
-            ;
-    }
 
     /**
      * @Route("/cancel_shipment", name="app_customer_dashboard_shipment_cancel_shipment")
@@ -422,10 +346,132 @@ class ShipmentController extends Controller
             ->find($shipmentId);
         $shipment->setStatus(Shipment::STATUS_ASSIGNMENT_FAIL);
         $shipment->setReason($failReason);
-        $em->persist($shipment);
 
+        $em->persist($shipment);
         $em->flush();
+
+        //send message to driver and operator
+        $logger = $this->get('logger');
+        $logger->info("the shipment failed by customer");
 
         return new Response("true");
     }
+
+    /**
+     * Finds and displays a Shipment entity.
+     *
+     * @Route("/{id}", name="app_customer_dashboard_shipment_show")
+     * @Method({"GET","POST"})
+     * @param Request $request
+     * @param Shipment $shipment
+     * @return Response
+     */
+    public function showAction(Request $request, Shipment $shipment)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $form = $this->createForm(ValidationCodeType::class);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $shipmentId = $request->request->get("shipment_id");
+            $driverExchangeCode = $form->get("exchange_code")->getData();
+            $shipmentAssignment = $this->getDoctrine()
+                ->getRepository("AppBundle:ShipmentAssignment")
+                ->findBy(
+                    [
+                        'shipment' => $shipmentId,
+                        'driverExchangeCode' => $driverExchangeCode
+                    ]
+                )
+            ;
+            if ($shipmentAssignment) {
+                $reciverExchangeCode = $shipmentAssignment[0]->getReciverExchangeCode();
+                // send code via sms to reciver
+                $logger = $this->get("logger");
+                $logger->info($reciverExchangeCode." sent to reciver customer");
+                $shipmentAssignment[0]->getShipment()
+                    ->setStatus(Shipment::STATUS_PICKED_UP);
+
+                $em ->persist($shipmentAssignment[0]);
+                $em->flush();
+
+                return new JsonResponse(true);
+            } else {
+                return new JsonResponse(false);
+            }
+
+        }
+        $deleteForm = $this->createDeleteForm($shipment);
+        return $this->render('customer/dashboard/shipment/show.html.twig', array(
+            'shipment' => $shipment,
+            'delete_form' => $deleteForm->createView(),
+            'form' => $form->createView()
+        ));
+    }
+
+    /**
+     * Displays a form to edit an existing Shipment entity.
+     *
+     * @Route("/{id}/edit", name="app_customer_dashboard_shipment_edit")
+     * @Method({"GET", "POST"})
+     */
+    public function editAction(Request $request, Shipment $shipment)
+    {
+        $deleteForm = $this->createDeleteForm($shipment);
+        $editForm = $this->createForm(ShipmentType::class, $shipment);
+        $editForm->handleRequest($request);
+
+        if ($editForm->isSubmitted() && $editForm->isValid()) {
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($shipment);
+            $em->flush();
+
+            return $this->redirectToRoute('app_customer_dashboard_shipment_edit', array('id' => $shipment->getId()));
+        }
+
+        return $this->render('customer/dashboard/shipment/edit.html.twig', array(
+            'shipment' => $shipment,
+            'edit_form' => $editForm->createView(),
+            'delete_form' => $deleteForm->createView(),
+        ));
+    }
+
+    /**
+     * Deletes a Shipment entity.
+     *
+     * @Route("/{id}", name="app_customer_dashboard_shipment_delete")
+     * @Method("DELETE")
+     * @param Request $request
+     * @param Shipment $shipment
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     */
+    public function deleteAction(Request $request, Shipment $shipment)
+    {
+        $form = $this->createDeleteForm($shipment);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $em = $this->getDoctrine()->getManager();
+            $em->remove($shipment);
+            $em->flush();
+        }
+
+        return $this->redirectToRoute('app_customer_dashboard_shipment_index');
+    }
+
+    /**
+     * Creates a form to delete a Shipment entity.
+     *
+     * @param Shipment $shipment The Shipment entity
+     *
+     * @return \Symfony\Component\Form\Form The form
+     */
+    private function createDeleteForm(Shipment $shipment)
+    {
+        return $this->createFormBuilder()
+            ->setAction($this->generateUrl('app_customer_dashboard_shipment_delete', array('id' => $shipment->getId())))
+            ->setMethod('DELETE')
+            ->getForm()
+            ;
+    }
+
 }

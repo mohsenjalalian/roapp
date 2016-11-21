@@ -32,7 +32,13 @@
                 <td>{{ shipment.type }}</td>
                 <td>
                     <a href="{{ path('app_customer_dashboard_shipment_show', { 'id': shipment.id }) }}"><button>نمایش</button></a>
-                    <a href="{{ path('app_customer_dashboard_shipment_edit', { 'id': shipment.id }) }}"><button>ویرایش</button></a>
+                    {% if
+                    shipment.status == constant('STATUS_NOT_ASSIGNED',shipment) or
+                    shipment.status == constant('STATUS_ASSIGNMENT_SENT',shipment) or
+                    shipment.status == constant('STATUS_ASSIGNMENT_REJECT',shipment)
+                    %}
+                        <a href="{{ path('app_customer_dashboard_shipment_edit', { 'id': shipment.id }) }}"><button>ویرایش</button></a>
+                    {% endif %}
                 </td>
             </tr>
         {% endfor %}

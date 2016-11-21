@@ -42,6 +42,20 @@ class ShipmentAssignment
     private $status;
 
     /**
+     * @var int
+     *
+     * @ORM\Column(name="driver_exchange_code", type="integer", nullable=true)
+     */
+    private $driverExchangeCode;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="reciver_exchange_code", type="integer", nullable=true)
+     */
+    private $reciverExchangeCode;
+
+    /**
      * @var \DateTime
      * @ORM\Column(name="expire_time", type="datetime",nullable=true)
      */
@@ -63,6 +77,7 @@ class ShipmentAssignment
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Driver")
      */
     private $driver;
+
 
     public function  __construct()
     {
@@ -221,5 +236,53 @@ class ShipmentAssignment
     public function getExpireTime()
     {
         return $this->expireTime;
+    }
+
+    /**
+     * Set driverExchangeCode
+     *
+     * @param integer $driverExchangeCode
+     *
+     * @return ShipmentAssignment
+     */
+    public function setDriverExchangeCode($driverExchangeCode)
+    {
+        $this->driverExchangeCode = $driverExchangeCode;
+
+        return $this;
+    }
+
+    /**
+     * Get driverExchangeCode
+     *
+     * @return integer
+     */
+    public function getDriverExchangeCode()
+    {
+        return $this->driverExchangeCode;
+    }
+
+    /**
+     * Set reciverExchangeCode
+     *
+     * @param integer $reciverExchangeCode
+     *
+     * @return ShipmentAssignment
+     */
+    public function setReciverExchangeCode($reciverExchangeCode)
+    {
+        $this->reciverExchangeCode = $reciverExchangeCode;
+
+        return $this;
+    }
+
+    /**
+     * Get reciverExchangeCode
+     *
+     * @return integer
+     */
+    public function getReciverExchangeCode()
+    {
+        return $this->reciverExchangeCode;
     }
 }

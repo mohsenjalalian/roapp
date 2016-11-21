@@ -3,13 +3,13 @@
 {% block main %}
     <div>
         <h2 class="ui header" style="display: inline">لیست راننده ها</h2>
-        <a style="margin-right: 10px" href="{{ path('app_operator_dashboard_driver_create') }}"><button>ایجاد راننده ی جدید</button></a>
+        {#<a style="margin-right: 10px" href="{{ path('app_operator_dashboard_driver_create') }}"><button>ایجاد راننده ی جدید</button></a>#}
     </div>
     <table class="ui celled table">
         <thead>
         <tr>
             <th>{{ knp_pagination_sortable(pagination, 'نام','a.fullName') }}</th>
-            <th{% if pagination.isSorted('a.password') %} class="sorted"{% endif %}>{{ knp_pagination_sortable(pagination, 'رمز عبور', 'a.password') }}</th>
+            {#<th{% if pagination.isSorted('a.password') %} class="sorted"{% endif %}>{{ knp_pagination_sortable(pagination, 'رمز عبور', 'a.password') }}</th>#}
             <th{% if pagination.isSorted('a.isActive') %} class="sorted"{% endif %}>{{ knp_pagination_sortable(pagination, 'وضعیت', 'a.isActive') }}</th>
             <th{% if pagination.isSorted('d.status') %} class="sorted"{% endif %}>{{ knp_pagination_sortable(pagination, ' وضعیت فعالیت', 'd.status') }}</th>
             <th{% if pagination.isSorted('a.phone') %} class="sorted"{% endif %}>{{ knp_pagination_sortable(pagination, 'شماره تلفن', 'a.phone') }}</th>
@@ -20,11 +20,11 @@
         {% for driver in pagination %}
             <tr>
                 <td><a href="{{ path('app_operator_dashboard_driver_show', { 'id': driver.id }) }}">{{ driver.fullName }}</a></td>
-                <td>{{ driver.password }}</td>
-                <td>{% if driver.isActive %}آنلاین{% else %}آفلاین{% endif %}</td>
-                {% if driver.status == 1 %}
+                {#<td>{{ driver.password }}</td>#}
+                <td>{% if driver.isActive %}فعال{% else %}غیر فعال{% endif %}</td>
+                {% if driver.status == constant('STATUS_FREE',driver) %}
                     <td>آزاد</td>
-                {% elseif driver.status == 0 %}
+                {% elseif driver.status == constant('STATUS_BUSY',driver) %}
                     <td>مشغول</td>
                 {% else %}
                     <td>درحال بررسی درخواست</td>
@@ -32,7 +32,7 @@
                 <td>{{ driver.phone }}</td>
                 <td>
                     <a href="{{ path('app_operator_dashboard_driver_show', { 'id': driver.id }) }}"><button>نمایش</button></a>
-                    <a href="{{ path('app_operator_dashboard_driver_edit', { 'id': driver.id }) }}"><button>ویرایش</button></a>
+                    {#<a href="{{ path('app_operator_dashboard_driver_edit', { 'id': driver.id }) }}"><button>ویرایش</button></a>#}
                 </td>
             </tr>
         {% endfor %}

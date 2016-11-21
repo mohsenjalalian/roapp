@@ -3,6 +3,8 @@
 namespace AppBundle\Controller\Driver\Api\V1;
 
 use AppBundle\Entity\ShipmentAssignment;
+use AppBundle\Utils\AssignmentShipment;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
@@ -20,6 +22,7 @@ class ShipmentAssignmentController extends Controller
 
     /**
      * @Route("/{assignment}/accept")
+     * @Method("POST")
      * @Security("is_granted('IS_AUTHENTICATED_ANONYMOUSLY')")
      * @param ShipmentAssignment $assignment
      * @return JsonResponse
@@ -31,11 +34,13 @@ class ShipmentAssignmentController extends Controller
         if($isAssignTimeExpire) {
             $this->get('app.shipment_assignment')
                 ->acceptRequest($assignment);
+            $driverExchangeCode = $assignment->getDriverExchangeCode();
 
-                return new JsonResponse(
-                    [],
-                    Response::HTTP_NO_CONTENT
-                );
+            return new JsonResponse(
+                [
+                    'driverExchangeCode' => $driverExchangeCode
+                ]
+            );
         } else {
             $this->get("app.shipment_assignment")
                 ->timeOutAction($assignment);
@@ -48,6 +53,7 @@ class ShipmentAssignmentController extends Controller
 
     /**
      * @Route("/{assignment}/reject")
+     * @Method("POST")
      * @param ShipmentAssignment $assignment
      * @param Request $req
      * @return JsonResponse

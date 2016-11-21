@@ -19,6 +19,11 @@ class Shipment
     const STATUS_ASSIGNMENT_CANCEL = 3;
     const STATUS_ASSIGNMENT_REJECT = 4;
     const STATUS_ASSIGNMENT_FAIL = 5;
+    const STATUS_ON_PICK_UP = 6;
+    const STATUS_PICKED_UP = 7;
+    const STATUS_ON_DELIVERY = 8;
+    const STATUS_DELIVERED = 9;
+    const STATUS_FINISH = 10;
 
     /**
      * @var int
