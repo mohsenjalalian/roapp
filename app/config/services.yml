@@ -79,3 +79,8 @@ services:
 
     app.jdate_service:
             class: AppBundle\Utils\Services\JdateService
+
+    app.shipment_listener:
+            class: AppBundle\EventListener\ShipmentListener
+            tags:
+                - { name: doctrine.event_listener, event: postUpdate, method: postUpdate }
