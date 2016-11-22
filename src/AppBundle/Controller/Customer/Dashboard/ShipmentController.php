@@ -4,6 +4,7 @@ namespace AppBundle\Controller\Customer\Dashboard;
 
 use AppBundle\Entity\Address;
 use AppBundle\Entity\Customer;
+use AppBundle\Entity\Invoice;
 use AppBundle\Form\Customer\Dashboard\AddressType;
 use AppBundle\Form\Customer\Dashboard\ShipmentType;
 use AppBundle\Form\Customer\Dashboard\ValidationCodeType;
@@ -74,6 +75,7 @@ class ShipmentController extends Controller
     public function newAction(Request $request)
     {
         $shipment = new Shipment();
+        $invoice = new Invoice();
         $addressEntity = new Address();
         $customerId = $this->getUser()->getId(); // get current customer id
         $address = $this->getDoctrine()
@@ -139,7 +141,11 @@ class ShipmentController extends Controller
             $shipment->setCreatedAt($createdAt);
             $shipment->setStatus(Shipment::STATUS_NOT_ASSIGNED);
             $shipment->setType("send");
-
+            $invoice->setCreatedAt($createdAt);
+            $invoice->setStatus(Invoice::STATUS_UNPAID);
+            $invoice->setPrice(floatval($shipmentPrice));
+            $shipment->setInvoice($invoice);
+            
             $em = $this->getDoctrine()->getManager();
             $em->persist($shipment);
             $em->flush();
