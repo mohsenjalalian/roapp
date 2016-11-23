@@ -6,14 +6,11 @@ var http = require('http').Server(app);
 var io = require('socket.io')(http);
 var r = require("rethinkdb");
 
-app.get('/', function(req, res){
-    res.sendFile(__dirname + '/index.html');
-});
-
 io.on('connection', function(socket){
     socket.on('data', function(data) {
         r.connect({host: 'localhost', port: 28015, password: '09126354397'}).then(function (conn) {
-            r.db('roapp').table('shipment').filter(r.row('tracking_token').eq(data)
+            r.db('roapp').table('shipment').filter(
+                r.row('tracking_token').eq(data).and(r.row('status').eq('enabled'))
             ).run(conn, function (err, cursor) {
                 if (err) throw err;
                 cursor.toArray(function(err, result) {

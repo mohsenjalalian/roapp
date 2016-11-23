@@ -56,7 +56,7 @@ class ShipmentController extends Controller
     /**
      * Finds and displays a Shipment entity.
      *
-     * @Route("/{id}", name="app_operator_dashboard_shipment_show")
+     * @Route("/show/{id}", name="app_operator_dashboard_shipment_show")
      * @Method("GET")
      * @param Shipment $shipment
      * @return \Symfony\Component\HttpFoundation\Response
@@ -190,7 +190,7 @@ class ShipmentController extends Controller
      */
     public function loadMapAction (Request $request) {
 
-        $conn = r\connect('localhost', '28015', 'roapp', '09126354397');
+            $conn = r\connect('localhost', '28015', 'roapp', '09126354397');
         $result = r\table('shipment')
             ->filter(
                 [

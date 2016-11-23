@@ -6,10 +6,38 @@
  */
 namespace AppBundle\EventListener;
 
+use AppBundle\Entity\Shipment;
+use Doctrine\ORM\Event\PreUpdateEventArgs;
+use r;
+
 class ShipmentListener
 {
-    public function postUpdate()
+    public function preUpdate(PreUpdateEventArgs $eventArgs)
     {
-        die('Something is being inserted!');
+        if ($eventArgs->getEntity() instanceof Shipment) {
+            if ($eventArgs->hasChangedField('status')) {
+                if (in_array($eventArgs->getEntity()->getStatus(), Shipment::TRACK_ENABLED_STATUSES)) {
+                    $conn = r\connect('localhost', '28015', 'roapp', '09126354397');
+                    r\table('shipment')
+                        ->filter(
+                            [
+                                'shipment_id' => $eventArgs->getEntity()->getId()
+                            ]
+                        )
+                        ->update(array('status' => "enabled"))
+                        ->run($conn);
+                } elseif (in_array($eventArgs->getEntity()->getStatus(), Shipment::TRACK_DISABLED_STATUSES)) {
+                    $conn = r\connect('localhost', '28015', 'roapp', '09126354397');
+                    r\table('shipment')
+                        ->filter(
+                            [
+                                'shipment_id' => $eventArgs->getEntity()->getId()
+                            ]
+                        )
+                        ->update(array('status' => "disabled"))
+                        ->run($conn);
+                }
+            }
+        }
     }
 }

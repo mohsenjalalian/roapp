@@ -144,16 +144,16 @@ class ShipmentController extends Controller
             $em->persist($shipment);
             $em->flush();
 
-            $conn = r\connect('localhost');
+            $conn = r\connect('localhost', '28015', 'roapp', '09126354397');
             $driverToken = uniqid();
             $trackingToken = uniqid();
             $document = [
                 'shipment_id' => $shipment->getId(),
                 'driver_token' => $driverToken,
                 'tracking_token' => $trackingToken,
+                'status'    =>  'disabled',
             ];
-            r\db("roapp")
-                ->table("shipment")
+            r\table("shipment")
                 ->insert($document)
                 ->run($conn);
 
@@ -170,6 +170,55 @@ class ShipmentController extends Controller
                 'form' => $form->createView(),
             ]
         );
+    }
+
+    /**
+     * @Route("/load_map",name="app_customer_dashboard_shipment_load_map")
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function loadMapAction (Request $request) {
+
+        $conn = r\connect('localhost', '28015', 'roapp', '09126354397');
+        $result = r\table('shipment')
+            ->filter(
+                [
+                    'tracking_token' => $request->get('token')
+                ]
+            )
+            ->run($conn);
+        /** @var \ArrayObject $current */
+        $current = $result->current();
+        $id = $current->getArrayCopy()['id'];
+        $cursor = r\table('driver_location')
+            ->filter(
+                [
+                    'shipment_id' => $id,
+                ]
+            )
+            ->limit(4)
+            ->run($conn);
+
+        $last_location = r\table('driver_location')
+            ->filter(
+                [
+                    'shipment_id' => $id,
+                ]
+            )
+            ->orderBy(r\desc('date_time'))
+            ->limit(1)
+            ->run($conn);
+
+        $counter = 0;
+        foreach ($cursor as $value) {
+            $output[$counter]['lat'] = $value->getArrayCopy()['lat'];
+            $output[$counter]['lng'] = $value->getArrayCopy()['lng'];
+            $output[$counter]['lastLat'] = $last_location[0]->getArrayCopy()['lat'];
+            $output[$counter]['lastLng'] = $last_location[0]->getArrayCopy()['lng'];
+            $counter = $counter+1;
+        }
+
+        return new JsonResponse($output );
     }
 
     /**
@@ -483,55 +532,6 @@ class ShipmentController extends Controller
         }
 
         return $this->redirectToRoute('app_customer_dashboard_shipment_index');
-    }
-
-    /**
-     * @Route("/load_map",name="app_customer_dashboard_shipment_load_map")
-     * @param Request $request
-     * @return JsonResponse
-     */
-    public function loadMapAction (Request $request) {
-
-        $conn = r\connect('localhost', '28015', 'roapp', '09126354397');
-        $result = r\table('shipment')
-            ->filter(
-                [
-                    'tracking_token' => $request->get('token')
-                ]
-            )
-            ->run($conn);
-        /** @var \ArrayObject $current */
-        $current = $result->current();
-        $id = $current->getArrayCopy()['id'];
-        $cursor = r\table('driver_location')
-            ->filter(
-                [
-                    'shipment_id' => $id,
-                ]
-            )
-            ->limit(4)
-            ->run($conn);
-
-        $last_location = r\table('driver_location')
-            ->filter(
-                [
-                    'shipment_id' => $id,
-                ]
-            )
-            ->orderBy(r\desc('date_time'))
-            ->limit(1)
-            ->run($conn);
-
-        $counter = 0;
-        foreach ($cursor as $value) {
-            $output[$counter]['lat'] = $value->getArrayCopy()['lat'];
-            $output[$counter]['lng'] = $value->getArrayCopy()['lng'];
-            $output[$counter]['lastLat'] = $last_location[0]->getArrayCopy()['lat'];
-            $output[$counter]['lastLng'] = $last_location[0]->getArrayCopy()['lng'];
-            $counter = $counter+1;
-        }
-
-        return new JsonResponse($output );
     }
 
     /**

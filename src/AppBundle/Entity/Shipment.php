@@ -25,6 +25,15 @@ class Shipment
     const STATUS_DELIVERED = 9;
     const STATUS_FINISH = 10;
 
+    const TRACK_ENABLED_STATUSES = [
+        self::STATUS_ON_PICK_UP
+    ];
+
+    const TRACK_DISABLED_STATUSES = [
+        self::STATUS_ASSIGNMENT_FAIL,
+        self::STATUS_FINISH
+    ];
+
     /**
      * @var int
      *

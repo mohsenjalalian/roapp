@@ -45,7 +45,7 @@ socket.on('chat message', function(msg){
 
 $(document).ready(function () {
     $.ajax({
-        url: "load_map",
+        url: "../load_map",
         dataType: "json",
         data: {token: token},
         type: "POST",
