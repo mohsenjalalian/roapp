@@ -64,6 +64,24 @@ function editMap() {
     });
 }
 
+function showMap() {
+
+    var lat = parseFloat($("#address").data('lat'));
+    var lng = parseFloat($("#address").data('lng'));
+
+    var map = new google.maps.Map(document.getElementById('map'), {
+        zoom: 13,
+        center: {lat: lat, lng: lng}
+    });
+
+    var marker = new google.maps.Marker({
+        position: {lat: lat, lng: lng},
+        map: map,
+        title: 'تهران',
+        draggable:false
+    })
+}
+
 $("#address").keyup(function() {
     $("#address_description").val($(this).val());
 });

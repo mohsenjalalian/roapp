@@ -35,6 +35,7 @@ class GoogleMapExtension extends \Twig_Extension
         return [
             'getGoogleMapInitLink' => new \Twig_Function_Method($this, 'getGoogleMapInitLink'),
             'getGoogleMapEditLink' => new \Twig_Function_Method($this, 'getGoogleMapEditLink'),
+            'getGoogleMapShowLink' => new \Twig_Function_Method($this, 'getGoogleMapShowLink'),
 
         ];
     }
@@ -65,5 +66,15 @@ class GoogleMapExtension extends \Twig_Extension
         return "https://maps.googleapis.com/maps/api/js?key="
         .$this->googleMapApi.
         "&language=fa&region=IR&libraries=places&callback=editMap";
+    }
+
+    /**
+     * @return string
+     */
+    public function getGoogleMapShowLink()
+    {
+        return "https://maps.googleapis.com/maps/api/js?key="
+        .$this->googleMapApi.
+        "&language=fa&region=IR&libraries=places&callback=showMap";
     }
 }
