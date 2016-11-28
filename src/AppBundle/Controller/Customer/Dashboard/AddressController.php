@@ -135,7 +135,7 @@ class AddressController extends Controller
             $em->persist($address);
             $em->flush();
 
-            return $this->redirectToRoute('address_edit', array('id' => $address->getId()));
+            return $this->redirectToRoute('customer_dashboard_address_edit', array('id' => $address->getId()));
         }
 
         return $this->render('customer/dashboard/address/edit.html.twig', array(

@@ -1,6 +1,26 @@
 {% extends ':customer/dashboard:layout.html.twig' %}
 
+{% block stylesheets %}
+    {{ parent()  }}
+    {% stylesheets 'bundles/app/stylesheets/customer/dashboard/address/style.css' %}
+    <link rel="stylesheet" href="{{ asset_url }}" />
+    {% endstylesheets %}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent()  }}
+    {% javascripts
+    'bundles/app/javascript/customer/dashboard/address/script.js'
+    %}
+    <script src="{{ asset_url }}"></script>
+    <script src="{{ getGoogleMapShowLink() }}"></script>
+    {% endjavascripts %}
+{% endblock %}
+
 {% block main %}
+
+    <div id="map"></div>
+
     <h2 class="ui header">آدرس</h2>
 
     <table class="ui celled table">
@@ -15,16 +35,8 @@
             </tr>
             <tr>
                 <th>آدرس</th>
-                <td>{{ address.description }}</td>
+                <td id="address" data-lat="{{ address.latitude }}" data-lng="{{ address.longitude }}">{{ address.description }}</td>
             </tr>
-            {#<tr>#}
-                {#<th>Latitude</th>#}
-                {#<td>{{ address.latitude }}</td>#}
-            {#</tr>#}
-            {#<tr>#}
-                {#<th>Longitude</th>#}
-                {#<td>{{ address.longitude }}</td>#}
-            {#</tr>#}
         </tbody>
     </table>
 
