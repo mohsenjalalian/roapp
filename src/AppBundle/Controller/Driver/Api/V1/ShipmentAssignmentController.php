@@ -35,11 +35,11 @@ class ShipmentAssignmentController extends Controller
         if($isAssignTimeExpire) {
             $this->get('app.shipment_assignment')
                 ->acceptRequest($assignment);
-            $driverExchangeCode = $assignment->getDriverExchangeCode();
-
+//            $driverExchangeCode = $assignment->getDriverExchangeCode();
+            $param = $this->prepareAcceptInfo($assignment);
             return new JsonResponse(
                 [
-                    'driverExchangeCode' => $driverExchangeCode
+                    $param
                 ]
             );
         } else {
@@ -95,5 +95,81 @@ class ShipmentAssignmentController extends Controller
                 Response::HTTP_GONE
             );
         }
+    }
+    public function prepareAcceptInfo(ShipmentAssignment $assignment){
+        $ownerLatitude = $assignment->getShipment()
+            ->getOwnerAddress()
+            ->getLatitude();
+        $ownerLongitude = $assignment->getShipment()
+            ->getOwnerAddress()
+            ->getLongitude();
+        $ownerDescription =  $assignment->getShipment()
+            ->getOwnerAddress()
+            ->getDescription();
+        $otherLatitude = $assignment->getShipment()
+            ->getOtherAddress()
+            ->getLatitude();
+        $otherLongitude = $assignment->getShipment()
+            ->getOtherAddress()
+            ->getLongitude();
+        $otherDescription = $assignment->getShipment()
+            ->getOtherAddress()
+            ->getDescription();
+        $driverExchangeCode = $assignment->getDriverExchangeCode();
+        $shipmentPickUpTime = $assignment->getShipment()
+            ->getPickUpTime()
+            ->getTimestamp();
+        $shipmentDescription = $assignment->getShipment()
+            ->getDescription();
+        $shipmentPrice = $assignment->getShipment()
+            ->getPrice();
+        $shipmentId = $assignment->getShipment()
+            ->getId();
+        $senderName = $assignment->getShipment()
+            ->getOwnerAddress()
+            ->getCustomer()
+            ->getFullName();
+        $senderPhone = $assignment->getShipment()
+            ->getOwnerAddress()
+            ->getCustomer()
+            ->getPhone();
+        $reciverName = $assignment->getShipment()
+            ->getOther()
+            ->getFullName();
+        $reciverPhone = $assignment->getShipment()
+            ->getOther()
+            ->getPhone();
+        $shipmentValue = $assignment->getShipment()
+            ->getValue();
+        $shipmentPhotos = $assignment->getShipment()
+            ->getPhotoFiles();
+       if ($shipmentPhotos) {
+           foreach ($shipmentPhotos as $value) {
+               $photoUrl [] = $this->get("roapp_media.upload_manager")
+                   ->generateAbsoluteUrl($value->getMediaEntity());
+           }
+       } else {
+           $photoUrl = null;
+       }
+        $parameters = [
+            'ownerLatitude' => $ownerLatitude,
+            'ownerLongitude' => $ownerLongitude,
+            'ownerDescription' => $ownerDescription,
+            'otherLatitude' => $otherLatitude,
+            'otherLongitude' => $otherLongitude,
+            'otherDescription' => $otherDescription,
+            'driverExchangeCode' => $driverExchangeCode,
+            'shipmentPickUpTime' => $shipmentPickUpTime,
+            'shipmentPrice' => $shipmentPrice,
+            'shipmentId' => $shipmentId,
+            'senderName' => $senderName,
+            'senderPhone' => $senderPhone,
+            'reciverName' => $reciverName,
+            'reciverPhone' => $reciverPhone,
+            'shipmentValue' => $shipmentValue,
+            'shipmentPhoto' => $photoUrl,
+            'shipmentDescription' => $shipmentDescription
+        ];
+         return $parameters;
     }
 }
