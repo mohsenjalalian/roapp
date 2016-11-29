@@ -26,38 +26,38 @@
 
     <table class="ui celled table">
         <tbody class="headColor">
-            <tr>
-                <th>Id</th>
-                <td>{{ shipment.id }}</td>
-            </tr>
-            <tr>
-                <th>Description</th>
-                <td>{{ shipment.description }}</td>
-            </tr>
-            <tr>
-                <th>Value</th>
-                <td>{{ shipment.value }}</td>
-            </tr>
-            <tr>
-                <th>Status</th>
-                <td>{{ shipment.status }}</td>
-            </tr>
-            <tr>
-                <th>Pickuptime</th>
-                <td>{% if shipment.pickUpTime %}{{ shipment.pickUpTime|date('Y-m-d H:i:s') }}{% endif %}</td>
-            </tr>
-            <tr>
-                <th>Createdat</th>
-                <td>{% if shipment.createdAt %}{{ shipment.createdAt|date('Y-m-d H:i:s') }}{% endif %}</td>
-            </tr>
-            <tr>
-                <th>Price</th>
-                <td>{{ shipment.price }}</td>
-            </tr>
-            <tr>
-                <th>Type</th>
-                <td>{{ shipment.type }}</td>
-            </tr>
+        <tr>
+            <th>Id</th>
+            <td>{{ shipment.id }}</td>
+        </tr>
+        <tr>
+            <th>Description</th>
+            <td>{{ shipment.description }}</td>
+        </tr>
+        <tr>
+            <th>Value</th>
+            <td>{{ shipment.value }}</td>
+        </tr>
+        <tr>
+            <th>Status</th>
+            <td id="shipment_status_customer">{{ shipment.status }}</td>
+        </tr>
+        <tr>
+            <th>Pickuptime</th>
+            <td>{% if shipment.pickUpTime %}{{ shipment.pickUpTime|date('Y-m-d H:i:s') }}{% endif %}</td>
+        </tr>
+        <tr>
+            <th>Createdat</th>
+            <td>{% if shipment.createdAt %}{{ shipment.createdAt|date('Y-m-d H:i:s') }}{% endif %}</td>
+        </tr>
+        <tr>
+            <th>Price</th>
+            <td>{{ shipment.price }}</td>
+        </tr>
+        <tr>
+            <th>Type</th>
+            <td>{{ shipment.type }}</td>
+        </tr>
         </tbody>
     </table>
 
@@ -86,14 +86,14 @@
             <div style="float: right" class="ui cancel button">کنسل</div>
         </div>
     </div>
-    <a href="{{ path('app_customer_dashboard_shipment_index') }}"><button>برگشت به لیست</button></a>
+    <a href="{{ path('app_customer_dashboard_shipment_index') }}"><button class="btn">برگشت به لیست</button></a>
     {% if
     shipment.status == constant('STATUS_NOT_ASSIGNED',shipment) or
     shipment.status == constant('STATUS_ASSIGNMENT_SENT',shipment) or
     shipment.status == constant('STATUS_ASSIGNMENT_REJECT',shipment)
     %}
-        <a id="edit_button_customer_shipment" href="{{ path('app_customer_dashboard_shipment_edit', { 'id': shipment.id }) }}"><button>ویرایش</button></a>
-        <a id="cancel_button"><button>کنسل</button></a>
+        <a id="edit_button_customer_shipment" href="{{ path('app_customer_dashboard_shipment_edit', { 'id': shipment.id }) }}"><button class="btn">ویرایش</button></a>
+        <a id="cancel_button"><button class="btn">کنسل</button></a>
     {% endif %}
     {% if
     shipment.status == constant('STATUS_ASSIGNED',shipment) or
@@ -102,10 +102,10 @@
     shipment.status == constant('STATUS_ON_DELIVERY',shipment)
     %}
         {#<a id="cancel_button"><button>کنسل</button></a>#}
-        <a id="fail_button_customer"><button>لغو</button></a>
+        <a id="fail_button_customer"><button class="btn">لغو</button></a>
     {% endif %}
     {{ form_start(delete_form) }}
-    <input type="submit" value="حذف">
+    <input class="btn" type="submit" value="حذف">
     {{ form_end(delete_form) }}
     <div id="valid_code_form_section">
         {% if shipment.status == constant('STATUS_ON_PICK_UP',shipment) %}

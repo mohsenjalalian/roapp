@@ -199,6 +199,27 @@ assetic:
             inputs:
                 - "bundles/app/semantic/dist/themes/default/assets/fonts/icons.woff2"
             output: css/themes/default/assets/fonts/icons.woff2
+        font_awesome_otf:
+            inputs:
+                - "assets/vendor/roapp-pixel-admin/help/assets/fontawesome/FontAwesome.otf"
+            output: css/fontawesome/FontAwesome.otf
+        font_awesome_eot:
+            inputs:
+                - "assets/vendor/roapp-pixel-admin/help/assets/fontawesome/fontawesome-webfont.eot"
+            output: css/fontawesome/fontawesome-webfont.eot
+        font_awesome_svg:
+              inputs:
+                  - "assets/vendor/roapp-pixel-admin/help/assets/fontawesome/fontawesome-webfont.svg"
+              output: css/fontawesome/fontawesome-webfont.svg
+        font_awesome_ttf:
+              inputs:
+                  - "assets/vendor/roapp-pixel-admin/help/assets/fontawesome/fontawesome-webfont.ttf"
+              output: css/fontawesome/fontawesome-webfont.ttf
+        font_awesome_woff:
+              inputs:
+                  - "assets/vendor/roapp-pixel-admin/help/assets/fontawesome/fontawesome-webfont.woff"
+              output: css/fontawesome/fontawesome-webfont.woff
+
 
 
 vich_uploader:

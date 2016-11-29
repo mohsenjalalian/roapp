@@ -1,9 +1,11 @@
 {% extends ':operator/dashboard:layout.html.twig' %}
 
 {% block main %}
-    <h2 class="ui header" style="display: inline">لیست سفارشات آماده برای انتصاب</h2>
-
-    <table class="ui celled table">
+    <div class="page-header">
+        <h2 class="ui header" style="display: inline">لیست سفارشات آماده برای انتصاب</h2>
+    </div>
+<div class="panel-body">
+    <table class="table">
         <thead>
         <tr>
             <td>id</td>
@@ -27,13 +29,14 @@
                     <td>انتصاب نشده</td>
                     <td>{{ shipment.ownerAddress.latitude }}</td>
                     <td>{{ shipment.ownerAddress.longitude }}</td>
-                    <td><a href="{{ path("app_operator_dashboard_driver_list") }}/{{ shipment.id }}"><button>انتصاب</button></a></td>
-                    <td><button value="{{ shipment.id }}" class="reject_shipment_button">رد</button></td>
+                    <td><a href="{{ path("app_operator_dashboard_driver_list") }}/{{ shipment.id }}"><button class="btn">انتصاب</button></a></td>
+                    <td><button value="{{ shipment.id }}" class="reject_shipment_button btn">رد</button></td>
                 </tr>
             {% endif %}
         {% endfor %}
         </tbody>
     </table>
+</div>
     <div class="ui modal small">
         <input class="type" type="hidden">
         {#<div class="header">Header</div>#}
