@@ -1,0 +1,7 @@
+services:
+    app.gateway.manual:
+        class: AppBundle\Utils\PaymentSystem\ManualGateway
+        arguments:
+            - "@router"
+        tags :
+            - { name: app.gateway }

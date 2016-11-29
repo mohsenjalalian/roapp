@@ -1,0 +1,35 @@
+{% extends ':customer/dashboard:layout.html.twig' %}
+
+{% block main %}
+    <table class="ui unstackable table">
+        <thead>
+        <tr>
+            <th>نام و نام خانودگی</th>
+            <th>وضعیت</th>
+            <th>مبلغ قابل پرداخت</th>
+            <th>عملیات</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td>{{ shipment.ownerAddress.customer.fullName }}</td>
+            {% if constant('STATUS_UNPAID',invoice) == 0 %}
+                <td>پرداخت نشده</td>
+            {% else %}
+                <td>پرداخت شده است</td>
+            {% endif %}
+            <td>{{ invoice.price }}</td>
+            <td>
+                <div class="ui form">
+                {{ form_start(form) }}
+                <div class="field">
+                {{ form_widget(form) }}
+                </div>
+                <input type="submit" style="margin-top: 10px " value="پرداخت" />
+                {{ form_end(form) }}
+                </div>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+{% endblock %}

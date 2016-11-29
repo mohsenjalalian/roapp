@@ -14,6 +14,12 @@ use Doctrine\ORM\Mapping\ManyToOne;
  */
 class Payment
 {
+    const STATUS_WAITING_FOR_PAYMENT = 0;
+    const STATUS_IN_PROGRESS = 1;
+    const STATUS_FAILED = 2;
+    const STATUS_WAITING_FOR_APPROVE = 3;
+    const STATUS_APPROVED = 4;
+    const STATUS_CANCEL = 5;
     /**
      * @var int
      *
@@ -40,7 +46,7 @@ class Payment
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="paidAt", type="datetime")
+     * @ORM\Column(name="paidAt", type="datetime", nullable=true)
      */
     private $paidAt;
 
@@ -54,7 +60,7 @@ class Payment
     /**
      * @var array
      *
-     * @ORM\Column(name="data", type="json_array")
+     * @ORM\Column(name="data", type="json_array", nullable=true)
      */
     private $data;
 
@@ -64,6 +70,17 @@ class Payment
      */
     private $invoice;
 
+    /**
+     * @ManyToOne(targetEntity="AppBundle\Entity\Shipment", inversedBy="payment")
+     * @JoinColumn(name="shipment_id", referencedColumnName="id")
+     */
+    private $shipment;
+
+    /**
+     * @ManyToOne(targetEntity="Person", inversedBy="payment")
+     * @JoinColumn(name="person_id", referencedColumnName="id")
+     */
+    private $person;
 
     /**
      * Get id
@@ -180,7 +197,7 @@ class Payment
      */
     public function setData($data)
     {
-        $this->data = $data;
+        $this->data = json_encode($data,true);
 
         return $this;
     }
@@ -192,7 +209,7 @@ class Payment
      */
     public function getData()
     {
-        return $this->data;
+        return json_decode($this->data,true);
     }
 
     /**
@@ -217,5 +234,53 @@ class Payment
     public function getInvoice()
     {
         return $this->invoice;
+    }
+
+    /**
+     * Set shipment
+     *
+     * @param \AppBundle\Entity\Shipment $shipment
+     *
+     * @return Payment
+     */
+    public function setShipment(\AppBundle\Entity\Shipment $shipment = null)
+    {
+        $this->shipment = $shipment;
+
+        return $this;
+    }
+
+    /**
+     * Get shipment
+     *
+     * @return \AppBundle\Entity\Shipment
+     */
+    public function getShipment()
+    {
+        return $this->shipment;
+    }
+
+    /**
+     * Set person
+     *
+     * @param \AppBundle\Entity\Person $person
+     *
+     * @return Payment
+     */
+    public function setPerson(\AppBundle\Entity\Person $person = null)
+    {
+        $this->person = $person;
+
+        return $this;
+    }
+
+    /**
+     * Get person
+     *
+     * @return \AppBundle\Entity\Person
+     */
+    public function getPerson()
+    {
+        return $this->person;
     }
 }

@@ -6,6 +6,7 @@ use AppBundle\Entity\Address;
 use AppBundle\Entity\Customer;
 use AppBundle\Entity\Invoice;
 use AppBundle\Form\Customer\Dashboard\AddressType;
+use AppBundle\Form\Customer\Dashboard\PaymentStyle;
 use AppBundle\Form\Customer\Dashboard\ShipmentType;
 use AppBundle\Form\Customer\Dashboard\ValidationCodeType;
 use DateTime;
@@ -19,6 +20,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use AppBundle\Entity\Shipment;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Validator\Constraints\Url;
 use r;
 
@@ -55,11 +57,8 @@ class ShipmentController extends Controller
             $request->query->getInt('page', 1)/*page number*/,
             5/*limit per page*/
         );
-        
-        //        $shipments = $em->getRepository('AppBundle:Shipment')->findAll();
 
         return $this->render(':customer/dashboard/shipment:index.html.twig', array(
-//            'shipments' => $qb,
             'pagination' => $pagination,
         ));
     }
@@ -123,7 +122,6 @@ class ShipmentController extends Controller
                 ;
                 $shipment->setOtherAddress($otherAddress);
             }
-
             $description = $form->get("description")
                 ->getData();
             $value = $form->get("value")
@@ -139,15 +137,16 @@ class ShipmentController extends Controller
             $shipment->setPrice(floatval($shipmentPrice));
             $shipment->setPickUpTime($pickUpTime);
             $shipment->setCreatedAt($createdAt);
-            $shipment->setStatus(Shipment::STATUS_NOT_ASSIGNED);
+            $shipment->setStatus(Shipment::STATUS_WAITING_FOR_PAYMENT);
             $shipment->setType("send");
             $invoice->setCreatedAt($createdAt);
             $invoice->setStatus(Invoice::STATUS_UNPAID);
             $invoice->setPrice(floatval($shipmentPrice));
             $shipment->setInvoice($invoice);
-            
+
             $em = $this->getDoctrine()->getManager();
             $em->persist($shipment);
+            $em->persist($invoice);
             $em->flush();
 
             $conn = r\connect('localhost', '28015', 'roapp', '09126354397');
@@ -162,8 +161,8 @@ class ShipmentController extends Controller
             r\table("shipment")
                 ->insert($document)
                 ->run($conn);
-
-            return $this->redirectToRoute('app_customer_dashboard_shipment_show', array('id' => $shipment->getId()));
+            
+            return $this->redirectToRoute('app_customer_dashboard_invoice_checkout', array('id' => $shipment->getInvoice()->getId()));
         }
 
         return $this->render(

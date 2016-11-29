@@ -1,0 +1,32 @@
+{% extends ':customer/dashboard:layout.html.twig' %}
+
+{% block main %}
+    <h3>جزئیات پرداخت</h3>
+    <table class="ui celled table">
+        <tbody class="headColor">
+        <tr>
+            <th>نام</th>
+            <td>{{ payment.data.first_name }}</td>
+        </tr>
+        <tr>
+            <th>نام خانوادگی</th>
+            <td>{{ payment.data.last_name }}</td>
+        </tr>
+        <tr>
+            <th>شماره کارت</th>
+            <td>{{ payment.data.card_number }}</td>
+        </tr>
+        <tr>
+            <th>نام بانک</th>
+            <td>{{ payment.data.bank_name }}</td>
+        <tr>
+            <th>کد رهگیری</th>
+            <td>{{ payment.data.tracking_code }}</td>
+        </tr>
+        <tr>
+            <th>قیمت</th>
+            <td>{{ payment.shipment.price }}</td>
+        </tr>
+        </tbody>
+    </table>
+{% endblock %}

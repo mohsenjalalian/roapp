@@ -1,0 +1,38 @@
+{% extends ':customer/dashboard:layout.html.twig' %}
+
+{% block main %}
+    <h3>پرداختی ها</h3>
+    <table class="ui celled table">
+        <thead>
+        <tr>
+            <th>{{ knp_pagination_sortable(pagination, 'id','p.id') }}</th>
+            <th>نام پرداخت کننده</th>
+            <th>مبلغ پرداختی</th>
+            <th{% if pagination.isSorted('p.status') %} class="sorted"{% endif %}>{{ knp_pagination_sortable(pagination, 'وضعیت', 'p.status') }}</th>
+            <th{% if pagination.isSorted('p.createdDate') %} class="sorted"{% endif %}>{{ knp_pagination_sortable(pagination, 'تاریخ ایجاد', 'p.createdDate') }}</th>
+            <th{% if pagination.isSorted('p.paidAt') %} class="sorted"{% endif %}>{{ knp_pagination_sortable(pagination, 'تاریخ پرداخت', 'p.paidAt') }}</th>
+            <th{% if pagination.isSorted('p.method') %} class="sorted"{% endif %}>{{ knp_pagination_sortable(pagination, 'روش پرداخت', 'p.method') }}</th>
+            <th>عملیات</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for payment in pagination %}
+            <tr>
+                <td>{{ payment.id }}</td>
+                <td>{{ payment.person.fullName }}</td>
+                <td>{{ payment.shipment.price }}</td>
+                <td>{{ payment.status }}</td>
+                <td>{{ payment.createdDate|date('Y-m-d H:i:s')}}</td>
+                <td>{{ payment.paidAt|date('Y-m-d H:i:s')}}</td>
+                <td>{{ payment.method }}</td>
+                <td><a class="ui button" href="{{ path('app_customer_dashboard_payment_show', { 'id': payment.id }) }}">مشاهده جزئیات</a></td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <div class="ui one column stackable center aligned page grid navigation">
+        <div class="pagination menu column twelve wide ui" style="font-size: 18px">
+            {{ knp_pagination_render(pagination) }}
+        </div>
+    </div>
+{% endblock %}

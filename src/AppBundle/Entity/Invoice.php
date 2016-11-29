@@ -4,6 +4,7 @@ namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\OneToMany;
+use Doctrine\ORM\Mapping\OneToOne;
 
 /**
  * Invoice
@@ -48,6 +49,10 @@ class Invoice
      */
     private $payments;
 
+    /**
+     * @OneToOne(targetEntity="Shipment", mappedBy="invoice")
+     */
+    private $shipment;
 
     /**
      * Get id
@@ -170,5 +175,29 @@ class Invoice
     public function getPrice()
     {
         return $this->price;
+    }
+
+    /**
+     * Set shipment
+     *
+     * @param \AppBundle\Entity\shipment $shipment
+     *
+     * @return Invoice
+     */
+    public function setShipment(\AppBundle\Entity\Shipment $shipment = null)
+    {
+        $this->shipment = $shipment;
+
+        return $this;
+    }
+
+    /**
+     * Get shipment
+     *
+     * @return \AppBundle\Entity\shipment
+     */
+    public function getShipment()
+    {
+        return $this->shipment;
     }
 }
