@@ -20,6 +20,7 @@
 /web/css
 /.idea
 /app/Resources/assets/semantic/node_modules/
+/rethink/node_modules/
 /app/Resources/assets/semantic/dist/
 /Vagrantfile
 /.vagrant

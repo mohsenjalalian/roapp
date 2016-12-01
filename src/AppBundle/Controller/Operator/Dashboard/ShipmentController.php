@@ -10,6 +10,8 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use AppBundle\Entity\Shipment;
 use AppBundle\Form\ShipmentType;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use r;
 
 /**
  * Class ShipmentController
@@ -61,10 +63,23 @@ class ShipmentController extends Controller
      */
     public function showAction(Shipment $shipment)
     {
+        $conn = r\connect('localhost', '28015', 'roapp', '09126354397');
+        $t = r\table('shipment')
+            ->filter(
+                [
+                    'shipment_id' => $shipment->getId(),
+                ]
+            )
+            ->run($conn);
+        /** @var \ArrayObject $current */
+        $current = $t->current();
+        $trackingToken = $current->getArrayCopy()['tracking_token'];
+
         $deleteForm = $this->createDeleteForm($shipment);
 
         return $this->render('operator/dashboard/shipment/show.html.twig', array(
             'shipment' => $shipment,
+            'tracking_token' =>$trackingToken,
             'delete_form' => $deleteForm->createView(),
         ));
     }
@@ -166,6 +181,55 @@ class ShipmentController extends Controller
                 'pagination' => $pagination
             ]
         );
+    }
+
+    /**
+     * @Route("/load_map",name="app_operator_dashboard_shipment_load_map")
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function loadMapAction (Request $request) {
+
+            $conn = r\connect('localhost', '28015', 'roapp', '09126354397');
+        $result = r\table('shipment')
+            ->filter(
+                [
+                    'tracking_token' => $request->get('token')
+                ]
+            )
+            ->run($conn);
+        /** @var \ArrayObject $current */
+        $current = $result->current();
+        $id = $current->getArrayCopy()['id'];
+        $cursor = r\table('driver_location')
+            ->filter(
+                [
+                    'shipment_id' => $id,
+                ]
+            )
+            ->limit(4)
+            ->run($conn);
+
+        $last_location = r\table('driver_location')
+            ->filter(
+                [
+                    'shipment_id' => $id,
+                ]
+            )
+            ->orderBy(r\desc('date_time'))
+            ->limit(1)
+            ->run($conn);
+
+        $counter = 0;
+        foreach ($cursor as $value) {
+            $output[$counter]['lat'] = $value->getArrayCopy()['lat'];
+            $output[$counter]['lng'] = $value->getArrayCopy()['lng'];
+            $output[$counter]['lastLat'] = $last_location[0]->getArrayCopy()['lat'];
+            $output[$counter]['lastLng'] = $last_location[0]->getArrayCopy()['lng'];
+            $counter = $counter+1;
+        }
+
+        return new JsonResponse($output );
     }
 
     /**

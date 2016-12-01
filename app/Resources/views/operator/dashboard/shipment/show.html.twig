@@ -1,5 +1,26 @@
 {% extends ':operator/dashboard:layout.html.twig' %}
 
+{% block stylesheets %}
+    {{ parent()  }}
+    {% stylesheets
+    'bundles/app/stylesheets/operator/dashboard/shipment/show/style.css'
+    'bundles/app/sass/operator/dashboard/driverList/showPageStyle.scss'
+    %}
+    <link rel="stylesheet" href="{{ asset_url }}" />
+    {% endstylesheets %}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent()  }}
+    {% javascripts
+    'assets/vendor/socket.io-client/socket.io.js'
+    'bundles/app/javascript/operator/dashboard/shipment/show/map.js'
+    %}
+    <script src="{{ asset_url }}"></script>
+    <script src="{{ getGoogleMapInitLink() }}"></script>
+    {% endjavascripts %}
+{% endblock %}
+
 {% block main %}
     <h1>سفارش</h1>
 
@@ -39,6 +60,9 @@
             </tr>
         </tbody>
     </table>
+
+    <div data-token = {{ tracking_token }} id="show-shipment-map"></div>
+
     <div>
         <a style="color: black" href="{{ path('app_operator_dashboard_shipment_index') }}"><button>لیست کل سفارشات</button></a>
         {#<a style="color: black" href="{{ path('app_operator_dashboard_shipment_edit', { 'id': shipment.id }) }}"><button>ویرایش</button></a>#}
@@ -46,12 +70,5 @@
         {#<input type="submit" value="حذف">#}
         {#{{ form_end(delete_form) }}#}
     </div>
-    {% block stylesheets %}
-        {{ parent()  }}
-        {% stylesheets
-        'bundles/app/sass/operator/dashboard/driverList/showPageStyle.scss'
-        %}
-        <link rel="stylesheet" href="{{ asset_url }}" />
-        {% endstylesheets %}
-    {% endblock %}
+
 {% endblock %}

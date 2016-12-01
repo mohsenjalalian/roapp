@@ -1,44 +1,68 @@
 {% extends ':customer/dashboard:layout.html.twig' %}
 
+{% block stylesheets %}
+    {{ parent()  }}
+    {% stylesheets 'bundles/app/stylesheets/customer/dashboard/shipment/show/style.css' %}
+    <link rel="stylesheet" href="{{ asset_url }}" />
+    {% endstylesheets %}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent()  }}
+    {% javascripts
+    'assets/vendor/socket.io-client/socket.io.js'
+    'bundles/app/javascript/customer/dashboard/shipment/show/map.js'
+    'bundles/app/javascript/customer/dashboard/shipment/cancel_shipment.js'
+    'bundles/app/javascript/customer/dashboard/shipment/fail_shipment.js'
+    'bundles/app/javascript/customer/dashboard/shipment/validation_code.js'
+    %}
+    <script src="{{ asset_url }}"></script>
+    <script src="{{ getGoogleMapInitLink() }}"></script>
+    {% endjavascripts %}
+{% endblock %}
+
 {% block main %}
     <h2 class="ui header">سفارش</h2>
 
     <table class="ui celled table">
         <tbody class="headColor">
-        <tr>
-            <th>Id</th>
-            <td>{{ shipment.id }}</td>
-        </tr>
-        <tr>
-            <th>Description</th>
-            <td>{{ shipment.description }}</td>
-        </tr>
-        <tr>
-            <th>Value</th>
-            <td>{{ shipment.value }}</td>
-        </tr>
-        <tr>
-            <th>Status</th>
-            <td id="shipment_status_customer">{{ shipment.status }}</td>
-        </tr>
-        <tr>
-            <th>Pickuptime</th>
-            <td>{% if shipment.pickUpTime %}{{ shipment.pickUpTime|date('Y-m-d H:i:s') }}{% endif %}</td>
-        </tr>
-        <tr>
-            <th>Createdat</th>
-            <td>{% if shipment.createdAt %}{{ shipment.createdAt|date('Y-m-d H:i:s') }}{% endif %}</td>
-        </tr>
-        <tr>
-            <th>Price</th>
-            <td>{{ shipment.price }}</td>
-        </tr>
-        <tr>
-            <th>Type</th>
-            <td>{{ shipment.type }}</td>
-        </tr>
+            <tr>
+                <th>Id</th>
+                <td>{{ shipment.id }}</td>
+            </tr>
+            <tr>
+                <th>Description</th>
+                <td>{{ shipment.description }}</td>
+            </tr>
+            <tr>
+                <th>Value</th>
+                <td>{{ shipment.value }}</td>
+            </tr>
+            <tr>
+                <th>Status</th>
+                <td>{{ shipment.status }}</td>
+            </tr>
+            <tr>
+                <th>Pickuptime</th>
+                <td>{% if shipment.pickUpTime %}{{ shipment.pickUpTime|date('Y-m-d H:i:s') }}{% endif %}</td>
+            </tr>
+            <tr>
+                <th>Createdat</th>
+                <td>{% if shipment.createdAt %}{{ shipment.createdAt|date('Y-m-d H:i:s') }}{% endif %}</td>
+            </tr>
+            <tr>
+                <th>Price</th>
+                <td>{{ shipment.price }}</td>
+            </tr>
+            <tr>
+                <th>Type</th>
+                <td>{{ shipment.type }}</td>
+            </tr>
         </tbody>
     </table>
+
+    <div data-token = {{ tracking_token }} id="show-shipment-map"></div>
+
     <div id="cancel_modal_customer" class="ui modal small">
         {#<div class="header">Header</div>#}
         <div class="content">
@@ -102,16 +126,4 @@
         </div>
     </div>
     {% endif %}
-
-    {% block javascripts %}
-        {{ parent()  }}
-
-        {% javascripts
-        'bundles/app/javascript/customer/dashboard/shipment/cancel_shipment.js'
-        'bundles/app/javascript/customer/dashboard/shipment/fail_shipment.js'
-        'bundles/app/javascript/customer/dashboard/shipment/validation_code.js'
-        %}
-        <script type="text/javascript" src="{{ asset_url }}" ></script>
-        {% endjavascripts %}
-    {% endblock %}
 {% endblock %}
