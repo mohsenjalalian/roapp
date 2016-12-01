@@ -84,3 +84,9 @@ services:
             class: AppBundle\EventListener\ShipmentListener
             tags:
                 - { name: doctrine.event_listener, event: preUpdate, method: preUpdate }
+
+    app.payment_service:
+        class: AppBundle\Utils\Services\PaymentService
+        arguments:
+            - "@doctrine.orm.default_entity_manager"
+            - "@router"

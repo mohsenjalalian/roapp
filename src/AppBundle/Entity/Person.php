@@ -2,6 +2,7 @@
 
 namespace AppBundle\Entity;
 
+use Doctrine\ORM\Mapping\OneToMany;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -67,6 +68,11 @@ abstract class Person
      * @ORM\Column(name="activation_token", type="string", nullable=true)
      */
     protected $activationToken;
+
+    /**
+     * @OneToMany(targetEntity="AppBundle\Entity\Payment", mappedBy="person")
+     */
+    protected $payment;
     
     /**
      * Get id
@@ -243,5 +249,46 @@ abstract class Person
     public function getActivationToken()
     {
         return $this->activationToken;
+    }
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->payment = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+    /**
+     * Add payment
+     *
+     * @param \AppBundle\Entity\Payment $payment
+     *
+     * @return Person
+     */
+    public function addPayment(\AppBundle\Entity\Payment $payment)
+    {
+        $this->payment[] = $payment;
+
+        return $this;
+    }
+
+    /**
+     * Remove payment
+     *
+     * @param \AppBundle\Entity\Payment $payment
+     */
+    public function removePayment(\AppBundle\Entity\Payment $payment)
+    {
+        $this->payment->removeElement($payment);
+    }
+
+    /**
+     * Get payment
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getPayment()
+    {
+        return $this->payment;
     }
 }

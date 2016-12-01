@@ -37,8 +37,8 @@ class ShipmentController extends Controller
         if($shipment) {
             $shipment->setStatus(Shipment::STATUS_ASSIGNMENT_FAIL);
             $shipment->setReason($data->reason);
-            $em->persist($shipment);
 
+            $em->persist($shipment);
             $em->flush();
 
             // send sms to customer
@@ -103,28 +103,36 @@ class ShipmentController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
         $data = json_decode($request->getContent());
-        $assignmentId = $data->assignmentId;
-        $assignment = $this->getDoctrine()
-            ->getRepository("AppBundle:ShipmentAssignment")
-            ->find($assignmentId);
-        if ($assignment) {
+        $shipmentId = $data->shipmentId;
+        $shipment = $this->getDoctrine()
+            ->getRepository("AppBundle:Shipment")
+            ->find($shipmentId);
+        if ($shipment) {
             switch ($data->status) {
                 case 1 : // status = on pick up
-                    $assignment->getShipment()
-                        ->setStatus(Shipment::STATUS_ON_PICK_UP);
+                    $shipment->setStatus(Shipment::STATUS_ON_PICK_UP);
                     break;
                 case 2 : // status =  on delivery
-                    $assignment->getShipment()
-                        ->setStatus(Shipment::STATUS_ON_DELIVERY);
+                    $shipment->setStatus(Shipment::STATUS_ON_DELIVERY);
                     break;
                 case 3 : // status = finish
-                    $assignment->getShipment()
-                        ->setStatus(Shipment::STATUS_FINISH);
-                    $assignment->getDriver()
-                        ->setStatus(Driver::STATUS_FREE);
+                    $shipment->setStatus(Shipment::STATUS_FINISH);
+                    $driverId = $this->getUser()
+                        ->getId();
+                    $driver = $this->getDoctrine()
+                        ->getRepository("AppBundle:Driver")
+                        ->find($driverId);
+                    if ($driver instanceof Driver){
+                        $driver->setStatus(Driver::STATUS_FREE);
+                    } else {
+                        return new JsonResponse(
+                            [],
+                            Response::HTTP_BAD_REQUEST
+                        );
+                    }
                     break;
             }
-            $em->persist($assignment);
+            $em->persist($shipment);
 
             $em->flush();
 

@@ -54,23 +54,19 @@ class AssignmentShipment
     }
     public function initDataForSend(ShipmentAssignment $assignmentObj)
     {
-        $ownerLatitude = $assignmentObj->getShipment()
-            ->getOwnerAddress()
-            ->getLatitude();
-        $ownerLongitude = $assignmentObj->getShipment()
-            ->getOwnerAddress()
-            ->getLongitude();
         $ownerDescription =  $assignmentObj->getShipment()
             ->getOwnerAddress()
             ->getDescription();
-        $otherLatitude = $assignmentObj->getShipment()
-            ->getOtherAddress()
-            ->getLatitude();
-        $otherLongitude = $assignmentObj->getShipment()
-            ->getOtherAddress()
-            ->getLongitude();
         $otherDescription = $assignmentObj->getShipment()
             ->getOtherAddress()
+            ->getDescription();
+        $shipmentPrice =  $assignmentObj->getShipment()
+            ->getPrice();
+        $shipmentValue = $assignmentObj->getShipment()
+            ->getValue();
+        $shipmentPickUpTime = $assignmentObj->getShipment()
+            ->getPickUpTime()->getTimestamp();
+        $shipmentDescription = $assignmentObj->getShipment()
             ->getDescription();
         $driverId = $assignmentObj->getDriver()
             ->getId();
@@ -84,11 +80,11 @@ class AssignmentShipment
                 'parameters' => [
                     'assignmentId' => $assignmentObj->getId(),
                     'sourceAddress' => $ownerDescription,
-                    'sourceLat' => $ownerLatitude,
-                    'sourceLng' => $ownerLongitude,
                     'destinationAddress' => $otherDescription,
-                    'destinationLat' => $otherLatitude,
-                    'destinationLng' => $otherLongitude,
+                    'shipmentPrice' => $shipmentPrice,
+                    'shipmentValue' => $shipmentValue,
+                    'shipmentPickUpTime' => $shipmentPickUpTime,
+                    'shipmentDescription' => $shipmentDescription
                 ]
             ];
 

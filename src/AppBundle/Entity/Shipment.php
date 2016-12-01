@@ -3,6 +3,9 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping\JoinColumn;
+use Doctrine\ORM\Mapping\OneToMany;
+use Doctrine\ORM\Mapping\OneToOne;
 use Roapp\MediaBundle\Annotation\UploadableField;
 
 /**
@@ -24,6 +27,7 @@ class Shipment
     const STATUS_ON_DELIVERY = 8;
     const STATUS_DELIVERED = 9;
     const STATUS_FINISH = 10;
+    const STATUS_WAITING_FOR_PAYMENT = 11;
 
     const TRACK_ENABLED_STATUSES = [
         self::STATUS_ON_PICK_UP
@@ -97,6 +101,17 @@ class Shipment
      * @ORM\Column(type="string", name="shipment_reason", nullable=true)
      */
     protected $reason;
+
+    /**
+     * @OneToOne(targetEntity="AppBundle\Entity\Invoice", inversedBy="shipment")
+     * @JoinColumn(name="invoice_id", referencedColumnName="id")
+     */
+    private $invoice;
+
+    /**
+     * @OneToMany(targetEntity="AppBundle\Entity\Payment", mappedBy="shipment")
+     */
+    private $payment;
 
     /**
      * @ORM\ManyToMany(targetEntity="AppBundle\Entity\Media")
@@ -503,5 +518,63 @@ class Shipment
     public function getReason()
     {
         return $this->reason;
+    }
+
+    /**
+     * Set invoice
+     *
+     * @param \AppBundle\Entity\Invoice $invoice
+     *
+     * @return Shipment
+     */
+    public function setInvoice(\AppBundle\Entity\Invoice $invoice = null)
+    {
+        $this->invoice = $invoice;
+
+        return $this;
+    }
+
+    /**
+     * Get invoice
+     *
+     * @return \AppBundle\Entity\Invoice
+     */
+    public function getInvoice()
+    {
+        return $this->invoice;
+    }
+
+    /**
+     * Add payment
+     *
+     * @param \AppBundle\Entity\Payment $payment
+     *
+     * @return Shipment
+     */
+    public function addPayment(\AppBundle\Entity\Payment $payment)
+    {
+        $this->payment[] = $payment;
+
+        return $this;
+    }
+
+    /**
+     * Remove payment
+     *
+     * @param \AppBundle\Entity\Payment $payment
+     */
+    public function removePayment(\AppBundle\Entity\Payment $payment)
+    {
+        $this->payment->removeElement($payment);
+    }
+
+    /**
+     * Get payment
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getPayment()
+    {
+        return $this->payment;
     }
 }
