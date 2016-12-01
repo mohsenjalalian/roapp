@@ -1,71 +1,66 @@
-{% extends ':operator/dashboard:layout.html.twig' %}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <title>{% block title %}Welcome!{% endblock %}</title>
+    {% block stylesheets %}
 
- {% block body %}
-     <div class="ui middle aligned center aligned grid">
-         <div class="column">
-             <h2 class="ui teal image header">
-                 <div class="content">
-                     ورود به سامانه
-                 </div>
-             </h2>
-             {#{% if error %}#}
-             {#<div>{{ error.messageKey|trans(error.messageData, 'security') }}</div>#}
-             {#{% endif %}#}
-             <div class="ui error">
-                 {% if error %}
-                     <div>{{ error.messageKey|trans(error.messageData, 'security') }}</div>
-                 {% endif %}
-             </div>
-             <form class="ui form" action="{{ path('app_operator_dashboard_security_login') }}" method="post">
-                 <div class="ui stacked segment">
-                     <div class="field">
-                         <div class="ui left icon input">
-                             <i class="user icon"></i>
-                             <input type="text" id="username" name="_username" value="{{ last_username }}" placeholder="پست الکترونیکی" />
-                         </div>
-                     </div>
-                     <input type="hidden" name="_target_path" value="{{ url('app_operator_dashboard_shipment_list') }}" />
-                     <div class="field">
-                         <div class="ui left icon input">
-                             <i class="lock icon"></i>
-                             <input type="password" id="password" name="_password" placeholder="رمز عبور"/>
-                         </div>
-                     </div>
-                     <button type="submit" class="ui fluid large teal submit button">ورود</button>
-                     {#<button style="color: black" type="submit">ورود</button>#}
-                         {#<label for="username">نام کاربری :</label>#}
-                         {#<input type="text" id="username" name="_username" value="{{ last_username }}" />#}
-                         {#<label for="password">رمز عبور :</label>#}
-                         {#<input type="password" id="password" name="_password" /> <br>#}
-                         {#<div class="ui inverted divider"></div>#}
-                         {#<label for="remember_me">مرا به خاطر بسپار</label>#}
-                         {#<input type="checkbox" id="remember_me" name="_remember_me" checked /><br>#}
-                     </div>
-                 <div class="ui error message">asdasdad</div>
-             </form>
-             <div class="ui message">
-                 عضو نیستید؟ <a href="#">ثبت نام کنید</a>
-             </div>
-         </div>
-     </div>
+        {% stylesheets
+        'assets/vendor/bootstrap/dist/css/bootstrap.min.css'
+        'assets/vendor/roapp-pixel-admin/html/assets/stylesheets/pixel-admin.min.css'
+        'assets/vendor/roapp-pixel-admin/html/assets/stylesheets/pages.min.css'
+        'assets/vendor/roapp-pixel-admin/html/assets/stylesheets/rtl.min.css'
+        'assets/vendor/roapp-pixel-admin/html/assets/stylesheets/themes.min.css'
+        'assets/vendor/roapp-pixel-admin/help/assets/font-awesome.min.css'
+        %}
+        <link rel="stylesheet" href="{{ asset_url }}" />
+        {% endstylesheets %}
+    {% endblock %}
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
 
+    <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
+</head>
+<body dir="rtl" class="theme-default page-signin-alt">
 
- {% endblock %}
+{% if error %}
+    <div class="alert alert-danger">
+        <button type="button" class="close" data-dismiss="alert">×</button>
+        {{ error.messageKey|trans(error.messageData, 'security') }}<
+    </div>
+{% endif %}
 
-{% block stylesheets %}
-    {{ parent() }}
-    <style type="text/css">
-        body {
-            background-color: #DADADA;
-        }
-        body > .grid {
-            height: 100%;
-        }
-        .image {
-            margin-top: -100px;
-        }
-        .column {
-            max-width: 450px;
-        }
-    </style>
-{% endblock %}
+<div class="signin-header">
+    <a href="index.html" class="logo">
+        <div class="demo-logo bg-primary"><img src="assets/demo/logo-big.png" alt="" style="margin-top: -4px;"></div>&nbsp;
+        <strong>Roapp</strong>
+    </a> <!-- / .logo -->
+    <a href="pages-signup-alt.html" class="btn btn-primary">ثبت نام</a>
+</div> <!-- / .header -->
+<h1 class="form-header">ورود به سامانه</h1>
+<!-- Form -->
+<form action="{{ path('app_operator_dashboard_security_login') }}" id="signin-form_id" class="panel" method="post">
+    <div class="form-group">
+        <input type="text" value="{{ last_username }}" name="_username" id="username" class="form-control input-lg" placeholder="پست الکترونیکی">
+        <input type="hidden" name="_target_path" value="{{ url('app_operator_dashboard_shipment_list') }}" />
+    </div> <!-- / Username -->
+
+    <div class="form-group signin-password">
+        <input type="password" name="_password" id="password" class="form-control input-lg" placeholder="رمز عبور">
+        <a href="#" class="forgot">فراموشی?</a>
+    </div> <!-- / Password -->
+
+    <div class="form-actions">
+        <input type="submit" value="ورود" class="btn btn-primary btn-block btn-lg">
+    </div> <!-- / .form-actions -->
+</form>
+<!-- / Form -->
+<div class="signin-with">
+    <div class="header">ورود با</div>
+    <a href="index.html" class="btn btn-lg btn-facebook rounded"><i class="fa fa-facebook"></i></a>&nbsp;&nbsp;
+    <a href="index.html" class="btn btn-lg btn-info rounded"><i class="fa fa-twitter"></i></a>&nbsp;&nbsp;
+    <a href="index.html" class="btn btn-lg btn-danger rounded"><i class="fa fa-google-plus"></i></a>
+</div>
+</body>

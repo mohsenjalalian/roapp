@@ -18,6 +18,8 @@
     "socket.io-client": "^1.5.1",
     "persian-datepicker": "^0.4.5",
     "jquery": "^3.1.1",
-    "dropzone": "^4.3.0"
+    "dropzone": "^4.3.0",
+    "bootstrap": "^3.3.7",
+    "roapp-pixel-admin": "git@gitlab.com:mohsenjalalian.ir/roapp-pixel-admin.git"
   }
 }

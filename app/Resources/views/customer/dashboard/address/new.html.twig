@@ -27,9 +27,9 @@
     <div class="ui form">
     {{ form_start(form) }}
     {{ form_widget(form) }}
-    <input type="submit" value="ایجاد" />
+    <input class="btn" type="submit" value="ایجاد" />
     {{ form_end(form) }}
     </div>
 
-    <a href="{{ path('customer_dashboard_address_index') }}"><button>برگشت به لیست</button></a>
+    <a href="{{ path('customer_dashboard_address_index') }}"><button class="btn">برگشت به لیست</button></a>
 {% endblock %}
