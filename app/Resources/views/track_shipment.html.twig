@@ -1,0 +1,21 @@
+{% extends 'customer/dashboard/base.html.twig' %}
+{% block stylesheets %}
+    {% stylesheets
+    'bundles/app/stylesheets/customer/dashboard/shipment/show/style.css'
+    %}
+    <link rel="stylesheet" href="{{ asset_url }}" />
+    {% endstylesheets %}
+{% endblock %}
+{% block javascripts %}
+    {% javascripts
+    'assets/vendor/jquery/dist/jquery.js'
+    'assets/vendor/socket.io-client/dist/socket.io.js'
+    'bundles/app/javascript/track_shipment.js'
+    %}
+    <script type="text/javascript" src="{{ asset_url }}" ></script>
+    <script src="{{ getGoogleMapInitLink() }}"></script>
+    {% endjavascripts %}
+{% endblock %}
+{% block body %}
+<div data-token = {{ tracking_token }} id="show_track_map"></div>
+{% endblock %}
