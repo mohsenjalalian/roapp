@@ -35,7 +35,7 @@ class AddressController extends Controller
         $query = $em->getRepository('AppBundle:Address')
             ->createQueryBuilder('a')
             ->where('a.customer =:user_id')
-            ->setParameter('user_id',$this->getUser()->getId())
+            ->setParameter('user_id', $this->getUser()->getId())
             ->getQuery();
 
         $paginator  = $this->get('knp_paginator');
@@ -45,16 +45,18 @@ class AddressController extends Controller
             5/*limit per page*/
         );
 
-        return $this->render('customer/dashboard/address/index.html.twig', array(
+        return $this->render('customer/dashboard/address/index.html.twig', [
             'pagination' => $pagination,
-        ));
+        ]);
     }
 
     /**
      * Creates a new Address entity.
      *
      * @Route("/new", name="app_customer_dashboard_address_new")
+     * @param Request $request
      * @Method({"GET", "POST"})
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function newAction(Request $request)
     {
@@ -73,7 +75,7 @@ class AddressController extends Controller
                 $customer = $this->getDoctrine()
                     ->getRepository('AppBundle:Customer')
                     ->findOneBy(
-                        array('phone' => $owner)
+                        ['phone' => $owner]
                     );
 
                 if (!$customer) {
@@ -90,39 +92,47 @@ class AddressController extends Controller
                 $em->persist($address);
                 $em->flush();
 
-                return $this->redirectToRoute('app_customer_dashboard_address_show',
-                    array('id' => $address->getId())
+                return $this->redirectToRoute(
+                    'app_customer_dashboard_address_show',
+                    [
+                        'id' => $address->getId(),
+                    ]
                 );
             }
         }
 
-        return $this->render('customer/dashboard/address/new.html.twig', array(
+        return $this->render('customer/dashboard/address/new.html.twig', [
             'address' => $address,
             'form' => $form->createView(),
-        ));
+        ]);
     }
 
     /**
      * Finds and displays a Address entity.
      *
      * @Route("/{id}", name="app_customer_dashboard_address_show")
+     * @param Address $address
      * @Method("GET")
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function showAction(Address $address)
     {
         $deleteForm = $this->createDeleteForm($address);
 
-        return $this->render('customer/dashboard/address/show.html.twig', array(
+        return $this->render('customer/dashboard/address/show.html.twig', [
             'address' => $address,
             'delete_form' => $deleteForm->createView(),
-        ));
+        ]);
     }
 
     /**
      * Displays a form to edit an existing Address entity.
      *
      * @Route("/{id}/edit", name="app_customer_dashboard_address_edit")
+     * @param Request $request
+     * @param Address $address
      * @Method({"GET", "POST"})
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function editAction(Request $request, Address $address)
     {
@@ -135,21 +145,24 @@ class AddressController extends Controller
             $em->persist($address);
             $em->flush();
 
-            return $this->redirectToRoute('app_customer_dashboard_address_edit', array('id' => $address->getId()));
+            return $this->redirectToRoute('app_customer_dashboard_address_edit', ['id' => $address->getId()]);
         }
 
-        return $this->render('customer/dashboard/address/edit.html.twig', array(
+        return $this->render('customer/dashboard/address/edit.html.twig', [
             'address' => $address,
             'edit_form' => $editForm->createView(),
             'delete_form' => $deleteForm->createView(),
-        ));
+        ]);
     }
 
     /**
      * Deletes a Address entity.
      *
-     * @Route("/{id}", name="app_customer_dashboard_address_delete")
+     * @param Request $request
+     * @param Address $address
+     * @Route("/{id}", name="customer_dashboard_address_delete")
      * @Method("DELETE")
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function deleteAction(Request $request, Address $address)
     {
@@ -166,27 +179,11 @@ class AddressController extends Controller
     }
 
     /**
-     * Creates a form to delete a Address entity.
-     *
-     * @param Address $address The Address entity
-     *
-     * @return \Symfony\Component\Form\Form The form
-     */
-    private function createDeleteForm(Address $address)
-    {
-        return $this->createFormBuilder()
-            ->setAction($this->generateUrl('app_customer_dashboard_address_delete', array('id' => $address->getId())))
-            ->setMethod('DELETE')
-            ->getForm();
-    }
-
-    /**
      * @Route("/add_address",name="customer_dashboard_address_add_address")
      * @param Request $request
      * @return JsonResponse
      * @throws \Exception
      */
-    // add address with ajax method
     public function addAddressAction(Request $request)
     {
         $address = new Address();
@@ -197,7 +194,7 @@ class AddressController extends Controller
         $form = $this->createForm(AddressType::class, $address);
         $form->handleRequest($request);
         if ($form->isValid()) {
-           $reciverMobile = $request->request->get('shipment_otherAddress_number');
+            $reciverMobile = $request->request->get('shipment_otherAddress_number');
             if ($reciverMobile) {
                 $address = $this->get("app.address_service")
                     ->createAddress($address, $reciverMobile, $customer);
@@ -207,15 +204,28 @@ class AddressController extends Controller
             }
             $arr = [
                 'description' => $address->getDescription(),
-                'cId' => $address->getCustomer()->getId(), 
-                'isPublic' => $address->getIsPublic()
+                'cId' => $address->getCustomer()->getId(),
+                'isPublic' => $address->getIsPublic(),
             ];
             $res = json_encode($arr);
 
             return new JsonResponse($res);
-            
         } else {
             throw new \Exception('Invalid information');
         }
+    }
+    /**
+     * Creates a form to delete a Address entity.
+     *
+     * @param Address $address The Address entity
+     *
+     * @return \Symfony\Component\Form\Form The form
+     */
+    private function createDeleteForm(Address $address)
+    {
+        return $this->createFormBuilder()
+            ->setAction($this->generateUrl('customer_dashboard_address_delete', ['id' => $address->getId()]))
+            ->setMethod('DELETE')
+            ->getForm();
     }
 }

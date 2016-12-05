@@ -7,6 +7,7 @@ use AppBundle\Entity\Driver;
 use Symfony\Bridge\Monolog\Logger;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Guard\AbstractGuardAuthenticator;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
@@ -33,7 +34,7 @@ class TokenAuthenticator extends AbstractGuardAuthenticator
     /**
      * TokenAuthenticator constructor.
      * @param EntityManager $em
-     * @param Logger $logger
+     * @param Logger        $logger
      */
     public function __construct(EntityManager $em, Logger $logger)
     {
@@ -44,6 +45,8 @@ class TokenAuthenticator extends AbstractGuardAuthenticator
     /**
      * Called on every request. Return whatever credentials you want,
      * or null to stop authentication.
+     * @param Request $request
+     * @return array | null
      */
     public function getCredentials(Request $request)
     {
@@ -82,7 +85,7 @@ class TokenAuthenticator extends AbstractGuardAuthenticator
             $customerDevice = $this->em->getRepository('AppBundle:PersonDevice')
                 ->findOneBy(
                     [
-                        'deviceToken' => $token
+                        'deviceToken' => $token,
                     ]
                 );
             if ($customerDevice) {
@@ -95,7 +98,7 @@ class TokenAuthenticator extends AbstractGuardAuthenticator
             $driverDevice = $this->em->getRepository('AppBundle:PersonDevice')
                 ->findOneBy(
                     [
-                        'deviceToken' => $token
+                        'deviceToken' => $token,
                     ]
                 );
             if ($driverDevice) {
@@ -104,7 +107,7 @@ class TokenAuthenticator extends AbstractGuardAuthenticator
 
             return null;
         }
-        
+
         throw new \Exception('No provider found');
     }
 
@@ -133,20 +136,31 @@ class TokenAuthenticator extends AbstractGuardAuthenticator
         return true;
     }
 
+    /**
+     * @param Request        $request
+     * @param TokenInterface $token
+     * @param string         $providerKey
+     * @return null
+     */
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, $providerKey)
     {
         // on success, let the request continue
         return null;
     }
 
+    /**
+     * @param Request                 $request
+     * @param AuthenticationException $exception
+     * @return JsonResponse
+     */
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception)
     {
-        $data = array(
-            'message' => strtr($exception->getMessageKey(), $exception->getMessageData())
+        $data = [
+            'message' => strtr($exception->getMessageKey(), $exception->getMessageData()),
 
             // or to translate this message
             // $this->translator->trans($exception->getMessageKey(), $exception->getMessageData())
-        );
+        ];
 
         return new JsonResponse($data, 403);
     }
@@ -172,14 +186,17 @@ class TokenAuthenticator extends AbstractGuardAuthenticator
      */
     public function start(Request $request, AuthenticationException $authException = null)
     {
-        $data = array(
+        $data = [
             // you might translate this message
-            'message' => 'Authentication Required'
-        );
+            'message' => 'Authentication Required',
+        ];
 
         return new JsonResponse($data, 401);
     }
 
+    /**
+     * @return bool
+     */
     public function supportsRememberMe()
     {
         return false;

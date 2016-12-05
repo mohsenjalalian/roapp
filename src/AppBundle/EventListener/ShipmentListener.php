@@ -10,8 +10,15 @@ use AppBundle\Entity\Shipment;
 use Doctrine\ORM\Event\PreUpdateEventArgs;
 use r;
 
+/**
+ * Class ShipmentListener
+ * @package AppBundle\EventListener
+ */
 class ShipmentListener
 {
+    /**
+     * @param PreUpdateEventArgs $eventArgs
+     */
     public function preUpdate(PreUpdateEventArgs $eventArgs)
     {
         if ($eventArgs->getEntity() instanceof Shipment) {
@@ -21,20 +28,20 @@ class ShipmentListener
                     r\table('shipment')
                         ->filter(
                             [
-                                'shipment_id' => $eventArgs->getEntity()->getId()
+                                'shipment_id' => $eventArgs->getEntity()->getId(),
                             ]
                         )
-                        ->update(array('status' => "enabled"))
+                        ->update(['status' => "enabled"])
                         ->run($conn);
                 } elseif (in_array($eventArgs->getEntity()->getStatus(), Shipment::TRACK_DISABLED_STATUSES)) {
                     $conn = r\connect('localhost', '28015', 'roapp', '09126354397');
                     r\table('shipment')
                         ->filter(
                             [
-                                'shipment_id' => $eventArgs->getEntity()->getId()
+                                'shipment_id' => $eventArgs->getEntity()->getId(),
                             ]
                         )
-                        ->update(array('status' => "disabled"))
+                        ->update(['status' => "disabled"])
                         ->run($conn);
                 }
             }

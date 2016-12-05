@@ -6,22 +6,26 @@ use AppBundle\Entity\Customer;
 
 use AppBundle\Form\Customer\Dashboard\RegisterType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
+/**
+ * Class SecurityController
+ * @package AppBundle\Controller\Customer\Dashboard
+ */
 class SecurityController extends Controller
 {
     /**
      * @author Naghmeh Mashhadi
      * @Route("/login", name="app_customer_dashboard_security_login")
+     * @return \Symfony\Component\HttpFoundation\Response
      * This action displays and validates the login form
      */
-    public function loginAction(Request $request)
+    public function loginAction()
     {
-        if($this->isGranted("ROLE_CUSTOMER")){
+        if ($this->isGranted("ROLE_CUSTOMER")) {
             return $this->redirectToRoute("app_customer_dashboard_shipment_index");
         }
 
@@ -35,21 +39,21 @@ class SecurityController extends Controller
 
         return $this->render(
             ':customer/dashboard/security:login.html.twig',
-            array(
+            [
                 // last username entered by the user
                 'last_username' => $lastUsername,
                 'error'         => $error,
-            )
+            ]
         );
-
     }
 
     /**
      * @author Naghmeh Mashhadi
      * @Route("/logout", name="logout")
+     * @return \Symfony\Component\HttpFoundation\Response
      * This action is done after user logs out
      */
-    public function logoutAction(Request $request)
+    public function logoutAction()
     {
         return new Response("You are logged out successfully.");
     }
@@ -57,14 +61,13 @@ class SecurityController extends Controller
     /**
      * @Route("/register", name="_register")
      * @param \Symfony\Component\HttpFoundation\Request $request
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function registerAction(Request $request)
     {
         $customer = new Customer();
         $form = $this->createForm(RegisterType::class, $customer);
-        
         $form->handleRequest($request);
-        
         if ($form->isValid()) {
             $em = $this->getDoctrine()
                 ->getManager();
@@ -76,25 +79,28 @@ class SecurityController extends Controller
             $em->flush();
 
             $this->get('logger')->info('customer activation token', [$activationToken]);
-            
+
             return $this->render(':customer/dashboard/security:registered.html.twig');
         }
 
         return $this->render('customer/dashboard/security/register.html.twig', [
-            'form' => $form->createView()
+            'form' => $form->createView(),
         ]);
     }
 
     /**
      * @Route(path="/activation/{activationToken}")
+     * @param String $activationToken
+     * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function activationAction($activationToken) {
+    public function activationAction($activationToken)
+    {
         $customer = $this->getDoctrine()
             ->getManager()
             ->getRepository('AppBundle:Customer')
             ->findOneBy([
                 'activationToken' => $activationToken,
-                'isActive' => false
+                'isActive' => false,
             ]);
 
         if (!$customer instanceof Customer) {
@@ -102,7 +108,6 @@ class SecurityController extends Controller
         }
 
         $customer->setIsActive(true);
-        
         $this->getDoctrine()
             ->getManager()
             ->flush();

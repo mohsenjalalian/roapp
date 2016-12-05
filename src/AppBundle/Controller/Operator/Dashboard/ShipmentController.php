@@ -8,7 +8,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use AppBundle\Entity\Shipment;
-use AppBundle\Form\ShipmentType;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use r;
@@ -43,12 +42,11 @@ class ShipmentController extends Controller
             $request->query->getInt('page', 1)/*page number*/,
             5/*limit per page*/
         );
-        
-        return $this->render
-        (
+
+        return $this->render(
             'operator/dashboard/shipment/index.html.twig',
             [
-                'pagination' => $pagination
+                'pagination' => $pagination,
             ]
         );
     }
@@ -77,11 +75,11 @@ class ShipmentController extends Controller
 
         $deleteForm = $this->createDeleteForm($shipment);
 
-        return $this->render('operator/dashboard/shipment/show.html.twig', array(
+        return $this->render('operator/dashboard/shipment/show.html.twig', [
             'shipment' => $shipment,
-            'tracking_token' =>$trackingToken,
+            'tracking_token' => $trackingToken,
             'delete_form' => $deleteForm->createView(),
-        ));
+        ]);
     }
 
     /**
@@ -89,7 +87,7 @@ class ShipmentController extends Controller
      *
      * @Route("/{id}/edit", name="app_operator_dashboard_shipment_edit")
      * @Method({"GET", "POST"})
-     * @param Request $request
+     * @param Request  $request
      * @param Shipment $shipment
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
      */
@@ -104,14 +102,14 @@ class ShipmentController extends Controller
             $em->persist($shipment);
             $em->flush();
 
-            return $this->redirectToRoute('app_operator_dashboard_shipment_edit', array('id' => $shipment->getId()));
+            return $this->redirectToRoute('app_operator_dashboard_shipment_edit', ['id' => $shipment->getId()]);
         }
 
-        return $this->render('operator/dashboard/shipment/edit.html.twig', array(
+        return $this->render('operator/dashboard/shipment/edit.html.twig', [
             'shipment' => $shipment,
             'edit_form' => $editForm->createView(),
             'delete_form' => $deleteForm->createView(),
-        ));
+        ]);
     }
 
     /**
@@ -119,7 +117,7 @@ class ShipmentController extends Controller
      *
      * @Route("/delete/{id}", name="app_operator_dashboard_shipment_delete")
      * @Method("DELETE")
-     * @param Request $request
+     * @param Request  $request
      * @param Shipment $shipment
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
@@ -136,34 +134,18 @@ class ShipmentController extends Controller
 
         return $this->redirectToRoute('app_operator_dashboard_shipment_index');
     }
-
-    /**
-     * Creates a form to delete a Shipment entity.
-     *
-     * @param Shipment $shipment The Shipment entity
-     *
-     * @return \Symfony\Component\Form\Form The form
-     */
-    private function createDeleteForm(Shipment $shipment)
-    {
-        return $this->createFormBuilder()
-            ->setAction($this->generateUrl('app_operator_dashboard_shipment_delete', array('id' => $shipment->getId())))
-            ->setMethod('DELETE')
-            ->getForm()
-        ;
-    }
-
     /**
      * @Route("/list",name="app_operator_dashboard_shipment_list")
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function listAction(Request $request){
+    public function listAction(Request $request)
+    {
         $query = $this->getDoctrine()
             ->getRepository('AppBundle:Shipment')
             ->createQueryBuilder('s')
             ->where('s.status=:notAssign')
-            ->setParameter('notAssign',0)
+            ->setParameter('notAssign', 0)
             ->orderBy('s.pickUpTime', 'Asc')
             ->getQuery()
         ;
@@ -178,7 +160,7 @@ class ShipmentController extends Controller
         return $this->render(
             ":operator/dashboard/shipment:list.html.twig",
             [
-                'pagination' => $pagination
+                'pagination' => $pagination,
             ]
         );
     }
@@ -188,13 +170,14 @@ class ShipmentController extends Controller
      * @param Request $request
      * @return JsonResponse
      */
-    public function loadMapAction (Request $request) {
+    public function loadMapAction(Request $request)
+    {
 
             $conn = r\connect('localhost', '28015', 'roapp', '09126354397');
         $result = r\table('shipment')
             ->filter(
                 [
-                    'tracking_token' => $request->get('token')
+                    'tracking_token' => $request->get('token'),
                 ]
             )
             ->run($conn);
@@ -210,7 +193,7 @@ class ShipmentController extends Controller
             ->limit(4)
             ->run($conn);
 
-        $last_location = r\table('driver_location')
+        $lastLocation = r\table('driver_location')
             ->filter(
                 [
                     'shipment_id' => $id,
@@ -224,12 +207,12 @@ class ShipmentController extends Controller
         foreach ($cursor as $value) {
             $output[$counter]['lat'] = $value->getArrayCopy()['lat'];
             $output[$counter]['lng'] = $value->getArrayCopy()['lng'];
-            $output[$counter]['lastLat'] = $last_location[0]->getArrayCopy()['lat'];
-            $output[$counter]['lastLng'] = $last_location[0]->getArrayCopy()['lng'];
+            $output[$counter]['lastLat'] = $lastLocation[0]->getArrayCopy()['lat'];
+            $output[$counter]['lastLng'] = $lastLocation[0]->getArrayCopy()['lng'];
             $counter = $counter+1;
         }
 
-        return new JsonResponse($output );
+        return new JsonResponse($output);
     }
 
     /**
@@ -256,5 +239,20 @@ class ShipmentController extends Controller
         $logger->info('send notification to'." ".$customerId);
 
         return new Response($shipmentId);
+    }
+    /**
+     * Creates a form to delete a Shipment entity.
+     *
+     * @param Shipment $shipment The Shipment entity
+     *
+     * @return \Symfony\Component\Form\Form The form
+     */
+    private function createDeleteForm(Shipment $shipment)
+    {
+        return $this->createFormBuilder()
+            ->setAction($this->generateUrl('app_operator_dashboard_shipment_delete', ['id' => $shipment->getId()]))
+            ->setMethod('DELETE')
+            ->getForm()
+            ;
     }
 }

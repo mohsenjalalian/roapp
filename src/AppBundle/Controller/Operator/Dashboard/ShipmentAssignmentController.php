@@ -4,7 +4,6 @@ namespace AppBundle\Controller\Operator\Dashboard;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use AppBundle\Entity\Shipment;
 use AppBundle\Entity\Driver;
@@ -17,11 +16,10 @@ use AppBundle\Entity\Driver;
  */
 class ShipmentAssignmentController extends Controller
 {
-    
     /**
      * @Route("/match/{shipment}/{driver}",name="app_operator_dashboard_shipment_assignment_match")
      * @param Shipment $shipment
-     * @param Driver $driver
+     * @param Driver   $driver
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
      */
     public function matchAction(Shipment $shipment = null, Driver $driver = null)
@@ -38,7 +36,7 @@ class ShipmentAssignmentController extends Controller
                 return $this->render(
                     ":operator/dashboard/shipmentAssignment:errorAssignShipment.html.twig",
                     [
-                        'shipmentId'=>$shipment->getId()
+                        'shipmentId' => $shipment->getId(),
                     ]
                 );
             }
