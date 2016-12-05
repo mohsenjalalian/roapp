@@ -2,9 +2,6 @@
 
 namespace AppBundle\Utils\Services;
 
-
-use AppBundle\Entity\Person;
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManager;
 
 /**
@@ -17,7 +14,7 @@ class NotificationService
     const URL = 'https://fcm.googleapis.com/fcm/send';
     const HEADERS = [
         'Authorization:key = AIzaSyBJaQ9dbnGXZbWoNu70nibNsUajGUj2GpA',
-        'Content-Type: application/json'
+        'Content-Type: application/json',
     ];
 
     /**
@@ -34,7 +31,7 @@ class NotificationService
      * SendNotification constructor.
      *
      * @param EntityManager $entityManager
-     * @param array $firebaseConfig
+     * @param array         $firebaseConfig
      */
     public function __construct($entityManager, $firebaseConfig)
     {
@@ -43,7 +40,7 @@ class NotificationService
     }
 
     /**
-     * @param $data
+     * @param array $data
      * @deprecated
      * @return bool
      */
@@ -52,7 +49,7 @@ class NotificationService
         $sendUrl = 'https://fcm.googleapis.com/fcm/send';
         $headers = array(
             'Authorization:key = AIzaSyBJaQ9dbnGXZbWoNu70nibNsUajGUj2GpA',
-            'Content-Type: application/json'
+            'Content-Type: application/json',
         );
         $title = $data['title'];
         $text = $data['body'];
@@ -63,20 +60,20 @@ class NotificationService
         curl_setopt($ch, CURLOPT_POST, true);
         curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST,0);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
         $fields = array(
             'notification' => array(
                 'title' => $title,
                 'body' => $text,
-                'tag' => $parameters
+                'tag' => $parameters,
             ),
-            'to' => '/topics/'.$topic
+            'to' => '/topics/'.$topic,
         );
         curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($fields));
         $result = curl_exec($ch);
-        if ($result===FALSE) {
-            die("curl deny:" . curl_error($ch));
+        if ($result === false) {
+            die("curl deny:".curl_error($ch));
         }
         curl_close($ch);
         // send request to driver
@@ -100,12 +97,12 @@ class NotificationService
             $ch,
             CURLOPT_HTTPHEADER,
             [
-                'Authorization:key = ' . $this->firebaseConfig['authorization_key'],
-                'Content-Type: application/json'
+                'Authorization:key = '.$this->firebaseConfig['authorization_key'],
+                'Content-Type: application/json',
             ]
         );
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST,0);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
         curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($keysArray));
         $result = curl_exec($ch);
