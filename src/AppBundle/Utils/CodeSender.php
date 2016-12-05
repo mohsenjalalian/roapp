@@ -1,6 +1,7 @@
 <?php
 
 namespace AppBundle\Utils;
+
 use AppBundle\Entity\Customer;
 use AppBundle\Entity\Driver;
 use AppBundle\Entity\Shipment;
@@ -30,10 +31,10 @@ class CodeSender
 
     /**
      * CodeSender constructor.
-     * 
-     * @param NotificationService     $notificationService Notification service
-     * @param Sms                     $smsService          SMS service
-     * @param TranslatorInterface     $translator          Translator
+     *
+     * @param NotificationService $notificationService Notification service
+     * @param Sms                 $smsService          SMS service
+     * @param TranslatorInterface $translator          Translator
      */
     public function __construct($notificationService, $smsService, $translator)
     {
@@ -44,12 +45,11 @@ class CodeSender
 
     /**
      * Sends codes to driver and receiver
-     * 
+     *
      * @param Shipment $shipment Shipment entity
      */
     public function send($shipment)
     {
-        
         $shipment->getAssignments()
             ->containsKey('status', ShipmentAssignment::STATUS_ACCEPTED);
         /**
@@ -60,20 +60,20 @@ class CodeSender
          * @var Customer
          */
         $receiver = new Customer();
-        
+
         $driverCode = 0;
         $receiverCode = 0;
-        
+
         // Send sms
         $this->smsService->send(
             $driver->getPhone(),
-            $this->translator->trans('Please give this code to consignment sender:') . $driverCode
+            $this->translator->trans('Please give this code to consignment sender:').$driverCode
         );
         $this->smsService->send(
             $receiver->getPhone(),
-            $this->translator->trans('Please give this code to driver:') . $receiverCode
+            $this->translator->trans('Please give this code to driver:').$receiverCode
         );
-        
+
         // Send notification
     }
 }

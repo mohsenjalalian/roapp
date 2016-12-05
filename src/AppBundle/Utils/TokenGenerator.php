@@ -2,17 +2,15 @@
 
 namespace AppBundle\Utils;
 
-
+/**
+ * Class TokenGenerator
+ * @package AppBundle\Utils
+ */
 class TokenGenerator
 {
     /**
-     * @var string
-     */
-    private $key;
-
-    /**
      * TokenGenerator constructor.
-     * 
+     *
      */
     public function __construct()
     {
@@ -22,6 +20,7 @@ class TokenGenerator
      * Generate token based on key.
      *
      * @param string $key
+     * @return int
      */
     public function generate($key)
     {

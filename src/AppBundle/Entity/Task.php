@@ -101,7 +101,7 @@ class Task
      *
      * @return Task
      */
-    public function setShipment(\AppBundle\Entity\Shipment $shipment = null)
+    public function setShipment(Shipment $shipment = null)
     {
         $this->shipment = $shipment;
 

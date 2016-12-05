@@ -136,7 +136,7 @@ class ScoreHistory
      *
      * @return ScoreHistory
      */
-    public function setPerson(\AppBundle\Entity\Person $person = null)
+    public function setPerson(Person $person = null)
     {
         $this->person = $person;
 
@@ -160,7 +160,7 @@ class ScoreHistory
      *
      * @return ScoreHistory
      */
-    public function setAuthor(\AppBundle\Entity\Person $author = null)
+    public function setAuthor(Person $author = null)
     {
         $this->author = $author;
 

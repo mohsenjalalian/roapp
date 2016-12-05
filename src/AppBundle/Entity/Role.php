@@ -2,6 +2,7 @@
 
 namespace AppBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\ManyToMany;
 
@@ -35,21 +36,21 @@ class Role
      * @ORM\Column(name="label", type="string", length=255)
      */
     private $label;
-    
+
     /**
      * @var int
-     * 
+     *
      * @ManyToMany(targetEntity="AppBundle\Entity\Operator", mappedBy="roleId")
      */
-    
+
     private $operatorId;
-    
+
     /**
      * Constructor
      */
     public function __construct()
     {
-        $this->operatorId = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->operatorId = new ArrayCollection();
     }
 
     /**
@@ -117,7 +118,7 @@ class Role
      *
      * @return Role
      */
-    public function addOperatorId(\AppBundle\Entity\Operator $operatorId)
+    public function addOperatorId(Operator $operatorId)
     {
         $this->operatorId[] = $operatorId;
 
@@ -129,7 +130,7 @@ class Role
      *
      * @param \AppBundle\Entity\Operator $operatorId
      */
-    public function removeOperatorId(\AppBundle\Entity\Operator $operatorId)
+    public function removeOperatorId(Operator $operatorId)
     {
         $this->operatorId->removeElement($operatorId);
     }

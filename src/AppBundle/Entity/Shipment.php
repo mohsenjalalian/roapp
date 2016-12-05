@@ -2,6 +2,7 @@
 
 namespace AppBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\JoinColumn;
 use Doctrine\ORM\Mapping\OneToMany;
@@ -30,12 +31,12 @@ class Shipment
     const STATUS_WAITING_FOR_PAYMENT = 11;
 
     const TRACK_ENABLED_STATUSES = [
-        self::STATUS_ON_PICK_UP
+        self::STATUS_ON_PICK_UP,
     ];
 
     const TRACK_DISABLED_STATUSES = [
         self::STATUS_ASSIGNMENT_FAIL,
-        self::STATUS_FINISH
+        self::STATUS_FINISH,
     ];
 
     /**
@@ -293,7 +294,7 @@ class Shipment
      *
      * @return Shipment
      */
-    public function setOwnerAddress(\AppBundle\Entity\Address $ownerAddress = null)
+    public function setOwnerAddress(Address $ownerAddress = null)
     {
         $this->ownerAddress = $ownerAddress;
 
@@ -338,7 +339,8 @@ class Shipment
      */
     public function __construct()
     {
-        $this->photos = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->photos = new ArrayCollection();
+        $this->assignments = new ArrayCollection();
         $this->photoFiles = [];
     }
 
@@ -349,7 +351,7 @@ class Shipment
      *
      * @return Shipment
      */
-    public function addPhoto(\AppBundle\Entity\Media $photo)
+    public function addPhoto(Media $photo)
     {
         $this->photos[] = $photo;
 
@@ -361,7 +363,7 @@ class Shipment
      *
      * @param \AppBundle\Entity\Media $photo
      */
-    public function removePhoto(\AppBundle\Entity\Media $photo)
+    public function removePhoto(Media $photo)
     {
         $this->photos->removeElement($photo);
     }
@@ -383,7 +385,7 @@ class Shipment
      *
      * @return Shipment
      */
-    public function addAssignment(\AppBundle\Entity\ShipmentAssignment $assignment)
+    public function addAssignment(ShipmentAssignment $assignment)
     {
         $this->assignments[] = $assignment;
 
@@ -395,7 +397,7 @@ class Shipment
      *
      * @param \AppBundle\Entity\ShipmentAssignment $assignment
      */
-    public function removeAssignment(\AppBundle\Entity\ShipmentAssignment $assignment)
+    public function removeAssignment(ShipmentAssignment $assignment)
     {
         $this->assignments->removeElement($assignment);
     }
@@ -417,7 +419,7 @@ class Shipment
      *
      * @return Shipment
      */
-    public function setOtherAddress(\AppBundle\Entity\Address $otherAddress = null)
+    public function setOtherAddress(Address $otherAddress = null)
     {
         $this->otherAddress = $otherAddress;
 
@@ -441,7 +443,7 @@ class Shipment
      *
      * @return Shipment
      */
-    public function setOther(\AppBundle\Entity\Customer $other = null)
+    public function setOther(Customer $other = null)
     {
         $this->other = $other;
 
@@ -461,7 +463,7 @@ class Shipment
     /**
      * Add photo
      *
-     * @param \AppBundle\Entity\Media $photo
+     * @param \AppBundle\Entity\Media $photoFile
      *
      * @return Shipment
      */
@@ -475,7 +477,7 @@ class Shipment
     /**
      * Remove photo
      *
-     * @param $photo
+     * @param \AppBundle\Entity\Media $photoFile
      */
     public function removePhotoFile($photoFile)
     {
@@ -527,7 +529,7 @@ class Shipment
      *
      * @return Shipment
      */
-    public function setInvoice(\AppBundle\Entity\Invoice $invoice = null)
+    public function setInvoice(Invoice $invoice = null)
     {
         $this->invoice = $invoice;
 
@@ -551,7 +553,7 @@ class Shipment
      *
      * @return Shipment
      */
-    public function addPayment(\AppBundle\Entity\Payment $payment)
+    public function addPayment(Payment $payment)
     {
         $this->payment[] = $payment;
 
@@ -563,7 +565,7 @@ class Shipment
      *
      * @param \AppBundle\Entity\Payment $payment
      */
-    public function removePayment(\AppBundle\Entity\Payment $payment)
+    public function removePayment(Payment $payment)
     {
         $this->payment->removeElement($payment);
     }

@@ -1,11 +1,12 @@
 <?php
 
 namespace AppBundle\Utils\Notification\Messages;
+
 use Doctrine\ORM\EntityManager;
 
 /**
  * Class BulkMessage
- * 
+ *
  * @package AppBundle\Utils\Notification\Messages
  */
 class BroadcastMessage extends AbstractMessage
@@ -27,12 +28,13 @@ class BroadcastMessage extends AbstractMessage
 
     /**
      * @inheritdoc
+     * @return array
      */
     public function getParameters()
     {
         $keysArray = [
             'to' => $this->topic,
-            'notification' => $this->createNotificationArray()
+            'notification' => $this->createNotificationArray(),
         ];
 
         return $keysArray;

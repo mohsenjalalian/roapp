@@ -24,8 +24,8 @@ class Driver extends Person implements UserInterface
 
     /**
      * @inheritdoc
+     * @return array
      */
-
     public function getRoles()
     {
         return array('ROLE_DRIVER');
@@ -75,7 +75,7 @@ class Driver extends Person implements UserInterface
     public function setUsername($username)
     {
         $this->phone = $username;
-        
+
         return $this;
     }
 
@@ -84,10 +84,14 @@ class Driver extends Person implements UserInterface
      */
     public function __construct()
     {
+        parent::__construct();
         $this->status = self::STATUS_FREE;
         $this->isActive = true;
     }
-    
+
+    /**
+     * @return string
+     */
     public function __toString()
     {
         return (string) $this->getUsername();

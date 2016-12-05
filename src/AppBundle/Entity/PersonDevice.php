@@ -408,11 +408,10 @@ class PersonDevice
     /**
      * @Assert\Callback
      * @param ExecutionContextInterface $context
-     * @param $payload
+     * check if the name is actually a fake name
      */
-    public function validate(ExecutionContextInterface $context, $payload)
+    public function validate(ExecutionContextInterface $context)
     {
-        // check if the name is actually a fake name
         if (empty($this->getLatitude()) xor empty($this->getLongitude())) {
             if (empty($this->getLatitude())) {
                 $context->buildViolation('This value should not be blank')

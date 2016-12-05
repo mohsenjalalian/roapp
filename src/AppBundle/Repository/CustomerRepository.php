@@ -1,6 +1,7 @@
 <?php
 
 namespace AppBundle\Repository;
+
 use AppBundle\Entity\Customer;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Security\User\UserLoaderInterface;
@@ -15,6 +16,8 @@ class CustomerRepository extends EntityRepository implements UserLoaderInterface
 {
     /**
      * @inheritdoc
+     * @param string $username
+     * @return object
      */
     public function loadUserByUsername($username)
     {
@@ -26,11 +29,15 @@ class CustomerRepository extends EntityRepository implements UserLoaderInterface
             ->getOneOrNullResult();
     }
 
+    /**
+     * @param string $phoneNumber
+     * @return Customer
+     */
     public function findOrCreateByPhone($phoneNumber)
     {
         $customer  = $this->findBy(
             [
-                'phone' => $phoneNumber
+                'phone' => $phoneNumber,
             ]
         );
         if ($customer) {
@@ -42,7 +49,7 @@ class CustomerRepository extends EntityRepository implements UserLoaderInterface
             $customerObj->setIsActive(true);
             $em = $this->getEntityManager();
             $em->persist($customerObj);
-            
+
             $em->flush();
 
             return $customerObj;

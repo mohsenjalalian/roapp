@@ -5,12 +5,14 @@ namespace AppBundle\Utils;
 use AppBundle\Entity\ShipmentAssignment;
 use AppBundle\Entity\Driver;
 use AppBundle\Entity\Task;
-use AppBundle\Utils\NotificationService;
 use Doctrine\ORM\EntityManager;
 use AppBundle\Entity\Shipment;
-use Symfony\Component\Translation\Translator;
 use Symfony\Component\Translation\TranslatorInterface;
 
+/**
+ * Class AssignmentShipment
+ * @package AppBundle\Utils
+ */
 class AssignmentShipment
 {
     /**
@@ -19,7 +21,7 @@ class AssignmentShipment
     private $entityManager;
 
     /**
-     * @var NotificationService
+     * @var \AppBundle\Utils\NotificationService
      */
     private $notificationService;
 
@@ -30,28 +32,38 @@ class AssignmentShipment
 
     /**
      * AssignmentShipment constructor.
-     * @param EntityManager $entityManager
+     * @param EntityManager       $entityManager
      * @param NotificationService $notificationService
      * @param TranslatorInterface $translation
      * @internal param NotificationService $NotificationService
      * @internal param NotificationService $sendNotification
      */
-
-    public function __construct(EntityManager $entityManager ,NotificationService $notificationService ,TranslatorInterface $translation)
+    public function __construct(EntityManager $entityManager, NotificationService $notificationService, TranslatorInterface $translation)
     {
         $this->entityManager = $entityManager;
         $this->notificationService = $notificationService;
         $this->translations = $translation;
     }
-    public function sendRequest(Shipment $shipment,Driver $driver)
+
+    /**
+     * @param Shipment $shipment
+     * @param Driver   $driver
+     * @return bool
+     */
+    public function sendRequest(Shipment $shipment, Driver $driver)
     {
-        $assignmentObj = $this->setWaitingAssign($shipment,$driver);
+        $assignmentObj = $this->setWaitingAssign($shipment, $driver);
         $data = $this->initDataForSend($assignmentObj);
         $this->notificationService->sendNotification($data);
         $this->setExpireTime($assignmentObj);
 
         return true;
     }
+
+    /**
+     * @param ShipmentAssignment $assignmentObj
+     * @return array
+     */
     public function initDataForSend(ShipmentAssignment $assignmentObj)
     {
         $ownerDescription =  $assignmentObj->getShipment()
@@ -84,35 +96,45 @@ class AssignmentShipment
                     'shipmentPrice' => $shipmentPrice,
                     'shipmentValue' => $shipmentValue,
                     'shipmentPickUpTime' => $shipmentPickUpTime,
-                    'shipmentDescription' => $shipmentDescription
-                ]
+                    'shipmentDescription' => $shipmentDescription,
+                ],
             ];
 
         return $data;
     }
-    public function setWaitingAssign(Shipment $shipment , Driver $driver)
+
+    /**
+     * @param Shipment $shipment
+     * @param Driver   $driver
+     * @return ShipmentAssignment
+     */
+    public function setWaitingAssign(Shipment $shipment, Driver $driver)
     {
-        $ShipmentAssignmentObj = new ShipmentAssignment();
+        $shipmentAssignmentObj = new ShipmentAssignment();
         $em = $this->entityManager;
         // waiting for driver answer
         $driver->setStatus(Driver::STATUS_IN_PROGRESS); // driver status = waiting
         $shipment->setStatus(Shipment::STATUS_ASSIGNMENT_SENT); // shipment status = waiting
-        $ShipmentAssignmentObj->setShipment($shipment);
-        $ShipmentAssignmentObj->setDriver($driver);
-        $ShipmentAssignmentObj
+        $shipmentAssignmentObj->setShipment($shipment);
+        $shipmentAssignmentObj->setDriver($driver);
+        $shipmentAssignmentObj
             ->setReason(
                 $this->translations->trans("waiting")
             );
-        $ShipmentAssignmentObj->setStatus(ShipmentAssignment::STATUS_WAITING);
+        $shipmentAssignmentObj->setStatus(ShipmentAssignment::STATUS_WAITING);
 
         $em->persist($driver);
         $em->persist($shipment);
-        $em->persist($ShipmentAssignmentObj);
-        $assignmentId = $ShipmentAssignmentObj;
+        $em->persist($shipmentAssignmentObj);
+        $assignmentId = $shipmentAssignmentObj;
         $em->flush();
 
         return $assignmentId;
     }
+
+    /**
+     * @param ShipmentAssignment $assignment
+     */
     public function setExpireTime(ShipmentAssignment $assignment)
     {
         $em = $this->entityManager;
@@ -129,6 +151,10 @@ class AssignmentShipment
         $em->persist($assignment);
         $em->flush();
     }
+
+    /**
+     * @param ShipmentAssignment $assignment
+     */
     public function timeOutAction(ShipmentAssignment $assignment)
     {
         $em = $this->entityManager;
@@ -148,6 +174,11 @@ class AssignmentShipment
         $em->persist($assignment);
         $em->flush();
     }
+
+    /**
+     * @param ShipmentAssignment $assignment
+     * @return bool
+     */
     public function isExpiredAssignTime(ShipmentAssignment $assignment)
     {
         $currentTime = new \DateTime();
@@ -158,6 +189,10 @@ class AssignmentShipment
             return false;
         }
     }
+
+    /**
+     * @param ShipmentAssignment $assignment
+     */
     public function acceptRequest(ShipmentAssignment $assignment)
     {
         $em = $this->entityManager;
@@ -183,10 +218,14 @@ class AssignmentShipment
         $em->persist($assignment);
         $em->flush();
     }
+
+    /**
+     * @param shipment $shipment
+     */
     public function createTasks($shipment)
     {
         $em = $this->entityManager;
-        $taskTypes = ['pickup','deliver'];
+        $taskTypes = ['pickup', 'deliver'];
         foreach ($taskTypes as $key => $type) {
             $taskTblObj = new Task();
             $taskTblObj->setShipment($shipment);
@@ -197,7 +236,12 @@ class AssignmentShipment
             $em->flush();
         }
     }
-    public function rejectRequest(ShipmentAssignment $assignment , $reason)
+
+    /**
+     * @param ShipmentAssignment $assignment
+     * @param string             $reason
+     */
+    public function rejectRequest(ShipmentAssignment $assignment, $reason)
     {
         $em = $this->entityManager;
         $assignment
@@ -215,13 +259,19 @@ class AssignmentShipment
         $em->flush();
     }
 
-    function generateExchangeCode($length = 6) {
+    /**
+     * @param int $length
+     * @return int
+     */
+    public function generateExchangeCode($length = 6)
+    {
         $characters = '0123456789';
         $charactersLength = strlen($characters);
         $randomCode = '';
         for ($i = 0; $i < $length; $i++) {
             $randomCode .= $characters[rand(0, $charactersLength - 1)];
         }
+
         return intval($randomCode);
     }
 }

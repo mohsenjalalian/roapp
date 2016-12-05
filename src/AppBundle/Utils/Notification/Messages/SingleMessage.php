@@ -6,7 +6,7 @@ use Doctrine\ORM\EntityManager;
 
 /**
  * Class SingleMessage
- * 
+ *
  * @package AppBundle\Utils\Notification\Messages
  */
 class SingleMessage extends AbstractMessage
@@ -19,7 +19,7 @@ class SingleMessage extends AbstractMessage
     /**
      * SingleMessage constructor.
      *
-     * @param Person        $person Person to send notification
+     * @param Person        $person
      * @param EntityManager $entityManager
      */
     public function __construct($person, $entityManager)
@@ -30,6 +30,7 @@ class SingleMessage extends AbstractMessage
 
     /**
      * @inheritdoc
+     * @return array
      */
     public function getParameters()
     {
@@ -39,9 +40,9 @@ class SingleMessage extends AbstractMessage
         $notificationToken = $personActiveDevice->getNotificationToken();
         $keysArray = [
             'to' => $notificationToken,
-            'notification' => $this->createNotificationArray()
+            'notification' => $this->createNotificationArray(),
         ];
-        
+
         return $keysArray;
     }
 }

@@ -1,6 +1,7 @@
 <?php
 
 namespace AppBundle\Repository;
+
 use Doctrine\ORM\EntityRepository;
 
 /**
@@ -11,30 +12,39 @@ use Doctrine\ORM\EntityRepository;
  */
 class AddressRepository extends EntityRepository
 {
+    /**
+     * @param int $customerId
+     * @return array
+     */
     public function getPublicAddressCustomer($customerId)
     {
         return $this->createQueryBuilder('a')
             ->andWhere('a.customer=:customerId')
             ->andWhere('a.isPublic=:public')
             ->orWhere('a.creator=:customerId')
-            ->setParameter('customerId',$customerId)
-            ->setParameter('public',true)
+            ->setParameter('customerId', $customerId)
+            ->setParameter('public', true)
             ->getQuery()
             ->getResult();
     }
-    
+
     // get customer's public address OR get addresses that current customer create that for other customer
-    public function getPublicAddressOrCreator($customerId=null,$creatorId){
+    /**
+     * @param int $creatorId
+     * @param int $customerId
+     * @return array
+     */
+    public function getPublicAddressOrCreator($creatorId, $customerId = null)
+    {
         return $this->createQueryBuilder('a')
             ->andWhere('a.customer=:customerId')
             ->andWhere('a.isPublic=:public')
             ->orWhere("a.creator=:creatorId AND a.isPublic=:noPublic AND a.customer=:customerId")
-            ->setParameter('customerId',$customerId)
-            ->setParameter('public',true)
-            ->setParameter('creatorId',$creatorId)
-            ->setParameter('noPublic',false)
+            ->setParameter('customerId', $customerId)
+            ->setParameter('public', true)
+            ->setParameter('creatorId', $creatorId)
+            ->setParameter('noPublic', false)
             ->getQuery()
             ->getResult();
     }
-    
 }

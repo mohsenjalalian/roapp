@@ -5,7 +5,7 @@ use Doctrine\ORM\EntityManager;
 
 /**
  * Class AbstractMessage
- * 
+ *
  * @package AppBundle\Utils\Notification\Messages
  */
 abstract class AbstractMessage
@@ -14,38 +14,37 @@ abstract class AbstractMessage
      * @var EntityManager $entityManager
      */
     protected $entityManager;
-    
     /**
      * Indicates notification title
-     * 
+     *
      * @var string
      */
     protected $title = null;
 
     /**
      * Indicates notification body text
-     * 
+     *
      * @var string
      */
     protected $body = null;
 
     /**
      * Indicates the action associated with a user click on the notification
-     * 
+     *
      * @var string
      */
     protected $clickAction = null;
 
     /**
      * Indicates a sound to play when the device receives a notification
-     * 
+     *
      * @var string
      */
     protected $sound = null;
 
     /**
      * Indicates notification icon(Android)
-     * 
+     *
      * @var string
      */
     protected $icon = null;
@@ -53,28 +52,28 @@ abstract class AbstractMessage
     /**
      * Indicates whether each notification results in a new entry in
      * the notification drawer on Android(Android)
-     * 
+     *
      * @var string
      */
     protected $tag = null;
 
     /**
      * Indicates color of the icon, expressed in #rrggbb format(Android)
-     * 
+     *
      * @var string
      */
     protected $color = null;
 
     /**
      * Indicates the badge on the client app home icon(IOS)
-     * 
+     *
      * @var string
      */
     protected $badge = null;
 
     /**
      * AbstractMessage constructor.
-     * 
+     *
      * @param EntityManager $entityManager
      */
     public function __construct($entityManager)
@@ -84,10 +83,10 @@ abstract class AbstractMessage
 
     /**
      * Get keys array
-     * 
+     *
      * @return array
      */
-    public abstract function getParameters();
+    abstract public function getParameters();
 
     /**
      * @return string

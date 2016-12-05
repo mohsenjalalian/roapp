@@ -2,7 +2,6 @@
 
 namespace AppBundle\Repository;
 
-use AppBundle\Entity\ShipmentAssignment;
 use Doctrine\ORM\EntityRepository;
 
 /**

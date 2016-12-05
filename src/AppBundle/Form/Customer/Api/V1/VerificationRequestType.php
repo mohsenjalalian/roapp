@@ -3,10 +3,13 @@
 namespace AppBundle\Form\Customer\Api\V1;
 
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
+/**
+ * Class VerificationRequestType
+ * @package AppBundle\Form\Customer\Api\V1
+ */
 class VerificationRequestType extends AbstractType
 {
     /**
