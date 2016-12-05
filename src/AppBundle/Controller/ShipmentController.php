@@ -8,6 +8,10 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use r;
 
+/**
+ * Class ShipmentController
+ * @package AppBundle\Controller
+ */
 class ShipmentController extends Controller
 {
     /**
@@ -22,17 +26,19 @@ class ShipmentController extends Controller
         $result = r\table('shipment')
             ->filter(
                 [
-                    'tracking_token' => $request->get('token')
+                    'tracking_token' => $request->get('token'),
                 ]
             )
             ->run($conn);
         /** @var \ArrayObject $current */
         $current = $result->current();
         $trackingToken = $current->getArrayCopy()['tracking_token'];
-       return $this->render("track_shipment.html.twig",
-           [
-               'tracking_token' => $trackingToken
-           ]
-       );
+
+        return $this->render(
+            "track_shipment.html.twig",
+            [
+               'tracking_token' => $trackingToken,
+            ]
+        );
     }
 }

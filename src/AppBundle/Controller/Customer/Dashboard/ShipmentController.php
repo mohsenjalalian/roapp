@@ -174,11 +174,14 @@ class ShipmentController extends Controller
     /**
      * @Route("/load_map",name="app_customer_dashboard_shipment_load_map")
      * @param Request $request
-     * @return JsonResponse
+     * @return JsonResponse | null
      */
     public function loadMapAction(Request $request)
     {
         $conn = r\connect('localhost', '28015', 'roapp', '09126354397');
+        if (!isset($conn)) {
+            return new JsonResponse(null);
+        }
         $result = r\table('shipment')
             ->filter(
                 [
@@ -186,6 +189,9 @@ class ShipmentController extends Controller
                 ]
             )
             ->run($conn);
+        if (!isset($result)) {
+            return new JsonResponse(null);
+        }
         /** @var \ArrayObject $current */
         $current = $result->current();
         $id = $current->getArrayCopy()['id'];
@@ -197,7 +203,10 @@ class ShipmentController extends Controller
             )
             ->limit(4)
             ->run($conn);
-
+        if (!isset($cursor)) {
+            return new JsonResponse(null);
+        }
+        /** @var \ArrayObject $lastLocation */
         $lastLocation = r\table('driver_location')
             ->filter(
                 [
@@ -207,9 +216,13 @@ class ShipmentController extends Controller
             ->orderBy(r\desc('date_time'))
             ->limit(1)
             ->run($conn);
-
+        if (!isset($lastLocation)) {
+            return new JsonResponse(null);
+        }
         $counter = 0;
+        $output = [];
         foreach ($cursor as $value) {
+            /** @var \ArrayObject $value */
             $output[$counter]['lat'] = $value->getArrayCopy()['lat'];
             $output[$counter]['lng'] = $value->getArrayCopy()['lng'];
             $output[$counter]['lastLat'] = $lastLocation[0]->getArrayCopy()['lat'];
@@ -217,7 +230,7 @@ class ShipmentController extends Controller
             $counter = $counter+1;
         }
 
-        return new JsonResponse($output);
+            return new JsonResponse($output);
     }
 
     /**
@@ -252,10 +265,9 @@ class ShipmentController extends Controller
 
     /**
      * @Route("/load_other_form",name="app_customer_dashboard_shipment_load_other_form")
-     * @param Request $request
      * @return Response
      */
-    public function loadOtherAddressFormAction(Request $request)
+    public function loadOtherAddressFormAction()
     {
         $addressEntity = new Address();
         $addressForm = $this
@@ -306,8 +318,11 @@ class ShipmentController extends Controller
                     $currentCustomer
                 );
             // check customer has any address ??
+            $addressId = [];
+            $description = [];
             if ($address) {
                 foreach ($address as $ind => $val) {
+                    /** @var Address $val */
                     $description[] = $val->getDescription();
                     $addressId[] = $val->getId();
                 }
