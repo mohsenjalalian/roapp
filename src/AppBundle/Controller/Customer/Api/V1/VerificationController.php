@@ -100,7 +100,7 @@ class VerificationController extends Controller
                     ->setData(
                         [
                             "message" => $this->get('translator')
-                                ->trans('Maximum verification number reached.'),
+                                ->trans('You reached maximum verification request number.'),
                         ]
                     )
                     ->setStatus(false);
@@ -122,7 +122,7 @@ class VerificationController extends Controller
                 ->setData(
                     [
                         "message" => $this->get('translator')
-                            ->trans('Sending verification sms.'),
+                            ->trans('Sending verification sms'),
                     ]
                 )
                 ->setStatus(true);

@@ -7,8 +7,36 @@
                 <target>کد فعال سازی شما:</target>
             </trans-unit>
             <trans-unit id="maximum_verfication_request_number">
-                <source>You reached maximum verification request number.</source>
+                    <source>You reached maximum verification request number.</source>
                 <target>شما به حداکثر تعداد درخواست رسیده اید.</target>
+             </trans-unit>
+             <trans-unit id="Sending_verification_sms">
+                <source>Sending verification sms</source>
+                <target>ارسال پیام تایید</target>
+             </trans-unit>
+             <trans-unit id="Verification report: Person_device_not_found">
+                <source>Verification report: Person device not found</source>
+                <target>Verification report: Person device not found</target>
+             </trans-unit>
+             <trans-unit id="Verification report: Person Verified Successfully">
+                <source>Verification report: Person Verified Successfully</source>
+                <target>Verification report: Person Verified Successfully</target>
+             </trans-unit>
+             <trans-unit id="Please_give_this_code_to_consignment_sender:">
+                <source>Please give this code to consignment sender:</source>
+                <target>Please give this code to consignment sender:</target>
+             </trans-unit>
+             <trans-unit id="Please give this code to driver:">
+                <source>Please give this code to driver:</source>
+                <target>Please give this code to driver:</target>
+             </trans-unit>
+             <trans-unit id="Verification report: Customer device not found">
+                <source>Verification report: Customer device not found.</source>
+                <target>Verification report: Customer device not found.</target>
+             </trans-unit>
+             <trans-unit id="Verification report: Customer Verified Successfully">
+                <source>Verification report: Customer Verified Successfully.</source>
+                <target>Verification report: Customer Verified Successfully.</target>
              </trans-unit>
              <trans-unit id="waiting">
                 <source>waiting</source>
