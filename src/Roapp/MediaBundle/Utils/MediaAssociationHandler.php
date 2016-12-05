@@ -10,8 +10,11 @@ use Roapp\MediaBundle\Annotation\UploadableField;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\DependencyInjection\Container;
 use Doctrine\ORM\Mapping\ClassMetadataInfo;
-use Roapp\MediaBundle\Utils\MediaFile;
 
+/**
+ * Class MediaAssociationHandler
+ * @package Roapp\MediaBundle\Utils
+ */
 class MediaAssociationHandler
 {
     /**
@@ -39,7 +42,10 @@ class MediaAssociationHandler
      */
     private $fs;
 
-
+    /**
+     * MediaAssociationHandler constructor.
+     * @param \Symfony\Component\DependencyInjection\Container $container
+     */
     public function __construct(Container $container)
     {
         $this->reader = $container->get('annotation_reader');
@@ -49,6 +55,13 @@ class MediaAssociationHandler
         $this->fs = $container->get('filesystem');
     }
 
+    /**
+     * @param mixed               $entity
+     * @param \ReflectionProperty $reflectionProperty
+     * @param string              $mode
+     * @throws \Doctrine\ORM\Mapping\MappingException
+     * @throws \Exception
+     */
     public function handle(&$entity, \ReflectionProperty $reflectionProperty, $mode = 'persist')
     {
         if (!in_array($mode, ['persist', 'load'])) {
@@ -83,7 +96,6 @@ class MediaAssociationHandler
                 }
             } else {
                 if ($mode == 'persist') {
-
                     $this->hasManyPersistHandler($entity, $mediaName, $propertyName, $associationMediaPropertyName);
                 } else {
                     $this->hasManyLoadHandler($entity, $mediaName, $propertyName, $associationMediaPropertyName);
@@ -94,22 +106,31 @@ class MediaAssociationHandler
         }
     }
 
+    /**
+     * @param mixed  $entity
+     * @param string $mediaName
+     * @param string $propertyName
+     * @param string $associationMediaPropertyName
+     */
     private function hasOnePersistHandler($entity, $mediaName, $propertyName, $associationMediaPropertyName)
     {
         $mediaUploads = $this->accessor->getValue($entity, $propertyName);
         $mediaAssociation = $this->accessor->getValue($entity, $associationMediaPropertyName);
-
     }
 
+    /**
+     * @param mixed  $entity
+     * @param string $mediaName
+     * @param string $propertyName
+     * @param string $associationMediaPropertyName
+     */
     private function hasManyPersistHandler($entity, $mediaName, $propertyName, $associationMediaPropertyName)
     {
-
         $mediaUploads = $this->accessor->getValue($entity, $propertyName);
         /* @TODO please resolve mediaUploads value   */
-        if($mediaUploads == null){
+        if ($mediaUploads == null) {
             $mediaUploads = [];
         }
-//        $mediaUploadsIterator = $mediaUploads->getIterator();
         $newMedias = new ArrayCollection();
         $oldMedias = new ArrayCollection();
         foreach ($mediaUploads as $media) {
@@ -160,12 +181,12 @@ class MediaAssociationHandler
         $mediaEntities = $this->accessor->getValue($entity, $associationMediaPropertyName);
         /** @var ArrayCollection $mediaFiles */
         $mediaFiles = $this->accessor->getValue($entity, $propertyName);
-        
+
         if ($mediaFiles == null) {
             $mediaFiles = new ArrayCollection();
         }
         $mediaEntitiesIterator = $mediaEntities->getIterator();
-        
+
         while ($mediaEntitiesIterator->valid()) {
             /** @var Media $mediaEntity */
             $mediaEntity = $mediaEntitiesIterator->current();
