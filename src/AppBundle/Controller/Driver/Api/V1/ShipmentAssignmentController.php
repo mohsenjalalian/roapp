@@ -150,9 +150,10 @@ class ShipmentAssignmentController extends Controller
             ->getValue();
         $shipmentPhotos = $assignment->getShipment()
             ->getPhotoFiles();
+        $photoUrl = [];
         if ($shipmentPhotos) {
             foreach ($shipmentPhotos as $value) {
-                $photoUrl [] = $this->get("roapp_media.upload_manager")
+                $photoUrl[] = $this->get("roapp_media.upload_manager")
                    ->generateAbsoluteUrl($value->getMediaEntity());
             }
         } else {

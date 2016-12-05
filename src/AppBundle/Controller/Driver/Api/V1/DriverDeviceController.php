@@ -23,7 +23,7 @@ class DriverDeviceController extends Controller
     /**
      * @Security("is_granted('IS_AUTHENTICATED_ANONYMOUSLY')")
      * @param Request $request
-     * @return JsonResponse
+     * @return JsonResponse | Response
      * @Route()
      * @Method({"POST"})
      */

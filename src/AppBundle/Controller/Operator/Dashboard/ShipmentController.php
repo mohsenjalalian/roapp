@@ -173,7 +173,10 @@ class ShipmentController extends Controller
     public function loadMapAction(Request $request)
     {
 
-            $conn = r\connect('localhost', '28015', 'roapp', '09126354397');
+        $conn = r\connect('localhost', '28015', 'roapp', '09126354397');
+        if (!isset($conn)) {
+            return new JsonResponse(null);
+        }
         $result = r\table('shipment')
             ->filter(
                 [
@@ -181,6 +184,9 @@ class ShipmentController extends Controller
                 ]
             )
             ->run($conn);
+        if (!isset($result)) {
+            return new JsonResponse(null);
+        }
         /** @var \ArrayObject $current */
         $current = $result->current();
         $id = $current->getArrayCopy()['id'];
@@ -192,7 +198,10 @@ class ShipmentController extends Controller
             )
             ->limit(4)
             ->run($conn);
-
+        if (!isset($cursor)) {
+            return new JsonResponse(null);
+        }
+        /** @var \ArrayObject $lastLocation */
         $lastLocation = r\table('driver_location')
             ->filter(
                 [
@@ -202,9 +211,13 @@ class ShipmentController extends Controller
             ->orderBy(r\desc('date_time'))
             ->limit(1)
             ->run($conn);
-
+        if (!isset($lastLocation)) {
+            return new JsonResponse(null);
+        }
+        $output = [];
         $counter = 0;
         foreach ($cursor as $value) {
+            /** @var \ArrayObject $value */
             $output[$counter]['lat'] = $value->getArrayCopy()['lat'];
             $output[$counter]['lng'] = $value->getArrayCopy()['lng'];
             $output[$counter]['lastLat'] = $lastLocation[0]->getArrayCopy()['lat'];
