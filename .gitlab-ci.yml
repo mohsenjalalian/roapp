@@ -10,8 +10,8 @@ stages:
 
 check_phpcs:
     script:
-        - pear install PHP_CodeSniffer
-        - git clone https://github.com/leaphub/phpcs-symfony2-standard.git /usr/local/lib/php/PHP/CodeSniffer/Standards/Symfony2
-        - phpcs --config-set default_standard /usr/local/lib/php/PHP/CodeSniffer/Standards/Symfony2
-        - phpcs --standard=Symfony2 --extensions=php src/
+        - composer global require "squizlabs/php_codesniffer=*"
+        - git clone https://github.com/djoos/Symfony2-coding-standard.git
+        - ~/.composer/vendor/bin/phpcs --config-set installed_paths Symfony2-coding-standard
+        - ~/.composer/vendor/bin/phpcs --standard=Symfony2 --extensions=php src/
     stage: build
