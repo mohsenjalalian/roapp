@@ -40,8 +40,8 @@
         </tbody>
     </table>
 
-            <a href="{{ path('customer_dashboard_address_index') }}"><button class="btn">برگشت به لیست</button></a>
-            <a href="{{ path('customer_dashboard_address_edit', { 'id': address.id }) }}"><button class="btn">ویرایش</button></a>
+            <a href="{{ path('app_customer_dashboard_address_index') }}"><button class="btn">برگشت به لیست</button></a>
+            <a href="{{ path('app_customer_dashboard_address_edit', { 'id': address.id }) }}"><button class="btn">ویرایش</button></a>
             {{ form_start(delete_form) }}
             <input class="btn" type="submit" value="حذف">
 

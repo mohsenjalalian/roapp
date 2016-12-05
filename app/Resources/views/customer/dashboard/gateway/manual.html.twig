@@ -1,11 +1,13 @@
 {% extends ':customer/dashboard:layout.html.twig' %}
 
 {% block main %}
+    <div class="panel-heading">
     <h2>ثبت اطلاعات کارت</h2>
-<div class="ui form">
+    </div>
+<div class="panel-body">
     {{ form_start(form)}}
     {{ form_widget(form) }}
-    <input type="submit" style="margin-top: 10px " value="ثبت اطلاعات" />
+    <input class="btn" type="submit" style="margin-top: 10px " value="ثبت اطلاعات" />
     {{ form_end(form) }}
 </div>
 {% endblock %}

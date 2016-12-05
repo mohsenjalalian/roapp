@@ -1,7 +1,10 @@
 {% extends ':operator/dashboard:layout.html.twig' %}
 
 {% block main %}
+    <div class="page-header">
     <h2 class="ui header" style="display: inline">لیست رانندگان</h2>
+    </div>
+    <div class="panel-body">
     <table class="ui celled table">
         <thead>
         <tr>
@@ -26,6 +29,7 @@
         {% endfor %}
         </tbody>
     </table>
+    </div>
     {% if pagination.getTotalItemCount > 10 %}
         <div class="ui one column stackable center aligned page grid navigation">
             <div class="pagination menu column twelve wide ui" style="font-size: 18px">

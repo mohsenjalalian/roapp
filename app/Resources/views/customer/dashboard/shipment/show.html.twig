@@ -63,27 +63,35 @@
 
     <div data-token = {{ tracking_token }} id="show-shipment-map"></div>
 
-    <div id="cancel_modal_customer" class="ui modal small">
+    <div id="cancel_modal_customer" class="ui modal small fade">
         {#<div class="header">Header</div>#}
-        <div class="content">
-            <h3>مطمئن هستید ؟</h3>
-        </div>
-        <div  class="actions">
-            <div id="accept_cancel_button" style="float: right;margin-bottom: 20px" class="ui approve button">بلی</div>
-            <input id="shipment_id" type="hidden" value="{{ shipment.id }}">
-            <div style="float: right" class="ui cancel button">خیر</div>
-        </div>
-    </div>
-    <div id="fail_modal_customer" class="ui modal small">
-        <div class="header">دلیل لغو سفارش</div>
-        <div class="content">
-            <div class="ui form field">
-                <textarea id="fail_customer_reason" placeholder="دلیل لغو سفارش را خود را یادداشت نمایید" rows="2"></textarea>
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>مطمئن هستید ؟</h3>
+                </div>
+                <div  class="modal-body">
+                    <div id="accept_cancel_button" style="float: right;margin-bottom: 20px" class="ui approve button btn" data-dismiss="modal">بلی</div>
+                    <input id="shipment_id" type="hidden" value="{{ shipment.id }}">
+                    <div data-dismiss="modal" style="float: right" class="ui cancel button btn">خیر</div>
+                </div>
             </div>
         </div>
-        <div  class="actions">
-            <div id="accept_fail_button_customer" style="float: right;margin-bottom: 20px" class="ui approve button">تایید</div>
-            <div style="float: right" class="ui cancel button">کنسل</div>
+    </div>
+    <div id="fail_modal_customer" class="ui modal small fade">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">دلیل لغو سفارش</div>
+                <div class="modal-body">
+                    <div class="ui form field">
+                        <textarea id="fail_customer_reason" placeholder="دلیل لغو سفارش را خود را یادداشت نمایید" class="form-control"></textarea>
+                    </div>
+                </div>
+                <div  class="modal-footer">
+                    <div id="accept_fail_button_customer" style="float: right;margin-bottom: 20px" class="ui approve button btn" data-dismiss="modal">تایید</div>
+                    <div style="float: right" class="ui cancel button btn" data-dismiss="modal">کنسل</div>
+                </div>
+            </div>
         </div>
     </div>
     <a href="{{ path('app_customer_dashboard_shipment_index') }}"><button class="btn">برگشت به لیست</button></a>

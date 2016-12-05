@@ -1,10 +1,11 @@
 {% extends ':operator/dashboard:layout.html.twig' %}
 
 {% block main %}
-    <div>
+    <div class="page-header">
         <h2 class="ui header" style="display: inline">لیست راننده ها</h2>
         {#<a style="margin-right: 10px" href="{{ path('app_operator_dashboard_driver_create') }}"><button>ایجاد راننده ی جدید</button></a>#}
     </div>
+    <div class="panel-body">
     <table class="ui celled table">
         <thead>
         <tr>
@@ -31,13 +32,14 @@
                 {% endif %}
                 <td>{{ driver.phone }}</td>
                 <td>
-                    <a href="{{ path('app_operator_dashboard_driver_show', { 'id': driver.id }) }}"><button>نمایش</button></a>
+                    <a href="{{ path('app_operator_dashboard_driver_show', { 'id': driver.id }) }}"><button class="btn  ">نمایش</button></a>
                     {#<a href="{{ path('app_operator_dashboard_driver_edit', { 'id': driver.id }) }}"><button>ویرایش</button></a>#}
                 </td>
             </tr>
         {% endfor %}
         </tbody>
     </table>
+    </div>
     <div class="ui one column stackable center aligned page grid navigation">
         <div class="pagination menu column twelve wide ui" style="font-size: 18px">
             {{ knp_pagination_render(pagination) }}

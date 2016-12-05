@@ -1,7 +1,10 @@
 {% extends ':operator/dashboard:layout.html.twig' %}
 
 {% block main %}
+    <div class="page-header">
     <h2 class="ui header" style="display: inline">لیست سفارشات</h2>
+    </div>
+    <div class="panel-body">
     <table class="ui celled table">
         <thead>
         <tr>
@@ -28,13 +31,14 @@
                 <td>{{ shipment.price }}</td>
                 <td>{{ shipment.type }}</td>
                 <td>
-                    <a href="{{ path('app_operator_dashboard_shipment_show', { 'id': shipment.id }) }}"><button>نمایش</button></a>
+                    <a href="{{ path('app_operator_dashboard_shipment_show', { 'id': shipment.id }) }}"><button class="btn">نمایش</button></a>
                     {#<a href="{{ path('app_operator_dashboard_shipment_edit', { 'id': shipment.id }) }}"><button>ویرایش</button></a>#}
                 </td>
             </tr>
         {% endfor %}
         </tbody>
     </table>
+    </div>
     {% if pagination.getTotalItemCount > 5 %}
         <div class="ui one column stackable center aligned page grid navigation">
             <div class="pagination menu column twelve wide ui" style="font-size: 18px">

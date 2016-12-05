@@ -23,7 +23,7 @@ class AddressController extends Controller
     /**
      * Lists all Address entities.
      *
-     * @Route("/", name="customer_dashboard_address_index")
+     * @Route("/", name="app_customer_dashboard_address_index")
      * @Method("GET")
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
@@ -53,7 +53,7 @@ class AddressController extends Controller
     /**
      * Creates a new Address entity.
      *
-     * @Route("/new", name="customer_dashboard_address_new")
+     * @Route("/new", name="app_customer_dashboard_address_new")
      * @Method({"GET", "POST"})
      */
     public function newAction(Request $request)
@@ -90,7 +90,7 @@ class AddressController extends Controller
                 $em->persist($address);
                 $em->flush();
 
-                return $this->redirectToRoute('customer_dashboard_address_show',
+                return $this->redirectToRoute('app_customer_dashboard_address_show',
                     array('id' => $address->getId())
                 );
             }
@@ -105,7 +105,7 @@ class AddressController extends Controller
     /**
      * Finds and displays a Address entity.
      *
-     * @Route("/{id}", name="customer_dashboard_address_show")
+     * @Route("/{id}", name="app_customer_dashboard_address_show")
      * @Method("GET")
      */
     public function showAction(Address $address)
@@ -121,7 +121,7 @@ class AddressController extends Controller
     /**
      * Displays a form to edit an existing Address entity.
      *
-     * @Route("/{id}/edit", name="customer_dashboard_address_edit")
+     * @Route("/{id}/edit", name="app_customer_dashboard_address_edit")
      * @Method({"GET", "POST"})
      */
     public function editAction(Request $request, Address $address)
@@ -135,7 +135,7 @@ class AddressController extends Controller
             $em->persist($address);
             $em->flush();
 
-            return $this->redirectToRoute('customer_dashboard_address_edit', array('id' => $address->getId()));
+            return $this->redirectToRoute('app_customer_dashboard_address_edit', array('id' => $address->getId()));
         }
 
         return $this->render('customer/dashboard/address/edit.html.twig', array(
@@ -148,7 +148,7 @@ class AddressController extends Controller
     /**
      * Deletes a Address entity.
      *
-     * @Route("/{id}", name="customer_dashboard_address_delete")
+     * @Route("/{id}", name="app_customer_dashboard_address_delete")
      * @Method("DELETE")
      */
     public function deleteAction(Request $request, Address $address)
@@ -162,7 +162,7 @@ class AddressController extends Controller
             $em->flush();
         }
 
-        return $this->redirectToRoute('customer_dashboard_address_index');
+        return $this->redirectToRoute('app_customer_dashboard_address_index');
     }
 
     /**
@@ -175,7 +175,7 @@ class AddressController extends Controller
     private function createDeleteForm(Address $address)
     {
         return $this->createFormBuilder()
-            ->setAction($this->generateUrl('customer_dashboard_address_delete', array('id' => $address->getId())))
+            ->setAction($this->generateUrl('app_customer_dashboard_address_delete', array('id' => $address->getId())))
             ->setMethod('DELETE')
             ->getForm();
     }

@@ -1,7 +1,10 @@
 {% extends ':operator/dashboard:layout.html.twig' %}
 
 {% block main %}
+    <div class="page-header">
     <h3>جزئیات پرداخت</h3>
+    </div>
+    <div class="panel-body">
     <table class="ui celled table">
         <tbody class="headColor">
         <tr>
@@ -29,9 +32,10 @@
         </tr>
         </tbody>
     </table>
+    </div>
     {% if payment.status == constant('STATUS_WAITING_FOR_APPROVE',payment) %}
         <div id="pay_confirm_section">
-            <a class="ui button" id="pay_confirm_button_operator">تایید پرداخت</a>
+            <a class="ui button btn" id="pay_confirm_button_operator">تایید پرداخت</a>
             <input id="payment_id_operator" type="hidden" value="{{ payment.id }}">
         </div>
     {% else %}

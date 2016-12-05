@@ -1,7 +1,10 @@
 {% extends ':customer/dashboard:layout.html.twig' %}
 
 {% block main %}
-    <h3>پرداختی ها</h3>
+    <div class="page-header">
+        <h3>لیست پرداخت ها</h3>
+    </div>
+    <div class="panel-body">
     <table class="ui celled table">
         <thead>
         <tr>
@@ -25,11 +28,12 @@
                 <td>{{ payment.createdDate|date('Y-m-d H:i:s')}}</td>
                 <td>{{ payment.paidAt|date('Y-m-d H:i:s')}}</td>
                 <td>{{ payment.method }}</td>
-                <td><a class="ui button" href="{{ path('app_customer_dashboard_payment_show', { 'id': payment.id }) }}">مشاهده جزئیات</a></td>
+                <td><a class="btn" href="{{ path('app_customer_dashboard_payment_show', { 'id': payment.id }) }}">مشاهده جزئیات</a></td>
             </tr>
         {% endfor %}
         </tbody>
     </table>
+    </div>
     <div class="ui one column stackable center aligned page grid navigation">
         <div class="pagination menu column twelve wide ui" style="font-size: 18px">
             {{ knp_pagination_render(pagination) }}

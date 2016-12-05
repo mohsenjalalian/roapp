@@ -31,7 +31,7 @@ class ManualGateway implements GatewayInterface
     public function getRedirectParameters(Payment $payment)
     {
         $parameters = [
-            'payment' => $payment,
+            'payment' => $payment->getId(),
         ];
         
         return $parameters;

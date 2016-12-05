@@ -15,7 +15,7 @@ $(".address_modal").on('click',function () {
                     $("#load_form_place").html(response);
                     $("#add_address").on('submit', function (event) {
                         event.preventDefault();
-                        var fd = new FormData($('form')[1]);
+                        var fd = new FormData($('form')[2]);
                         var formURL = $(this).attr("action");
                         $.ajax(
                             {
@@ -63,7 +63,7 @@ $(".address_modal").on('click',function () {
                     $("#add_address #address").append('<input id="reciver_customer_mobile_number"  name="shipment_otherAddress_number" type="hidden" value="'+phoneNumber+'">');
                     $("#add_address").on('submit', function (event) {
                         event.preventDefault();
-                        var fd = new FormData($('form')[1]);
+                        var fd = new FormData($('form')[2]);
                         var formURL = $(this).attr("action");
                         $.ajax(
                             {
