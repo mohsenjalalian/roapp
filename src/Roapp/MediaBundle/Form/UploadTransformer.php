@@ -4,13 +4,14 @@ namespace Roapp\MediaBundle\Form;
 
 use AppBundle\Entity\Media;
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\ORM\EntityManager;
 use Roapp\MediaBundle\Utils\MediaFile;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\Form\DataTransformerInterface;
-use Symfony\Component\Form\Exception\TransformationFailedException;
-use Symfony\Component\Validator\Tests\Fixtures\Entity;
 
+/**
+ * Class UploadTransformer
+ * @package Roapp\MediaBundle\Form
+ */
 class UploadTransformer implements DataTransformerInterface
 {
     /**
@@ -23,6 +24,11 @@ class UploadTransformer implements DataTransformerInterface
      */
     private $form;
 
+    /**
+     * UploadTransformer constructor.
+     * @param Container      $container
+     * @param RoappImageType $form
+     */
     public function __construct(Container $container, RoappImageType $form)
     {
         $this->container = $container;
@@ -64,8 +70,7 @@ class UploadTransformer implements DataTransformerInterface
         $mediaName = $this->form->getMediaName();
 
         $uploadManager = $this->container->get('roapp_media.upload_manager');
-//        $fileIdentifiers = explode(',', $value);
-        $fileIdentifiers = array_filter( explode(",", $value ));
+        $fileIdentifiers = array_filter(explode(",", $value));
         $fileCollection = new ArrayCollection();
         foreach ($fileIdentifiers as $fileIdentifier) {
             if (is_numeric($fileIdentifier)) {

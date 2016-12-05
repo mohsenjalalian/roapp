@@ -5,6 +5,10 @@ namespace Roapp\MediaBundle\Utils;
 use AppBundle\Entity\Media;
 use Symfony\Component\HttpFoundation\File\File;
 
+/**
+ * Class MediaFile
+ * @package Roapp\MediaBundle\Utils
+ */
 class MediaFile extends File
 {
     /**
@@ -17,12 +21,23 @@ class MediaFile extends File
      */
     private $mediaEntity;
 
+    /**
+     * @return bool|null
+     */
     public function getIsTemp()
     {
         return $this->isTemp;
     }
 
-    public function __construct($path, $isTemp = null, Media $mediaEntity = null ,$checkPath = true)
+    /**
+     * MediaFile constructor.
+     * @param string     $path
+     * @param null       $isTemp
+     * @param Media|NULL $mediaEntity
+     * @param bool       $checkPath
+     * @throws \Exception
+     */
+    public function __construct($path, $isTemp = null, Media $mediaEntity = null, $checkPath = true)
     {
         if (!is_null($isTemp)) {
             if ($isTemp == false) {
@@ -41,7 +56,8 @@ class MediaFile extends File
     /**
      * @return \AppBundle\Entity\Media
      */
-    public function getMediaEntity() {
+    public function getMediaEntity()
+    {
         return $this->mediaEntity;
     }
 
@@ -49,9 +65,10 @@ class MediaFile extends File
      * @param \AppBundle\Entity\Media $mediaEntity
      * @return $this
      */
-    public function setMediaEntity(Media $mediaEntity) {
+    public function setMediaEntity(Media $mediaEntity)
+    {
         $this->mediaEntity = $mediaEntity;
-        
+
         return $this;
     }
 }

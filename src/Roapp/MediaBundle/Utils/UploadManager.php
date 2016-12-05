@@ -9,6 +9,10 @@ use Symfony\Component\HttpFoundation\Session\Session;
 use AppBundle\Entity\Media;
 use Symfony\Component\Routing\RequestContext;
 
+/**
+ * Class UploadManager
+ * @package Roapp\MediaBundle\Utils
+ */
 class UploadManager
 {
     /**
@@ -41,6 +45,17 @@ class UploadManager
      */
     private $rootDir;
 
+    /**
+     * UploadManager constructor.
+     *
+     * @param Session        $session
+     * @param string         $temporaryDirectory
+     * @param string         $permanentDirectory
+     * @param array          $uploads
+     * @param RequestStack   $requestStack
+     * @param RequestContext $requestContext
+     * @param string         $rootDir
+     */
     public function __construct(
         Session $session,
         $temporaryDirectory,
@@ -59,6 +74,12 @@ class UploadManager
         $this->rootDir = $rootDir;
     }
 
+    /**
+     * @param UploadedFile $file
+     * @param string       $directory
+     *
+     * @return string
+     */
     public function upload(UploadedFile $file, $directory)
     {
         $fs = new Filesystem();
@@ -75,6 +96,11 @@ class UploadManager
         return $newfileName;
     }
 
+    /**
+     * @param string $directory
+     *
+     * @return string
+     */
     public function getTemporaryPath($directory)
     {
         return sprintf(
@@ -85,6 +111,11 @@ class UploadManager
         );
     }
 
+    /**
+     * @param string $directory
+     *
+     * @return string
+     */
     public function getPermanentPath($directory)
     {
         return sprintf(
@@ -94,6 +125,11 @@ class UploadManager
         );
     }
 
+    /**
+     * @param UploadedFile $file
+     *
+     * @return string
+     */
     public function getFileName(UploadedFile $file)
     {
         return sprintf(
@@ -103,11 +139,21 @@ class UploadManager
         );
     }
 
+    /**
+     * Clear
+     */
     public function clear()
     {
         // @TODO implement clear method and create a command
     }
 
+    /**
+     * @param string $directory
+     * @param string $fileName
+     * @param bool   $temp
+     *
+     * @return string
+     */
     public function getFilePath($directory, $fileName, $temp = true)
     {
         if ($temp) {
@@ -118,13 +164,24 @@ class UploadManager
 
         return $path.'/'.$fileName;
     }
-    
+
+    /**
+     * @param Media $media
+     *
+     * @return string
+     */
     public function getMediaPathForEntity(Media $media)
     {
         return $this->getFilePath($media->getMediaName(), $media->getName(), false);
     }
 
-
+    /**
+     * @param string $directory
+     * @param string $fileName
+     * @param bool   $temp
+     *
+     * @return bool
+     */
     public function exists($directory, $fileName, $temp = true)
     {
         $fs = new Filesystem();
@@ -132,7 +189,14 @@ class UploadManager
 
         return $fs->exists($path);
     }
-    
+
+    /**
+     * @param MediaFile $mediaFile
+     * @param string    $directory
+     * @param Media     $mediaEntity
+     *
+     * @return \Roapp\MediaBundle\Utils\MediaFile
+     */
     public function moveToPermanent(MediaFile $mediaFile, $directory, Media $mediaEntity)
     {
         $fs = new Filesystem();
@@ -150,16 +214,21 @@ class UploadManager
             false,
             $mediaEntity
         );
-        
+
         return $file;
     }
 
+    /**
+     * @param Media $media
+     *
+     * @return string
+     */
     public function generateAbsoluteUrl(Media $media)
     {
         $realBasePath = realpath($this->rootDir.'/../web/');
         $realMediaPath = realpath($this->getMediaPathForEntity($media));
         $path = explode($realBasePath, $realMediaPath)[1];
-        
+
         if (false !== strpos($path, '://') || '//' === substr($path, 0, 2)) {
             return $path;
         }

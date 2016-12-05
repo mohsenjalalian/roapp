@@ -16,7 +16,7 @@ class UploadableField
      * @var string
      */
     public $mappedAttribute;
-    
+
     /**
      * @Annotation\Required
      *

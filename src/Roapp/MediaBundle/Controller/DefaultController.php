@@ -5,17 +5,24 @@ namespace Roapp\MediaBundle\Controller;
 use AppBundle\Entity\Media;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
+/**
+ * Class DefaultController
+ *
+ * @package Roapp\MediaBundle\Controller
+ */
 class DefaultController extends Controller
 {
     /**
      * @Route("/{prefix}/upload_{mediaName}/upload", name="_upload", requirements={"prefix"=".+"})
      * @Method({"POST"})
+     * @param string  $prefix
+     * @param string  $mediaName
+     * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function indexAction($prefix, $mediaName, Request $request)
@@ -46,9 +53,12 @@ class DefaultController extends Controller
     /**
      * @Route("/{prefix}/upload_{mediaName}/link/{media}", name="_link", requirements={"prefix"=".+"})
      * @Method({"GET"})
+     * @param string $prefix
+     * @param string $mediaName
+     * @param Media  $media
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function linkAction($prefix, $mediaName, Media $media,Request $request)
+    public function linkAction($prefix, $mediaName, Media $media)
     {
         $uploads = $this->getParameter('roapp_media.uploads');
 
@@ -59,12 +69,10 @@ class DefaultController extends Controller
         if ($uploads[$mediaName]['path'] !== $prefix) {
             return new Response("You have not access to this media", 403);
         }
-        
+
         $uploadManager = $this->get('roapp_media.upload_manager');
         $url = $uploadManager->generateAbsoluteUrl($media);
 
         return new Response($url);
     }
-    
-    
 }
