@@ -230,7 +230,7 @@ class ShipmentController extends Controller
             $counter = $counter+1;
         }
 
-            return new JsonResponse($output);
+        return new JsonResponse($output);
     }
 
     /**
