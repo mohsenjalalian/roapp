@@ -10,13 +10,22 @@ namespace AppBundle\Utils\Services;
 
 use jDateTime;
 use DateTime;
+
+/**
+ * Class JdateService
+ * @package AppBundle\Utils\Services
+ */
 class JdateService
 {
+    /**
+     * @param DateTime $jDate
+     * @return DateTime
+     */
     public function convertToGregorian($jDate)
     {
-        $date = explode("-",substr($jDate,0,10));
-        $time = substr($jDate,11,-3);
-        $gregorianArr = jDateTime::toGregorian($date[0],$date[1],$date[2]);
+        $date = explode("-", substr($jDate, 0, 10));
+        $time = substr($jDate, 11, -3);
+        $gregorianArr = jDateTime::toGregorian($date[0], $date[1], $date[2]);
         $gregorianDate = new DateTime(
             sprintf(
                 "%s-%s-%s %s",
@@ -28,6 +37,5 @@ class JdateService
         );
 
         return $gregorianDate;
-        
     }
 }

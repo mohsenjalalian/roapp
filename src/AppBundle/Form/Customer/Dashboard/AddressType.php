@@ -23,6 +23,10 @@ class AddressType extends AbstractType
     protected $request;
 
 
+    /**
+     * AddressType constructor.
+     * @param RequestStack $requestStack
+     */
     public function __construct(RequestStack $requestStack)
     {
         $this->request = $requestStack->getCurrentRequest();
@@ -31,13 +35,13 @@ class AddressType extends AbstractType
 
     /**
      * @param FormBuilderInterface $builder
-     * @param array $options
+     * @param array                $options
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('description',HiddenType::class)
-            ->add('latitude',HiddenType::class)
+            ->add('description', HiddenType::class)
+            ->add('latitude', HiddenType::class)
             ->add('longitude', HiddenType::class)
         ;
 
@@ -45,10 +49,14 @@ class AddressType extends AbstractType
             $form = $event->getForm();
 
             if (!$this->request->query->get('owner')) {
-                $form->add('isPublic', CheckboxType::class, array(
-                    'label' => 'آدرس به صورت عمومی باشد',
-                    'required' => false
-                ));
+                $form->add(
+                    'isPublic',
+                    CheckboxType::class,
+                    [
+                        'label' => 'آدرس به صورت عمومی باشد',
+                        'required' => false,
+                    ]
+                );
             }
         });
     }
@@ -58,8 +66,10 @@ class AddressType extends AbstractType
      */
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults(array(
-            'data_class' => 'AppBundle\Entity\Address'
-        ));
+        $resolver->setDefaults(
+            [
+                'data_class' => 'AppBundle\Entity\Address',
+            ]
+        );
     }
 }

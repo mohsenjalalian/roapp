@@ -10,6 +10,10 @@ use Doctrine\ORM\EntityManager;
 use AppBundle\Entity\Address;
 use AppBundle\Entity\Customer;
 
+/**
+ * Class AddressService
+ * @package AppBundle\Utils\Services
+ */
 class AddressService
 {
     /**
@@ -27,6 +31,12 @@ class AddressService
         $this->entityManager = $entityManager;
     }
 
+    /**
+     * @param Address $address
+     * @param object  $owner
+     * @param object  $user
+     * @return Address
+     */
     public function createAddress(Address $address, $owner, $user)
     {
         $em = $this->entityManager;
@@ -40,7 +50,7 @@ class AddressService
                 ->getRepository('AppBundle:Customer')
                 ->findOneBy(
                     [
-                        'phone' => $owner
+                        'phone' => $owner,
                     ]
                 );
 

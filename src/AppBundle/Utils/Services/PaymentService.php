@@ -9,10 +9,12 @@ use AppBundle\Entity\Shipment;
 use AppBundle\Utils\PaymentSystem\GatewayInterface;
 use Doctrine\ORM\EntityManager;
 use Symfony\Bundle\FrameworkBundle\Routing\Router;
-use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\HttpFoundation\Session\Session;
 
+/**
+ * Class PaymentService
+ * @package AppBundle\Utils\Services
+ */
 class PaymentService
 {
     /**
@@ -29,11 +31,11 @@ class PaymentService
      * @var GatewayInterface[]
      */
     private $gateways;
-    
+
     /**
      * PaymentService constructor.
      * @param EntityManager $entityManager
-     * @param Router $router
+     * @param Router        $router
      */
     public function __construct(EntityManager $entityManager, Router $router)
     {
@@ -41,6 +43,12 @@ class PaymentService
         $this->router = $router;
     }
 
+    /**
+     * @param string  $paymentMethod
+     * @param Invoice $invoice
+     * @param Person  $person
+     * @return RedirectResponse
+     */
     public function pay($paymentMethod, Invoice $invoice, Person $person)
     {
         $em = $this->entityManager;
@@ -61,12 +69,12 @@ class PaymentService
         $gatewayService = $this->gateways['app.gateway.'.$paymentMethod];
         $parameters =  $gatewayService->getRedirectParameters($payment);
         $url = $gatewayService->getRedirectUrl();
-        if(strpos($url,'http') !== false) {
+        if (strpos($url, 'http') !== false) {
             $queryString = "";
             $loopCounter = 1;
-            foreach ($parameters as $key=>$val){
+            foreach ($parameters as $key => $val) {
                 if ($loopCounter == 1) {
-                    $queryString = $queryString . $key . "=" . $val;
+                    $queryString = $queryString.$key."=".$val;
                 } else {
                     $queryString = $queryString."&".$key."=".$val;
                 }
@@ -75,22 +83,27 @@ class PaymentService
 
             return new RedirectResponse($url."?".$queryString);
         } else {
-            return new RedirectResponse($this->router->generate($url,$parameters));
+            return new RedirectResponse($this->router->generate($url, $parameters));
         }
     }
 
-    public function payConfirm(Payment $payment,$data)
+    /**
+     * @param Payment $payment
+     * @param array   $data
+     * @return bool
+     */
+    public function payConfirm(Payment $payment, $data)
     {
         $em = $this->entityManager;
         $gatewayService = $this->gateways['app.gateway.'.$payment->getMethod()];
         $payConfirmResult = $gatewayService->payConfirm($payment);
         switch ($payConfirmResult) {
-            case Payment::STATUS_WAITING_FOR_APPROVE :
+            case Payment::STATUS_WAITING_FOR_APPROVE:
                 $payment->setStatus(Payment::STATUS_WAITING_FOR_APPROVE);
                 $payment->setPaidAt(new \DateTime());
                 $payment->setData($data);
                 break;
-            case Payment::STATUS_APPROVED :
+            case Payment::STATUS_APPROVED:
                 $payment->setStatus(Payment::STATUS_APPROVED);
                 $payment->getInvoice()->setStatus(Invoice::STATUS_PAID);
                 $payment->setPaidAt(new \DateTime());
@@ -98,7 +111,7 @@ class PaymentService
                 $shipment = $this->entityManager->getRepository("AppBundle:Shipment")
                     ->findOneBy(
                         [
-                            'invoice' => $payment->getInvoice()
+                            'invoice' => $payment->getInvoice(),
                         ]
                     );
                 $shipment->setStatus(Shipment::STATUS_NOT_ASSIGNED);
@@ -106,11 +119,11 @@ class PaymentService
                 $em->persist($shipment);
 
                 break;
-            case Payment::STATUS_FAILED :
+            case Payment::STATUS_FAILED:
                 $payment->setStatus(Payment::STATUS_FAILED);
                 $payment->setData($data);
                 break;
-            case Payment::STATUS_CANCEL :
+            case Payment::STATUS_CANCEL:
                 $payment->setStatus(Payment::STATUS_CANCEL);
                 $payment->setData($data);
                 break;
@@ -121,6 +134,9 @@ class PaymentService
         return true;
     }
 
+    /**
+     * @param Payment $payment
+     */
     public function operatorConfirm(Payment $payment)
     {
         $em = $this->entityManager;
@@ -131,9 +147,12 @@ class PaymentService
 
         $em->persist($payment);
         $em->flush();
-
     }
 
+    /**
+     * @param string           $gatewayServiceName
+     * @param GatewayInterface $gateway
+     */
     public function addGateway($gatewayServiceName, GatewayInterface $gateway)
     {
         $this->gateways[$gatewayServiceName] = $gateway;
