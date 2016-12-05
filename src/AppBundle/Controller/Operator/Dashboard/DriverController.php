@@ -149,11 +149,11 @@ class DriverController extends Controller
     }
     /**
      * @Route("/list/{shipment}" , name="app_operator_dashboard_driver_list")
-     * @param Shipment $shipment
-     * @param Request  $request
+     * @param Request       $request
+     * @param Shipment|null $shipment
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
      */
-    public function listAction(Shipment $shipment = null, Request $request)
+    public function listAction(Request $request, Shipment $shipment = null)
     {
         // check shipment is exist
         if ($shipment) {
