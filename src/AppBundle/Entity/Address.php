@@ -169,7 +169,7 @@ class Address
      *
      * @return Address
      */
-    public function setCustomer(\AppBundle\Entity\Customer $customer = null)
+    public function setCustomer(Customer $customer = null)
     {
         $this->customer = $customer;
 
@@ -193,7 +193,7 @@ class Address
      *
      * @return Address
      */
-    public function setCreator(\AppBundle\Entity\Customer $creator = null)
+    public function setCreator(Customer $creator = null)
     {
         $this->creator = $creator;
 
@@ -209,6 +209,10 @@ class Address
     {
         return $this->creator;
     }
+
+    /**
+     * @return string
+     */
     public function __toString()
     {
         return (string) $this->getDescription();

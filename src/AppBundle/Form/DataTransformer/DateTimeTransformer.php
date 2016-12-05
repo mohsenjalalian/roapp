@@ -5,8 +5,11 @@ namespace AppBundle\Form\DataTransformer;
 use DateTime;
 use jDateTime;
 use Symfony\Component\Form\DataTransformerInterface;
-use Symfony\Component\Form\Exception\TransformationFailedException;
 
+/**
+ * Class DateTimeTransformer
+ * @package AppBundle\Form\DataTransformer
+ */
 class DateTimeTransformer implements DataTransformerInterface
 {
     /**
@@ -30,9 +33,9 @@ class DateTimeTransformer implements DataTransformerInterface
      */
     public function reverseTransform($jDate)
     {
-        $date = explode("-",substr($jDate,0,10));
-        $time = substr($jDate,11,-3);
-        $gregorianArr = jDateTime::toGregorian($date[0],$date[1],$date[2]);
+        $date = explode("-", substr($jDate, 0, 10));
+        $time = substr($jDate, 11, -3);
+        $gregorianArr = jDateTime::toGregorian($date[0], $date[1], $date[2]);
         $gregorianDate = new DateTime(
             sprintf(
                 "%s-%s-%s %s",
@@ -42,7 +45,7 @@ class DateTimeTransformer implements DataTransformerInterface
                 $time
             )
         );
-        
+
         return $gregorianDate;
     }
 }

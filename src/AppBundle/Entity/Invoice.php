@@ -2,6 +2,7 @@
 
 namespace AppBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\OneToMany;
 use Doctrine\ORM\Mapping\OneToOne;
@@ -14,8 +15,8 @@ use Doctrine\ORM\Mapping\OneToOne;
  */
 class Invoice
 {
-    Const STATUS_UNPAID = 0;
-    Const STATUS_PAID = 1;
+    const STATUS_UNPAID = 0;
+    const STATUS_PAID = 1;
     /**
      * @var int
      *
@@ -116,7 +117,7 @@ class Invoice
      */
     public function __construct()
     {
-        $this->payments = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->payments = new ArrayCollection();
     }
 
     /**
@@ -126,7 +127,7 @@ class Invoice
      *
      * @return Invoice
      */
-    public function addPayment(\AppBundle\Entity\Payment $payment)
+    public function addPayment(Payment $payment)
     {
         $this->payments[] = $payment;
 
@@ -138,7 +139,7 @@ class Invoice
      *
      * @param \AppBundle\Entity\Payment $payment
      */
-    public function removePayment(\AppBundle\Entity\Payment $payment)
+    public function removePayment(Payment $payment)
     {
         $this->payments->removeElement($payment);
     }
@@ -184,7 +185,7 @@ class Invoice
      *
      * @return Invoice
      */
-    public function setShipment(\AppBundle\Entity\Shipment $shipment = null)
+    public function setShipment(Shipment $shipment = null)
     {
         $this->shipment = $shipment;
 
@@ -194,7 +195,7 @@ class Invoice
     /**
      * Get shipment
      *
-     * @return \AppBundle\Entity\shipment
+     * @return \AppBundle\Entity\Shipment
      */
     public function getShipment()
     {

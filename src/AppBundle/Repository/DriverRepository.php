@@ -1,6 +1,7 @@
 <?php
 
 namespace AppBundle\Repository;
+
 use AppBundle\Entity\ShipmentAssignment;
 use AppBundle\Entity\Shipment;
 use Doctrine\ORM\EntityRepository;
@@ -14,6 +15,10 @@ use Doctrine\ORM\EntityRepository;
 class DriverRepository extends EntityRepository
 {
     // check shipment rejected by some driver or no
+    /**
+     * @param Shipment $shipment
+     * @return array
+     */
     public function filterDriverAction(Shipment $shipment)
     {
         $filterDriver = $this->getEntityManager()
@@ -33,7 +38,7 @@ class DriverRepository extends EntityRepository
 
             return $banDriver;
         } else {
-            return $banDriver=[];
+            return $banDriver = [];
         }
     }
 }

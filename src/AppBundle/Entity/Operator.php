@@ -2,6 +2,7 @@
 
 namespace AppBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\ManyToMany;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -39,7 +40,7 @@ class Operator extends Person implements UserInterface, \Serializable
 
     /**
      * @var int
-     * 
+     *
      * @ManyToMany(targetEntity="AppBundle\Entity\Role", inversedBy="operatorId")
      */
     private $roleId;
@@ -48,7 +49,8 @@ class Operator extends Person implements UserInterface, \Serializable
      */
     public function __construct()
     {
-        $this->roleId = new \Doctrine\Common\Collections\ArrayCollection();
+        parent::__construct();
+        $this->roleId = new ArrayCollection();
     }
 
 //    /**
@@ -116,7 +118,7 @@ class Operator extends Person implements UserInterface, \Serializable
      *
      * @return Operator
      */
-    public function addRoleId(\AppBundle\Entity\Role $roleId)
+    public function addRoleId(Role $roleId)
     {
         $this->roleId[] = $roleId;
 
@@ -128,7 +130,7 @@ class Operator extends Person implements UserInterface, \Serializable
      *
      * @param \AppBundle\Entity\Role $roleId
      */
-    public function removeRoleId(\AppBundle\Entity\Role $roleId)
+    public function removeRoleId(Role $roleId)
     {
         $this->roleId->removeElement($roleId);
     }
@@ -157,7 +159,7 @@ class Operator extends Person implements UserInterface, \Serializable
      * and populated in any number of different ways when the user object
      * is created.
      *
-     * @return (Role|string)[] The user roles
+     * @return string
      */
     public function getRoles()
     {
@@ -183,7 +185,7 @@ class Operator extends Person implements UserInterface, \Serializable
      */
     public function getUsername()
     {
-       return $this->email;
+        return $this->email;
     }
 
     /**

@@ -3,7 +3,6 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Doctrine\ORM\Mapping\JoinColumn;
 
 /**
  * ShipmentAssignment
@@ -79,9 +78,12 @@ class ShipmentAssignment
     private $driver;
 
 
-    public function  __construct()
+    /**
+     * ShipmentAssignment constructor.
+     */
+    public function __construct()
     {
-        $this->dateTime= new \DateTime();
+        $this->dateTime = new \DateTime();
     }
 
     /**
@@ -173,7 +175,7 @@ class ShipmentAssignment
      *
      * @return ShipmentAssignment
      */
-    public function setShipment(\AppBundle\Entity\Shipment $shipment = null)
+    public function setShipment(Shipment $shipment = null)
     {
         $this->shipment = $shipment;
 
@@ -197,7 +199,7 @@ class ShipmentAssignment
      *
      * @return ShipmentAssignment
      */
-    public function setDriver(\AppBundle\Entity\Driver $driver = null)
+    public function setDriver(Driver $driver = null)
     {
         $this->driver = $driver;
 

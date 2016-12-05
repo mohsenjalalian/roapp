@@ -7,7 +7,7 @@ use Doctrine\ORM\EntityManager;
 
 /**
  * Class MulticastMessage
- * 
+ *
  * @package AppBundle\Utils\Notification\Messages
  */
 class MulticastMessage extends AbstractMessage
@@ -31,6 +31,7 @@ class MulticastMessage extends AbstractMessage
 
     /**
      * @inheritdoc
+     * @return array
      */
     public function getParameters()
     {
@@ -40,9 +41,9 @@ class MulticastMessage extends AbstractMessage
         }
         $keysArray = [
             'registration_ids' => $notificationTokens,
-            'notification' => $this->createNotificationArray()
+            'notification' => $this->createNotificationArray(),
         ];
-        
+
         return $keysArray;
     }
 }

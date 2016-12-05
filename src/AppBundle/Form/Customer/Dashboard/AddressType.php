@@ -11,7 +11,10 @@ use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\HttpFoundation\RequestStack;
 
-
+/**
+ * Class AddressType
+ * @package AppBundle\Form\Customer\Dashboard
+ */
 class AddressType extends AbstractType
 {
     /**

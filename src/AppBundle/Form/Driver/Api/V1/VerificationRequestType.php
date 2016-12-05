@@ -6,6 +6,10 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
+/**
+ * Class VerificationRequestType
+ * @package AppBundle\Form\Driver\Api\V1
+ */
 class VerificationRequestType extends AbstractType
 {
     /**
@@ -17,8 +21,7 @@ class VerificationRequestType extends AbstractType
         $builder
             ->add('deviceUuid')
             ->add('deviceType')
-            ->add('phone')
-        ;
+            ->add('phone');
     }
 
     /**

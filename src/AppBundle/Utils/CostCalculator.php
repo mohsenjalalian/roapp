@@ -1,6 +1,7 @@
 <?php
 
 namespace AppBundle\Utils;
+
 use AppBundle\Entity\Address;
 use GuzzleHttp\Client;
 
@@ -50,7 +51,7 @@ class CostCalculator
 
     /**
      * calculates the cost for shipment
-     * 
+     *
      * @param Address   $origin        Source address
      * @param Address   $destination   Destination address
      * @param int       $shipmentValue Value of shipment
@@ -60,7 +61,8 @@ class CostCalculator
      *
      * @return int
      */
-    public function getCost(Address $origin, Address $destination, $shipmentValue, \DateTime $orderDateTime) {
+    public function getCost(Address $origin, Address $destination, $shipmentValue, \DateTime $orderDateTime)
+    {
 //        $client = new Client(['base_uri' => $this->googleMapSettings['distance_matrix']['url']]);
 //        $result = $client->request(
 //            'GET',
@@ -88,7 +90,7 @@ class CostCalculator
 //
 //        // @todo Write cost calculation algorithm right here and return
 
-        return mt_rand(500,10000);
+        return mt_rand(500, 10000);
     }
 
     /**
@@ -100,17 +102,15 @@ class CostCalculator
      *
      * @return string
      */
-    private function formatLatLong(Address $address) {
+    private function formatLatLong(Address $address)
+    {
         $lat = $address->getLatitude();
         $long = $address->getLongitude();
 
-        if ($lat != null & $long!= null) {
+        if ($lat != null & $long != null) {
             return sprintf('%s,%s', $lat, $long);
         }
 
         throw new \Exception('Null value for Latitude/Longitude');
     }
-    
-    
-
 }

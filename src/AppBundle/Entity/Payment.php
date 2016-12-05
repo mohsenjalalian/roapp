@@ -197,7 +197,7 @@ class Payment
      */
     public function setData($data)
     {
-        $this->data = json_encode($data,true);
+        $this->data = json_encode($data, true);
 
         return $this;
     }
@@ -209,7 +209,7 @@ class Payment
      */
     public function getData()
     {
-        return json_decode($this->data,true);
+        return json_decode($this->data, true);
     }
 
     /**
@@ -219,7 +219,7 @@ class Payment
      *
      * @return Payment
      */
-    public function setInvoice(\AppBundle\Entity\Invoice $invoice = null)
+    public function setInvoice(Invoice $invoice = null)
     {
         $this->invoice = $invoice;
 
@@ -243,7 +243,7 @@ class Payment
      *
      * @return Payment
      */
-    public function setShipment(\AppBundle\Entity\Shipment $shipment = null)
+    public function setShipment(Shipment $shipment = null)
     {
         $this->shipment = $shipment;
 
@@ -267,7 +267,7 @@ class Payment
      *
      * @return Payment
      */
-    public function setPerson(\AppBundle\Entity\Person $person = null)
+    public function setPerson(Person $person = null)
     {
         $this->person = $person;
 

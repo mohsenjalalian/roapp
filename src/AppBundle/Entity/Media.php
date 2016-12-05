@@ -49,7 +49,7 @@ class Media
 
     /**
      * @ORM\Column(name="media_name", type="string")
-     * 
+     *
      * @var string
      */
     private $mediaName;
@@ -61,6 +61,9 @@ class Media
      */
     private $updatedAt;
 
+    /**
+     * Media constructor.
+     */
     public function __construct()
     {
         $this->createdAt = new \DateTime();
@@ -83,9 +86,10 @@ class Media
      * must be able to accept an instance of 'File' as the bundle will inject one here
      * during Doctrine hydration.
      *
-     * @param File|\Symfony\Component\HttpFoundation\File\UploadedFile $image
-     *
+     * @param File $file
      * @return Media
+     * @internal param File|\Symfony\Component\HttpFoundation\File\UploadedFile $image
+     *
      */
     public function setFile(File $file = null)
     {
@@ -178,7 +182,7 @@ class Media
 
     /**
      * Get mediaName
-     * 
+     *
      * @return string
      */
     public function getMediaName()
@@ -190,13 +194,13 @@ class Media
      * Set mediaName
      *
      * @param string $mediaName
-     * 
+     *
      * @return Media
      */
     public function setMediaName($mediaName)
     {
         $this->mediaName = $mediaName;
-        
+
         return $this;
     }
 }

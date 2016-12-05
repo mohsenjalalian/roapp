@@ -23,8 +23,7 @@ class DriverDeviceType extends AbstractType
             ->add('notificationToken')
             ->add('deviceType')
             ->add('latitude')
-            ->add('longitude')
-        ;
+            ->add('longitude');
     }
 
     /**

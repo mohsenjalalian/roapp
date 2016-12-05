@@ -2,6 +2,7 @@
 
 namespace AppBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping\OneToMany;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Doctrine\ORM\Mapping as ORM;
@@ -17,8 +18,10 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  * @UniqueEntity(fields="phone", message="شماره تلفن وارد شده تکراری است.")
  * @UniqueEntity(fields="email", message="پست الکترونیکی وارد شده تکراری است.")
  */
+
 abstract class Person
 {
+    //TODO: Refactor className to AbstractPerson
     /**
      * @var int
      *
@@ -39,12 +42,12 @@ abstract class Person
      * @ORM\Column(name="is_active", type="boolean")
      */
     protected $isActive = false;
-    
+
     /**
      * @ORM\Column(name="full_name", type="string" , nullable=true)
      */
     protected $fullName;
-    
+
     /**
      * @ORM\Column(name="password", type="string",  nullable=true)
      */
@@ -73,7 +76,7 @@ abstract class Person
      * @OneToMany(targetEntity="AppBundle\Entity\Payment", mappedBy="person")
      */
     protected $payment;
-    
+
     /**
      * Get id
      *
@@ -117,10 +120,10 @@ abstract class Person
     public function setIsActive($isActive)
     {
         $this->isActive = $isActive;
-        
+
         return $this;
     }
-    
+
     /**
      * Get isActive
      *
@@ -255,7 +258,7 @@ abstract class Person
      */
     public function __construct()
     {
-        $this->payment = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->payment = new ArrayCollection();
     }
 
     /**
@@ -265,7 +268,7 @@ abstract class Person
      *
      * @return Person
      */
-    public function addPayment(\AppBundle\Entity\Payment $payment)
+    public function addPayment(Payment $payment)
     {
         $this->payment[] = $payment;
 
@@ -277,7 +280,7 @@ abstract class Person
      *
      * @param \AppBundle\Entity\Payment $payment
      */
-    public function removePayment(\AppBundle\Entity\Payment $payment)
+    public function removePayment(Payment $payment)
     {
         $this->payment->removeElement($payment);
     }

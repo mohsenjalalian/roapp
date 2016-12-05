@@ -7,11 +7,15 @@ use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
+/**
+ * Class ShipmentType
+ * @package AppBundle\Form\Operator\Dashboard
+ */
 class ShipmentType extends AbstractType
 {
     /**
      * @param FormBuilderInterface $builder
-     * @param array $options
+     * @param array                $options
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
@@ -23,18 +27,18 @@ class ShipmentType extends AbstractType
             ->add('createdAt', DateTimeType::class)
             ->add('price')
             ->add('type')
-            ->add('ownerAddress')
-//            ->add('photos')
-        ;
+            ->add('ownerAddress');
     }
-    
+
     /**
      * @param OptionsResolver $resolver
      */
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults(array(
-            'data_class' => 'AppBundle\Entity\Shipment'
-        ));
+        $resolver->setDefaults(
+            [
+                'data_class' => 'AppBundle\Entity\Shipment',
+            ]
+        );
     }
 }

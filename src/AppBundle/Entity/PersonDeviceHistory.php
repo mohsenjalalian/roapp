@@ -81,7 +81,7 @@ class PersonDeviceHistory
     /**
      * Get action
      *
-     * @return array
+     * @return int
      */
     public function getAction()
     {

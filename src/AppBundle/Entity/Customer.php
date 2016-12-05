@@ -16,7 +16,7 @@ class Customer extends Person implements AdvancedUserInterface, \Serializable
      *
      */
     private $email;
-    
+
     /**
      * @ORM\Column(name="status", type="integer")
      */
@@ -24,14 +24,16 @@ class Customer extends Person implements AdvancedUserInterface, \Serializable
 
     /**
      * @inheritdoc
+     * @return array
      */
     public function getRoles()
     {
         return array('ROLE_CUSTOMER');
     }
-    
+
     /**
      * @inheritdoc
+     * @return null
      */
     public function getSalt()
     {
@@ -41,6 +43,7 @@ class Customer extends Person implements AdvancedUserInterface, \Serializable
 
     /**
      * @inheritdoc
+     * @return string
      */
     public function getUsername()
     {
@@ -58,6 +61,7 @@ class Customer extends Person implements AdvancedUserInterface, \Serializable
 
     /**
      * @inheritdoc
+     * @return array
      */
     public function serialize()
     {
@@ -74,6 +78,7 @@ class Customer extends Person implements AdvancedUserInterface, \Serializable
 
     /**
      * @inheritdoc
+     * @param array $serialized
      */
     public function unserialize($serialized)
     {
@@ -101,7 +106,7 @@ class Customer extends Person implements AdvancedUserInterface, \Serializable
 
         return $this;
     }
-    
+
     /**
      * Set status
      *
@@ -160,7 +165,8 @@ class Customer extends Person implements AdvancedUserInterface, \Serializable
      *
      * @see AccountExpiredException
      */
-    public function isAccountNonExpired() {
+    public function isAccountNonExpired()
+    {
         return true;
     }
 
@@ -174,7 +180,8 @@ class Customer extends Person implements AdvancedUserInterface, \Serializable
      *
      * @see LockedException
      */
-    public function isAccountNonLocked() {
+    public function isAccountNonLocked()
+    {
         return true;
     }
 
@@ -188,7 +195,8 @@ class Customer extends Person implements AdvancedUserInterface, \Serializable
      *
      * @see CredentialsExpiredException
      */
-    public function isCredentialsNonExpired() {
+    public function isCredentialsNonExpired()
+    {
         return true;
     }
 
@@ -202,7 +210,8 @@ class Customer extends Person implements AdvancedUserInterface, \Serializable
      *
      * @see DisabledException
      */
-    public function isEnabled() {
+    public function isEnabled()
+    {
         return $this->isActive;
     }
 }

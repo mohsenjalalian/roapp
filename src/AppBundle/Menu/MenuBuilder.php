@@ -1,10 +1,17 @@
 <?php
+
 namespace AppBundle\Menu;
+
 use Knp\Menu\FactoryInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 use Symfony\Component\Security\Core\Authorization\AuthorizationChecker;
+
+/**
+ * Class MenuBuilder
+ * @package AppBundle\Menu
+ */
 class MenuBuilder
 {
     private $factory;
@@ -21,7 +28,10 @@ class MenuBuilder
      */
     private $security;
     /**
-     * @param FactoryInterface $factory
+     * @param FactoryInterface     $factory
+     * @param Container            $container
+     * @param AuthorizationChecker $auth
+     * @param TokenStorage         $security
      *
      * Add any other dependency you need
      */
@@ -32,6 +42,11 @@ class MenuBuilder
         $this->auth = $auth;
         $this->security = $security;
     }
+
+    /**
+     * @param array $options
+     * @return \Knp\Menu\ItemInterface
+     */
     public function createProfileSidebarMenu(array $options)
     {
         $menu = $this->factory->createItem('root');
@@ -44,8 +59,14 @@ class MenuBuilder
                 $child->setCurrent(true);
             }
         }
+
         return $menu;
     }
+
+    /**
+     * @param array $options
+     * @return \Knp\Menu\ItemInterface
+     */
     public function createMainMenu(array $options)
     {
         $menu = $this->factory->createItem('root');
@@ -68,6 +89,7 @@ class MenuBuilder
                 $child->setCurrent(true);
             }
         }
+
         return $menu;
     }
 }
