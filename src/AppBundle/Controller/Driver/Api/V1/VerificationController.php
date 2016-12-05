@@ -100,7 +100,7 @@ class VerificationController extends Controller
                     ->setData(
                         [
                             "message" => $this->get('translator')
-                                ->trans('Maximum verification number reached.'),
+                                ->trans('You reached maximum verification request number.'),
                         ]
                     )
                     ->setStatus(false);
@@ -122,7 +122,7 @@ class VerificationController extends Controller
                 ->setData(
                     [
                         "message" => $this->get('translator')
-                            ->trans('Sending verification sms.'),
+                            ->trans('Sending verification sms'),
                     ]
                 )
                 ->setStatus(true);
@@ -179,7 +179,7 @@ class VerificationController extends Controller
                     ->setData(
                         [
                             "message" => $this->get('translator')
-                                ->trans('Verification report: Person device not found.'),
+                                ->trans('Verification report: Person device not found'),
                         ]
                     )
                     ->setStatus(false);
@@ -202,7 +202,7 @@ class VerificationController extends Controller
                 ->setData(
                     [
                         "message" => $this->get('translator')
-                            ->trans('Verification report: Person Verified Successfully.'),
+                            ->trans('Verification report: Person Verified Successfully'),
                     ]
                 )
                 ->setStatus(true);
