@@ -13,28 +13,28 @@
             <span class="panel-title">ثبت درخواست ارسال</span>
         </div>
         <div class="panel-body">
-            <div class="form-group">
+            <div class="form-group row">
                 <label class="col-sm-2">{{ form_label(form.description) }}</label>
-                <div class="col-sm-10">{{ form_widget(form.description ) }}</div>
+                <div class="col-sm-10">{{ form_widget(form.description, { 'attr': {'class': 'form-control'} } ) }}</div>
             </div>
 
-            <div class="row">
+            <div class="form-group row">
                 <div class="col-md-6">
-                    <div class="form-group">
-                        <label>{{ form_label(form.pickUpTime) }}</label>
-                        <div class="calc_price_item" style="direction: rtl !important;">{{ form_widget(form.pickUpTime ) }}</div>
+                    <div class="form-group row">
+                        <label class="col-sm-4">{{ form_label(form.pickUpTime) }}</label>
+                        <div class="calc_price_item col-sm-8" style="direction: rtl !important;">{{ form_widget(form.pickUpTime ) }}</div>
                     </div>
                 </div>
                 <div class="col-md-6">
-                    <div class="form-group">
-                        <label>{{ form_label(form.value) }}</label>
-                        <div>{{ form_widget(form.value ) }}</div>
+                    <div class="form-group row">
+                        <label class="col-sm-4">{{ form_label(form.value) }}</label>
+                        <div class="col-sm-8">{{ form_widget(form.value ) }}</div>
                     </div>
                 </div>
             </div>
             <div class="row">
                 <div class="col-md-6">
-                    <div class="form-group">
+                    <div class="form-group col-sm-4">
                         <label>آدرس فرستنده</label>
                         <div class="calc_price_item" style="margin-top: 10px" id="address_show_section">
                             {% for infoAddress in address %}
@@ -76,15 +76,17 @@
                     </div>
                 </div>
                 <div class="col-md-6">
-                    <div class="form-group">
+                    <div class="form-group row">
                         {#<label>شماره گیرنده</label>#}
-                        <label>{{ form_label(form.other) }}</label>
-                        <div>
+                        <label class="col-sm-4">{{ form_label(form.other) }}</label>
+                        <div class="col-sm-8">
                             {{ form_widget(form.other) }}
                             {#<input id="mobile_reciver"  name="reciver_mobile_number" placeholder="وارد کردن شماره تلفن همراه" type="text">#}
-                            <div id="reciver_address" class="ui toggle checkbox" style="margin-top: 5px">
-                                <input class="calc_price_item"  id="show_reciver_address_btn" name="public" type="checkbox" disabled>
-                                <label>نمایش آدرس</label>
+                            <div id="reciver_address" class="ui toggle" style="margin-top: 5px">
+                                <label class="switch">
+                                    <input class="calc_price_item col-sm-6"  id="show_reciver_address_btn" name="public" type="checkbox" disabled>
+                                    <div class="slider round"></div>
+                                </label>
                             </div>
                             <div id="reciver_info_box" class="calc_price_item" style="margin-top: 15px;display: none">
 
@@ -100,7 +102,7 @@
                 </div>
             </div>
 
-            <div class="form-group">
+            <div class="form-group row">
                 <label class="col-sm-2">{{ form_label(form.photoFiles) }}</label>
                 <div class="col-sm-10">{{ form_widget(form.photoFiles, {'attr': {'class': 'roapp-image-upload'}}) }}</div>
             </div>
@@ -122,18 +124,21 @@
         <a href="{{ path('app_customer_dashboard_shipment_index') }}"><button class="ui grey button">بازگشت</button></a>
     </div>
     <div style="margin-bottom: 10px" class="ui modal" id="address_modal_form">
-        <i class="close icon"></i>
-        <div class="header">
-            <span>افزودن آدرس جدید</span>
-        </div>
-        <div class="image content">
-            <div class="description">
-                <div id="map"></div>
-                <input id="address" style="position: absolute; top: 37px;" class="controls" type="text" placeholder="آدرس">‍
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <i class="close icon"></i>
+                <div class="modal-header">
+                    <span>افزودن آدرس جدید</span>
+                </div>
+                <div class="image content modal-body">
+                    <div class="description">
+                        <div id="map"></div>
+                        <input id="address" style="position: absolute; top: 37px;" class="controls" type="text" placeholder="آدرس">‍
+                    </div>
+                </div>
+                <div id="load_form_place" style="margin: 5px" class="ui form">
+                </div>
             </div>
-        </div>
-        <div id="load_form_place" style="margin: 20px" class="ui form">
-
         </div>
     </div>
 {% endblock %}
@@ -187,5 +192,64 @@
                 );
             });
         </script>
+        <style>
+            /* The switch - the box around the slider */
+            .switch {
+                position: relative;
+                display: inline-block;
+                width: 60px;
+                height: 34px;
+            }
 
+            /* Hide default HTML checkbox */
+            .switch input {display:none;}
+
+            /* The slider */
+            .slider {
+                position: absolute;
+                cursor: pointer;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background-color: #ccc;
+                -webkit-transition: .4s;
+                transition: .4s;
+            }
+
+            .slider:before {
+                position: absolute;
+                content: "";
+                height: 26px;
+                width: 26px;
+                left: 4px;
+                bottom: 4px;
+                background-color: white;
+                -webkit-transition: .4s;
+                transition: .4s;
+            }
+
+            input:checked + .slider {
+                background-color: #2196F3;
+            }
+
+            input:focus + .slider {
+                box-shadow: 0 0 1px #2196F3;
+            }
+
+            input:checked + .slider:before {
+                -webkit-transform: translateX(26px);
+                -ms-transform: translateX(26px);
+                transform: translateX(26px);
+            }
+
+            /* Rounded sliders */
+            .slider.round {
+                border-radius: 34px;
+            }
+
+            .slider.round:before {
+                border-radius: 50%;
+            }
+        </style>
     {% endblock %}

@@ -1,5 +1,12 @@
 {% extends ':operator/dashboard:layout.html.twig' %}
-
+    {% block javascripts %}
+        {{ parent()  }}
+        {% javascripts
+        'bundles/app/javascript/operator/dashboard/shipment/reject_shipment.js'
+        %}
+        <script type="text/javascript" src="{{ asset_url }}" ></script>
+        {% endjavascripts %}
+    {% endblock %}
 {% block main %}
     <div class="page-header">
         <h2 class="ui header" style="display: inline">لیست سفارشات آماده برای انتصاب</h2>
@@ -37,15 +44,21 @@
         </tbody>
     </table>
 </div>
-    <div class="ui modal small">
-        <input class="type" type="hidden">
-        {#<div class="header">Header</div>#}
-        <div class="content">
-            <h3>مطمئن هستید ؟</h3>
-        </div>
-        <div  class="actions">
-            <div id="accept_reject_button" style="float: right;margin-bottom: 20px" class="ui approve button" data-value="">بلی</div>
-            <div style="float: right" class="ui cancel button">خیر</div>
+    <div class="ui modal small fade">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <input class="type" type="hidden">
+                    {#<div class="header">Header</div>#}
+                    <div class="content">
+                        <h3>مطمئن هستید ؟</h3>
+                    </div>
+                    <div  class="actions">
+                        <div id="accept_reject_button" style="float: right;margin-bottom: 20px" class="ui approve button btn" data-value="" data-dismiss="modal">بلی</div>
+                        <div style="float: right" class="ui cancel button btn" data-dismiss="modal">خیر</div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
         <div class="ui one column stackable center aligned page grid navigation">
@@ -53,14 +66,5 @@
                 {{ knp_pagination_render(pagination) }}
             </div>
         </div>
-    {% block javascripts %}
-        {% javascripts
-        'assets/vendor/jquery/dist/jquery.js'
-        '@semantic_base_js'
-        'bundles/app/javascript/operator/dashboard/shipment/reject_shipment.js'
-        %}
-        <script type="text/javascript" src="{{ asset_url }}" ></script>
-        {% endjavascripts %}
-    {% endblock %}
 {% endblock %}
 

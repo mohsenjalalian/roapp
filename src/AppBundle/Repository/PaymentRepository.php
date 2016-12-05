@@ -47,8 +47,8 @@ class PaymentRepository extends \Doctrine\ORM\EntityRepository
             )
             ->setParameter("invoice",$invoice)
             ->getQuery()
-            ->getSingleResult();
-        
+            ->getResult();
+
         return $result;
     }
 }
