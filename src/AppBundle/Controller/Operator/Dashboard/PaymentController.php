@@ -49,10 +49,11 @@ class PaymentController extends Controller
             $request->query->getInt('page', 1)/*page number*/,
             10/*limit per page*/
         );
+
         return $this->render(
             "operator/dashboard/payment/index.html.twig",
             [
-                'pagination' => $pagination
+                'pagination' => $pagination,
             ]
         );
     }
@@ -61,7 +62,7 @@ class PaymentController extends Controller
      * @Route("/pay_confirm", name="app_operator_dashboard_payment_pay_confirm")
      * @Method("POST")
      * @param Request $request
-     * @return NotFoundHttpException
+     * @return NotFoundHttpException | JsonResponse
      */
     public function payConfirm(Request $request)
     {
@@ -74,7 +75,7 @@ class PaymentController extends Controller
             return new NotFoundHttpException("page not found");
         }
         $this->get('app.payment_service')->operatorConfirm($payment);
-        
+
         return new JsonResponse(true);
     }
     /**

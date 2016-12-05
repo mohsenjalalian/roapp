@@ -20,7 +20,7 @@ class GoogleMapExtension extends \Twig_Extension
 
     /**
      * GoogleMapExtension constructor.
-     * @param $googleMapApi
+     * @param String $googleMapApi
      */
     public function __construct($googleMapApi)
     {
@@ -53,9 +53,7 @@ class GoogleMapExtension extends \Twig_Extension
      */
     public function getGoogleMapInitLink()
     {
-        return "https://maps.googleapis.com/maps/api/js?key="
-        .$this->googleMapApi.
-        "&language=fa&region=IR&libraries=places&callback=initMap";
+        return "https://maps.googleapis.com/maps/api/js?key=".$this->googleMapApi."&language=fa&region=IR&libraries=places&callback=initMap";
     }
 
     /**
@@ -63,9 +61,7 @@ class GoogleMapExtension extends \Twig_Extension
      */
     public function getGoogleMapEditLink()
     {
-        return "https://maps.googleapis.com/maps/api/js?key="
-        .$this->googleMapApi.
-        "&language=fa&region=IR&libraries=places&callback=editMap";
+        return "https://maps.googleapis.com/maps/api/js?key=".$this->googleMapApi."&language=fa&region=IR&libraries=places&callback=editMap";
     }
 
     /**
@@ -73,8 +69,6 @@ class GoogleMapExtension extends \Twig_Extension
      */
     public function getGoogleMapShowLink()
     {
-        return "https://maps.googleapis.com/maps/api/js?key="
-        .$this->googleMapApi.
-        "&language=fa&region=IR&libraries=places&callback=showMap";
+        return "https://maps.googleapis.com/maps/api/js?key=".$this->googleMapApi."&language=fa&region=IR&libraries=places&callback=showMap";
     }
 }

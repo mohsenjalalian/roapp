@@ -6,8 +6,15 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\Reference;
 
+/**
+ * Class GatewayPass
+ * @package AppBundle\DependencyInjection\Compiler
+ */
 class GatewayPass implements CompilerPassInterface
 {
+    /**
+     * @param ContainerBuilder $container
+     */
     public function process(ContainerBuilder $container)
     {
         // always first check if the primary service is defined
@@ -22,7 +29,7 @@ class GatewayPass implements CompilerPassInterface
 
         foreach ($taggedServices as $id => $tags) {
             // add the transport service to the ChainTransport service
-            $definition->addMethodCall('addGateway', array($id, new Reference($id)));
+            $definition->addMethodCall('addGateway', [$id, new Reference($id)]);
         }
     }
 }

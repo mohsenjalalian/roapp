@@ -6,11 +6,9 @@ use AppBundle\DBAL\EnumPersonDeviceHistoryActionType;
 use AppBundle\Entity\PersonDevice;
 use AppBundle\Entity\PersonDeviceHistory;
 use AppBundle\Form\Driver\Api\V1\DriverDeviceType;
-use Doctrine\DBAL\Types\Type;
 use FOS\RestBundle\Controller\Annotations\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
-use stdClass;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -33,7 +31,7 @@ class DriverDeviceController extends Controller
     {
         $driverDevice = new PersonDevice();
         $data = json_decode($request->getContent(), true);
-        $form = $this->createForm(DriverDeviceType::class, $driverDevice);;
+        $form = $this->createForm(DriverDeviceType::class, $driverDevice);
         $form->submit($data);
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getEntityManager();
@@ -59,7 +57,6 @@ class DriverDeviceController extends Controller
             } else {
                 $em->persist($driverDevice);
             }
-            
             $driverDeviceHistory = new PersonDeviceHistory();
             $driverDeviceHistory
                 ->setAction(EnumPersonDeviceHistoryActionType::ENUM_CREATE)
@@ -69,8 +66,8 @@ class DriverDeviceController extends Controller
             $em->persist($driverDeviceHistory);
 
             $em->flush();
-            
-            return new JsonResponse(null,Response::HTTP_NO_CONTENT);
+
+            return new JsonResponse(null, Response::HTTP_NO_CONTENT);
         }
 
         return new Response($this->get('jms_serializer')->serialize($form->getErrors(), 'json'), Response::HTTP_BAD_REQUEST);

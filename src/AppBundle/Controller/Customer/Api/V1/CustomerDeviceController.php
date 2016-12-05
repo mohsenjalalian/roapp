@@ -10,7 +10,6 @@ use FOS\RestBundle\Controller\Annotations\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -23,7 +22,7 @@ class CustomerDeviceController extends Controller
     /**
      * @Security("is_granted('IS_AUTHENTICATED_ANONYMOUSLY')")
      * @param Request $request
-     * @return JsonResponse
+     * @return Response
      * @Route()
      * @Method({"POST"})
      */
@@ -59,7 +58,6 @@ class CustomerDeviceController extends Controller
             } else {
                 $em->persist($customerDevice);
             }
-            
             $customerDeviceHistory = new PersonDeviceHistory();
             $customerDeviceHistory
                 ->setAction(EnumPersonDeviceHistoryActionType::ENUM_CREATE)

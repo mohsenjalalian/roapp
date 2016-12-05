@@ -1,7 +1,10 @@
 <?php
 namespace AppBundle\DBAL;
 
-
+/**
+ * Class EnumPersonDeviceHistoryActionType
+ * @package AppBundle\DBAL
+ */
 class EnumPersonDeviceHistoryActionType extends EnumType
 {
     const ENUM_CREATE = 1;
@@ -11,6 +14,6 @@ class EnumPersonDeviceHistoryActionType extends EnumType
     protected $values = [
         self::ENUM_CREATE,
         self::ENUM_VERIFY,
-        self::ENUM_REPORT
+        self::ENUM_REPORT,
     ];
 }

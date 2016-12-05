@@ -3,7 +3,6 @@
 namespace AppBundle\Controller\Driver\Api\V1;
 
 use AppBundle\Entity\ShipmentAssignment;
-use AppBundle\Utils\AssignmentShipment;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -32,14 +31,15 @@ class ShipmentAssignmentController extends Controller
     {
         $isAssignTimeExpire = $this->get("app.shipment_assignment")
             ->isExpiredAssignTime($assignment);
-        if($isAssignTimeExpire) {
+        if ($isAssignTimeExpire) {
             $this->get('app.shipment_assignment')
                 ->acceptRequest($assignment);
 //            $driverExchangeCode = $assignment->getDriverExchangeCode();
             $param = $this->prepareAcceptInfo($assignment);
+
             return new JsonResponse(
                 [
-                    $param
+                    $param,
                 ]
             );
         } else {
@@ -47,7 +47,7 @@ class ShipmentAssignmentController extends Controller
             $result = r\table('shipment')
                 ->filter(
                     [
-                        'shipment_id' => $assignment->getShipment()->getId()
+                        'shipment_id' => $assignment->getShipment()->getId(),
                     ]
                 )
                 ->run($conn);
@@ -56,9 +56,10 @@ class ShipmentAssignmentController extends Controller
             $driverToken = $current->getArrayCopy()['driver_token'];
             $this->get("app.shipment_assignment")
                 ->timeOutAction($assignment);
+
             return new JsonResponse(
                 [
-                    'driver_token' =>$driverToken,
+                    'driver_token' => $driverToken,
                 ],
                 Response::HTTP_GONE
             );
@@ -69,18 +70,18 @@ class ShipmentAssignmentController extends Controller
      * @Route("/{assignment}/reject")
      * @Method("POST")
      * @param ShipmentAssignment $assignment
-     * @param Request $req
+     * @param  Request            $req
      * @return JsonResponse
      */
-    public function rejectAction(ShipmentAssignment $assignment , Request $req)
+    public function rejectAction(ShipmentAssignment $assignment, Request $req)
     {
         $isAssignTimeExpire = $this->get("app.shipment_assignment")
             ->isExpiredAssignTime($assignment);
-        if($isAssignTimeExpire) {
+        if ($isAssignTimeExpire) {
             $reason = $req->getContent();
             $reason = json_decode($reason);
             $this->get("app.shipment_assignment")
-                ->rejectRequest($assignment,$reason->reason);
+                ->rejectRequest($assignment, $reason->reason);
 
             return new JsonResponse(
                 [],
@@ -96,7 +97,13 @@ class ShipmentAssignmentController extends Controller
             );
         }
     }
-    public function prepareAcceptInfo(ShipmentAssignment $assignment){
+
+    /**
+     * @param ShipmentAssignment $assignment
+     * @return array
+     */
+    public function prepareAcceptInfo(ShipmentAssignment $assignment)
+    {
         $ownerLatitude = $assignment->getShipment()
             ->getOwnerAddress()
             ->getLatitude();
@@ -143,14 +150,14 @@ class ShipmentAssignmentController extends Controller
             ->getValue();
         $shipmentPhotos = $assignment->getShipment()
             ->getPhotoFiles();
-       if ($shipmentPhotos) {
-           foreach ($shipmentPhotos as $value) {
-               $photoUrl [] = $this->get("roapp_media.upload_manager")
+        if ($shipmentPhotos) {
+            foreach ($shipmentPhotos as $value) {
+                $photoUrl [] = $this->get("roapp_media.upload_manager")
                    ->generateAbsoluteUrl($value->getMediaEntity());
-           }
-       } else {
-           $photoUrl = null;
-       }
+            }
+        } else {
+            $photoUrl = null;
+        }
         $parameters = [
             'ownerLatitude' => $ownerLatitude,
             'ownerLongitude' => $ownerLongitude,
@@ -168,8 +175,9 @@ class ShipmentAssignmentController extends Controller
             'reciverPhone' => $reciverPhone,
             'shipmentValue' => $shipmentValue,
             'shipmentPhoto' => $photoUrl,
-            'shipmentDescription' => $shipmentDescription
+            'shipmentDescription' => $shipmentDescription,
         ];
+
          return $parameters;
     }
 }

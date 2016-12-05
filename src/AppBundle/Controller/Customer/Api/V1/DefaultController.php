@@ -6,7 +6,6 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Class DefaultController
@@ -18,10 +17,9 @@ class DefaultController extends Controller
     /**
      * @Route(path="/", name="customer_home")
      * @Security("has_role('ROLE_CUSTOMER')")
-     * @param Request $request
      * @return JsonResponse
      */
-    public function indexAction(Request $request)
+    public function indexAction()
     {
         // replace this example code with whatever you need
         return new JsonResponse([

@@ -24,14 +24,14 @@ class GatewayController extends Controller
      * @param Payment $payment
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function ManualAction(Request $request, Payment $payment)
+    public function manualAction(Request $request, Payment $payment)
     {
         $form = $this->createForm(PaymentManualType::class);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
             $this->get('app.payment_service')
-                ->payConfirm($payment,$data);
+                ->payConfirm($payment, $data);
 
             return $this->redirectToRoute(
                 "app_customer_dashboard_shipment_index"
@@ -41,7 +41,7 @@ class GatewayController extends Controller
         return $this->render(
             "customer/dashboard/gateway/manual.html.twig",
             [
-                'form' => $form->createView()
+                'form' => $form->createView(),
             ]
         );
     }

@@ -39,11 +39,11 @@ class CustomerController extends Controller
             $request->query->getInt('page', 1)/*page number*/,
             5/*limit per page*/
         );
-        return $this->render
-        (
+
+        return $this->render(
             'operator/dashboard/customer/index.html.twig',
             [
-                'pagination' => $pagination
+                'pagination' => $pagination,
             ]
         );
     }
@@ -67,13 +67,13 @@ class CustomerController extends Controller
             $em->persist($customer);
             $em->flush();
 
-            return $this->redirectToRoute('app_operator_dashboard_customer_show', array('id' => $customer->getId()));
+            return $this->redirectToRoute('app_operator_dashboard_customer_show', ['id' => $customer->getId()]);
         }
 
-        return $this->render('operator/dashboard/customer/new.html.twig', array(
+        return $this->render('operator/dashboard/customer/new.html.twig', [
             'customer' => $customer,
             'form' => $form->createView(),
-        ));
+        ]);
     }
 
     /**
@@ -88,10 +88,10 @@ class CustomerController extends Controller
     {
         $deleteForm = $this->createDeleteForm($customer);
 
-        return $this->render('operator/dashboard/customer/show.html.twig', array(
+        return $this->render('operator/dashboard/customer/show.html.twig', [
             'customer' => $customer,
             'delete_form' => $deleteForm->createView(),
-        ));
+        ]);
     }
 
     /**
@@ -99,7 +99,7 @@ class CustomerController extends Controller
      *
      * @Route("/{id}/edit", name="app_operator_dashboard_customer_edit")
      * @Method({"GET", "POST"})
-     * @param Request $request
+     * @param Request  $request
      * @param Customer $customer
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
      */
@@ -114,14 +114,14 @@ class CustomerController extends Controller
             $em->persist($customer);
             $em->flush();
 
-            return $this->redirectToRoute('app_operator_dashboard_customer_edit', array('id' => $customer->getId()));
+            return $this->redirectToRoute('app_operator_dashboard_customer_edit', ['id' => $customer->getId()]);
         }
 
-        return $this->render('operator/dashboard/customer/edit.html.twig', array(
+        return $this->render('operator/dashboard/customer/edit.html.twig', [
             'customer' => $customer,
             'edit_form' => $editForm->createView(),
             'delete_form' => $deleteForm->createView(),
-        ));
+        ]);
     }
 
     /**
@@ -129,7 +129,7 @@ class CustomerController extends Controller
      *
      * @Route("/delete/{id}", name="app_operator_dashboard_customer_delete")
      * @Method("DELETE")
-     * @param Request $request
+     * @param Request  $request
      * @param Customer $customer
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
@@ -156,7 +156,7 @@ class CustomerController extends Controller
     private function createDeleteForm(Customer $customer)
     {
         return $this->createFormBuilder()
-            ->setAction($this->generateUrl('app_operator_dashboard_customer_delete', array('id' => $customer->getId())))
+            ->setAction($this->generateUrl('app_operator_dashboard_customer_delete', ['id' => $customer->getId()]))
             ->setMethod('DELETE')
             ->getForm()
             ;

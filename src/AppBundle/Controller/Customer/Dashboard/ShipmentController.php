@@ -6,12 +6,8 @@ use AppBundle\Entity\Address;
 use AppBundle\Entity\Customer;
 use AppBundle\Entity\Invoice;
 use AppBundle\Form\Customer\Dashboard\AddressType;
-use AppBundle\Form\Customer\Dashboard\PaymentStyle;
 use AppBundle\Form\Customer\Dashboard\ShipmentType;
 use AppBundle\Form\Customer\Dashboard\ValidationCodeType;
-use DateTime;
-use jDateTime;
-//use Symfony\Component\BrowserKit\Response;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -20,8 +16,6 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use AppBundle\Entity\Shipment;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Symfony\Component\Validator\Constraints\Url;
 use r;
 
 /**
@@ -34,9 +28,10 @@ class ShipmentController extends Controller
 {
     /**
      * Lists all Shipment entities.
-     *
+     * @param Request $request
      * @Route("/", name="app_customer_dashboard_shipment_index")
      * @Method("GET")
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
      */
     public function indexAction(Request $request)
     {
@@ -44,13 +39,12 @@ class ShipmentController extends Controller
 
         $query = $em->getRepository('AppBundle:Shipment')
             ->createQueryBuilder('s')
-            ->join('s.ownerAddress','ow')
-            ->join('ow.customer','oc')
+            ->join('s.ownerAddress', 'ow')
+            ->join('ow.customer', 'oc')
             ->where('oc.id =:user_id')
-            ->setParameter('user_id',$this->getUser()->getId())
-            ->orderBy('s.pickUpTime','Desc')
+            ->setParameter('user_id', $this->getUser()->getId())
+            ->orderBy('s.pickUpTime', 'Desc')
             ->getQuery();
-        
         $paginator  = $this->get('knp_paginator');
         $pagination = $paginator->paginate(
             $query, /* query NOT result */
@@ -58,9 +52,9 @@ class ShipmentController extends Controller
             5/*limit per page*/
         );
 
-        return $this->render(':customer/dashboard/shipment:index.html.twig', array(
+        return $this->render(':customer/dashboard/shipment:index.html.twig', [
             'pagination' => $pagination,
-        ));
+        ]);
     }
 
     /**
@@ -93,8 +87,8 @@ class ShipmentController extends Controller
                         'customer_dashboard_address_add_address'
                     ),
                     'attr' => [
-                        'id' => 'add_address'
-                    ]
+                        'id' => 'add_address',
+                    ],
                 ]
             )
         ;
@@ -161,8 +155,8 @@ class ShipmentController extends Controller
             r\table("shipment")
                 ->insert($document)
                 ->run($conn);
-            
-            return $this->redirectToRoute('app_customer_dashboard_invoice_checkout', array('id' => $shipment->getInvoice()->getId()));
+
+            return $this->redirectToRoute('app_customer_dashboard_invoice_checkout', ['id' => $shipment->getInvoice()->getId()]);
         }
 
         return $this->render(
@@ -182,13 +176,13 @@ class ShipmentController extends Controller
      * @param Request $request
      * @return JsonResponse
      */
-    public function loadMapAction (Request $request) {
-
+    public function loadMapAction(Request $request)
+    {
         $conn = r\connect('localhost', '28015', 'roapp', '09126354397');
         $result = r\table('shipment')
             ->filter(
                 [
-                    'tracking_token' => $request->get('token')
+                    'tracking_token' => $request->get('token'),
                 ]
             )
             ->run($conn);
@@ -204,7 +198,7 @@ class ShipmentController extends Controller
             ->limit(4)
             ->run($conn);
 
-        $last_location = r\table('driver_location')
+        $lastLocation = r\table('driver_location')
             ->filter(
                 [
                     'shipment_id' => $id,
@@ -218,18 +212,18 @@ class ShipmentController extends Controller
         foreach ($cursor as $value) {
             $output[$counter]['lat'] = $value->getArrayCopy()['lat'];
             $output[$counter]['lng'] = $value->getArrayCopy()['lng'];
-            $output[$counter]['lastLat'] = $last_location[0]->getArrayCopy()['lat'];
-            $output[$counter]['lastLng'] = $last_location[0]->getArrayCopy()['lng'];
+            $output[$counter]['lastLat'] = $lastLocation[0]->getArrayCopy()['lat'];
+            $output[$counter]['lastLng'] = $lastLocation[0]->getArrayCopy()['lng'];
             $counter = $counter+1;
         }
 
-        return new JsonResponse($output );
+        return new JsonResponse($output);
     }
 
     /**
      * @Route("/load_owner_form",name="app_customer_dashboard_shipment_load_owner_form")
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
      */
-    // load owner address form for show in modalBox
     public function loadOwnerAddressFormAction()
     {
         $addressEntity = new Address();
@@ -242,8 +236,8 @@ class ShipmentController extends Controller
                         'customer_dashboard_address_add_address'
                     ),
                     'attr' => [
-                        'id' => 'add_address'
-                    ]
+                        'id' => 'add_address',
+                    ],
                 ]
             )
         ;
@@ -261,7 +255,6 @@ class ShipmentController extends Controller
      * @param Request $request
      * @return Response
      */
-    // load reciver address form for show in modalBox
     public function loadOtherAddressFormAction(Request $request)
     {
         $addressEntity = new Address();
@@ -274,7 +267,7 @@ class ShipmentController extends Controller
                         'customer_dashboard_address_add_address'
                     ),
                     'attr' => [
-                        'id' => 'add_address'
+                        'id' => 'add_address',
                     ],
                 ]
             )
@@ -293,7 +286,6 @@ class ShipmentController extends Controller
      * @param Request $request
      * @return JsonResponse
      */
-    // fetch customer Address from DB
     public function getCustomerAddressAction(Request $request)
     {
         $currentCustomer = $this->getUser()->getId();
@@ -302,7 +294,7 @@ class ShipmentController extends Controller
             ->getRepository("AppBundle:Customer")
             ->findOneBy(
                 [
-                    'phone' => $phoneNumber
+                    'phone' => $phoneNumber,
                 ]
             );
         // check does customer exist with entered phone number ??
@@ -316,8 +308,8 @@ class ShipmentController extends Controller
             // check customer has any address ??
             if ($address) {
                 foreach ($address as $ind => $val) {
-                    $description [] = $val->getDescription();
-                    $addressId [] = $val->getId();
+                    $description[] = $val->getDescription();
+                    $addressId[] = $val->getId();
                 }
                 $res = array_combine($addressId, $description);
                 $res = json_encode($res);
@@ -331,7 +323,7 @@ class ShipmentController extends Controller
         } else {
             $msg = "there is no address";
 
-            return new Response($msg);
+            return new JsonResponse($msg);
         }
     }
 
@@ -340,7 +332,6 @@ class ShipmentController extends Controller
      * @param Request $request
      * @return Response
      */
-    // calculation shipment's price 
     public function calcShipmentPriceAction(Request $request)
     {
         $ownerAddressId = $request->request->get('ownerAddressId');
@@ -355,13 +346,13 @@ class ShipmentController extends Controller
         $otherAddress = $this->getDoctrine()
             ->getRepository("AppBundle:Address")
             ->find($otherAddressId);
-        if($otherAddress == null){
+        if ($otherAddress == null) {
             $em = $this->getDoctrine()
                 ->getRepository("AppBundle:Address");
             $qb = $em->createQueryBuilder('p')
                 ->where('p.customer=:reciverId')
-                ->setParameter('reciverId',$otherAddressId)
-                ->orderBy('p.id','DESC')
+                ->setParameter('reciverId', $otherAddressId)
+                ->orderBy('p.id', 'DESC')
                 ->getQuery()
                 ->getResult();
             $otherAddress = $this->getDoctrine()
@@ -430,7 +421,7 @@ class ShipmentController extends Controller
      *
      * @Route("/{id}", name="app_customer_dashboard_shipment_show")
      * @Method({"GET","POST"})
-     * @param Request $request
+     * @param Request  $request
      * @param Shipment $shipment
      * @return Response
      */
@@ -447,7 +438,7 @@ class ShipmentController extends Controller
                 ->findBy(
                     [
                         'shipment' => $shipmentId,
-                        'driverExchangeCode' => $driverExchangeCode
+                        'driverExchangeCode' => $driverExchangeCode,
                     ]
                 )
             ;
@@ -466,7 +457,6 @@ class ShipmentController extends Controller
             } else {
                 return new JsonResponse(false);
             }
-
         }
         $conn = r\connect('localhost', '28015', 'roapp', '09126354397');
         $t = r\table('shipment')
@@ -481,19 +471,22 @@ class ShipmentController extends Controller
         $trackingToken = $current->getArrayCopy()['tracking_token'];
 
         $deleteForm = $this->createDeleteForm($shipment);
-        return $this->render('customer/dashboard/shipment/show.html.twig', array(
+
+        return $this->render('customer/dashboard/shipment/show.html.twig', [
             'shipment' => $shipment,
-            'tracking_token' =>$trackingToken,
+            'tracking_token' => $trackingToken,
             'delete_form' => $deleteForm->createView(),
-            'form' => $form->createView()
-        ));
+            'form' => $form->createView(),
+        ]);
     }
 
     /**
      * Displays a form to edit an existing Shipment entity.
-     *
+     * @param Request  $request
+     * @param Shipment $shipment
      * @Route("/{id}/edit", name="app_customer_dashboard_shipment_edit")
      * @Method({"GET", "POST"})
+     * @return Response
      */
     public function editAction(Request $request, Shipment $shipment)
     {
@@ -506,14 +499,14 @@ class ShipmentController extends Controller
             $em->persist($shipment);
             $em->flush();
 
-            return $this->redirectToRoute('app_customer_dashboard_shipment_edit', array('id' => $shipment->getId()));
+            return $this->redirectToRoute('app_customer_dashboard_shipment_edit', ['id' => $shipment->getId()]);
         }
 
-        return $this->render('customer/dashboard/shipment/edit.html.twig', array(
+        return $this->render('customer/dashboard/shipment/edit.html.twig', [
             'shipment' => $shipment,
             'edit_form' => $editForm->createView(),
             'delete_form' => $deleteForm->createView(),
-        ));
+        ]);
     }
 
     /**
@@ -521,7 +514,7 @@ class ShipmentController extends Controller
      *
      * @Route("/{id}", name="app_customer_dashboard_shipment_delete")
      * @Method("DELETE")
-     * @param Request $request
+     * @param Request  $request
      * @param Shipment $shipment
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
@@ -549,7 +542,7 @@ class ShipmentController extends Controller
     private function createDeleteForm(Shipment $shipment)
     {
         return $this->createFormBuilder()
-            ->setAction($this->generateUrl('app_customer_dashboard_shipment_delete', array('id' => $shipment->getId())))
+            ->setAction($this->generateUrl('app_customer_dashboard_shipment_delete', ['id' => $shipment->getId()]))
             ->setMethod('DELETE')
             ->getForm()
             ;

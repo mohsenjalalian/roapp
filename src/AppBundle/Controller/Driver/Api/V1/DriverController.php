@@ -3,7 +3,6 @@
 namespace AppBundle\Controller\Driver\Api\V1;
 
 use AppBundle\Entity\Driver;
-use AppBundle\Entity\Shipment;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -51,7 +50,7 @@ class DriverController extends Controller
                 return new JsonResponse([], Response::HTTP_NO_CONTENT);
             }
         } else {
-           return new JsonResponse([],Response::HTTP_BAD_REQUEST);
+            return new JsonResponse([], Response::HTTP_BAD_REQUEST);
         }
     }
 }

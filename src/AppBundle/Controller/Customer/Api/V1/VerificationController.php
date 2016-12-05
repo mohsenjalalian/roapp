@@ -14,13 +14,10 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Validator\Constraints\DateTime;
 
 /**
  * Class VerificationController
- * 
  * @Route(path="/verification")
- * 
  * @package AppBundle\Controller\Customer\Api\V1
  */
 class VerificationController extends Controller
@@ -29,14 +26,13 @@ class VerificationController extends Controller
      * Verify login form
      *
      * @Security("is_granted('IS_AUTHENTICATED_ANONYMOUSLY')")
-     * 
      * @Route(path="/request")
      *
      * @param Request $request
      *
      * @return Response
      */
-    public function verification_request(Request $request)
+    public function verificationRequest(Request $request)
     {
         $data = json_decode($request->getContent(), true);
 
@@ -87,7 +83,7 @@ class VerificationController extends Controller
             $yesterday =  date('Y-m-d H:m:s', time() - 60 * 60 * 24);
             $lastFiveVerificationRequest = $qb
                 ->select('history.id')
-                ->where('history.dateTime BETWEEN :yesterday AND :now' )
+                ->where('history.dateTime BETWEEN :yesterday AND :now')
                 ->setParameter('yesterday', $yesterday)
                 ->setParameter('now', $now)
                 ->andWhere('history.status = TRUE')
@@ -104,7 +100,7 @@ class VerificationController extends Controller
                     ->setData(
                         [
                             "message" => $this->get('translator')
-                                ->trans('Maximum verification number reached.')
+                                ->trans('Maximum verification number reached.'),
                         ]
                     )
                     ->setStatus(false);
@@ -114,7 +110,7 @@ class VerificationController extends Controller
                 return new JsonResponse(
                     [
                         "error" => true,
-                        "message" => $this->get('translator')->trans('You reached maximum verification request number.')
+                        "message" => $this->get('translator')->trans('You reached maximum verification request number.'),
                     ]
                 );
             }
@@ -126,7 +122,7 @@ class VerificationController extends Controller
                 ->setData(
                     [
                         "message" => $this->get('translator')
-                            ->trans('Sending verification sms.')
+                            ->trans('Sending verification sms.'),
                     ]
                 )
                 ->setStatus(true);
@@ -136,7 +132,7 @@ class VerificationController extends Controller
 
             $this->get('app.sms')->send(
                 $form->get('phone')->getData(),
-                $this->get('translator')->trans('Your verification code is:') . $randomVerificationNumber
+                $this->get('translator')->trans('Your verification code is:').$randomVerificationNumber
             );
 
             return new Response(null, Response::HTTP_NO_CONTENT);
@@ -154,10 +150,9 @@ class VerificationController extends Controller
      *
      * @return mixed
      */
-    public function verification_report(Request $request)
+    public function verificationReport(Request $request)
     {
         $data = json_decode($request->getContent(), true);
-        
         $form = $this->createForm(VerificationReportType::class);
         $form->submit($data);
 
@@ -184,7 +179,7 @@ class VerificationController extends Controller
                     ->setData(
                         [
                             "message" => $this->get('translator')
-                                ->trans('Verification report: Customer device not found.')
+                                ->trans('Verification report: Customer device not found.'),
                         ]
                     )
                     ->setStatus(false);
@@ -207,17 +202,16 @@ class VerificationController extends Controller
                 ->setData(
                     [
                         "message" => $this->get('translator')
-                            ->trans('Verification report: Customer Verified Successfully.')
+                            ->trans('Verification report: Customer Verified Successfully.'),
                     ]
                 )
                 ->setStatus(true);
             $em->persist($customerDeviceHistory);
-
             $em->flush();
-            
+
             return new JsonResponse(
                 [
-                    'token' => $token
+                    'token' => $token,
                 ]
             );
         }

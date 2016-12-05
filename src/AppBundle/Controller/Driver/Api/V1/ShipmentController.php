@@ -34,7 +34,7 @@ class ShipmentController extends Controller
         $shipment = $this->getDoctrine()
             ->getRepository("AppBundle:Shipment")
             ->find($data->shipmentId);
-        if($shipment) {
+        if ($shipment) {
             $shipment->setStatus(Shipment::STATUS_ASSIGNMENT_FAIL);
             $shipment->setReason($data->reason);
 
@@ -45,7 +45,7 @@ class ShipmentController extends Controller
             $sendNotification = $this->get("logger");
             $sendNotification->info("your shipment failed By driver");
 
-            return new JsonResponse([],Response::HTTP_NO_CONTENT);
+            return new JsonResponse([], Response::HTTP_NO_CONTENT);
         } else {
             return new JsonResponse(
                 [],
@@ -80,6 +80,7 @@ class ShipmentController extends Controller
             // send sms to sender customer
             $logger = $this->get("logger");
             $logger->info("your package deliver to destination");
+
             return new JsonResponse(
                 [],
                 Response::HTTP_OK
@@ -109,20 +110,20 @@ class ShipmentController extends Controller
             ->find($shipmentId);
         if ($shipment) {
             switch ($data->status) {
-                case 1 : // status = on pick up
+                case 1: // status = on pick up
                     $shipment->setStatus(Shipment::STATUS_ON_PICK_UP);
                     break;
-                case 2 : // status =  on delivery
+                case 2: // status =  on delivery
                     $shipment->setStatus(Shipment::STATUS_ON_DELIVERY);
                     break;
-                case 3 : // status = finish
+                case 3: // status = finish
                     $shipment->setStatus(Shipment::STATUS_FINISH);
                     $driverId = $this->getUser()
                         ->getId();
                     $driver = $this->getDoctrine()
                         ->getRepository("AppBundle:Driver")
                         ->find($driverId);
-                    if ($driver instanceof Driver){
+                    if ($driver instanceof Driver) {
                         $driver->setStatus(Driver::STATUS_FREE);
                     } else {
                         return new JsonResponse(
