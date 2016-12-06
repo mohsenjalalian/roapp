@@ -9,6 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
+// @codingStandardsIgnoreStart
 /**
  * @ORM\Entity
  * @ORM\Table(name="person")
@@ -18,9 +19,9 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  * @UniqueEntity(fields="phone", message="شماره تلفن وارد شده تکراری است.")
  * @UniqueEntity(fields="email", message="پست الکترونیکی وارد شده تکراری است.")
  */
-
 abstract class Person
 {
+    // @codingStandardsIgnoreEnd
     //TODO: Refactor className to AbstractPerson
     /**
      * @var int

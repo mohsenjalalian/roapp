@@ -1,6 +1,7 @@
 <?php
 
 namespace AppBundle\Utils\Notification\Messages;
+
 use AppBundle\Entity\Person;
 use Doctrine\ORM\EntityManager;
 

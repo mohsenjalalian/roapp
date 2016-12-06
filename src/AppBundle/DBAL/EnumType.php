@@ -1,4 +1,5 @@
 <?php
+
 namespace AppBundle\DBAL;
 
 use Doctrine\DBAL\Types\Type;
@@ -7,9 +8,11 @@ use Doctrine\DBAL\Platforms\AbstractPlatform;
 /**
  * Class EnumType
  * @package AppBundle\DBAL
+ * @codingStandardsIgnoreStart
  */
 abstract class EnumType extends Type
 {
+    // @codingStandardsIgnoreEnd
     protected $name;
     protected $values = [];
 

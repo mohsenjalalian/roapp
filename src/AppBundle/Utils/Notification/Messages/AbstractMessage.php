@@ -1,6 +1,7 @@
 <?php
 
 namespace AppBundle\Utils\Notification\Messages;
+
 use Doctrine\ORM\EntityManager;
 
 /**
@@ -246,7 +247,7 @@ abstract class AbstractMessage
         if (!is_null($this->badge) & !empty($this->badge)) {
             $notification['badge'] = $this->badge;
         }
-        
+
         return $notification;
     }
 }
