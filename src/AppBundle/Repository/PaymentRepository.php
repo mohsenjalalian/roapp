@@ -5,6 +5,7 @@ namespace AppBundle\Repository;
 use AppBundle\Entity\Invoice;
 use AppBundle\Entity\Payment;
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\NoResultException;
 
 /**
  * PaymentRepository
@@ -39,21 +40,25 @@ class PaymentRepository extends EntityRepository
      */
     public function findOpenPayment(Invoice $invoice)
     {
-        $result = $this->createQueryBuilder("p")
-            ->where("p.invoice=:invoice")
-            ->andWhere('p.status IN (:status)')
-            ->setParameter(
-                'status',
-                [
-                    Payment::STATUS_WAITING_FOR_APPROVE,
-                    Payment::STATUS_APPROVED,
-                    Payment::STATUS_WAITING_FOR_PAYMENT,
-                    Payment::STATUS_IN_PROGRESS,
-                ]
-            )
-            ->setParameter("invoice", $invoice)
-            ->getQuery()
-            ->getResult();
+        try {
+            $result = $this->createQueryBuilder("p")
+                ->where("p.invoice=:invoice")
+                ->andWhere('p.status IN (:status)')
+                ->setParameter(
+                    'status',
+                    [
+                        Payment::STATUS_WAITING_FOR_APPROVE,
+                        Payment::STATUS_APPROVED,
+                        Payment::STATUS_WAITING_FOR_PAYMENT,
+                        Payment::STATUS_IN_PROGRESS,
+                    ]
+                )
+                ->setParameter("invoice", $invoice)
+                ->getQuery()
+                ->getSingleResult();
+        } catch (NoResultException $e) {
+            $result = null;
+        }
 
         return $result;
     }
