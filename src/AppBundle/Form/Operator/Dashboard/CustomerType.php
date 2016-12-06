@@ -3,6 +3,8 @@
 namespace AppBundle\Form\Operator\Dashboard;
 
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\EmailType;
+use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -19,10 +21,41 @@ class CustomerType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('username')
-            ->add('password')
-            ->add('isActive')
-            ->add('phone');
+            ->add(
+                'fullName',
+                null,
+                [
+                    'label' => 'نام و نام خانوادگی',
+                ]
+            )
+            ->add(
+                'email',
+                EmailType::class,
+                [
+                    'label' => 'ایمیل',
+                ]
+            )
+            ->add(
+                'phone',
+                null,
+                [
+                    'label' => 'شماره تلفن همراه',
+                ]
+            )
+            ->add(
+                'password',
+                PasswordType::class,
+                [
+                    'label' => 'رمز عبور',
+                ]
+            )
+            ->add(
+                'isActive',
+                null,
+                [
+                    'label' => 'وضعیت',
+                ]
+            );
     }
 
     /**
