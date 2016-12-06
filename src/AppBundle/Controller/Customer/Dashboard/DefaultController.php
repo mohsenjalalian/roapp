@@ -4,6 +4,7 @@ namespace AppBundle\Controller\Customer\Dashboard;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 
 /**
  * Class DefaultController
@@ -14,6 +15,7 @@ class DefaultController extends Controller
 {
     /**
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     * @Route("/", name="app_customer_dashboard_default_index")
      */
     public function indexAction()
     {
