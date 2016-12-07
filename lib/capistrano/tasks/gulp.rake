@@ -11,6 +11,7 @@ namespace :gulp do
       execute "cd '#{release_path}';/usr/bin/php bin/console doctrine:schema:update --force"
       execute "cd '#{release_path}';/usr/bin/php bin/console cache:clear --env=prod"
       execute "cd '#{release_path}';/usr/bin/php bin/console cache:clear --env=dev"
+      execute "cd '#{release_path}/rethink';npm install --no-interaction"
     end
   end
 end
