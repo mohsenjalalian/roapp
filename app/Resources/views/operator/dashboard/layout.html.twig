@@ -77,6 +77,25 @@
     </div> <!-- / #main-menu -->
     {#{{ knp_menu_render('main_menu', {"template": "menu.html.twig", "currentClass": "active"}) }}#}
     <div id="content-wrapper">
+        <ul id="page-breadcrumb-demo" class="breadcrumb breadcrumb-page breadcrumb-dark" style="background: rgb(71, 142, 158); display: block;">
+            <li><a href="{{ path('app_operator_dashboard_default_index') }}">خانه</a></li>
+            {% block breadcrumbs %} {% endblock %}
+        </ul>
+
+        <!-- page title -->
+        {% set _page_title = block('page_title') %}
+        {% if _page_title is not empty %}
+            <div class="page-header">
+                <h1 class="ui header" style="display: inline">
+                    {{ _page_title|raw }}
+                </h1>
+                {% set _header_link = block('header_link') %}
+                {% if _header_link is not empty %}
+                    {{ _header_link|raw }}
+                {% endif %}
+            </div>
+        {% endif %}
+
         {% block main %}{% endblock %}
     </div> <!-- / #content-wrapper -->
     <div id="main-menu-bg"></div>
