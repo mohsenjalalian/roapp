@@ -2,10 +2,7 @@
 
 namespace AppBundle\Entity;
 
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
-use Doctrine\ORM\Mapping\ManyToMany;
-use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * Operator
@@ -13,7 +10,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
  * @ORM\Table(name="operator")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\OperatorRepository")
  */
-class Operator extends Person implements UserInterface, \Serializable
+class Operator extends Person
 {
 //    /**
 //     * @var int
@@ -37,21 +34,6 @@ class Operator extends Person implements UserInterface, \Serializable
 //     * @ORM\Column(name="password", type="string", length=255)
 //     */
 //    private $password;
-
-    /**
-     * @var int
-     *
-     * @ManyToMany(targetEntity="AppBundle\Entity\Role", inversedBy="operatorId")
-     */
-    private $roleId;
-    /**
-     * Constructor
-     */
-    public function __construct()
-    {
-        parent::__construct();
-        $this->roleId = new ArrayCollection();
-    }
 
 //    /**
 //     * Get id
@@ -110,74 +92,6 @@ class Operator extends Person implements UserInterface, \Serializable
 //    {
 //        return $this->password;
 //    }
-
-    /**
-     * Add roleId
-     *
-     * @param \AppBundle\Entity\Role $roleId
-     *
-     * @return Operator
-     */
-    public function addRoleId(Role $roleId)
-    {
-        $this->roleId[] = $roleId;
-
-        return $this;
-    }
-
-    /**
-     * Remove roleId
-     *
-     * @param \AppBundle\Entity\Role $roleId
-     */
-    public function removeRoleId(Role $roleId)
-    {
-        $this->roleId->removeElement($roleId);
-    }
-
-    /**
-     * Get roleId
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getRoleId()
-    {
-        return $this->roleId;
-    }
-
-    /**
-     * Returns the roles granted to the user.
-     *
-     * <code>
-     * public function getRoles()
-     * {
-     *     return array('ROLE_USER');
-     * }
-     * </code>
-     *
-     * Alternatively, the roles might be stored on a ``roles`` property,
-     * and populated in any number of different ways when the user object
-     * is created.
-     *
-     * @return string
-     */
-    public function getRoles()
-    {
-        return ['ROLE_USER'];
-    }
-
-    /**
-     * Returns the salt that was originally used to encode the password.
-     *
-     * This can return null if the password was not encoded using a salt.
-     *
-     * @return string|null The salt
-     */
-    public function getSalt()
-    {
-        return null;
-    }
-
     /**
      * Returns the username used to authenticate the user.
      *
@@ -207,13 +121,13 @@ class Operator extends Person implements UserInterface, \Serializable
      */
     public function serialize()
     {
-        return serialize(array(
+        return serialize([
             $this->id,
             $this->email,
             $this->password,
             // see section on salt below
             // $this->salt,
-        ));
+        ]);
         // TODO: Implement serialize() method.
     }
 

@@ -3,14 +3,13 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Driver
  * @ORM\Entity(repositoryClass="AppBundle\Repository\DriverRepository")
  */
-class Driver extends Person implements UserInterface
+class Driver extends Person
 {
     const STATUS_FREE = 1;
     const STATUS_BUSY = 0;
@@ -28,7 +27,7 @@ class Driver extends Person implements UserInterface
      */
     public function getRoles()
     {
-        return array('ROLE_DRIVER');
+        return ['ROLE_DRIVER'];
     }
 
     /**
@@ -119,5 +118,42 @@ class Driver extends Person implements UserInterface
     public function getStatus()
     {
         return $this->status;
+    }
+
+    /**
+     * String representation of object
+     * @link http://php.net/manual/en/serializable.serialize.php
+     * @return string the string representation of the object or null
+     * @since 5.1.0
+     */
+    public function serialize()
+    {
+        return serialize([
+            $this->id,
+            $this->password,
+            // see section on salt below
+            // $this->salt,
+        ]);
+        // TODO: Implement serialize() method.
+    }
+
+    /**
+     * Constructs the object
+     * @link http://php.net/manual/en/serializable.unserialize.php
+     * @param string $serialized <p>
+     * The string representation of the object.
+     * </p>
+     * @return void
+     * @since 5.1.0
+     */
+    public function unserialize($serialized)
+    {
+        list (
+            $this->id,
+            $this->password,
+            // see section on salt below
+            // $this->salt
+            ) = unserialize($serialized);
+        // TODO: Implement unserialize() method.
     }
 }
