@@ -8,10 +8,11 @@ use Symfony\Component\Security\Core\User\UserInterface;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Doctrine\ORM\Mapping\ManyToMany;
 
 // @codingStandardsIgnoreStart
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\PersonRepository")
  * @ORM\Table(name="person")
  * @ORM\InheritanceType("SINGLE_TABLE")
  * @ORM\DiscriminatorColumn(name="type", type="string")
@@ -19,7 +20,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  * @UniqueEntity(fields="phone", message="شماره تلفن وارد شده تکراری است.")
  * @UniqueEntity(fields="email", message="پست الکترونیکی وارد شده تکراری است.")
  */
-abstract class Person
+abstract class Person implements UserInterface, \Serializable
 {
     // @codingStandardsIgnoreEnd
     //TODO: Refactor className to AbstractPerson
@@ -77,6 +78,20 @@ abstract class Person
      * @OneToMany(targetEntity="AppBundle\Entity\Payment", mappedBy="person")
      */
     protected $payment;
+
+    /**
+     * @var int
+     *
+     * @ManyToMany(targetEntity="AppBundle\Entity\Role", inversedBy="people")
+     */
+    private $roles;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="scope", type="string", length=255)
+     */
+    private $scope;
 
     /**
      * Get id
@@ -254,6 +269,7 @@ abstract class Person
     {
         return $this->activationToken;
     }
+
     /**
      * Constructor
      */
@@ -294,5 +310,84 @@ abstract class Person
     public function getPayment()
     {
         return $this->payment;
+    }
+
+    /**
+     * Add role
+     *
+     * @param \AppBundle\Entity\Role $role
+     *
+     * @return Person
+     */
+    public function addRole(\AppBundle\Entity\Role $role)
+    {
+        $this->roles[] = $role;
+
+        return $this;
+    }
+
+    /**
+     * Remove role
+     *
+     * @param \AppBundle\Entity\Role $role
+     */
+    public function removeRole(\AppBundle\Entity\Role $role)
+    {
+        $this->roles->removeElement($role);
+    }
+
+    /**
+     * Get roles
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getRoles()
+    {
+        return $this->roles;
+    }
+
+    /**
+     * Set scope
+     *
+     * @param string $scope
+     *
+     * @return Person
+     */
+    public function setScope($scope)
+    {
+        $this->scope = $scope;
+
+        return $this;
+    }
+
+    /**
+     * Get scope
+     *
+     * @return string
+     */
+    public function getScope()
+    {
+        return $this->scope;
+    }
+
+    /**
+     * @return null
+     */
+    public function getSalt()
+    {
+        // you *may* need a real salt depending on your encoder
+        // see section on salt below
+        return null;
+    }
+
+    /**
+     * Removes sensitive data from the user.
+     *
+     * This is important if, at any given point, sensitive information like
+     * the plain-text password is stored on this object.
+     */
+    public function eraseCredentials()
+    {
+        // TODO: Implement eraseCredentials() method.
     }
 }

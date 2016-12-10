@@ -2,17 +2,15 @@
 
 namespace AppBundle\Entity;
 
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
-use Doctrine\ORM\Mapping\ManyToMany;
 
 /**
- * Role
+ * Permission
  *
- * @ORM\Table(name="role")
- * @ORM\Entity(repositoryClass="AppBundle\Repository\RoleRepository")
+ * @ORM\Table(name="permission")
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\PermissionRepository")
  */
-class Role
+class Permission
 {
     /**
      * @var int
@@ -33,16 +31,16 @@ class Role
     /**
      * @var string
      *
+     * @ORM\Column(name="type", type="string", length=255)
+     */
+    private $type;
+
+    /**
+     * @var string
+     *
      * @ORM\Column(name="label", type="string", length=255)
      */
     private $label;
-
-    /**
-     * @var int
-     *
-     * @ManyToMany(targetEntity="AppBundle\Entity\Person", mappedBy="roles")
-     */
-    private $people;
 
     /**
      * @var string
@@ -52,17 +50,17 @@ class Role
     private $scope;
 
     /**
-     * Constructor
+     * @var string
+     *
+     * @ORM\Column(name="subject_class", type="string", length=255)
      */
-    public function __construct()
-    {
-        $this->operatorId = new ArrayCollection();
-    }
+    private $subjectClass;
+
 
     /**
      * Get id
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -74,7 +72,7 @@ class Role
      *
      * @param string $name
      *
-     * @return Role
+     * @return Permission
      */
     public function setName($name)
     {
@@ -94,11 +92,35 @@ class Role
     }
 
     /**
+     * Set type
+     *
+     * @param string $type
+     *
+     * @return Permission
+     */
+    public function setType($type)
+    {
+        $this->type = $type;
+
+        return $this;
+    }
+
+    /**
+     * Get type
+     *
+     * @return string
+     */
+    public function getType()
+    {
+        return $this->type;
+    }
+
+    /**
      * Set label
      *
      * @param string $label
      *
-     * @return Role
+     * @return Permission
      */
     public function setLabel($label)
     {
@@ -118,37 +140,27 @@ class Role
     }
 
     /**
-     * Add person
+     * Set subjectClass
      *
-     * @param \AppBundle\Entity\Person $person
+     * @param string $subjectClass
      *
-     * @return Role
+     * @return Permission
      */
-    public function addPerson(\AppBundle\Entity\Person $person)
+    public function setSubjectClass($subjectClass)
     {
-        $this->people[] = $person;
+        $this->subjectClass = $subjectClass;
 
         return $this;
     }
 
     /**
-     * Remove person
+     * Get subjectClass
      *
-     * @param \AppBundle\Entity\Person $person
+     * @return string
      */
-    public function removePerson(\AppBundle\Entity\Person $person)
+    public function getSubjectClass()
     {
-        $this->people->removeElement($person);
-    }
-
-    /**
-     * Get people
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getPeople()
-    {
-        return $this->people;
+        return $this->subjectClass;
     }
 
     /**
@@ -156,7 +168,7 @@ class Role
      *
      * @param string $scope
      *
-     * @return Role
+     * @return Permission
      */
     public function setScope($scope)
     {
