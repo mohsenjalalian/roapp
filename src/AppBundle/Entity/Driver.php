@@ -3,7 +3,6 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -28,7 +27,7 @@ class Driver extends Person
      */
     public function getRoles()
     {
-        return array('ROLE_DRIVER');
+        return ['ROLE_DRIVER'];
     }
 
     /**
@@ -120,6 +119,7 @@ class Driver extends Person
     {
         return $this->status;
     }
+
     /**
      * String representation of object
      * @link http://php.net/manual/en/serializable.serialize.php
