@@ -27,7 +27,7 @@
 /web/uploads/
 /src/AppBundle/Resources/public/stylesheets/
 /src/AppBundle/Resources/public/.sass-cache/
-*~
+/*~
 !/app/data
 /app/data/*
 !app/data/.gitkeep

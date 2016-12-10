@@ -45,7 +45,7 @@ class Permission
     /**
      * @var string
      *
-     * @ORM\Column(name="scope", type="string", length=255)
+     * @ORM\Column(name="scope", type="json_array", length=255)
      */
     private $scope;
 
@@ -55,8 +55,12 @@ class Permission
      * @ORM\Column(name="subject_class", type="string", length=255)
      */
     private $subjectClass;
-
-
+    
+    /**
+     * @ORM\ManyToMany(targetEntity="AppBundle\Entity\Role", inversedBy="permissions")
+     */
+    private $roles;
+    
     /**
      * Get id
      *
@@ -166,7 +170,7 @@ class Permission
     /**
      * Set scope
      *
-     * @param string $scope
+     * @param array $scope
      *
      * @return Permission
      */
@@ -180,10 +184,59 @@ class Permission
     /**
      * Get scope
      *
-     * @return string
+     * @return array
      */
     public function getScope()
     {
         return $this->scope;
+    }
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->roles = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+    /**
+     * Add role
+     *
+     * @param \AppBundle\Entity\Role $role
+     *
+     * @return Permission
+     */
+    public function addRole(\AppBundle\Entity\Role $role)
+    {
+        $this->roles[] = $role;
+
+        return $this;
+    }
+
+    /**
+     * Remove role
+     *
+     * @param \AppBundle\Entity\Role $role
+     */
+    public function removeRole(\AppBundle\Entity\Role $role)
+    {
+        $this->roles->removeElement($role);
+    }
+
+    /**
+     * Get roles
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getRoles()
+    {
+        return $this->roles;
+    }
+
+    /**
+     * @return string
+     */
+    public function __toString()
+    {
+        return $this->label;
     }
 }

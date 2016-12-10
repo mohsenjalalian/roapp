@@ -1,0 +1,45 @@
+{% extends ':operator/dashboard:layout.html.twig' %}
+{% block page_title %}
+    ویرایش نقش {{ role.label }}
+{% endblock %}
+{% block breadcrumbs %}
+    <li>
+        <a href="{{ path('operator_dashboard_driver_index') }}">نقش ها</a>
+    </li>
+{% endblock %}
+{% block main %}
+{{ form_start(edit_form) }}
+<div class="panel-heading">
+    <span class="panel-title">ویرایش نقش {{ role.label }}</span>
+</div>
+<div class="panel-body">
+    {% form_theme edit_form 'bootstrap_3_layout.html.twig' %}
+    <div class="form-group">
+        {{ form_label(edit_form.name, null, {"label_attr":{"class": "col-sm-2 control-label"}}) }}
+        <div class="col-sm-10">
+            {{ form_widget(edit_form.name, {"attr": {"placeholder": edit_form.name.vars.label}}) }}
+            {{ form_errors(edit_form.name) }}
+        </div>
+    </div> <!-- / .form-group -->
+    <div class="form-group">
+        {{ form_label(edit_form.label, null, {"label_attr":{"class": "col-sm-2 control-label"}}) }}
+        <div class="col-sm-10">
+            {{ form_widget(edit_form.label, {"attr": {"placeholder": edit_form.label.vars.label}}) }}
+            {{ form_errors(edit_form.label) }}
+        </div>
+    </div> <!-- / .form-group -->
+    <div class="form-group">
+        {{ form_label(edit_form.scope, null, {"label_attr":{"class": "col-sm-2 control-label"}}) }}
+        <div class="col-sm-10">
+            {{ form_widget(edit_form.scope, {"attr": {"placeholder": edit_form.scope.vars.label}}) }}
+            {{ form_errors(edit_form.scope) }}
+        </div>
+    </div> <!-- / .form-group -->
+    <div class="form-group" style="margin-bottom: 0;">
+        <div class="col-sm-offset-2 col-sm-10">
+            <input type="submit" value="ویرایش" />
+        </div>
+    </div> <!-- / .form-group -->
+    {{ form_end(edit_form) }}
+</div>
+{% endblock %}

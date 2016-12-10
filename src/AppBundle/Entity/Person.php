@@ -87,13 +87,6 @@ abstract class Person implements UserInterface, \Serializable
     private $roles;
 
     /**
-     * @var string
-     *
-     * @ORM\Column(name="scope", type="string", length=255)
-     */
-    private $scope;
-
-    /**
      * Get id
      *
      * @return int
@@ -276,6 +269,7 @@ abstract class Person implements UserInterface, \Serializable
     public function __construct()
     {
         $this->payment = new ArrayCollection();
+        $this->roles = new ArrayCollection();
     }
 
     /**
@@ -319,7 +313,7 @@ abstract class Person implements UserInterface, \Serializable
      *
      * @return Person
      */
-    public function addRole(\AppBundle\Entity\Role $role)
+    public function addRole(Role $role)
     {
         $this->roles[] = $role;
 
@@ -331,7 +325,7 @@ abstract class Person implements UserInterface, \Serializable
      *
      * @param \AppBundle\Entity\Role $role
      */
-    public function removeRole(\AppBundle\Entity\Role $role)
+    public function removeRole(Role $role)
     {
         $this->roles->removeElement($role);
     }
@@ -343,31 +337,7 @@ abstract class Person implements UserInterface, \Serializable
      */
     public function getRoles()
     {
-        return $this->roles;
-    }
-
-    /**
-     * Set scope
-     *
-     * @param string $scope
-     *
-     * @return Person
-     */
-    public function setScope($scope)
-    {
-        $this->scope = $scope;
-
-        return $this;
-    }
-
-    /**
-     * Get scope
-     *
-     * @return string
-     */
-    public function getScope()
-    {
-        return $this->scope;
+        return array_merge(['ROLE_USER'], $this->roles->toArray());
     }
 
     /**
@@ -389,5 +359,13 @@ abstract class Person implements UserInterface, \Serializable
     public function eraseCredentials()
     {
         // TODO: Implement eraseCredentials() method.
+    }
+
+    /**
+     * @return string
+     */
+    public function __toString()
+    {
+        return $this->getFullName() ? $this->getFullName() : 'UNNAMED USER';
     }
 }

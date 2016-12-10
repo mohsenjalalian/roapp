@@ -1,0 +1,45 @@
+{% extends ':operator/dashboard:layout.html.twig' %}
+{% block page_title %}
+    نقش ها
+{% endblock %}
+
+{% block header_link %}
+<a href="{{ path('operator_dashboard_driver_new') }}" class="btn btn-sm btn-labeled btn-primary"><span class="btn-label icon fa fa-camera-retro"></span>ایجاد نقش جدید</a>
+{% endblock %}
+{% block main %}
+<div class="panel">
+    <div class="panel-body">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Name</th>
+                <th>Label</th>
+                <th>Scope</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for role in roles %}
+            <tr>
+                <td><a href="{{ path('operator_dashboard_driver_show', { 'id': role.id }) }}">{{ role.id }}</a></td>
+                <td>{{ role.name }}</td>
+                <td>{{ role.label }}</td>
+                <td>{{ role.scope }}</td>
+                <td>
+                    <ul>
+                        <li>
+                            <a href="{{ path('operator_dashboard_driver_show', { 'id': role.id }) }}">show</a>
+                        </li>
+                        <li>
+                            <a href="{{ path('operator_dashboard_driver_edit', { 'id': role.id }) }}">edit</a>
+                        </li>
+                    </ul>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    </div>
+</div>
+{% endblock %}
