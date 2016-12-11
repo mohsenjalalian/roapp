@@ -4,10 +4,10 @@ namespace AppBundle\Command;
 
 use AppBundle\Annotation\Permission;
 use AppBundle\Annotation\Permissions;
+use AppBundle\Entity\PermissionScope;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Doctrine\Common\Annotations\AnnotationRegistry;
 use Symfony\Component\ClassLoader\UniversalClassLoader;
 use Doctrine\Common\Annotations\Reader;
 use Symfony\Component\Finder\Finder;
@@ -15,7 +15,12 @@ use Symfony\Component\Finder\SplFileInfo;
 use Symfony\Component\HttpKernel\Config\FileLocator;
 use Doctrine\ORM\NoResultException;
 use AppBundle\Entity\Permission as PermissionEntity;
+use AppBundle\Entity\Person;
 
+/**
+ * Class PermissionReloadCommand
+ * @package AppBundle\Command
+ */
 class PermissionReloadCommand extends ContainerAwareCommand
 {
     /**
@@ -43,6 +48,9 @@ class PermissionReloadCommand extends ContainerAwareCommand
         $path = $rootDir.'/../src/AppBundle/Entity';
         $finder = new Finder();
         $finder->files()->in($path);
+        $scopes = $this->getContainer()->get('doctrine')->getManager()->getClassMetadata(Person::class)->subClasses;
+
+        $this->updateScopes($scopes);
 
         /** @var SplFileInfo $file */
         foreach ($finder as $file) {
@@ -71,8 +79,6 @@ class PermissionReloadCommand extends ContainerAwareCommand
 
             /** @var Permission $permission */
             foreach ($permissionsAnnotation->getPermissions() as $permission) {
-                $doctrine = $this->getContainer()->get('doctrine');
-
                 try {
                     /** @var EntityManager $em */
                     $permissionEntity = $entityManager
@@ -89,10 +95,51 @@ class PermissionReloadCommand extends ContainerAwareCommand
                 }
 
                 $permissionEntity->setLabel($permission->getLabel());
-                $permissionEntity->setScope($permission->getScope());
+
+                if (count(array_intersect($permission->getScopes(), $scopes)) != count($permission->getScopes())) {
+                    throw new \Exception("Permission scopes are not valid.");
+                }
+
+                foreach ($permission->getScopes() as $scope) {
+                    $permissionScopeEntity = $entityManager
+                        ->getRepository('AppBundle:PermissionScope')
+                        ->createQueryBuilder('permission_scope')
+                        ->where('permission_scope.name = :name')->setParameter('name', $scope)
+                        ->getQuery()
+                        ->getSingleResult();
+
+                    $permissionEntity->addScope($permissionScopeEntity);
+                }
+
                 $permissionEntity->setType($permission->getType());
 
                 $entityManager->persist($permissionEntity);
+                $entityManager->flush();
+            }
+        }
+    }
+
+    /**
+     * @param array $scopes
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
+    private function updateScopes($scopes)
+    {
+        $entityManager = $this->getContainer()->get('doctrine.orm.default_entity_manager');
+
+        foreach ($scopes as $scope) {
+            try {
+                /** @var EntityManager $em */
+                $permissionScopeEntity = $entityManager
+                    ->getRepository('AppBundle:PermissionScope')
+                    ->createQueryBuilder('permission_scope')
+                    ->where('permission_scope.name = :name')->setParameter('name', $scope)
+                    ->getQuery()
+                    ->getSingleResult();
+            } catch (NoResultException $e) {
+                $permissionScopeEntity = new PermissionScope();
+                $permissionScopeEntity->setName($scope);
+                $entityManager->persist($permissionScopeEntity);
                 $entityManager->flush();
             }
         }

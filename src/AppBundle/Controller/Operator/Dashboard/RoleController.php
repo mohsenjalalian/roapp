@@ -6,7 +6,8 @@ use AppBundle\Entity\Role;
 use AppBundle\Form\Operator\Dashboard\RoleType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;use Symfony\Component\HttpFoundation\Request;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Role controller.
@@ -18,8 +19,9 @@ class RoleController extends Controller
     /**
      * Lists all role entities.
      *
-     * @Route("/", name="operator_dashboard_driver_index")
+     * @Route("/", name="operator_dashboard_role_index")
      * @Method("GET")
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function indexAction()
     {
@@ -35,8 +37,10 @@ class RoleController extends Controller
     /**
      * Creates a new role entity.
      *
-     * @Route("/new", name="operator_dashboard_driver_new")
+     * @Route("/new", name="operator_dashboard_role_new")
      * @Method({"GET", "POST"})
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
      */
     public function newAction(Request $request)
     {
@@ -49,7 +53,7 @@ class RoleController extends Controller
             $em->persist($role);
             $em->flush($role);
 
-            return $this->redirectToRoute('operator_dashboard_driver_show', array('id' => $role->getId()));
+            return $this->redirectToRoute('operator_dashboard_role_show', array('id' => $role->getId()));
         }
 
         return $this->render('operator/dashboard/role/new.html.twig', array(
@@ -59,10 +63,26 @@ class RoleController extends Controller
     }
 
     /**
+     * @param \AppBundle\Entity\Role                    $role
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     * @Route("/{id}/permission", name="operator_dashboard_role_permission")
+     */
+    public function permissionAction(Role $role, Request $request)
+    {
+        $dql = 'SELECT u FROM AppBundle\Entity\Permission u WHERE u.id > 0';
+        $permissions = $this->getDoctrine()
+            ->getEntityManager()
+            ->createQuery($dql)
+            ->getResult();
+    }
+
+    /**
      * Finds and displays a role entity.
      *
-     * @Route("/{id}", name="operator_dashboard_driver_show")
+     * @Route("/{id}", name="operator_dashboard_role_show")
      * @Method("GET")
+     * @param \AppBundle\Entity\Role $role
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function showAction(Role $role)
     {
@@ -77,8 +97,11 @@ class RoleController extends Controller
     /**
      * Displays a form to edit an existing role entity.
      *
-     * @Route("/{id}/edit", name="operator_dashboard_driver_edit")
+     * @Route("/{id}/edit", name="operator_dashboard_role_edit")
      * @Method({"GET", "POST"})
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     * @param \AppBundle\Entity\Role                    $role
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
      */
     public function editAction(Request $request, Role $role)
     {
@@ -89,7 +112,7 @@ class RoleController extends Controller
         if ($editForm->isSubmitted() && $editForm->isValid()) {
             $this->getDoctrine()->getManager()->flush();
 
-            return $this->redirectToRoute('operator_dashboard_driver_edit', array('id' => $role->getId()));
+            return $this->redirectToRoute('operator_dashboard_role_edit', array('id' => $role->getId()));
         }
 
         return $this->render('operator/dashboard/role/edit.html.twig', array(
@@ -102,8 +125,11 @@ class RoleController extends Controller
     /**
      * Deletes a role entity.
      *
-     * @Route("/{id}", name="operator_dashboard_driver_delete")
+     * @Route("/{id}", name="operator_dashboard_role_delete")
      * @Method("DELETE")
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     * @param \AppBundle\Entity\Role                    $role
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
     public function deleteAction(Request $request, Role $role)
     {
@@ -116,7 +142,7 @@ class RoleController extends Controller
             $em->flush($role);
         }
 
-        return $this->redirectToRoute('operator_dashboard_driver_index');
+        return $this->redirectToRoute('operator_dashboard_role_index');
     }
 
     /**
@@ -129,7 +155,7 @@ class RoleController extends Controller
     private function createDeleteForm(Role $role)
     {
         return $this->createFormBuilder()
-            ->setAction($this->generateUrl('operator_dashboard_driver_delete', array('id' => $role->getId())))
+            ->setAction($this->generateUrl('operator_dashboard_role_delete', array('id' => $role->getId())))
             ->setMethod('DELETE')
             ->getForm()
         ;

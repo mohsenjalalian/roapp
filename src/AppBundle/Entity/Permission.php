@@ -45,9 +45,9 @@ class Permission
     /**
      * @var string
      *
-     * @ORM\Column(name="scope", type="json_array", length=255)
+     * @ORM\ManyToMany(targetEntity="AppBundle\Entity\PermissionScope", inversedBy="permissions")
      */
-    private $scope;
+    private $scopes;
 
     /**
      * @var string
@@ -55,12 +55,12 @@ class Permission
      * @ORM\Column(name="subject_class", type="string", length=255)
      */
     private $subjectClass;
-    
+
     /**
      * @ORM\ManyToMany(targetEntity="AppBundle\Entity\Role", inversedBy="permissions")
      */
     private $roles;
-    
+
     /**
      * Get id
      *
@@ -168,29 +168,6 @@ class Permission
     }
 
     /**
-     * Set scope
-     *
-     * @param array $scope
-     *
-     * @return Permission
-     */
-    public function setScope($scope)
-    {
-        $this->scope = $scope;
-
-        return $this;
-    }
-
-    /**
-     * Get scope
-     *
-     * @return array
-     */
-    public function getScope()
-    {
-        return $this->scope;
-    }
-    /**
      * Constructor
      */
     public function __construct()
@@ -238,5 +215,39 @@ class Permission
     public function __toString()
     {
         return $this->label;
+    }
+
+    /**
+     * Add scope
+     *
+     * @param \AppBundle\Entity\PermissionScope $scope
+     *
+     * @return Permission
+     */
+    public function addScope(\AppBundle\Entity\PermissionScope $scope)
+    {
+        $this->scopes[] = $scope;
+
+        return $this;
+    }
+
+    /**
+     * Remove scope
+     *
+     * @param \AppBundle\Entity\PermissionScope $scope
+     */
+    public function removeScope(\AppBundle\Entity\PermissionScope $scope)
+    {
+        $this->scopes->removeElement($scope);
+    }
+
+    /**
+     * Get scopes
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getScopes()
+    {
+        return $this->scopes;
     }
 }

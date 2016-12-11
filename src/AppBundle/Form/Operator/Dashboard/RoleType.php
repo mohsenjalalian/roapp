@@ -27,7 +27,6 @@ class RoleType extends AbstractType
     public function __construct(DoctrineRegistry $doctrine)
     {
         $this->doctrine = $doctrine;
-        $this->scopes = $this->doctrine->getManager()->getClassMetadata(Person::class)->subClasses;
     }
 
     /**
@@ -42,13 +41,11 @@ class RoleType extends AbstractType
             ->add('label', null, [
                 'label' => 'عنوان',
             ])
-            ->add('scope', ChoiceType::class, [
-                'label' => 'حوزه',
-                'choices' => $this->scopes,
+            ->add('scope', null, [
+                'label' => 'عنوان',
                 'choice_label' => function ($value, $key, $index) {
                     return explode('\\', $value)[2];
                 },
-
             ])
         ;
     }

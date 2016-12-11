@@ -29,7 +29,7 @@ class Permission
      * @Annotation\Required
      * @var array<string>
      */
-    public $scope;
+    public $scopes;
 
     /**
      * @Annotation\Required
@@ -56,9 +56,9 @@ class Permission
     /**
      * @return array<string>
      */
-    public function getScope()
+    public function getScopes()
     {
-        return $this->scope;
+        return $this->scopes;
     }
 
     /**

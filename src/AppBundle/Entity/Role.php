@@ -55,7 +55,7 @@ class Role implements RoleInterface
     /**
      * @var string
      *
-     * @ORM\Column(name="scope", type="string", length=255)
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\PermissionScope", inversedBy="roles")
      */
     private $scope;
 
@@ -160,30 +160,6 @@ class Role implements RoleInterface
     }
 
     /**
-     * Set scope
-     *
-     * @param string $scope
-     *
-     * @return Role
-     */
-    public function setScope($scope)
-    {
-        $this->scope = $scope;
-
-        return $this;
-    }
-
-    /**
-     * Get scope
-     *
-     * @return string
-     */
-    public function getScope()
-    {
-        return $this->scope;
-    }
-
-    /**
      * Returns the role.
      *
      * This method returns a string representation whenever possible.
@@ -230,5 +206,29 @@ class Role implements RoleInterface
     public function getPermissions()
     {
         return $this->permissions;
+    }
+
+    /**
+     * Set scope
+     *
+     * @param \AppBundle\Entity\PermissionScope $scope
+     *
+     * @return Role
+     */
+    public function setScope(\AppBundle\Entity\PermissionScope $scope = null)
+    {
+        $this->scope = $scope;
+
+        return $this;
+    }
+
+    /**
+     * Get scope
+     *
+     * @return \AppBundle\Entity\PermissionScope
+     */
+    public function getScope()
+    {
+        return $this->scope;
     }
 }
