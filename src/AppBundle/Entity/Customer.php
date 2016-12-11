@@ -23,12 +23,18 @@ class Customer extends Person implements AdvancedUserInterface, \Serializable
     private $status;
 
     /**
+     * @ORM\ManyToOne(targetEntity="BusinessUnit", inversedBy="customers")
+     * @ORM\JoinColumn(name="business_unit_id", referencedColumnName="id")
+     */
+    private $businessUnit;
+
+    /**
      * @inheritdoc
      * @return array
      */
     public function getRoles()
     {
-        return array('ROLE_CUSTOMER');
+        return ['ROLE_CUSTOMER'];
     }
 
     /**
@@ -65,14 +71,14 @@ class Customer extends Person implements AdvancedUserInterface, \Serializable
      */
     public function serialize()
     {
-        return serialize(array(
+        return serialize([
             $this->id,
             $this->email,
             $this->password,
             // see section on salt below
             // $this->salt,
             $this->isActive,
-        ));
+        ]);
         // TODO: Implement serialize() method.
     }
 
@@ -213,5 +219,29 @@ class Customer extends Person implements AdvancedUserInterface, \Serializable
     public function isEnabled()
     {
         return $this->isActive;
+    }
+
+    /**
+     * Set businessUnit
+     *
+     * @param \AppBundle\Entity\BusinessUnit $businessUnit
+     *
+     * @return Customer
+     */
+    public function setBusinessUnit(\AppBundle\Entity\BusinessUnit $businessUnit = null)
+    {
+        $this->businessUnit = $businessUnit;
+
+        return $this;
+    }
+
+    /**
+     * Get businessUnit
+     *
+     * @return \AppBundle\Entity\BusinessUnit
+     */
+    public function getBusinessUnit()
+    {
+        return $this->businessUnit;
     }
 }
