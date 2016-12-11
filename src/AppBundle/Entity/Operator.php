@@ -3,12 +3,14 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * Operator
  *
  * @ORM\Table(name="operator")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\OperatorRepository")
+ * @UniqueEntity(fields="email", message="پست الکترونیکی وارد شده تکراری است.")
  */
 class Operator extends Person
 {

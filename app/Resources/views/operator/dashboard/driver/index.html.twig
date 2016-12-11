@@ -8,11 +8,12 @@
         لیست راننده ها
 {% endblock %}
 {% block header_link %}
-    <a href="{{ path('app_operator_dashboard_driver_create') }}" class="btn btn-sm btn-labeled btn-primary"><span class="btn-label icon fa fa-camera-retro"></span>ایجاد راننده ی جدید</a>
+    <a href="{{ path('app_operator_dashboard_driver_create') }}" class="btn btn-sm btn-labeled btn-primary"><span class="btn-label icon fa fa-plus-square"></span>ایجاد راننده ی جدید</a>
 {% endblock %}
 {% block main %}
+<div class="panel">
     <div class="panel-body">
-    <table class="ui celled table">
+    <table class="table table-striped">
         <thead>
         <tr>
             <th>{{ knp_pagination_sortable(pagination, 'نام','a.fullName') }}</th>
@@ -38,14 +39,15 @@
                 {% endif %}
                 <td>{{ driver.phone }}</td>
                 <td>
-                    <a href="{{ path('app_operator_dashboard_driver_show', { 'id': driver.id }) }}"><button class="btn  ">نمایش</button></a>
-                    {#<a href="{{ path('app_operator_dashboard_driver_edit', { 'id': driver.id }) }}"><button>ویرایش</button></a>#}
+                    <a href="{{ path('app_operator_dashboard_driver_show', { 'id': driver.id }) }}" class="btn btn-sm btn-labeled btn-success"><span class="btn-label icon fa fa-eye"></span>نمایش</a>&nbsp;&nbsp;
+                    <a href="{{ path('app_operator_dashboard_driver_edit', { 'id': driver.id }) }}" class="btn btn-sm btn-labeled btn-info"><span class="btn-label icon fa fa-pencil-square-o"></span>ویرایش</a>&nbsp;&nbsp;
                 </td>
             </tr>
         {% endfor %}
         </tbody>
     </table>
     </div>
+</div>
     <div class="ui one column stackable center aligned page grid navigation">
         <div class="pagination menu column twelve wide ui" style="font-size: 18px">
             {{ knp_pagination_render(pagination) }}
