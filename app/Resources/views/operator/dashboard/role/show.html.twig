@@ -5,7 +5,7 @@
 {% endblock %}
 {% block breadcrumbs %}
     <li>
-        <a href="{{ path('operator_dashboard_driver_index') }}">نقش ها</a>
+        <a href="{{ path('operator_dashboard_role_index') }}">نقش ها</a>
     </li>
 {% endblock %}
 
@@ -35,10 +35,10 @@
 
             <ul>
                 <li>
-                    <a href="{{ path('operator_dashboard_driver_index') }}">Back to the list</a>
+                    <a href="{{ path('operator_dashboard_role_index') }}">Back to the list</a>
                 </li>
                 <li>
-                    <a href="{{ path('operator_dashboard_driver_edit', { 'id': role.id }) }}">Edit</a>
+                    <a href="{{ path('operator_dashboard_role_edit', { 'id': role.id }) }}">Edit</a>
                 </li>
                 <li>
                     {{ form_start(delete_form) }}
