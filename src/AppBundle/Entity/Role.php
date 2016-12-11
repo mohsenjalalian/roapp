@@ -5,6 +5,8 @@ namespace AppBundle\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\ManyToMany;
+use Symfony\Component\Security\Core\Role\RoleInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Role
@@ -12,7 +14,7 @@ use Doctrine\ORM\Mapping\ManyToMany;
  * @ORM\Table(name="role")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\RoleRepository")
  */
-class Role
+class Role implements RoleInterface
 {
     /**
      * @var int
@@ -27,6 +29,7 @@ class Role
      * @var string
      *
      * @ORM\Column(name="name", type="string", length=255)
+     * @Assert\Regex("([A-Z\_]+)")
      */
     private $name;
 
@@ -45,6 +48,11 @@ class Role
     private $people;
 
     /**
+     * @ManyToMany(targetEntity="AppBundle\Entity\Permission", mappedBy="roles")
+     */
+    private $permissions;
+
+    /**
      * @var string
      *
      * @ORM\Column(name="scope", type="string", length=255)
@@ -56,7 +64,7 @@ class Role
      */
     public function __construct()
     {
-        $this->operatorId = new ArrayCollection();
+        $this->people = new ArrayCollection();
     }
 
     /**
@@ -173,5 +181,54 @@ class Role
     public function getScope()
     {
         return $this->scope;
+    }
+
+    /**
+     * Returns the role.
+     *
+     * This method returns a string representation whenever possible.
+     *
+     * When the role cannot be represented with sufficient precision by a
+     * string, it should return null.
+     *
+     * @return string|null A string representation of the role, or null
+     */
+    public function getRole()
+    {
+        return $this->getName();
+    }
+
+    /**
+     * Add permission
+     *
+     * @param \AppBundle\Entity\Permission $permission
+     *
+     * @return Role
+     */
+    public function addPermission(\AppBundle\Entity\Permission $permission)
+    {
+        $this->permissions[] = $permission;
+
+        return $this;
+    }
+
+    /**
+     * Remove permission
+     *
+     * @param \AppBundle\Entity\Permission $permission
+     */
+    public function removePermission(\AppBundle\Entity\Permission $permission)
+    {
+        $this->permissions->removeElement($permission);
+    }
+
+    /**
+     * Get permissions
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getPermissions()
+    {
+        return $this->permissions;
     }
 }

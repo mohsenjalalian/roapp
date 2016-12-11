@@ -64,7 +64,11 @@ services:
         arguments: ["@request_stack"]
         tags:
             - { name: form.type }
-
+    app.form_role:
+        class: AppBundle\Form\Operator\Dashboard\RoleType
+        arguments: ["@doctrine"]
+        tags:
+            - { name: form.type }
     app.address_service:
         class: AppBundle\Utils\Services\AddressService
         arguments:

@@ -3,15 +3,32 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use AppBundle\Security\AccessControlInterface;
+use AppBundle\Annotation\Permissions;
+use AppBundle\Annotation\Permission;
 
 /**
  * Address
  *
  * @ORM\Table(name="address")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\AddressRepository")
+ * @Permissions(permissions={
+ *     @Permission(mappedConst=Address::PERMISSION_ADD, type="class", label="افزودن آدرس",
+ *          scope={"AppBundle\Entity\Customer", "AppBundle\Entity\Operator"}
+ *     ),
+ *     @Permission(mappedConst=Address::PERMISSION_EDIT, type="object", label="ویرایش آدرس",
+ *          scope={"AppBundle\Entity\Customer"}
+ *     )
+ * })
  */
-class Address
+class Address implements AccessControlInterface
 {
+    /**
+     * Permissions
+     */
+    const PERMISSION_ADD = 'add';
+    const PERMISSION_EDIT = 'edit';
+
     /**
      * @var int
      *
@@ -54,8 +71,7 @@ class Address
      * @ORM\Column(name="longitude", type="decimal", precision=11, scale=8, nullable=true)
      */
     private $longitude;
-
-
+    
     /**
      * Get id
      *
