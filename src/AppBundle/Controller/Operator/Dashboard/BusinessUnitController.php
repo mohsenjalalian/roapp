@@ -19,25 +19,39 @@ class BusinessUnitController extends Controller
     /**
      * Lists all businessUnit entities.
      *
-     * @Route("/", name="businessunit_index")
+     * @Route("/", name="app_operator_dashboard_businessunit_index")
      * @Method("GET")
+     * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function indexAction()
+    public function indexAction(Request $request)
     {
-        $em = $this->getDoctrine()->getManager();
+        $query = $this->getDoctrine()
+            ->getRepository('AppBundle:BusinessUnit')
+            ->createQueryBuilder('a')
+            ->orderBy('a.id', 'Asc')
+            ->getQuery()
+        ;
 
-        $businessUnits = $em->getRepository('AppBundle:BusinessUnit')->findAll();
+        $paginator  = $this->get('knp_paginator');
+        $pagination = $paginator->paginate(
+            $query, /* query NOT result */
+            $request->query->getInt('page', 1)/*page number*/,
+            5/*limit per page*/
+        );
 
-        return $this->render('operator/dashboard/businessunit/index.html.twig', [
-            'businessUnits' => $businessUnits,
-        ]);
+        return $this->render(
+            'operator/dashboard/businessunit/index.html.twig',
+            [
+                'pagination' => $pagination,
+            ]
+        );
     }
 
     /**
      * Creates a new businessUnit entity.
      *
-     * @Route("/new", name="businessunit_new")
+     * @Route("/new", name="app_operator_dashboard_businessunit_new")
      * @param Request $request
      * @Method({"GET", "POST"})
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
@@ -45,7 +59,7 @@ class BusinessUnitController extends Controller
     public function newAction(Request $request)
     {
         $businessUnit = new Businessunit();
-        $form = $this->createForm('AppBundle\Form\BusinessUnitType', $businessUnit);
+        $form = $this->createForm('AppBundle\Form\Operator\Dashboard\BusinessUnitType', $businessUnit);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -53,7 +67,7 @@ class BusinessUnitController extends Controller
             $em->persist($businessUnit);
             $em->flush();
 
-            return $this->redirectToRoute('businessunit_show', ['id' => $businessUnit->getId()]);
+            return $this->redirectToRoute('app_operator_dashboard_businessunit_show', ['id' => $businessUnit->getId()]);
         }
 
         return $this->render('operator/dashboard/businessunit/new.html.twig', [
@@ -65,7 +79,7 @@ class BusinessUnitController extends Controller
     /**
      * Finds and displays a businessUnit entity.
      *
-     * @Route("/{id}", name="businessunit_show")
+     * @Route("/{id}", name="app_operator_dashboard_businessunit_show")
      * @param BusinessUnit $businessUnit
      * @Method("GET")
      * @return \Symfony\Component\HttpFoundation\Response
@@ -83,7 +97,7 @@ class BusinessUnitController extends Controller
     /**
      * Displays a form to edit an existing businessUnit entity.
      *
-     * @Route("/{id}/edit", name="businessunit_edit")
+     * @Route("/{id}/edit", name="app_operator_dashboard_businessunit_edit")
      * @param Request      $request
      * @param BusinessUnit $businessUnit
      * @Method({"GET", "POST"})
@@ -98,7 +112,7 @@ class BusinessUnitController extends Controller
         if ($editForm->isSubmitted() && $editForm->isValid()) {
             $this->getDoctrine()->getManager()->flush();
 
-            return $this->redirectToRoute('businessunit_edit', ['id' => $businessUnit->getId()]);
+            return $this->redirectToRoute('app_operator_dashboard_businessunit_edit', ['id' => $businessUnit->getId()]);
         }
 
         return $this->render('operator/dashboard/businessunit/edit.html.twig', [
@@ -111,7 +125,7 @@ class BusinessUnitController extends Controller
     /**
      * Deletes a businessUnit entity.
      *
-     * @Route("/{id}", name="businessunit_delete")
+     * @Route("/{id}", name="app_operator_dashboard_businessunit_delete")
      * @param Request      $request
      * @param BusinessUnit $businessUnit
      * @Method("DELETE")
@@ -128,7 +142,7 @@ class BusinessUnitController extends Controller
             $em->flush();
         }
 
-        return $this->redirectToRoute('businessunit_index');
+        return $this->redirectToRoute('app_operator_dashboard_businessunit_index');
     }
 
     /**
@@ -141,7 +155,7 @@ class BusinessUnitController extends Controller
     private function createDeleteForm(BusinessUnit $businessUnit)
     {
         return $this->createFormBuilder()
-            ->setAction($this->generateUrl('businessunit_delete', ['id' => $businessUnit->getId()]))
+            ->setAction($this->generateUrl('app_operator_dashboard_businessunit_delete', ['id' => $businessUnit->getId()]))
             ->setMethod('DELETE')
             ->getForm()
         ;

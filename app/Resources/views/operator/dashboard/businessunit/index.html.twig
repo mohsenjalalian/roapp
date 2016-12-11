@@ -1,28 +1,37 @@
-{% extends 'base.html.twig' %}
+{% extends ':operator/dashboard:layout.html.twig' %}
 
-{% block body %}
-    <h1>Businessunits list</h1>
+{% block breadcrumbs %}
+    <li class="active">واحدهای شغلی</li>
+{% endblock %}
 
-    <table>
+{% block page_title %}
+    لیست واحدهای شغلی
+{% endblock %}
+
+{% block header_link %}
+    <a href="{{ path('app_operator_dashboard_businessunit_new') }}" class="btn btn-sm btn-labeled btn-primary"><span class="btn-label icon fa fa-camera-retro"></span>ایجاد واحد شغلی جدید</a>
+{% endblock %}
+
+{% block main %}
+    <div class="panel-body">
+    <table class="ui celled table">
         <thead>
             <tr>
-                <th>Id</th>
-                <th>Name</th>
-                <th>Actions</th>
+                <th>{{ knp_pagination_sortable(pagination, 'نام','a.name') }}</th>
+                <th>عملیات</th>
             </tr>
         </thead>
         <tbody>
-        {% for businessUnit in businessUnits %}
+        {% for businessunit in pagination %}
             <tr>
-                <td><a href="{{ path('businessunit_show', { 'id': businessUnit.id }) }}">{{ businessUnit.id }}</a></td>
-                <td>{{ businessUnit.name }}</td>
+                <td><a href="{{ path('app_operator_dashboard_businessunit_show', { 'id': businessunit.id }) }}">{{ businessunit.name }}</a></td>
                 <td>
                     <ul>
                         <li>
-                            <a href="{{ path('businessunit_show', { 'id': businessUnit.id }) }}">show</a>
+                            <a href="{{ path('app_operator_dashboard_businessunit_show', { 'id': businessunit.id }) }}">show</a>
                         </li>
                         <li>
-                            <a href="{{ path('businessunit_edit', { 'id': businessUnit.id }) }}">edit</a>
+                            <a href="{{ path('app_operator_dashboard_businessunit_edit', { 'id': businessunit.id }) }}">edit</a>
                         </li>
                     </ul>
                 </td>
@@ -30,10 +39,5 @@
         {% endfor %}
         </tbody>
     </table>
-
-    <ul>
-        <li>
-            <a href="{{ path('businessunit_new') }}">Create a new businessUnit</a>
-        </li>
-    </ul>
+    </div>
 {% endblock %}
