@@ -18,7 +18,6 @@ use Doctrine\ORM\Mapping\ManyToMany;
  * @ORM\DiscriminatorColumn(name="type", type="string")
  * @ORM\DiscriminatorMap({"customer" = "Customer", "driver" = "Driver" , "operator" = "Operator"})
  * @UniqueEntity(fields="phone", message="شماره تلفن وارد شده تکراری است.")
- * @UniqueEntity(fields="email", message="پست الکترونیکی وارد شده تکراری است.")
  */
 abstract class Person implements UserInterface, \Serializable
 {

@@ -22,6 +22,15 @@ class Driver extends Person
     private $status;
 
     /**
+     * @var string
+     */
+    private $currentPassword;
+    /**
+     * @var string
+     */
+    private $newPassword;
+
+    /**
      * @inheritdoc
      * @return array
      */
@@ -155,5 +164,43 @@ class Driver extends Person
             // $this->salt
             ) = unserialize($serialized);
         // TODO: Implement unserialize() method.
+    }
+
+    /**
+     * @return string
+     */
+    public function getCurrentPassword()
+    {
+        return $this->currentPassword;
+    }
+
+    /**
+     * @param string $currentPassword
+     * @return $this
+     */
+    public function setCurrentPassword($currentPassword)
+    {
+        $this->currentPassword = $currentPassword;
+
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getNewPassword()
+    {
+        return $this->newPassword;
+    }
+
+    /**
+     * @param mixed $newPassword
+     * @return $this
+     */
+    public function setNewPassword($newPassword)
+    {
+        $this->newPassword = $newPassword;
+
+        return $this;
     }
 }

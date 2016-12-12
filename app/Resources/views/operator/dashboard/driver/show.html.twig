@@ -1,47 +1,51 @@
 {% extends ':operator/dashboard:layout.html.twig' %}
-
+{% block page_title %}
+    راننده
+{% endblock %}
+{% block breadcrumbs %}
+    <li><a href="{{ path('app_operator_dashboard_driver_index') }}">راننده ها</a></li>
+    <li class="active">نمایش</li>
+{% endblock %}
 {% block main %}
-    <h2 class="ui header">راننده</h2>
-    <table class="ui celled table">
-        <tbody class="headColor">
-        <tr>
-            <th>Id</th>
-            <td>{{ driver.id }}</td>
-        </tr>
-        <tr>
-            <th>نام</th>
-            <td>{{ driver.fullName }}</td>
-        </tr>
-        <tr>
-            <th>رمز عبور</th>
-            <td>{{ driver.password }}</td>
-        </tr>
-        <tr>
-            <th>وضعیت</th>
-            <td>{% if driver.isActive %}فعال{% else %}غیر فعال{% endif %}</td>
-        </tr>
-        <tr>
-            <th>وضعیت فعالیت</th>
-            {% if driver.status == constant('STATUS_FREE',driver) %}
-                <td>آزاد</td>
-            {% elseif driver.status == constant('STATUS_BUSY',driver) %}
-                <td>مشغول</td>
-            {% else %}
-                <td>درحال بررسی درخواست</td>
-            {% endif %}
-        </tr>
-        <tr>
-            <th>تلفن</th>
-            <td>{{ driver.phone }}</td>
-        </tr>
-        </tbody>
-    </table>
-    <div>
-        <a style="color: black" href="{{ path('app_operator_dashboard_driver_index') }}"><button>لیست کل راننده ها</button></a>
-        {#<a style="color: black" href="{{ path('app_operator_dashboard_driver_edit', { 'id': driver.id }) }}"><button>ویرایش</button></a>#}
-        {#{{ form_start(delete_form) }}#}
-        {#<input type="submit" value="حذف">#}
-        {#{{ form_end(delete_form) }}#}
+    <div class="panel">
+        <div class="panel-heading">
+            <span class="panel-title">راننده</span>
+        </div>
+        <div class="panel-body">
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th>نام</th>
+                    <th>رمز عبور</th>
+                    <th>وضعیت</th>
+                    <th>وضعیت فعالیت</th>
+                    <th>تلفن</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>{{ driver.fullName }}</td>
+                    <td>{{ driver.password }}</td>
+                    <td>{% if driver.isActive %}فعال{% else %}غیر فعال{% endif %}</td>
+                    {% if driver.status == constant('STATUS_FREE',driver) %}
+                        <td>آزاد</td>
+                    {% elseif driver.status == constant('STATUS_BUSY',driver) %}
+                        <td>مشغول</td>
+                    {% else %}
+                        <td>درحال بررسی درخواست</td>
+                    {% endif %}
+                    <td>{{ driver.phone }}</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div>
+            <a style="margin-right: 10px;margin-bottom: 10px" class="btn btn-sm btn-labeled btn-primary" href="{{ path('app_operator_dashboard_driver_index') }}">لیست کل راننده ها</a>
+            {#<a style="color: black" href="{{ path('app_operator_dashboard_driver_edit', { 'id': driver.id }) }}"><button>ویرایش</button></a>#}
+            {#{{ form_start(delete_form) }}#}
+            {#<input type="submit" value="حذف">#}
+            {#{{ form_end(delete_form) }}#}
+        </div>
     </div>
     {% block stylesheets %}
         {{ parent()  }}

@@ -41,4 +41,23 @@ class DriverRepository extends EntityRepository
             return $banDriver = [];
         }
     }
+
+    /**
+     * @param int    $id
+     * @param string $currentPassword
+     * @return \AppBundle\Entity\Driver[]|array
+     */
+    public function validationCurrentPassword($id, $currentPassword)
+    {
+        $result = $this
+            ->findOneBy(
+                [
+                    'id' => $id,
+                    'password' => $currentPassword,
+                ]
+            )
+        ;
+
+        return $result;
+    }
 }

@@ -3,7 +3,9 @@
 namespace AppBundle\Controller\Operator\Dashboard;
 
 use AppBundle\Entity\Shipment;
+use AppBundle\Form\Operator\Dashboard\DriverType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -107,15 +109,31 @@ class DriverController extends Controller
     public function editAction(Request $request, Driver $driver)
     {
         $deleteForm = $this->createDeleteForm($driver);
-        $editForm = $this->createForm('AppBundle\Form\Operator\Dashboard\DriverType', $driver);
+        $editForm = $this->createForm(
+            DriverType::class,
+            $driver,
+            [
+                'attr' => [
+                    'id' => 'drive_edit_form_operator',
+                ],
+            ]
+        );
         $editForm->handleRequest($request);
-
         if ($editForm->isSubmitted() && $editForm->isValid()) {
+            $currentPass = $editForm->get('currentPassword')->getData();
+            $result = $this->getDoctrine()
+                ->getRepository("AppBundle:Driver")
+                ->validationCurrentPassword($driver->getId(), $currentPass);
+            if ($result instanceof Driver) {
+                $newPassword = $editForm->get('newPassword')->getData();
+                $driver->setPassword($newPassword);
+            }
+
             $em = $this->getDoctrine()->getManager();
             $em->persist($driver);
             $em->flush();
 
-            return $this->redirectToRoute('app_operator_dashboard_driver_edit', ['id' => $driver->getId()]);
+            return new JsonResponse();
         }
 
         return $this->render('operator/dashboard/driver/edit.html.twig', [
