@@ -2,6 +2,8 @@
 
 namespace AppBundle\Repository;
 
+use AppBundle\Entity\PermissionScope;
+
 /**
  * PermissionRepository
  *
@@ -10,4 +12,41 @@ namespace AppBundle\Repository;
  */
 class PermissionRepository extends \Doctrine\ORM\EntityRepository
 {
+    /**
+     * @param \AppBundle\Entity\PermissionScope|NULL $permissionScope
+     * @return array
+     */
+    public function getSubjectClasses(PermissionScope $permissionScope = null)
+    {
+        $qb = $this
+            ->createQueryBuilder('permission')
+            ->select('permission.subjectClass')
+            ->distinct()
+        ;
+        if ($permissionScope) {
+            $qb->join('permission.scopes', 'scope')
+                ->where('scope = :scope')->setParameter('scope', $permissionScope)
+            ;
+        }
+        $result = $qb->getQuery()
+            ->getResult();
+
+        return $result;
+    }
+
+    /**
+     * @param \AppBundle\Entity\PermissionScope $permissionScope
+     * @param string                            $subjectClass
+     * @return array
+     */
+    public function getPermissionsPerScope(PermissionScope $permissionScope, $subjectClass)
+    {
+        return $this
+            ->createQueryBuilder('permission')
+            ->join('permission.scopes', 'scope')
+            ->where('scope = :scope')->setParameter('scope', $permissionScope)
+            ->andWhere('permission.subjectClass = :subjectClass')->setParameter('subjectClass', $subjectClass)
+            ->getQuery()
+            ->getResult();
+    }
 }

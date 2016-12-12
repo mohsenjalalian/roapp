@@ -1,0 +1,13 @@
+{% extends 'operator/dashboard/layout.html.twig' %}
+
+{% block page_title %}
+    مجوز ها
+{% endblock %}
+{% block main %}
+    {% form_theme form 'operator/dashboard/permission_scope/permission_entry.html.twig' %}
+    <div class="row">
+        <div class="col-md-12">
+            {{ form(form) }}
+        </div>
+    </div>
+{% endblock %}

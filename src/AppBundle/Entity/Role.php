@@ -231,4 +231,12 @@ class Role implements RoleInterface
     {
         return $this->scope;
     }
+
+    /**
+     * @return string
+     */
+    public function __toString()
+    {
+        return $this->label;
+    }
 }

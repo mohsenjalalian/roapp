@@ -63,20 +63,6 @@ class RoleController extends Controller
     }
 
     /**
-     * @param \AppBundle\Entity\Role                    $role
-     * @param \Symfony\Component\HttpFoundation\Request $request
-     * @Route("/{id}/permission", name="operator_dashboard_role_permission")
-     */
-    public function permissionAction(Role $role, Request $request)
-    {
-        $dql = 'SELECT u FROM AppBundle\Entity\Permission u WHERE u.id > 0';
-        $permissions = $this->getDoctrine()
-            ->getEntityManager()
-            ->createQuery($dql)
-            ->getResult();
-    }
-
-    /**
      * Finds and displays a role entity.
      *
      * @Route("/{id}", name="operator_dashboard_role_show")

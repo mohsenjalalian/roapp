@@ -29,12 +29,12 @@ class PermissionScope
     private $name;
 
     /**
-     * @ORM\ManyToMany(targetEntity="AppBundle\Entity\Permission", mappedBy="scopes")
+     * @ORM\ManyToMany(targetEntity="AppBundle\Entity\Permission", mappedBy="scopes", fetch="EAGER")
      */
     private $permissions;
 
     /**
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Role", mappedBy="scope")
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Role", mappedBy="scope", fetch="EAGER")
      */
     private $roles;
 
