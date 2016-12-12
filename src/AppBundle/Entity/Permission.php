@@ -173,6 +173,7 @@ class Permission
     public function __construct()
     {
         $this->roles = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->scopes = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
     /**

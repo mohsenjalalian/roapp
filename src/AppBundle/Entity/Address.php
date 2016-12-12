@@ -14,7 +14,7 @@ use AppBundle\Annotation\Permission as PermissionAnnotation;
  * @ORM\Entity(repositoryClass="AppBundle\Repository\AddressRepository")
  * @Permissions(permissions={
  *     @PermissionAnnotation(mappedConst=Address::PERMISSION_ADD, type="class", label="افزودن آدرس",
- *          scopes={"AppBundle\Entity\Customer", "AppBundle\Entity\Operator"}
+ *          scopes={"AppBundle\Entity\Customer", "AppBundle\Entity\Operator", "AppBundle\Entity\Driver"}
  *     ),
  *     @PermissionAnnotation(mappedConst=Address::PERMISSION_EDIT, type="object", label="ویرایش آدرس",
  *          scopes={"AppBundle\Entity\Customer"}

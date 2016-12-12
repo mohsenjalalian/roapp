@@ -4,10 +4,20 @@ namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
+use AppBundle\Annotation\Permissions;
+use AppBundle\Annotation\Permission as PermissionAnnotation;
 
 /**
  * Driver
  * @ORM\Entity(repositoryClass="AppBundle\Repository\DriverRepository")
+ * @Permissions(permissions={
+ *     @PermissionAnnotation(mappedConst=Address::PERMISSION_ADD, type="class", label="افزودن آدرس",
+ *          scopes={"AppBundle\Entity\Customer", "AppBundle\Entity\Operator", "AppBundle\Entity\Driver"}
+ *     ),
+ *     @PermissionAnnotation(mappedConst=Address::PERMISSION_EDIT, type="object", label="ویرایش آدرس",
+ *          scopes={"AppBundle\Entity\Customer"}
+ *     )
+ * })
  */
 class Driver extends Person
 {

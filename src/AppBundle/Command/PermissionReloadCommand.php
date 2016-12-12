@@ -101,14 +101,18 @@ class PermissionReloadCommand extends ContainerAwareCommand
                 }
 
                 foreach ($permission->getScopes() as $scope) {
-                    $permissionScopeEntity = $entityManager
-                        ->getRepository('AppBundle:PermissionScope')
-                        ->createQueryBuilder('permission_scope')
-                        ->where('permission_scope.name = :name')->setParameter('name', $scope)
-                        ->getQuery()
-                        ->getSingleResult();
+                    $permissionScopeEntity = $this->getScopeEntity($scope);
 
-                    $permissionEntity->addScope($permissionScopeEntity);
+                    if (!$permissionEntity->getScopes()->contains($permissionScopeEntity)) {
+                        $permissionEntity->addScope($permissionScopeEntity);
+                    }
+                }
+
+                /** @var PermissionScope $scopeEntity */
+                foreach ($permissionEntity->getScopes()->toArray() as $scopeEntity) {
+                    if (!in_array($scopeEntity->getName(), $permission->getScopes())) {
+                        $permissionEntity->removeScope($scopeEntity);
+                    }
                 }
 
                 $permissionEntity->setType($permission->getType());
@@ -143,5 +147,17 @@ class PermissionReloadCommand extends ContainerAwareCommand
                 $entityManager->flush();
             }
         }
+    }
+
+    private function getScopeEntity($name)
+    {
+        $entityManager = $this->getContainer()->get('doctrine.orm.default_entity_manager');
+
+        return $entityManager
+            ->getRepository('AppBundle:PermissionScope')
+            ->createQueryBuilder('permission_scope')
+            ->where('permission_scope.name = :name')->setParameter('name', $name)
+            ->getQuery()
+            ->getSingleResult();
     }
 }
