@@ -5,6 +5,7 @@ namespace AppBundle\Form\Operator\Dashboard;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
+use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -44,9 +45,14 @@ class CustomerType extends AbstractType
             )
             ->add(
                 'password',
-                PasswordType::class,
+                RepeatedType::class,
                 [
-                    'label' => 'رمز عبور',
+                    'type' => PasswordType::class,
+                    'invalid_message' => 'رمز های عبور وارد شده باید یکسان باشند',
+                    'options' => array('attr' => array('class' => 'password-field')),
+                    'required' => true,
+                    'first_options'  => array('label' => 'رمز عبور'),
+                    'second_options' => array('label' => 'تکرار رمز عبور'),
                 ]
             )
             ->add(

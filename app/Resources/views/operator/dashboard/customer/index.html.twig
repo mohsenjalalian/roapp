@@ -1,37 +1,43 @@
 {% extends ':operator/dashboard:layout.html.twig' %}
-
+{% block breadcrumbs %}
+    <li class="active">مشتریان</li>
+{% endblock %}
+{% block page_title %}
+    لیست مشتریان
+{% endblock %}
+{% block header_link %}
+    <a href="{{ path('app_operator_dashboard_customer_new') }}" class="btn btn-sm btn-labeled btn-primary"><span class="btn-label icon fa fa-plus-square"></span>ایجاد مشتری جدید</a>
+{% endblock %}
 {% block main %}
-    <div class="page-header">
-        <h2 class="ui header" style="display: inline">لیست مشتریان</h2>
-        <a style="margin-right: 10px" href="{{ path('app_operator_dashboard_customer_new') }}"><button>ایجاد مشتری جدید</button></a>
-    </div>
-    <div class="panel-body">
-    <table class="ui celled table">
-        <thead>
-        <tr>
-            <th>{{ knp_pagination_sortable(pagination, 'نام کاربری','a.username') }}</th>
-            {#<th{% if pagination.isSorted('a.password') %} class="sorted"{% endif %}>{{ knp_pagination_sortable(pagination, 'رمز عبور', 'a.password') }}</th>#}
-            <th{% if pagination.isSorted('a.isActive') %} class="sorted"{% endif %}>{{ knp_pagination_sortable(pagination, 'وضعیت', 'a.isActive') }}</th>
-            <th{% if pagination.isSorted('a.phone') %} class="sorted"{% endif %}>{{ knp_pagination_sortable(pagination, 'شماره تلفن', 'a.phone') }}</th>
-            <th>عملیات</th>
-        </tr>
-        </thead>
-        <tbody>
-        {% for customer in pagination %}
-            <tr>
-                {#<td>{{ customer.id }}</td>#}
-                <td><a href="{{ path('app_operator_dashboard_customer_show', { 'id': customer.id }) }}">{{ customer.username }}</a></td>
-                {#<td>{{ customer.password }}</td>#}
-                <td>{% if customer.isActive %}فعال{% else %}غیر فعال{% endif %}</td>
-                <td>{{ customer.phone }}</td>
-                <td>
-                    <a href="{{ path('app_operator_dashboard_customer_show', { 'id': customer.id }) }}"><button class="btn">نمایش</button></a>
-                    {#<a href="{{ path('app_operator_dashboard_customer_edit', { 'id': customer.id }) }}"><button>ویرایش</button></a>#}
-                </td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+    <div class="panel">
+        <div class="panel-body">
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th>{{ knp_pagination_sortable(pagination, 'نام کاربری','a.username') }}</th>
+                    {#<th{% if pagination.isSorted('a.password') %} class="sorted"{% endif %}>{{ knp_pagination_sortable(pagination, 'رمز عبور', 'a.password') }}</th>#}
+                    <th{% if pagination.isSorted('a.isActive') %} class="sorted"{% endif %}>{{ knp_pagination_sortable(pagination, 'وضعیت', 'a.isActive') }}</th>
+                    <th{% if pagination.isSorted('a.phone') %} class="sorted"{% endif %}>{{ knp_pagination_sortable(pagination, 'شماره تلفن', 'a.phone') }}</th>
+                    <th>عملیات</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for customer in pagination %}
+                    <tr>
+                        {#<td>{{ customer.id }}</td>#}
+                        <td><a href="{{ path('app_operator_dashboard_customer_show', { 'id': customer.id }) }}">{{ customer.username }}</a></td>
+                        {#<td>{{ customer.password }}</td>#}
+                        <td>{% if customer.isActive %}فعال{% else %}غیر فعال{% endif %}</td>
+                        <td>{{ customer.phone }}</td>
+                        <td>
+                            <a href="{{ path('app_operator_dashboard_customer_show', { 'id': customer.id }) }}" class="btn btn-sm btn-labeled btn-success"><span class="btn-label icon fa fa-eye"></span>نمایش</a>&nbsp;&nbsp;
+                            <a href="{{ path('app_operator_dashboard_customer_edit', { 'id': customer.id }) }}" class="btn btn-sm btn-labeled btn-info"><span class="btn-label icon fa fa-pencil-square-o"></span>ویرایش</a>&nbsp;&nbsp;
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
     </div>
     <div class="ui one column stackable center aligned page grid navigation">
         <div class="pagination menu column twelve wide ui" style="font-size: 18px">
