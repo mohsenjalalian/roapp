@@ -67,8 +67,6 @@ class ShipmentController extends Controller
      */
     public function newAction(Request $request)
     {
-
-//        dump('test');exit;
         $shipment = new Shipment();
         $invoice = new Invoice();
         $addressEntity = new Address();
