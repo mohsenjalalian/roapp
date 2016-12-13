@@ -44,6 +44,11 @@ class Address implements AccessControlInterface
     private $customer;
 
     /**
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\BusinessUnit")
+     */
+    private $businessUnit;
+
+    /**
      * @ORM\Column(name="is_public", type="boolean", nullable=true)
      */
     private $isPublic = false;
@@ -179,30 +184,6 @@ class Address implements AccessControlInterface
     }
 
     /**
-     * Set customer
-     *
-     * @param \AppBundle\Entity\Customer $customer
-     *
-     * @return Address
-     */
-    public function setCustomer(Customer $customer = null)
-    {
-        $this->customer = $customer;
-
-        return $this;
-    }
-
-    /**
-     * Get customer
-     *
-     * @return \AppBundle\Entity\Customer
-     */
-    public function getCustomer()
-    {
-        return $this->customer;
-    }
-
-    /**
      * Set creator
      *
      * @param \AppBundle\Entity\Customer $creator
@@ -232,5 +213,53 @@ class Address implements AccessControlInterface
     public function __toString()
     {
         return (string) $this->getDescription();
+    }
+
+    /**
+     * Set businessUnit
+     *
+     * @param \AppBundle\Entity\BusinessUnit $businessUnit
+     *
+     * @return Address
+     */
+    public function setBusinessUnit(\AppBundle\Entity\BusinessUnit $businessUnit = null)
+    {
+        $this->businessUnit = $businessUnit;
+
+        return $this;
+    }
+
+    /**
+     * Get businessUnit
+     *
+     * @return \AppBundle\Entity\BusinessUnit
+     */
+    public function getBusinessUnit()
+    {
+        return $this->businessUnit;
+    }
+
+    /**
+     * Set customer
+     *
+     * @param \AppBundle\Entity\Customer $customer
+     *
+     * @return Address
+     */
+    public function setCustomer(\AppBundle\Entity\Customer $customer = null)
+    {
+        $this->customer = $customer;
+
+        return $this;
+    }
+
+    /**
+     * Get customer
+     *
+     * @return \AppBundle\Entity\Customer
+     */
+    public function getCustomer()
+    {
+        return $this->customer;
     }
 }

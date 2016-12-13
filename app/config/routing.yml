@@ -29,3 +29,8 @@ app.operator.dashboard:
 roapp.media_bundle:
     resource: "@RoappMediaBundle/Controller//"
     prefix:   /
+
+roapp.restaurant_bundle:
+    resource: "@RoappRestaurantBundle/Controller/"
+    type:     annotation
+    prefix:   /

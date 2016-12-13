@@ -6,6 +6,7 @@ imports:
     - { resource: mapping_time_based.yml }
     - { resource: secrets.yml }
     - { resource: gateway.yml }
+    - { resource: "@RoappRestaurantBundle/Resources/config/services.yml" }
 
 # Put parameters here that don't need to change on each machine where the app is deployed
 # http://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
@@ -59,6 +60,7 @@ doctrine:
         charset:  UTF8
         types:
             enumPersonDeviceHistoryAction: AppBundle\DBAL\EnumPersonDeviceHistoryActionType
+            enumContract: AppBundle\DBAL\EnumContractType
         mapping_types:
                   enum: integer
         # if using pdo_sqlite as your database driver:

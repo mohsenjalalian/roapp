@@ -1,0 +1,7 @@
+services:
+    app.shipment.restaurant:
+        class: Roapp\RestaurantBundle\Utils\Services\RestaurantShipmentService
+        arguments:
+            - "@router"
+        tags :
+            - { name: app.shipment }
