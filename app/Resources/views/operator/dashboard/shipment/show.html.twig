@@ -1,5 +1,11 @@
 {% extends ':operator/dashboard:layout.html.twig' %}
-
+{% block page_title %}
+    سفارش
+{% endblock %}
+{% block breadcrumbs %}
+    <li><a href="{{ path('app_operator_dashboard_shipment_index') }}">سفارشات</a></li>
+    <li class="active">نمایش</li>
+{% endblock %}
 {% block stylesheets %}
     {{ parent()  }}
     {% stylesheets
@@ -22,53 +28,43 @@
 {% endblock %}
 
 {% block main %}
-    <h1>سفارش</h1>
-
-    <table class="ui celled table">
-        <tbody class="headColor">
-            <tr>
-                <th>Id</th>
-                <td>{{ shipment.id }}</td>
-            </tr>
-            <tr>
-                <th>توضیحات</th>
-                <td>{{ shipment.description }}</td>
-            </tr>
-            <tr>
-                <th>مقدار</th>
-                <td>{{ shipment.value }}</td>
-            </tr>
-            <tr>
-                <th>وضعیت</th>
-                <td>{{ shipment.status }}</td>
-            </tr>
-            <tr>
-                <th>زمان انجام</th>
-                <td>{% if shipment.pickUpTime %}{{ shipment.pickUpTime|date('Y-m-d H:i:s') }}{% endif %}</td>
-            </tr>
-            <tr>
-                <th>زمان ایجاد</th>
-                <td>{% if shipment.createdAt %}{{ shipment.createdAt|date('Y-m-d H:i:s') }}{% endif %}</td>
-            </tr>
-            <tr>
-                <th>قیمت</th>
-                <td>{{ shipment.price }}</td>
-            </tr>
-            <tr>
-                <th>نوع</th>
-                <td>{{ shipment.type }}</td>
-            </tr>
-        </tbody>
-    </table>
-
-    <div data-token = {{ tracking_token }} id="show-shipment-map"></div>
-
-    <div>
-        <a style="color: black" href="{{ path('app_operator_dashboard_shipment_index') }}"><button>لیست کل سفارشات</button></a>
-        {#<a style="color: black" href="{{ path('app_operator_dashboard_shipment_edit', { 'id': shipment.id }) }}"><button>ویرایش</button></a>#}
-        {#{{ form_start(delete_form) }}#}
-        {#<input type="submit" value="حذف">#}
-        {#{{ form_end(delete_form) }}#}
+    <div class="panel">
+        <div class="panel-heading">
+            <span class="panel-title">سفارش</span>
+        </div>
+        <div class="panel-body">
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th>توضیحات</th>
+                    <th>ارزش</th>
+                    <th>وضعیت</th>
+                    <th>زمان انجام</th>
+                    <th>زمان ایجاد</th>
+                    <th>قیمت</th>
+                    <th>نوع</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>{{ shipment.description }}</td>
+                    <td>{{ shipment.value }}</td>
+                    <td>{{ shipment.status }}</td>
+                    <td>{% if shipment.pickUpTime %}{{ shipment.pickUpTime|date('Y-m-d H:i:s') }}{% endif %}</td>
+                    <td>{% if shipment.createdAt %}{{ shipment.createdAt|date('Y-m-d H:i:s') }}{% endif %}</td>
+                    <td>{{ shipment.price }}</td>
+                    <td>{{ shipment.type }}</td>
+                </tr>
+                </tbody>
+            </table>
+            <div data-token = {{ tracking_token }} id="show-shipment-map"></div>
+            <div>
+                <a style="margin-right: 10px;margin-top: 20px" class="btn btn-sm btn-labeled btn-primary" href="{{ path('app_operator_dashboard_shipment_index') }}">لیست کل سفارشات</a>
+                {#<a style="color: black" href="{{ path('app_operator_dashboard_shipment_edit', { 'id': shipment.id }) }}"><button>ویرایش</button></a>#}
+                {#{{ form_start(delete_form) }}#}
+                {#<input type="submit" value="حذف">#}
+                {#{{ form_end(delete_form) }}#}
+            </div>
+        </div>
     </div>
-
 {% endblock %}
