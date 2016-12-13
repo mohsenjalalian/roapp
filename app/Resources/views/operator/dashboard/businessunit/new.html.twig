@@ -1,6 +1,6 @@
-{% extends 'base.html.twig' %}
+{% extends ':operator/dashboard:layout.html.twig' %}
 
-{% block body %}
+{% block main %}
     <h1>Businessunit creation</h1>
 
     {{ form_start(form) }}
@@ -10,7 +10,7 @@
 
     <ul>
         <li>
-            <a href="{{ path('businessunit_index') }}">Back to the list</a>
+            <a href="{{ path('app_operator_dashboard_businessunit_index') }}">Back to the list</a>
         </li>
     </ul>
 {% endblock %}

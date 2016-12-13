@@ -33,6 +33,18 @@ class BusinessUnit
      */
     private $customers;
 
+    /**
+     * @var integer
+     *
+     *  * @ORM\Column(name="contract_type", type="enumContract")
+     */
+    private $contractType;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="BusinessType", inversedBy="businessUnits")
+     * @ORM\JoinColumn(name="business_type_id", referencedColumnName="id")
+     */
+    private $businessType;
 
     /**
      * Get id
@@ -107,5 +119,53 @@ class BusinessUnit
     public function getCustomers()
     {
         return $this->customers;
+    }
+
+    /**
+     * Set contractType
+     *
+     * @param \enumContract $contractType
+     *
+     * @return BusinessUnit
+     */
+    public function setContractType($contractType)
+    {
+        $this->contractType = $contractType;
+
+        return $this;
+    }
+
+    /**
+     * Get contractType
+     *
+     * @return \enumContract
+     */
+    public function getContractType()
+    {
+        return $this->contractType;
+    }
+
+    /**
+     * Set businessType
+     *
+     * @param \AppBundle\Entity\BusinessType $businessType
+     *
+     * @return BusinessUnit
+     */
+    public function setBusinessType(\AppBundle\Entity\BusinessType $businessType = null)
+    {
+        $this->businessType = $businessType;
+
+        return $this;
+    }
+
+    /**
+     * Get businessType
+     *
+     * @return \AppBundle\Entity\BusinessType
+     */
+    public function getBusinessType()
+    {
+        return $this->businessType;
     }
 }

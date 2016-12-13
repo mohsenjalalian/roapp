@@ -94,3 +94,9 @@ services:
         arguments:
             - "@doctrine.orm.default_entity_manager"
             - "@router"
+
+    app.shipment_service:
+        class: AppBundle\Utils\Services\ShipmentService
+        arguments:
+            - "@doctrine.orm.default_entity_manager"
+            - "@router"
