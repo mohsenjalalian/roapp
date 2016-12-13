@@ -1,14 +1,16 @@
 {% extends ':operator/dashboard:layout.html.twig' %}
-
+{% block breadcrumbs %}
+    <li class="active">سفارشات</li>
+{% endblock %}
+{% block page_title %}
+    لیست سفارشات
+{% endblock %}
 {% block main %}
-    <div class="page-header">
-    <h2 class="ui header" style="display: inline">لیست سفارشات</h2>
-    </div>
+<div class="panel">
     <div class="panel-body">
-    <table class="ui celled table">
+    <table class="table table-striped">
         <thead>
         <tr>
-            <th>{{ knp_pagination_sortable(pagination, 'id','a.id') }}</th>
             <th{% if pagination.isSorted('a.description') %} class="sorted"{% endif %}>{{ knp_pagination_sortable(pagination, 'توضیحات', 'a.description') }}</th>
             <th{% if pagination.isSorted('a.value') %} class="sorted"{% endif %}>{{ knp_pagination_sortable(pagination, 'مقدار', 'a.value') }}</th>
             <th{% if pagination.isSorted('a.status') %} class="sorted"{% endif %}>{{ knp_pagination_sortable(pagination, 'وضعیت', 'a.status') }}</th>
@@ -22,7 +24,6 @@
         <tbody>
         {% for shipment in pagination %}
             <tr>
-                <td><a href="{{ path('app_operator_dashboard_shipment_show', { 'id': shipment.id }) }}">{{ shipment.id }}</a></td>
                 <td>{{ shipment.description }}</td>
                 <td>{{ shipment.value }}</td>
                 <td>{{ shipment.status }}</td>
@@ -31,7 +32,8 @@
                 <td>{{ shipment.price }}</td>
                 <td>{{ shipment.type }}</td>
                 <td>
-                    <a href="{{ path('app_operator_dashboard_shipment_show', { 'id': shipment.id }) }}"><button class="btn">نمایش</button></a>
+                    <a href="{{ path('app_operator_dashboard_shipment_show', { 'id': shipment.id }) }}" class="btn btn-sm btn-labeled btn-success"><span class="btn-label icon fa fa-eye"></span>نمایش</a>
+                    {#<a href="{{ path('app_operator_dashboard_shipment_show', { 'id': shipment.id }) }}"><button class="btn">نمایش</button></a>#}
                     {#<a href="{{ path('app_operator_dashboard_shipment_edit', { 'id': shipment.id }) }}"><button>ویرایش</button></a>#}
                 </td>
             </tr>
@@ -39,6 +41,7 @@
         </tbody>
     </table>
     </div>
+</div>
     {% if pagination.getTotalItemCount > 5 %}
         <div class="ui one column stackable center aligned page grid navigation">
             <div class="pagination menu column twelve wide ui" style="font-size: 18px">
