@@ -38,6 +38,34 @@ class ShipmentService
         $this->router = $router;
     }
     /**
+     *
+     */
+    public function create()
+    {
+    }
+
+    /**
+     *
+     */
+    public function read()
+    {
+    }
+
+    /**
+     *
+     */
+    public function readAll()
+    {
+    }
+
+    /**
+     *
+     */
+    public function edit()
+    {
+    }
+
+    /**
      * @param string                   $shipmentServiceName
      * @param ShipmentProcessInterface $shipment
      */
