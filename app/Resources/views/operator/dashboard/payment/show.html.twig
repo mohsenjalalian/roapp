@@ -1,50 +1,53 @@
 {% extends ':operator/dashboard:layout.html.twig' %}
-
+{% block page_title %}
+    پرداخت ها
+{% endblock %}
+{% block breadcrumbs %}
+    <li><a href="{{ path('app_operator_dashboard_payment_index') }}">پرداخت ها</a></li>
+    <li class="active">نمایش</li>
+{% endblock %}
 {% block main %}
-    <div class="page-header">
-    <h3>جزئیات پرداخت</h3>
-    </div>
-    <div class="panel-body">
-    <table class="ui celled table">
-        <tbody class="headColor">
-        <tr>
-            <th>نام</th>
-            <td>{{ payment.data.first_name }}</td>
-        </tr>
-        <tr>
-            <th>نام خانوادگی</th>
-            <td>{{ payment.data.last_name }}</td>
-        </tr>
-        <tr>
-            <th>شماره کارت</th>
-            <td>{{ payment.data.card_number }}</td>
-        </tr>
-        <tr>
-            <th>نام بانک</th>
-            <td>{{ payment.data.bank_name }}</td>
-        <tr>
-            <th>کد رهگیری</th>
-            <td>{{ payment.data.tracking_code }}</td>
-        </tr>
-        <tr>
-            <th>قیمت</th>
-            <td>{{ payment.shipment.price }}</td>
-        </tr>
-        </tbody>
-    </table>
-    </div>
-    {% if payment.status == constant('STATUS_WAITING_FOR_APPROVE',payment) %}
-        <div id="pay_confirm_section">
-            <a class="ui button btn" id="pay_confirm_button_operator">تایید پرداخت</a>
+    <div class="panel">
+        <div class="panel-heading">
+            <span class="panel-title">جزئیات پرداخت</span>
+        </div>
+        <div class="panel-body">
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th>نام</th>
+                    <th>نام خانوادگی</th>
+                    <th>شماره کارت</th>
+                    <th>نام بانک</th>
+                    <th>کد رهگیری</th>
+                    <th>قیمت</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>{{ payment.data.first_name }}</td>
+                    <td>{{ payment.data.last_name }}</td>
+                    <td>{{ payment.data.card_number }}</td>
+                    <td>{{ payment.data.bank_name }}</td>
+                    <td>{{ payment.data.tracking_code }}</td>
+                    <td>{{ payment.shipment.price }}</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        {% if payment.status == constant('STATUS_WAITING_FOR_APPROVE',payment) %}
+        <div id="pay_confirm_section" style="margin-bottom: 10px;margin-right: 10px">
+            <a class="btn btn-sm btn-labeled btn-primary" id="pay_confirm_button_operator">تایید پرداخت</a>
             <input id="payment_id_operator" type="hidden" value="{{ payment.id }}">
         </div>
-    {% else %}
+        {% else %}
         <div id="result_confirm_pay_oparator">
             <h4 style="color: green">
                 <i style="color: green;font-size: large" class="checkmark icon"></i>
                 <span>تایید شده</span>
             </h4>
         </div>
+    </div>
     {% endif %}
     {% block javascripts %}
         {{ parent()  }}
