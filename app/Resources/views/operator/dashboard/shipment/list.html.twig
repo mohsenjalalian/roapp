@@ -1,4 +1,10 @@
 {% extends ':operator/dashboard:layout.html.twig' %}
+{% block breadcrumbs %}
+    <li class="active">سفارشات آماده</li>
+{% endblock %}
+{% block page_title %}
+    لیست سفارشات آماده برای انتصاب
+{% endblock %}
     {% block javascripts %}
         {{ parent()  }}
         {% javascripts
@@ -8,63 +14,68 @@
         {% endjavascripts %}
     {% endblock %}
 {% block main %}
-    <div class="page-header">
-        <h2 class="ui header" style="display: inline">لیست سفارشات آماده برای انتصاب</h2>
+<div class="panel">
+    <div class="panel-body">
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <td>id</td>
+                <td>نام سفارش دهنده</td>
+                <th>{{ knp_pagination_sortable(pagination, 'زمان انجام کار', 's.pickUpTime') }}</th>
+                <td>نوع</td>
+                <td>وضعیت</td>
+                <td>عرض جغرافیایی</td>
+                <td>طول جغرافیایی</td>
+                <td>عملیات</td>
+            </tr>
+            </thead>
+            <tbody>
+            {% for shipment in pagination %}
+                {% if shipment.status != 1 and shipment.status != 2 %}
+                    <tr class="shipment_assign_list{{ shipment.id }}">
+                        <td>{{ shipment.id }}</td>
+                        <td>{{ shipment.ownerAddress.creator.username }}</td>
+                        <td>{{ shipment.pickUpTime|date('Y-m-d H:i:s') }}</td>
+                        <td>{{ shipment.type }}</td>
+                        <td>انتصاب نشده</td>
+                        <td>{{ shipment.ownerAddress.latitude }}</td>
+                        <td>{{ shipment.ownerAddress.longitude }}</td>
+                        <td>
+                            <a href="{{ path("app_operator_dashboard_driver_list") }}/{{ shipment.id }}" class="btn btn-sm btn-labeled btn-info"><span class="btn-label icon fa fa-paperclip"></span>انتصاب</a>&nbsp;&nbsp;
+                            <button value="{{ shipment.id }}" class="reject_shipment_button btn btn-sm btn-labeled btn-warning"><span class="btn-label icon fa fa-exclamation-triangle"></span>رد</button>&nbsp;&nbsp;
+                            {#<button value="{{ shipment.id }}" class="reject_shipment_button btn">رد</button>#}
+                        </td>
+                    </tr>
+                {% endif %}
+            {% endfor %}
+            </tbody>
+        </table>
     </div>
-<div class="panel-body">
-    <table class="table">
-        <thead>
-        <tr>
-            <td>id</td>
-            <td>نام سفارش دهنده</td>
-            <th>{{ knp_pagination_sortable(pagination, 'زمان انجام کار', 's.pickUpTime') }}</th>
-            <td>نوع</td>
-            <td>وضعیت</td>
-            <td>عرض جغرافیایی</td>
-            <td>طول جغرافیایی</td>
-            <td>عملیات</td>
-        </tr>
-        </thead>
-        <tbody>
-        {% for shipment in pagination %}
-            {% if shipment.status != 1 and shipment.status != 2 %}
-                <tr class="shipment_assign_list{{ shipment.id }}">
-                    <td>{{ shipment.id }}</td>
-                    <td>{{ shipment.ownerAddress.creator.username }}</td>
-                    <td>{{ shipment.pickUpTime|date('Y-m-d H:i:s') }}</td>
-                    <td>{{ shipment.type }}</td>
-                    <td>انتصاب نشده</td>
-                    <td>{{ shipment.ownerAddress.latitude }}</td>
-                    <td>{{ shipment.ownerAddress.longitude }}</td>
-                    <td><a href="{{ path("app_operator_dashboard_driver_list") }}/{{ shipment.id }}"><button class="btn">انتصاب</button></a></td>
-                    <td><button value="{{ shipment.id }}" class="reject_shipment_button btn">رد</button></td>
-                </tr>
-            {% endif %}
-        {% endfor %}
-        </tbody>
-    </table>
 </div>
-    <div class="ui modal small fade">
+    <div data-target="#uidemo-modals-alerts-danger" class="modal small fade modal modal-alert modal-warning fade">
         <div class="modal-dialog">
             <div class="modal-content">
+                <div class="modal-header">
+                    <i class="fa fa-warning"></i>
+                </div>
                 <div class="modal-body">
                     <input class="type" type="hidden">
                     {#<div class="header">Header</div>#}
                     <div class="content">
                         <h3>مطمئن هستید ؟</h3>
                     </div>
-                    <div  class="actions">
-                        <div id="accept_reject_button" style="float: right;margin-bottom: 20px" class="ui approve button btn" data-value="" data-dismiss="modal">بلی</div>
-                        <div style="float: right" class="ui cancel button btn" data-dismiss="modal">خیر</div>
+                    <div  class="actions modal-footer" style="margin-right: 85px">
+                        <div id="accept_reject_button" style="float: right;margin-bottom: 20px" class="ui approve button btn btn-success" data-value="" data-dismiss="modal">بلی</div>
+                        <div style="float: right" class="ui cancel button btn btn-danger" data-dismiss="modal">خیر</div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-        <div class="ui one column stackable center aligned page grid navigation">
-            <div class="pagination menu column twelve wide ui" style="font-size: 18px">
-                {{ knp_pagination_render(pagination) }}
-            </div>
+    <div class="ui one column stackable center aligned page grid navigation">
+        <div class="pagination menu column twelve wide ui" style="font-size: 18px">
+            {{ knp_pagination_render(pagination) }}
         </div>
-{% endblock %}
+    </div>
+    {% endblock %}
 
