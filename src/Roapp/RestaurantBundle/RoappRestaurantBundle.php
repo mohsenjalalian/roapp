@@ -2,7 +2,6 @@
 
 namespace Roapp\RestaurantBundle;
 
-use Roapp\RestaurantBundle\DependencyInjection\Compiler\ShipmentPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
@@ -18,6 +17,5 @@ class RoappRestaurantBundle extends Bundle
     public function build(ContainerBuilder $container)
     {
         parent::build($container);
-        $container->addCompilerPass(new ShipmentPass());
     }
 }

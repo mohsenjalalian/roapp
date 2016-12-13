@@ -14,16 +14,4 @@ use AppBundle\Utils\Shipment\ShipmentInterface;
  */
 class RestaurantShipmentService implements ShipmentInterface
 {
-    /**
-     * @var ShipmentInterface[]
-     */
-    private $shipments;
-    /**
-     * @param string            $shipmentServiceName
-     * @param ShipmentInterface $shipment
-     */
-    public function addShipment($shipmentServiceName, ShipmentInterface $shipment)
-    {
-        $this->shipments[$shipmentServiceName] = $shipment;
-    }
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace Roapp\RestaurantBundle\DependencyInjection\Compiler;
+namespace AppBundle\DependencyInjection\Compiler;
 
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
@@ -8,7 +8,7 @@ use Symfony\Component\DependencyInjection\Reference;
 
 /**
  * Class ShipmentPass
- * @package Roapp\RestaurantBundle\DependencyInjection\Compiler
+ * @package AppBundle\DependencyInjection\Compiler
  */
 class ShipmentPass implements CompilerPassInterface
 {

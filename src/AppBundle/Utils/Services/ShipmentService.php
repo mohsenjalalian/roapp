@@ -2,11 +2,9 @@
 
 namespace AppBundle\Utils\Services;
 
-use AppBundle\Entity\Shipment;
 use AppBundle\Utils\Shipment\ShipmentInterface;
 use Doctrine\ORM\EntityManager;
 use Symfony\Bundle\FrameworkBundle\Routing\Router;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
  * Class PaymentService
@@ -39,12 +37,11 @@ class ShipmentService
         $this->entityManager = $entityManager;
         $this->router = $router;
     }
-
     /**
      * @param string            $shipmentServiceName
      * @param ShipmentInterface $shipment
      */
-    public function addGateway($shipmentServiceName, ShipmentInterface $shipment)
+    public function addShipment($shipmentServiceName, ShipmentInterface $shipment)
     {
         $this->shipments[$shipmentServiceName] = $shipment;
     }
