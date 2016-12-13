@@ -2,7 +2,7 @@
 
 namespace AppBundle\Utils\Services;
 
-use AppBundle\Utils\Shipment\ShipmentInterface;
+use AppBundle\Utils\Shipment\ShipmentProcessInterface;
 use Doctrine\ORM\EntityManager;
 use Symfony\Bundle\FrameworkBundle\Routing\Router;
 
@@ -23,7 +23,7 @@ class ShipmentService
     private $router;
 
     /**
-     * @var ShipmentInterface[]
+     * @var ShipmentProcessInterface[]
      */
     private $shipments;
 
@@ -38,10 +38,10 @@ class ShipmentService
         $this->router = $router;
     }
     /**
-     * @param string            $shipmentServiceName
-     * @param ShipmentInterface $shipment
+     * @param string                   $shipmentServiceName
+     * @param ShipmentProcessInterface $shipment
      */
-    public function addShipment($shipmentServiceName, ShipmentInterface $shipment)
+    public function addShipment($shipmentServiceName, ShipmentProcessInterface $shipment)
     {
         $this->shipments[$shipmentServiceName] = $shipment;
     }
