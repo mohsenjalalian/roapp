@@ -1,37 +1,43 @@
 {% extends ':operator/dashboard:layout.html.twig' %}
-
+{% block page_title %}
+    مشتری
+{% endblock %}
+{% block breadcrumbs %}
+    <li><a href="{{ path('app_operator_dashboard_customer_index') }}">مشتریان</a></li>
+    <li class="active">نمایش</li>
+{% endblock %}
 {% block main %}
-    <h2 class="ui header">مشتری</h2>
-    <table class="ui celled table">
-        <tbody class="headColor">
-        <tr>
-            <th>Id</th>
-            <td>{{ customer.id }}</td>
-        </tr>
-        <tr>
-            <th>نام کاربری</th>
-            <td>{{ customer.username }}</td>
-        </tr>
-        <tr>
-            <th>رمز عبور</th>
-            <td>{{ customer.password }}</td>
-        </tr>
-        <tr>
-            <th>وضعیت</th>
-            <td>{% if customer.isActive %}آنلاین{% else %}آفلاین{% endif %}</td>
-        </tr>
-        <tr>
-            <th>تلفن</th>
-            <td>{{ customer.phone }}</td>
-        </tr>
-        </tbody>
-    </table>
-    <div>
-        <a style="color: black" href="{{ path('app_operator_dashboard_customer_index') }}"><button>لیست کل مشتریان</button></a>
-        {#<a style="color: black" href="{{ path('app_operator_dashboard_customer_edit', { 'id': customer.id }) }}"><button>ویرایش</button></a>#}
-        {#{{ form_start(delete_form) }}#}
-        {#<input type="submit" value="حذف">#}
-        {#{{ form_end(delete_form) }}#}
+    <div class="panel">
+        <div class="panel-heading">
+            <span class="panel-title">مشتری</span>
+        </div>
+        <div class="panel-body">
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th>ایمیل</th>
+                    <th>رمز عبور</th>
+                    <th>وضعیت</th>
+                    <th>تلفن</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>{{ customer.username }}</td>
+                    <td>{{ customer.password }}</td>
+                    <td>{% if customer.isActive %}آنلاین{% else %}آفلاین{% endif %}</td>
+                    <td>{{ customer.phone }}</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div>
+            <a style="margin-right: 10px;margin-bottom: 10px" class="btn btn-sm btn-labeled btn-primary" href="{{ path('app_operator_dashboard_customer_index') }}">لیست کل مشتریان</a>
+            {#<a style="color: black" href="{{ path('app_operator_dashboard_customer_edit', { 'id': customer.id }) }}"><button>ویرایش</button></a>#}
+            {#{{ form_start(delete_form) }}#}
+            {#<input type="submit" value="حذف">#}
+            {#{{ form_end(delete_form) }}#}
+        </div>
     </div>
     {% block stylesheets %}
         {{ parent()  }}

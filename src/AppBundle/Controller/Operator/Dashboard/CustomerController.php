@@ -19,19 +19,23 @@ class CustomerController extends Controller
 {
     /**
      * Lists all Customer entities.
-     * @Route("/", name="app_operator_dashboard_customer_index")
+     * @Route("/{id}", name="app_operator_dashboard_customer_index", requirements={"id": "\d+"})
      * @Method("GET")
      * @param Request $request
+     * @param int     $id
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function indexAction(Request $request)
+    public function indexAction(Request $request, $id = null)
     {
-        $query = $this->getDoctrine()
-            ->getRepository('AppBundle:Customer')
-            ->createQueryBuilder('a')
-            ->orderBy('a.id', 'Asc')
-            ->getQuery()
-        ;
+        if ($id) {
+          //TODO implement query for get each customer in businessUnit
+        } else {
+            $query = $this->getDoctrine()
+                ->getRepository('AppBundle:Customer')
+                ->createQueryBuilder('a')
+                ->orderBy('a.id', 'Asc')
+                ->getQuery();
+        }
 
         $paginator  = $this->get('knp_paginator');
         $pagination = $paginator->paginate(
