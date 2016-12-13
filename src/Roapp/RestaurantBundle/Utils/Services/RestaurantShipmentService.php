@@ -7,6 +7,7 @@
 namespace Roapp\RestaurantBundle\Utils\Services;
 
 use AppBundle\Utils\Shipment\ShipmentProcessInterface;
+use Roapp\RestaurantBundle\Entity\RestaurantShipment;
 
 /**
  * Class RestaurantShipmentService
@@ -44,5 +45,13 @@ class RestaurantShipmentService implements ShipmentProcessInterface
     public function edit()
     {
         // TODO: Implement edit() method.
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getNameSpace()
+    {
+        return RestaurantShipment::class;
     }
 }

@@ -73,4 +73,14 @@ class ShipmentService
     {
         $this->shipments[$shipmentServiceName] = $shipment;
     }
+
+    /**
+     *
+     */
+    public function shipmentFactory()
+    {
+        $nameSpace = $this->shipments['app.shipment.restaurant']->getNameSpace();
+        $shipment = new $nameSpace();
+        dump($shipment);
+    }
 }
