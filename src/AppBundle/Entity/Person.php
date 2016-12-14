@@ -36,6 +36,8 @@ abstract class Person implements UserInterface, \Serializable
      * @var string
      *
      * @ORM\Column(name="phone", type="string", length=255, unique=true)
+     * @Assert\Length(min = 11, max = 11, minMessage = "min_lenght", maxMessage = "max_lenght")
+     * @Assert\Regex(pattern="/^[0-9]*$/", message="number_only")
      */
     protected $phone;
 
