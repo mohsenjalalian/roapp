@@ -14,6 +14,9 @@ use Roapp\MediaBundle\Annotation\UploadableField;
  *
  * @ORM\Table(name="shipment")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\ShipmentRepository")
+ * @ORM\InheritanceType("SINGLE_TABLE")
+ * @ORM\DiscriminatorColumn(name="business_type", type="string")
+ * @ORM\DiscriminatorMap({"shipment" = "Shipment"})
  */
 class Shipment
 {
