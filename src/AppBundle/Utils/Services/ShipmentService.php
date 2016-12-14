@@ -6,9 +6,11 @@ use AppBundle\Entity\Shipment;
 use AppBundle\Utils\Shipment\ShipmentProcessInterface;
 use Doctrine\ORM\EntityManager;
 use Symfony\Bundle\FrameworkBundle\Routing\Router;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 use AppBundle\Entity\Invoice;
 use AppBundle\Entity\Address;
+use r;
 
 /**
  * Class PaymentService
@@ -50,14 +52,66 @@ class ShipmentService
     }
     /**
      * @param Shipment $shipment
+     * @param Request  $request
+     * @param Form     $form
+     *
      */
-    public function create(Shipment $shipment)
+    public function create(Shipment $shipment, Request $request, $form)
     {
         $invoice = new Invoice();
-        $addressEntity = new Address();
-        $user = $this->tokenStorage->getToken()->getUser();
-        $now = new \DateTime();
-        $tomorrow = $now->add(new \DateInterval('P1D'));
+        $ownerAddressId =  $request->request->get('publicAddress');
+        $otherPhoneNumber = $form->get('other')->getData();
+        $otherAddressId = $request->request->get('reciver_public_address');
+        $ownerAddress = $this->entityManager
+            ->getRepository("AppBundle:Address")
+            ->find($ownerAddressId)
+        ;
+        /** @var Customer $customer */
+        $customer = $this->entityManager
+            ->getRepository('AppBundle:Customer')
+            ->findOrCreateByPhone($otherPhoneNumber);
+
+        $shipment->setOther($customer);
+        $shipment->setOwnerAddress($ownerAddress);
+
+        if ($otherAddressId) {
+            $otherAddress = $this->entityManager
+                ->getRepository("AppBundle:Address")
+                ->find($otherAddressId)
+            ;
+            $shipment->setOtherAddress($otherAddress);
+        }
+
+        $shipmentPrice = $request
+            ->request->get('price_shipment');
+
+        $createdAt = new \DateTime();
+        $shipment->setPrice(floatval($shipmentPrice));
+        $shipment->setCreatedAt($createdAt);
+        $shipment->setStatus(Shipment::STATUS_WAITING_FOR_PAYMENT);
+        $shipment->setType("send");
+        $invoice->setCreatedAt($createdAt);
+        $invoice->setStatus(Invoice::STATUS_UNPAID);
+        $invoice->setPrice(floatval($shipmentPrice));
+        $shipment->setInvoice($invoice);
+
+        $em = $this->entityManager;
+        $em->persist($shipment);
+        $em->persist($invoice);
+        $em->flush();
+
+        $conn = r\connect('localhost', '28015', 'roapp', '09126354397');
+        $driverToken = uniqid();
+        $trackingToken = uniqid();
+        $document = [
+            'shipment_id' => $shipment->getId(),
+            'driver_token' => $driverToken,
+            'tracking_token' => $trackingToken,
+            'status'    =>  'disabled',
+        ];
+        r\table("shipment")
+            ->insert($document)
+            ->run($conn);
     }
 
     /**
@@ -99,5 +153,16 @@ class ShipmentService
         $shipment = new $nameSpace();
 
         return $shipment;
+    }
+
+    /**
+     * @return ShipmentType $shipmentType
+     */
+    public function shipmentForm()
+    {
+        $nameSpace = $this->shipments['app.shipment.restaurant']->getForm();
+        $shipmentType = new $nameSpace();
+
+        return $shipmentType;
     }
 }

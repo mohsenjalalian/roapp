@@ -2,6 +2,7 @@
 
 namespace Roapp\RestaurantBundle\Entity;
 
+use AppBundle\Annotation\BusinessTypeShipment;
 use AppBundle\Entity\Shipment;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -10,11 +11,8 @@ use Doctrine\ORM\Mapping as ORM;
  *
  * @ORM\Table(name="restaurant_shipment")
  * @ORM\Entity(repositoryClass="Roapp\RestaurantBundle\Repository\RestaurantShipmentRepository")
+ * @BusinessTypeShipment()
  */
 class RestaurantShipment extends Shipment
 {
-    /**
-     * @ORM\Column(name="test", type="string")
-     */
-    private $test;
 }
