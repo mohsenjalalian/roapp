@@ -67,6 +67,9 @@ class ShipmentController extends Controller
      */
     public function newAction(Request $request)
     {
+//        $shipment = $this->get('app.shipment_service')->shipmentFactory();
+//        $this->get('app.shipment_service')->create($shipment);
+//        exit;
         $shipment = new Shipment();
         $invoice = new Invoice();
         $addressEntity = new Address();
