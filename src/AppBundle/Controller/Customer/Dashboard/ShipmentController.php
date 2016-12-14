@@ -67,8 +67,7 @@ class ShipmentController extends Controller
      */
     public function newAction(Request $request)
     {
-        $shipment = new Shipment();
-        $invoice = new Invoice();
+        $shipment = $this->get('app.shipment_service')->shipmentFactory();
         $addressEntity = new Address();
         $customerId = $this->getUser()->getId(); // get current customer id
         $address = $this->getDoctrine()
@@ -94,67 +93,7 @@ class ShipmentController extends Controller
         ;
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            $ownerAddressId =  $request->request->get('publicAddress');
-            $otherPhoneNumber = $form->get('other')->getData();
-            $otherAddressId = $request->request->get('reciver_public_address');
-            $ownerAddress = $this->getDoctrine()
-                ->getRepository("AppBundle:Address")
-                ->find($ownerAddressId)
-            ;
-            /** @var Customer $customer */
-            $customer = $this->getDoctrine()
-                ->getRepository('AppBundle:Customer')
-                ->findOrCreateByPhone($otherPhoneNumber);
-
-            $shipment->setOther($customer);
-            $shipment->setOwnerAddress($ownerAddress);
-
-            if ($otherAddressId) {
-                $otherAddress = $this->getDoctrine()
-                    ->getRepository("AppBundle:Address")
-                    ->find($otherAddressId)
-                ;
-                $shipment->setOtherAddress($otherAddress);
-            }
-            $description = $form->get("description")
-                ->getData();
-            $value = $form->get("value")
-                ->getData();
-            $pickUpTime = $form->get('pickUpTime')
-                ->getData();
-            $shipmentPrice = $request
-                ->request->get('price_shipment');
-
-            $createdAt = new \DateTime();
-            $shipment->setDescription($description);
-            $shipment->setValue($value);
-            $shipment->setPrice(floatval($shipmentPrice));
-            $shipment->setPickUpTime($pickUpTime);
-            $shipment->setCreatedAt($createdAt);
-            $shipment->setStatus(Shipment::STATUS_WAITING_FOR_PAYMENT);
-            $shipment->setType("send");
-            $invoice->setCreatedAt($createdAt);
-            $invoice->setStatus(Invoice::STATUS_UNPAID);
-            $invoice->setPrice(floatval($shipmentPrice));
-            $shipment->setInvoice($invoice);
-
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($shipment);
-            $em->persist($invoice);
-            $em->flush();
-
-            $conn = r\connect('localhost', '28015', 'roapp', '09126354397');
-            $driverToken = uniqid();
-            $trackingToken = uniqid();
-            $document = [
-                'shipment_id' => $shipment->getId(),
-                'driver_token' => $driverToken,
-                'tracking_token' => $trackingToken,
-                'status'    =>  'disabled',
-            ];
-            r\table("shipment")
-                ->insert($document)
-                ->run($conn);
+            $this->get('app.shipment_service')->create($shipment, $request, $form);
 
             return $this->redirectToRoute('app_customer_dashboard_invoice_checkout', ['id' => $shipment->getInvoice()->getId()]);
         }
