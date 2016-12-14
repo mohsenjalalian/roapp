@@ -100,3 +100,8 @@ services:
         arguments:
             - "@doctrine.orm.default_entity_manager"
             - "@router"
+
+    app.shipment_discriminator_map_listener:
+        class: AppBundle\EventListener\ShipmentDiscriminatorMapListener
+        tags:
+            - { name: doctrine.event_listener, event: loadClassMetadata }

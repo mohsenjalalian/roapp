@@ -13,4 +13,8 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class RestaurantShipment extends Shipment
 {
+    /**
+     * @ORM\Column(name="test", type="string")
+     */
+    private $test;
 }
