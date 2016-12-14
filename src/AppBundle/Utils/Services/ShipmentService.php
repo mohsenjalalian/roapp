@@ -2,6 +2,7 @@
 
 namespace AppBundle\Utils\Services;
 
+use AppBundle\Entity\Customer;
 use AppBundle\Entity\Shipment;
 use AppBundle\Utils\Shipment\ShipmentProcessInterface;
 use Doctrine\ORM\EntityManager;
@@ -149,20 +150,23 @@ class ShipmentService
      */
     public function shipmentFactory()
     {
-        $nameSpace = $this->shipments['app.shipment.restaurant']->getNameSpace();
+        /** @var Customer $customer */
+        $customer = $this->tokenStorage->getToken()->getUser();
+        $nameSpace = $customer->getBusinessUnit()->getBusinessType()->getEntityNamespace();
         $shipment = new $nameSpace();
 
         return $shipment;
     }
 
     /**
-     * @return ShipmentType $shipmentType
+     * @return string
      */
-    public function shipmentForm()
+    public function getShipmentFormNamespace()
     {
-        $nameSpace = $this->shipments['app.shipment.restaurant']->getForm();
-        $shipmentType = new $nameSpace();
+        /** @var Customer $customer */
+        $customer = $this->tokenStorage->getToken()->getUser();
+        $nameSpace = $customer->getBusinessUnit()->getBusinessType()->getFormNamespace();
 
-        return $shipmentType;
+        return $nameSpace;
     }
 }

@@ -10,11 +10,10 @@ use Doctrine\DBAL\Platforms\AbstractPlatform;
  * @package AppBundle\DBAL
  * @codingStandardsIgnoreStart
  */
-abstract class EnumType extends Type
+abstract class EnumType extends Type implements EnumInterface
 {
     // @codingStandardsIgnoreEnd
     protected $name;
-    protected $values = [];
 
     /**
      * @param array            $fieldDeclaration
@@ -29,7 +28,7 @@ abstract class EnumType extends Type
                 function ($value) {
                     return "'{$value}'";
                 },
-                $this->values
+                array_keys($this->getValues())
             )
         );
 
@@ -53,7 +52,7 @@ abstract class EnumType extends Type
      */
     public function convertToDatabaseValue($value, AbstractPlatform $platform)
     {
-        if (!in_array($value, $this->values)) {
+        if (!in_array($value, array_keys($this->getValues()))) {
             throw new \InvalidArgumentException("Invalid '".$this->name."' value.");
         }
 

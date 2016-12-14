@@ -9,6 +9,7 @@ namespace Roapp\RestaurantBundle\Utils\Services;
 use AppBundle\Utils\Shipment\ShipmentProcessInterface;
 use Roapp\RestaurantBundle\Entity\RestaurantShipment;
 use Roapp\RestaurantBundle\Form\RestaurantShipmentType;
+use Roapp\RestaurantBundle\RoappRestaurantBundle;
 
 /**
  * Class RestaurantShipmentService
@@ -17,7 +18,7 @@ use Roapp\RestaurantBundle\Form\RestaurantShipmentType;
 class RestaurantShipmentService implements ShipmentProcessInterface
 {
     /**
-     * @return mixed
+     * Create process
      */
     public function create()
     {
@@ -25,7 +26,7 @@ class RestaurantShipmentService implements ShipmentProcessInterface
     }
 
     /**
-     * @return mixed
+     *
      */
     public function read()
     {
@@ -33,7 +34,7 @@ class RestaurantShipmentService implements ShipmentProcessInterface
     }
 
     /**
-     * @return mixed
+     *
      */
     public function readAll()
     {
@@ -41,7 +42,7 @@ class RestaurantShipmentService implements ShipmentProcessInterface
     }
 
     /**
-     * @return mixed
+     *
      */
     public function edit()
     {
@@ -49,18 +50,18 @@ class RestaurantShipmentService implements ShipmentProcessInterface
     }
 
     /**
-     * @return mixed
+     * @return string
      */
-    public function getNameSpace()
+    public function getShipmentEntityNameSpace()
     {
-        return RestaurantShipment::class;
+        return RoappRestaurantBundle::getShipmentEntityNamespace();
     }
 
     /**
-     * @return mixed
+     * @return string
      */
-    public function getForm()
+    public function getShipmentFormNamespace()
     {
-        return RestaurantShipmentType::class;
+        return RoappRestaurantBundle::getShipmentFormNamespace();
     }
 }

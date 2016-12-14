@@ -2,7 +2,9 @@
 
 namespace AppBundle\Form\Operator\Dashboard;
 
+use AppBundle\DBAL\EnumContractType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -17,7 +19,13 @@ class BusinessUnitType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('name')        ;
+        $builder
+            ->add('name')
+            ->add('businessType')
+            ->add('contractType', ChoiceType::class, [
+                'choices' => array_combine(array_values(EnumContractType::getValues()), array_keys(EnumContractType::getValues())),
+            ])
+        ;
     }
 
     /**

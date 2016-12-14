@@ -67,7 +67,8 @@ class ShipmentController extends Controller
      */
     public function newAction(Request $request)
     {
-        $shipment = $this->get('app.shipment_service')->shipmentFactory();
+        $shipmentService = $this->get('app.shipment_service');
+        $shipment = $shipmentService->shipmentFactory();
         $addressEntity = new Address();
         $customerId = $this->getUser()->getId(); // get current customer id
         $address = $this->getDoctrine()
@@ -76,7 +77,7 @@ class ShipmentController extends Controller
         $now = new \DateTime();
         $tomorrow = $now->add(new \DateInterval('P1D'));
         $shipment->setPickUpTime($tomorrow);
-        $form = $this->createForm(ShipmentType::class, $shipment);
+        $form = $this->createForm($shipmentService->getShipmentFormNamespace(), $shipment);
         $addressForm = $this
             ->createForm(
                 AddressType::class,
@@ -106,6 +107,7 @@ class ShipmentController extends Controller
                 'address' => $address,
                 'shipment' => $shipment,
                 'form' => $form->createView(),
+                'child_form_template' => $form->getConfig()->getOption('template')
             ]
         );
     }

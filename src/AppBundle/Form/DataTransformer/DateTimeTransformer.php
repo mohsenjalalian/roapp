@@ -33,6 +33,10 @@ class DateTimeTransformer implements DataTransformerInterface
      */
     public function reverseTransform($jDate)
     {
+        if (empty($jDate)) {
+            return null;
+        }
+
         $date = explode("-", substr($jDate, 0, 10));
         $time = substr($jDate, 11, -3);
         $gregorianArr = jDateTime::toGregorian($date[0], $date[1], $date[2]);

@@ -57,24 +57,19 @@ class Shipment
     protected $ownerAddress;
 
     /**
+     * @var string
+     */
+    protected $otherPhone;
+
+    /**
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Address" )
      */
     protected $otherAddress;
 
     /**
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Customer" )
-     */
-    protected $other;
-
-    /**
      * @ORM\Column(type="text", name="description")
      */
     protected $description;
-
-    /**
-     * @ORM\Column(type="decimal", name="value")
-     */
-    protected $value;
 
     /**
      * @ORM\Column(type="integer", name="status")
@@ -97,45 +92,16 @@ class Shipment
     protected $price;
 
     /**
-     * @ORM\Column(type="string", name="shipment_type")
-     */
-    protected $type;
-
-    /**
-     * @ORM\Column(type="string", name="shipment_reason", nullable=true)
-     */
-    protected $reason;
-
-    /**
      * @OneToOne(targetEntity="AppBundle\Entity\Invoice", inversedBy="shipment")
      * @JoinColumn(name="invoice_id", referencedColumnName="id")
      */
     private $invoice;
 
     /**
-     * @OneToMany(targetEntity="AppBundle\Entity\Payment", mappedBy="shipment")
-     */
-    private $payment;
-
-    /**
-     * @ORM\ManyToMany(targetEntity="AppBundle\Entity\Media")
-     * @ORM\JoinTable(name="shipment_photos",
-     *      joinColumns={@ORM\JoinColumn(name="shipment_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="photo_id", referencedColumnName="id", unique=true)}
-     *      )
-     */
-    protected $photos;
-
-    /**
-     * @var
-     * @UploadableField(mappedAttribute="photos", mediaName="shipment_image")
-     */
-    protected $photoFiles;
-
-    /**
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\ShipmentAssignment",mappedBy="shipment")
      */
     private $assignments;
+
     /**
      * Get id
      *
@@ -168,30 +134,6 @@ class Shipment
     public function getDescription()
     {
         return $this->description;
-    }
-
-    /**
-     * Set value
-     *
-     * @param string $value
-     *
-     * @return Shipment
-     */
-    public function setValue($value)
-    {
-        $this->value = $value;
-
-        return $this;
-    }
-
-    /**
-     * Get value
-     *
-     * @return string
-     */
-    public function getValue()
-    {
-        return $this->value;
     }
 
     /**
@@ -314,71 +256,13 @@ class Shipment
         return $this->ownerAddress;
     }
 
-    /**
-     * Set type
-     *
-     * @param string $type
-     *
-     * @return Shipment
-     */
-    public function setType($type)
-    {
-        $this->type = $type;
 
-        return $this;
-    }
-
-    /**
-     * Get type
-     *
-     * @return string
-     */
-    public function getType()
-    {
-        return $this->type;
-    }
     /**
      * Constructor
      */
     public function __construct()
     {
-        $this->photos = new ArrayCollection();
         $this->assignments = new ArrayCollection();
-        $this->photoFiles = [];
-    }
-
-    /**
-     * Add photo
-     *
-     * @param \AppBundle\Entity\Media $photo
-     *
-     * @return Shipment
-     */
-    public function addPhoto(Media $photo)
-    {
-        $this->photos[] = $photo;
-
-        return $this;
-    }
-
-    /**
-     * Remove photo
-     *
-     * @param \AppBundle\Entity\Media $photo
-     */
-    public function removePhoto(Media $photo)
-    {
-        $this->photos->removeElement($photo);
-    }
-
-    /**
-     * Get photos
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getPhotos()
-    {
-        return $this->photos;
     }
 
     /**
@@ -440,92 +324,6 @@ class Shipment
     }
 
     /**
-     * Set other
-     *
-     * @param \AppBundle\Entity\Customer $other
-     *
-     * @return Shipment
-     */
-    public function setOther(Customer $other = null)
-    {
-        $this->other = $other;
-
-        return $this;
-    }
-
-    /**
-     * Get other
-     *
-     * @return \AppBundle\Entity\Customer
-     */
-    public function getOther()
-    {
-        return $this->other;
-    }
-
-    /**
-     * Add photo
-     *
-     * @param \AppBundle\Entity\Media $photoFile
-     *
-     * @return Shipment
-     */
-    public function addPhotoFile($photoFile)
-    {
-        $this->photoFiles[] = $photoFile;
-
-        return $this;
-    }
-
-    /**
-     * Remove photo
-     *
-     * @param \AppBundle\Entity\Media $photoFile
-     */
-    public function removePhotoFile($photoFile)
-    {
-        $index = array_search($photoFile, $this->photoFiles);
-
-        if ($index != false) {
-            unset($this->photoFiles[$index]);
-        }
-    }
-
-    /**
-     * Get photos
-     *
-     * @return array
-     */
-    public function getPhotoFiles()
-    {
-        return $this->photoFiles;
-    }
-
-    /**
-     * Set reason
-     *
-     * @param string $reason
-     *
-     * @return Shipment
-     */
-    public function setReason($reason)
-    {
-        $this->reason = $reason;
-
-        return $this;
-    }
-
-    /**
-     * Get reason
-     *
-     * @return string
-     */
-    public function getReason()
-    {
-        return $this->reason;
-    }
-
-    /**
      * Set invoice
      *
      * @param \AppBundle\Entity\Invoice $invoice
@@ -550,36 +348,18 @@ class Shipment
     }
 
     /**
-     * Add payment
-     *
-     * @param \AppBundle\Entity\Payment $payment
-     *
-     * @return Shipment
+     * @return string
      */
-    public function addPayment(Payment $payment)
+    public function getOtherPhone()
     {
-        $this->payment[] = $payment;
-
-        return $this;
+        return $this->otherPhone;
     }
 
     /**
-     * Remove payment
-     *
-     * @param \AppBundle\Entity\Payment $payment
+     * @param string $otherPhone
      */
-    public function removePayment(Payment $payment)
+    public function setOtherPhone($otherPhone)
     {
-        $this->payment->removeElement($payment);
-    }
-
-    /**
-     * Get payment
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getPayment()
-    {
-        return $this->payment;
+        $this->otherPhone = $otherPhone;
     }
 }

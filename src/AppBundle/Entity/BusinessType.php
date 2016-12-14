@@ -2,6 +2,7 @@
 
 namespace AppBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -29,6 +30,27 @@ class BusinessType
     private $name;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="entity_namespace", type="string", unique=true)
+     */
+    private $entityNamespace;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="form_namespace", type="string", unique=true)
+     */
+    private $formNamespace;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="bundle_namespace", type="string", unique=true, options={"default"=""})
+     */
+    private $bundleNamespace;
+
+    /**
      * @ORM\OneToMany(targetEntity="BusinessUnit", mappedBy="businessType")
      */
     private $businessUnits;
@@ -43,12 +65,13 @@ class BusinessType
     {
         return $this->id;
     }
+
     /**
      * Constructor
      */
     public function __construct()
     {
-        $this->businessUnits = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->businessUnits = new ArrayCollection();
     }
 
     /**
@@ -82,7 +105,7 @@ class BusinessType
      *
      * @return BusinessType
      */
-    public function addBusinessUnit(\AppBundle\Entity\BusinessUnit $businessUnit)
+    public function addBusinessUnit(BusinessUnit $businessUnit)
     {
         $this->businessUnits[] = $businessUnit;
 
@@ -94,7 +117,7 @@ class BusinessType
      *
      * @param \AppBundle\Entity\BusinessUnit $businessUnit
      */
-    public function removeBusinessUnit(\AppBundle\Entity\BusinessUnit $businessUnit)
+    public function removeBusinessUnit(BusinessUnit $businessUnit)
     {
         $this->businessUnits->removeElement($businessUnit);
     }
@@ -107,5 +130,87 @@ class BusinessType
     public function getBusinessUnits()
     {
         return $this->businessUnits;
+    }
+
+    /**
+     * Display as string
+     *
+     * @return string
+     */
+    public function __toString()
+    {
+        return $this->name;
+    }
+
+    /**
+     * Set entityNamespace
+     *
+     * @param string $entityNamespace
+     *
+     * @return BusinessType
+     */
+    public function setEntityNamespace($entityNamespace)
+    {
+        $this->entityNamespace = $entityNamespace;
+
+        return $this;
+    }
+
+    /**
+     * Get entityNamespace
+     *
+     * @return string
+     */
+    public function getEntityNamespace()
+    {
+        return $this->entityNamespace;
+    }
+
+    /**
+     * Set bundleNamespace
+     *
+     * @param string $bundleNamespace
+     *
+     * @return BusinessType
+     */
+    public function setBundleNamespace($bundleNamespace)
+    {
+        $this->bundleNamespace = $bundleNamespace;
+
+        return $this;
+    }
+
+    /**
+     * Get bundleNamespace
+     *
+     * @return string
+     */
+    public function getBundleNamespace()
+    {
+        return $this->bundleNamespace;
+    }
+
+    /**
+     * Set formNamespace
+     *
+     * @param string $formNamespace
+     *
+     * @return BusinessType
+     */
+    public function setFormNamespace($formNamespace)
+    {
+        $this->formNamespace = $formNamespace;
+
+        return $this;
+    }
+
+    /**
+     * Get formNamespace
+     *
+     * @return string
+     */
+    public function getFormNamespace()
+    {
+        return $this->formNamespace;
     }
 }

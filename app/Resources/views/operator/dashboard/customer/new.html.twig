@@ -45,6 +45,12 @@
             </div>
         </div>
         <div class="form-group">
+            {{ form_label(form.businessUnit, null, {"label_attr":{"class": "col-sm-2 control-label"}}) }}
+            <div class="col-sm-10">
+                {{ form_widget(form.businessUnit, {"attr": {"placeholder": form.businessUnit.vars.label}}) }}
+            </div>
+        </div>
+        <div class="form-group">
             <div class="col-sm-offset-2 col-sm-10">
                 {{ form_widget(form.isActive, {"attr": {"placeholder": form.isActive.vars.label}}) }}
             </div>
