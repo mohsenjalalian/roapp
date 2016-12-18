@@ -2,6 +2,9 @@
 
 namespace Roapp\RestaurantBundle;
 
+use AppBundle\Utils\BusinessTypeBundleInterface;
+use Roapp\RestaurantBundle\Entity\RestaurantShipment;
+use Roapp\RestaurantBundle\Form\RestaurantShipmentType;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
@@ -9,7 +12,7 @@ use Symfony\Component\HttpKernel\Bundle\Bundle;
  * Class RoappRestaurantBundle
  * @package Roapp\RestaurantBundle
  */
-class RoappRestaurantBundle extends Bundle
+class RoappRestaurantBundle extends Bundle implements BusinessTypeBundleInterface
 {
     /**
      * @param ContainerBuilder $container
@@ -17,5 +20,29 @@ class RoappRestaurantBundle extends Bundle
     public function build(ContainerBuilder $container)
     {
         parent::build($container);
+    }
+
+    /**
+     * @return mixed
+     */
+    public static function getShipmentFormNamespace()
+    {
+        return RestaurantShipmentType::class;
+    }
+
+    /**
+     * @return mixed
+     */
+    public static function getShipmentEntityNamespace()
+    {
+        return RestaurantShipment::class;
+    }
+
+    /**
+     * @return string
+     */
+    public static function getBusinessTypeName()
+    {
+        return 'Restaurant';
     }
 }

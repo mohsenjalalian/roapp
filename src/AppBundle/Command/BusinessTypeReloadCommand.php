@@ -4,10 +4,12 @@ namespace AppBundle\Command;
 
 use AppBundle\Entity\BusinessType;
 use AppBundle\Entity\Shipment;
+use Doctrine\ORM\EntityManager;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Doctrine\ORM\NoResultException;
+use AppBundle\Utils\BusinessTypeBundleInterface;
 
 /**
  * Class BusinessTypeReloadCommand
@@ -21,7 +23,7 @@ class BusinessTypeReloadCommand extends ContainerAwareCommand
     protected function configure()
     {
         $this
-            ->setName('app:business_type_reload_command')
+            ->setName('app:business_type:reload')
             ->setDescription('Reload BusinessType');
     }
 
@@ -31,19 +33,28 @@ class BusinessTypeReloadCommand extends ContainerAwareCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $entityManager = $this->getContainer()->get('doctrine.orm.default_entity_manager');
-        $types = $this->getContainer()->get('doctrine')->getManager()->getClassMetadata(Shipment::class)->subClasses;
-        foreach ($types as $type) {
-            try {
-                /** @var EntityManager $em */
-                $businessTypeEntity = $entityManager
-                    ->getRepository('AppBundle:BusinessType')
-                    ->createQueryBuilder('business_type')
-                    ->where('business_type.name = :name')->setParameter('name', $type)
-                    ->getQuery()
-                    ->getSingleResult();
-            } catch (NoResultException $e) {
-                $businessTypeEntity = new BusinessType();
-                $businessTypeEntity->setName($type);
+        global $kernel;
+        /** @var BusinessTypeBundleInterface $bundle */
+        foreach ($kernel->getBundles() as $bundle) {
+            if ($bundle instanceof BusinessTypeBundleInterface) {
+                $entityNameSpace = $bundle->getShipmentEntityNamespace();
+                $formNameSpace = $bundle->getShipmentFormNamespace();
+                $businessTypeName = $bundle->getBusinessTypeName();
+                try {
+                    /** @var EntityManager $em */
+                    $businessTypeEntity = $entityManager
+                        ->getRepository('AppBundle:BusinessType')
+                        ->createQueryBuilder('business_type')
+                        ->where('business_type.bundleNamespace = :namespace')->setParameter('namespace', get_class($bundle))
+                        ->getQuery()
+                        ->getSingleResult();
+                } catch (NoResultException $e) {
+                    $businessTypeEntity = new BusinessType();
+                    $businessTypeEntity->setBundleNamespace(get_class($bundle));
+                }
+                $businessTypeEntity->setEntityNamespace($entityNameSpace);
+                $businessTypeEntity->setFormNamespace($formNameSpace);
+                $businessTypeEntity->setName($businessTypeName);
                 $entityManager->persist($businessTypeEntity);
                 $entityManager->flush();
             }

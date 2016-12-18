@@ -61,7 +61,13 @@ class CustomerType extends AbstractType
                 [
                     'label' => 'وضعیت',
                 ]
-            );
+            )
+            ->add('businessUnit',
+                null,
+                [
+                    'label' => 'واحد شغلی',
+                ])
+        ;
     }
 
     /**

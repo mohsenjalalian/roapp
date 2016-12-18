@@ -2,13 +2,18 @@
 
 namespace AppBundle\Form\Customer\Dashboard;
 
+use AppBundle\Entity\Shipment;
 use AppBundle\Form\DataTransformer\DateTimeTransformer;
+use AppBundle\Repository\AddressRepository;
+use Doctrine\ORM\EntityRepository;
 use Roapp\MediaBundle\Form\RoappImageType;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
@@ -33,19 +38,6 @@ class ShipmentType extends AbstractType
                 ]
             )
             ->add(
-                'value',
-                null,
-                [
-                    "label" => "ارزش بسته",
-                    'attr' => ['class' => 'calc_price_item'],
-                    'translation_domain' => 'messages',
-                ]
-            )
-            ->add(
-                'photoFiles',
-                RoappImageType::class
-            )
-            ->add(
                 'pickUpTime',
                 TextType::class,
                 [
@@ -54,28 +46,53 @@ class ShipmentType extends AbstractType
                     'attr' => ['class' => 'js-datepicker'],
                 ]
             )
-            ->addEventListener(
-                FormEvents::PRE_SET_DATA,
-                function (FormEvent $event) {
-                    $shipment = $event->getData();
-                    $form = $event->getForm();
-                    if ($shipment->getId() === null) {
-                        $form->add(
-                            'other',
-                            TextType::class,
-                            [
-                                "label" => "شماره گیرنده",
-                                'attr' => ['placeHolder' => 'لطفا شماره تلفن همراه مورد نظر خود را وارد نمایید.', 'class' => 'calc_price_item'],
-                                'translation_domain' => 'messages',
-                                'mapped' => false,
-                            ]
-                        );
-                    }
-                }
+            ->add(
+                'other_phone',
+                TextType::class,
+                [
+                    "label" => "شماره گیرنده",
+                    'attr' => ['placeHolder' => 'لطفا شماره تلفن همراه مورد نظر خود را وارد نمایید.', 'class' => 'calc_price_item'],
+                    'translation_domain' => 'messages',
+                ]
             )
         ;
         $builder->get('pickUpTime')
             ->addModelTransformer(new DateTimeTransformer());
+
+        $formModifier = function (FormInterface $form, $phone) {
+            $form->add('otherAddress', EntityType::class, array(
+                'class'       => 'AppBundle:Address',
+                'placeholder' => '',
+                'expanded' => true,
+                'multiple' => false,
+                'query_builder' => function (AddressRepository $addressRepository) use ($phone) {
+                    return $addressRepository->createQueryBuilder('address')
+                        ->join('address.customer', 'customer')
+                        ->where('customer.phone = :phone')->setParameter('phone', $phone)
+                        ->andWhere('address.isPublic = :public or address.creator = customer')
+                        ->setParameter('public', true);
+                },
+            ));
+        };
+
+        $builder->addEventListener(
+            FormEvents::PRE_SET_DATA,
+            function (FormEvent $event) use ($formModifier) {
+                /** @var Shipment $data */
+                $data = $event->getData();
+
+                $formModifier($event->getForm(), $data->getOtherPhone());
+            }
+        );
+
+        $builder->get('other_phone')->addEventListener(
+            FormEvents::POST_SUBMIT,
+            function (FormEvent $event) use ($formModifier) {
+                $otherPhone = $event->getForm()->getData();
+
+                $formModifier($event->getForm()->getParent(), $otherPhone);
+            }
+        );
     }
 
     /**

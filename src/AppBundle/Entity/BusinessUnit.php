@@ -168,4 +168,12 @@ class BusinessUnit
     {
         return $this->businessType;
     }
+
+    /**
+     * @return string
+     */
+    public function __toString()
+    {
+        return $this->name;
+    }
 }

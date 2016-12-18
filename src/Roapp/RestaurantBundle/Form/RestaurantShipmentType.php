@@ -3,43 +3,34 @@
 namespace Roapp\RestaurantBundle\Form;
 
 use AppBundle\Form\Customer\Dashboard\ShipmentType;
+use Roapp\RestaurantBundle\Entity\RestaurantShipment;
+use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-/**
- * Class RestaurantShipmentType
- * @package Roapp\RestaurantBundle\Form
- */
-class RestaurantShipmentType
+class RestaurantShipmentType extends AbstractType
 {
-    /**
-     * @param FormBuilderInterface $builder
-     * @param array                $options
-     */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $builder->add('test');
     }
 
-    /**
-     * @param OptionsResolver $resolver
-     */
     public function configureOptions(OptionsResolver $resolver)
     {
+        $resolver->setDefaults(
+            [
+                'data_class' => RestaurantShipment::class,
+                'template' => 'RoappRestaurantBundle:Shipment:_shipment_form.html.twig'
+            ]
+        );
     }
 
-    /**
-     * @return string
-     */
     public function getName()
     {
-        return 'roapp_restaurant_bundle_restaurant_shipment_type';
+        return 'restaurant_shipment_type';
     }
 
-    /**
-     * @return mixed
-     */
-    public function getParent()
-    {
+    public function getParent() {
         return ShipmentType::class;
     }
 }

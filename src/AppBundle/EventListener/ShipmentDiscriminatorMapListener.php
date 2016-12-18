@@ -3,9 +3,11 @@
 namespace AppBundle\EventListener;
 
 use AppBundle\Entity\Shipment;
+use AppBundle\Utils\BusinessTypeBundleInterface;
 use Doctrine\ORM\Event\LoadClassMetadataEventArgs;
 use Doctrine\Common\Annotations\AnnotationReader;
 use Roapp\RestaurantBundle\Entity\RestaurantShipment;
+use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 /**
  * Class ShipmentDiscreminatorMapListener
@@ -31,7 +33,17 @@ class ShipmentDiscriminatorMapListener
                 $discriminatorMap = $discriminatorMapAnnotation->value;
             }
 
-            $discriminatorMap['restaurant'] = RestaurantShipment::class;
+            global $kernel;
+            /** @var BusinessTypeBundleInterface $bundle */
+            foreach ($kernel->getBundles() as $bundle) {
+                if ($bundle instanceof BusinessTypeBundleInterface) {
+                    $bundleClass = get_class($bundle);
+                    $paths = explode('\\', call_user_func(array($bundleClass, 'getShipmentEntityNamespace')));
+                    $entityName = array_pop($paths);
+                    $discriminatorMap[$entityName] = $bundle->getShipmentEntityNamespace();
+                }
+            }
+
             $metadata->setDiscriminatorMap($discriminatorMap);
         }
     }
