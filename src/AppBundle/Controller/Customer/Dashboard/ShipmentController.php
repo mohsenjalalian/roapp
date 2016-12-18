@@ -4,7 +4,6 @@ namespace AppBundle\Controller\Customer\Dashboard;
 
 use AppBundle\Entity\Address;
 use AppBundle\Entity\Customer;
-use AppBundle\Entity\Invoice;
 use AppBundle\Form\Customer\Dashboard\AddressType;
 use AppBundle\Form\Customer\Dashboard\ShipmentType;
 use AppBundle\Form\Customer\Dashboard\ValidationCodeType;
@@ -107,7 +106,7 @@ class ShipmentController extends Controller
                 'address' => $address,
                 'shipment' => $shipment,
                 'form' => $form->createView(),
-                'child_form_template' => $form->getConfig()->getOption('template')
+                'child_form_template' => $form->getConfig()->getOption('template'),
             ]
         );
     }
