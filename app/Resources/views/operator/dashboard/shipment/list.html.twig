@@ -22,7 +22,6 @@
                 <td>id</td>
                 <td>نام سفارش دهنده</td>
                 <th>{{ knp_pagination_sortable(pagination, 'زمان انجام کار', 's.pickUpTime') }}</th>
-                <td>نوع</td>
                 <td>وضعیت</td>
                 <td>عرض جغرافیایی</td>
                 <td>طول جغرافیایی</td>
@@ -36,7 +35,6 @@
                         <td>{{ shipment.id }}</td>
                         <td>{{ shipment.ownerAddress.creator.username }}</td>
                         <td>{{ shipment.pickUpTime|date('Y-m-d H:i:s') }}</td>
-                        <td>{{ shipment.type }}</td>
                         <td>انتصاب نشده</td>
                         <td>{{ shipment.ownerAddress.latitude }}</td>
                         <td>{{ shipment.ownerAddress.longitude }}</td>

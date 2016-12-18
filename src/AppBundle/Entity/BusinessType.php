@@ -32,21 +32,33 @@ class BusinessType
     /**
      * @var string
      *
-     * @ORM\Column(name="entity_namespace", type="string", unique=true)
+     * @ORM\Column(name="entity_namespace", type="string", unique=true, nullable=true)
      */
     private $entityNamespace;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="form_namespace", type="string", unique=true)
+     * @ORM\Column(name="form_namespace", type="string", unique=true, nullable=true)
      */
     private $formNamespace;
 
     /**
      * @var string
+     * @ORM\Column(name="business_unit_entity", type="string", unique=true, nullable=true)
+     */
+    private $businessUnitEntity;
+
+    /**
+     * @var string
+     * @ORM\Column(name="business_unit_form", type="string", unique=true, nullable=true)
+     */
+    private $businessUnitForm;
+
+    /**
+     * @var string
      *
-     * @ORM\Column(name="bundle_namespace", type="string", unique=true, options={"default"=""})
+     * @ORM\Column(name="bundle_namespace", type="string", unique=true, options={"default"=""}, nullable=true)
      */
     private $bundleNamespace;
 
@@ -212,5 +224,53 @@ class BusinessType
     public function getFormNamespace()
     {
         return $this->formNamespace;
+    }
+
+    /**
+     * Set businessUnitEntity
+     *
+     * @param string $businessUnitEntity
+     *
+     * @return BusinessType
+     */
+    public function setBusinessUnitEntity($businessUnitEntity)
+    {
+        $this->businessUnitEntity = $businessUnitEntity;
+
+        return $this;
+    }
+
+    /**
+     * Get businessUnitEntity
+     *
+     * @return string
+     */
+    public function getBusinessUnitEntity()
+    {
+        return $this->businessUnitEntity;
+    }
+
+    /**
+     * Set businessUnitForm
+     *
+     * @param string $businessUnitForm
+     *
+     * @return BusinessType
+     */
+    public function setBusinessUnitForm($businessUnitForm)
+    {
+        $this->businessUnitForm = $businessUnitForm;
+
+        return $this;
+    }
+
+    /**
+     * Get businessUnitForm
+     *
+     * @return string
+     */
+    public function getBusinessUnitForm()
+    {
+        return $this->businessUnitForm;
     }
 }
