@@ -38,7 +38,9 @@ class BusinessTypeReloadCommand extends ContainerAwareCommand
         foreach ($kernel->getBundles() as $bundle) {
             if ($bundle instanceof BusinessTypeBundleInterface) {
                 $entityNameSpace = $bundle->getShipmentEntityNamespace();
+                $businessUnitEntity = $bundle->getBusinessUnitEntityNamespace();
                 $formNameSpace = $bundle->getShipmentFormNamespace();
+                $businessUnitForm = $bundle->getBusinessUnitFormNamespace();
                 $businessTypeName = $bundle->getBusinessTypeName();
                 try {
                     /** @var EntityManager $em */
@@ -53,7 +55,9 @@ class BusinessTypeReloadCommand extends ContainerAwareCommand
                     $businessTypeEntity->setBundleNamespace(get_class($bundle));
                 }
                 $businessTypeEntity->setEntityNamespace($entityNameSpace);
+                $businessTypeEntity->setBusinessUnitEntity($businessUnitEntity);
                 $businessTypeEntity->setFormNamespace($formNameSpace);
+                $businessTypeEntity->setBusinessUnitForm($businessUnitForm);
                 $businessTypeEntity->setName($businessTypeName);
                 $entityManager->persist($businessTypeEntity);
                 $entityManager->flush();

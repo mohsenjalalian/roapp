@@ -2,7 +2,9 @@
 
 namespace AppBundle\Controller\Operator\Dashboard;
 
+use AppBundle\Entity\BusinessType;
 use AppBundle\Entity\BusinessUnit;
+use AppBundle\Entity\Customer;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -51,14 +53,19 @@ class BusinessUnitController extends Controller
     /**
      * Creates a new businessUnit entity.
      *
-     * @Route("/new", name="app_operator_dashboard_businessunit_new")
-     * @param Request $request
-     * @Method({"GET", "POST"})
+     * @Route("/new/{businessType}", name="app_operator_dashboard_businessunit_new", requirements={"businessType": "\d+"})
+     * @param Request                        $request
+     * @param \AppBundle\Entity\BusinessType $businessType
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     * @Method({"GET", "POST"})
      */
-    public function newAction(Request $request)
+    public function newAction(Request $request, BusinessType $businessType = null)
     {
-        $businessUnit = new Businessunit();
+        if (!$businessType instanceof $businessType) {
+            return $this->render(':operator/dashboard/businessunit:new_business_type.html.twig');
+        }
+
+        $businessUnit = $this->get('app.business_unit_service')->businessUnitFactory($businessType);
         $form = $this->createForm('AppBundle\Form\Operator\Dashboard\BusinessUnitType', $businessUnit);
         $form->handleRequest($request);
 

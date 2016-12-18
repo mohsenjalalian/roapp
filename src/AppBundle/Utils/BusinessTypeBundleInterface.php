@@ -22,4 +22,14 @@ interface BusinessTypeBundleInterface
      * @return string
      */
     public static function getBusinessTypeName();
+
+    /**
+     * @return string
+     */
+    public static function getBusinessUnitFormNamespace();
+
+    /**
+     * @return string
+     */
+    public static function getBusinessUnitEntityNamespace();
 }

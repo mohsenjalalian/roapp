@@ -9,6 +9,9 @@ use Doctrine\ORM\Mapping as ORM;
  *
  * @ORM\Table(name="business_unit")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\BusinessUnitRepository")
+ * @ORM\InheritanceType("JOINED")
+ * @ORM\DiscriminatorColumn(name="business_type", type="string")
+ * @ORM\DiscriminatorMap({"" = "BusinessUnit"})
  */
 class BusinessUnit
 {
@@ -19,32 +22,32 @@ class BusinessUnit
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
      */
-    private $id;
+    protected $id;
 
     /**
      * @var string
      *
      * @ORM\Column(name="name", type="string", length=255)
      */
-    private $name;
+    protected $name;
 
     /**
      * @ORM\OneToMany(targetEntity="Customer", mappedBy="businessUnit")
      */
-    private $customers;
+    protected $customers;
 
     /**
      * @var integer
      *
      *  * @ORM\Column(name="contract_type", type="enumContract")
      */
-    private $contractType;
+    protected $contractType;
 
     /**
      * @ORM\ManyToOne(targetEntity="BusinessType", inversedBy="businessUnits")
      * @ORM\JoinColumn(name="business_type_id", referencedColumnName="id")
      */
-    private $businessType;
+    protected $businessType;
 
     /**
      * Get id

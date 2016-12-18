@@ -1,4 +1,4 @@
-{% extends ':operator/dashboard:layout.html.twig' %}
+{% extends 'customer/dashboard/layout.html.twig' %}
 {% block page_title %}
     ویرایش واحد شغلی
 {% endblock %}
@@ -39,6 +39,13 @@
                 </div>
             </div>
             {{ form_end(edit_form) }}
+            <div class="form-group" style="margin-bottom: 10px;">
+                <div class="col-sm-offset-2 col-sm-10">
+                    {{ form_start(delete_form) }}
+                    <input class="btn btn-flat btn-sm btn-labeled btn-danger" type="submit" value="حذف">
+                    {{ form_end(delete_form) }}
+                </div>
+            </div>
         </div>
     </div>
 {% endblock %}

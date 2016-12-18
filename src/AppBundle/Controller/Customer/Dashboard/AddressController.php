@@ -71,6 +71,7 @@ class AddressController extends Controller
 
             if ($owner == null) {
                 $address->setCustomer($this->getUser());
+                $address->setBusinessUnit($this->getUser()->getBusinessUnit());
             } else {
                 $customer = $this->getDoctrine()
                     ->getRepository('AppBundle:Customer')
