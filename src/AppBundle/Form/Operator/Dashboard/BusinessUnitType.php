@@ -20,11 +20,29 @@ class BusinessUnitType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('name')
-            ->add('businessType')
-            ->add('contractType', ChoiceType::class, [
-                'choices' => array_combine(array_values(EnumContractType::getValues()), array_keys(EnumContractType::getValues())),
-            ])
+            ->add(
+                'name',
+                null,
+                [
+                    'label' => 'نام',
+                ]
+            )
+            ->add(
+                'businessType',
+                null,
+                [
+                    'required' => true,
+                    'label' => 'صنف',
+                ]
+            )
+            ->add(
+                'contractType',
+                ChoiceType::class,
+                [
+                    'label' => 'نوع قرار داد',
+                    'choices' => array_combine(array_values(EnumContractType::getValues()), array_keys(EnumContractType::getValues())),
+                ]
+            )
         ;
     }
 
@@ -35,7 +53,7 @@ class BusinessUnitType extends AbstractType
     {
         $resolver->setDefaults(
             [
-            'data_class' => 'AppBundle\Entity\BusinessUnit',
+                'data_class' => 'AppBundle\Entity\BusinessUnit',
             ]
         );
     }

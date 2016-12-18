@@ -1,16 +1,43 @@
 {% extends ':operator/dashboard:layout.html.twig' %}
+{% block page_title %}
+    ایجاد واحد شغلی
+{% endblock %}
+{% block breadcrumbs %}
+    <li><a href="{{ path('app_operator_dashboard_businessunit_index') }}">لیست واحد شغلی</a></li>
+    <li class="active">ایجاد واحد شغلی</li>
+{% endblock %}
 
 {% block main %}
-    <h1>Businessunit creation</h1>
-
     {{ form_start(form) }}
-        {{ form_widget(form) }}
-        <input type="submit" value="Create" />
+    {{ form_errors(form) }}
+    <div class="panel-heading">
+        <span class="panel-title">ایجاد واحد شغلی</span>
+    </div>
+    <div class="panel-body">
+        {% form_theme form 'bootstrap_3_layout.html.twig' %}
+        <div class="form-group">
+            {{ form_label(form.name, null, {"label_attr":{"class": "col-sm-2 control-label"}}) }}
+            <div class="col-sm-10">
+                {{ form_widget(form.name, {"attr": {"placeholder": form.name.vars.label}}) }}
+            </div>
+        </div>
+        <div class="form-group">
+            {{ form_label(form.businessType, null, {"label_attr":{"class": "col-sm-2 control-label"}}) }}
+            <div class="col-sm-10">
+                {{ form_widget(form.businessType, {"attr": {"placeholder": form.businessType.vars.label}}) }}
+            </div>
+        </div>
+        <div class="form-group">
+            {{ form_label(form.contractType, null, {"label_attr":{"class": "col-sm-2 control-label"}}) }}
+            <div class="col-sm-10">
+                {{ form_widget(form.contractType, {"attr": {"placeholder": form.contractType.vars.label}}) }}
+            </div>
+        </div>
+        <div class="form-group" style="margin-bottom: 0;">
+            <div class="col-sm-offset-2 col-sm-10">
+                <input class="btn btn-flat btn-sm btn-labeled btn-success" type="submit" value="ایجاد" />
+            </div>
+        </div>
+    </div>
     {{ form_end(form) }}
-
-    <ul>
-        <li>
-            <a href="{{ path('app_operator_dashboard_businessunit_index') }}">Back to the list</a>
-        </li>
-    </ul>
 {% endblock %}

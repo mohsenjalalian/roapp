@@ -9,35 +9,50 @@
 {% endblock %}
 
 {% block header_link %}
-    <a href="{{ path('app_operator_dashboard_businessunit_new') }}" class="btn btn-sm btn-labeled btn-primary"><span class="btn-label icon fa fa-camera-retro"></span>ایجاد واحد شغلی جدید</a>
+    <a href="{{ path('app_operator_dashboard_businessunit_new') }}" class="btn btn-sm btn-labeled btn-primary"><span class="btn-label icon fa fa-plus-square"></span>ایجاد واحد شغلی جدید</a>
 {% endblock %}
 
 {% block main %}
-    <div class="panel-body">
-    <table class="ui celled table">
-        <thead>
-            <tr>
-                <th>{{ knp_pagination_sortable(pagination, 'نام','a.name') }}</th>
-                <th>عملیات</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for businessunit in pagination %}
-            <tr>
-                <td><a href="{{ path('app_operator_dashboard_businessunit_show', { 'id': businessunit.id }) }}">{{ businessunit.name }}</a></td>
-                <td>
-                    <ul>
-                        <li>
-                            <a href="{{ path('app_operator_dashboard_businessunit_show', { 'id': businessunit.id }) }}">show</a>
-                        </li>
-                        <li>
-                            <a href="{{ path('app_operator_dashboard_businessunit_edit', { 'id': businessunit.id }) }}">edit</a>
-                        </li>
-                    </ul>
-                </td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+    <div class="panel">
+        <div class="panel-body">
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th>{{ knp_pagination_sortable(pagination, 'نام','a.name') }}</th>
+                    <th>صنف</th>
+                    <th>نوع قرار داد</th>
+                    <th>عملیات</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for businessunit in pagination %}
+                    <tr>
+                        <td>
+                            <a href="{{ path('app_operator_dashboard_businessunit_show', { 'id': businessunit.id }) }}">{{ businessunit.name }}</a>
+                        </td>
+                        <td>
+                            {{ businessunit.businessType.name }}
+                        </td>
+                        <td>
+                            {% if businessunit.contractType == 1 %}
+                                <span>ماهیانه</span>
+                            {% else %}
+                                <span>به ازای هر سفارش</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <a href="{{ path('app_operator_dashboard_businessunit_show', { 'id': businessunit.id }) }}" class="btn btn-sm btn-labeled btn-success"><span class="btn-label icon fa fa-eye"></span>نمایش</a>&nbsp;&nbsp;
+                            <a href="{{ path('app_operator_dashboard_businessunit_edit', { 'id': businessunit.id }) }}" class="btn btn-sm btn-labeled btn-info"><span class="btn-label icon fa fa-pencil-square-o"></span>ویرایش</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-offset-3 col-sm-10">
+                {{ knp_pagination_render(pagination) }}
+            </div>
+        </div>
     </div>
 {% endblock %}
