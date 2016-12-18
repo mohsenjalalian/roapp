@@ -19,6 +19,7 @@
                     <th>رمز عبور</th>
                     <th>وضعیت</th>
                     <th>تلفن</th>
+                    <th>نام واحد شغلی</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -27,6 +28,7 @@
                     <td>{{ customer.password }}</td>
                     <td>{% if customer.isActive %}آنلاین{% else %}آفلاین{% endif %}</td>
                     <td>{{ customer.phone }}</td>
+                    <td>{{ customer.businessUnit.name }}</td>
                 </tr>
                 </tbody>
             </table>
