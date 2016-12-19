@@ -61,19 +61,40 @@
             </div>
             <ul class="navigation">
                 <li>
-                    <a href="{{ path('app_customer_dashboard_shipment_index') }}"><i class="menu-icon fa fa-dashboard"></i><span class="mm-text">لیست سفارشات</span></a>
+                    <a href="{{ path('app_customer_dashboard_shipment_index') }}"><i class="menu-icon fa fa-list-ol"></i><span class="mm-text">لیست سفارشات</span></a>
                 </li>
                 <li>
                     <a href="{{ path('app_customer_dashboard_address_index') }}"><i class="menu-icon fa fa-dashboard"></i><span class="mm-text">لیست آدرس ها</span></a>
                 </li>
                 <li>
-                    <a href="{{ path('app_dashboard_customer_payment_index') }}"><i class="menu-icon fa fa-dashboard"></i><span class="mm-text">لیست پرداخت ها</span></a>
+                    <a href="{{ path('app_dashboard_customer_payment_index') }}"><i class="menu-icon fa fa-money"></i><span class="mm-text">لیست پرداخت ها</span></a>
+                </li>
+                <li>
+                    <a href="{{ path('app_customer_dashboard_customer_index', { 'id': app.user.id }) }}"><i class="menu-icon fa fa-user"></i><span class="mm-text">پروفایل</span></a>
                 </li>
             </ul> <!-- / .navigation -->
         </div> <!-- / #main-menu-inner -->
     </div> <!-- / #main-menu -->
                 {#{{ knp_menu_render('main_menu', {"template": "menu.html.twig", "currentClass": "active"}) }}#}
     <div id="content-wrapper">
+        <ul id="page-breadcrumb-demo" class="breadcrumb breadcrumb-page breadcrumb-dark" style="background: rgb(71, 142, 158); display: block;">
+            <li><a href="{{ path('app_customer_dashboard_shipment_index') }}">خانه</a></li>
+            {% block breadcrumbs %} {% endblock %}
+        </ul>
+
+        <!-- page title -->
+        {% set _page_title = block('page_title') %}
+        {% if _page_title is not empty %}
+            <div class="page-header">
+                <h1 class="ui header" style="display: inline">
+                    {{ _page_title|raw }}
+                </h1>
+                {% set _header_link = block('header_link') %}
+                {% if _header_link is not empty %}
+                    {{ _header_link|raw }}
+                {% endif %}
+            </div>
+        {% endif %}
         {% block main %}{% endblock %}
     </div> <!-- / #content-wrapper -->
     <div id="main-menu-bg"></div>

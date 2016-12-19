@@ -55,4 +55,23 @@ class CustomerRepository extends EntityRepository implements UserLoaderInterface
             return $customerObj;
         }
     }
+
+    /**
+     * @param int    $id
+     * @param string $currentPassword
+     * @return null|object
+     */
+    public function validationCurrentPassword($id, $currentPassword)
+    {
+        $result = $this
+            ->findOneBy(
+                [
+                    'id' => $id,
+                    'password' => $currentPassword,
+                ]
+            )
+        ;
+
+        return $result;
+    }
 }
