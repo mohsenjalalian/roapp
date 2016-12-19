@@ -66,10 +66,21 @@ class ShipmentController extends Controller
      */
     public function newAction(Request $request)
     {
+        $customer = $this->getUser();
+        $businessUnit = $customer->getBusinessUnit();
+        $em = $this->getDoctrine()->getManager();
+        $drivers = $em->getRepository('AppBundle:Driver')
+            ->createQueryBuilder('driver')
+            ->join('driver.businessUnit', 'businessUnit')
+            ->where('driver.businessUnit = :businessUnit')
+            ->andWhere('driver.status = 1')
+            ->setParameter('businessUnit', $businessUnit)
+            ->getQuery()
+            ->getResult();
         $shipmentService = $this->get('app.shipment_service');
         $shipment = $shipmentService->shipmentFactory();
         $addressEntity = new Address();
-        $customerId = $this->getUser()->getId(); // get current customer id
+        $customerId = $customer->getId(); // get current customer id
         $address = $this->getDoctrine()
             ->getRepository("AppBundle:Address")
             ->getPublicAddressCustomer($customerId);
@@ -94,8 +105,12 @@ class ShipmentController extends Controller
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $this->get('app.shipment_service')->create($shipment, $request, $form);
+            $selectedDriver = $request->get('selected-driver');
+            if ($selectedDriver) {
+                $this->get('app.shipment_service')->shipmentAssign($shipment, $selectedDriver);
+            }
 
-            return $this->redirectToRoute('app_customer_dashboard_invoice_checkout', ['id' => $shipment->getInvoice()->getId()]);
+            return $this->redirectToRoute('app_customer_dashboard_shipment_index');
         }
 
         return $this->render(
@@ -106,6 +121,7 @@ class ShipmentController extends Controller
                 'address' => $address,
                 'shipment' => $shipment,
                 'form' => $form->createView(),
+                'drivers'   =>  $drivers,
                 'child_form_template' => $form->getConfig()->getOption('template'),
                 'child_form_javascript' => $form->getConfig()->getOption('javascript'),
                 'child_form_stylesheet' => $form->getConfig()->getOption('stylesheet'),

@@ -4,13 +4,13 @@ namespace AppBundle\Utils\Services;
 
 use AppBundle\Entity\Customer;
 use AppBundle\Entity\Shipment;
+use AppBundle\Utils\AssignmentShipment;
 use AppBundle\Utils\Shipment\ShipmentProcessInterface;
 use Doctrine\ORM\EntityManager;
 use Symfony\Bundle\FrameworkBundle\Routing\Router;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
-use AppBundle\Entity\Invoice;
-use AppBundle\Entity\Address;
+
 use r;
 
 /**
@@ -40,16 +40,23 @@ class ShipmentService
     private $tokenStorage;
 
     /**
-     * PaymentService constructor.
-     * @param EntityManager $entityManager
-     * @param Router        $router
-     * @param TokenStorage  $tokenStorage
+     * @var AssignmentShipment
      */
-    public function __construct(EntityManager $entityManager, Router $router, TokenStorage $tokenStorage)
+    private $assignmentShipment;
+
+    /**
+     * PaymentService constructor.
+     * @param EntityManager      $entityManager
+     * @param Router             $router
+     * @param TokenStorage       $tokenStorage
+     * @param $assignmentShipment $assignmentShipment
+     */
+    public function __construct(EntityManager $entityManager, Router $router, TokenStorage $tokenStorage, AssignmentShipment $assignmentShipment)
     {
         $this->entityManager = $entityManager;
         $this->router = $router;
         $this->tokenStorage = $tokenStorage;
+        $this->assignmentShipment = $assignmentShipment;
     }
     /**
      * @param Shipment $shipment
@@ -59,29 +66,7 @@ class ShipmentService
      */
     public function create(Shipment $shipment, Request $request, $form)
     {
-        $invoice = new Invoice();
-        $ownerAddressId =  $request->request->get('publicAddress');
-        $otherPhoneNumber = $form->get('other')->getData();
-        $otherAddressId = $request->request->get('reciver_public_address');
-        $ownerAddress = $this->entityManager
-            ->getRepository("AppBundle:Address")
-            ->find($ownerAddressId)
-        ;
         /** @var Customer $customer */
-        $customer = $this->entityManager
-            ->getRepository('AppBundle:Customer')
-            ->findOrCreateByPhone($otherPhoneNumber);
-
-        $shipment->setOther($customer);
-        $shipment->setOwnerAddress($ownerAddress);
-
-        if ($otherAddressId) {
-            $otherAddress = $this->entityManager
-                ->getRepository("AppBundle:Address")
-                ->find($otherAddressId)
-            ;
-            $shipment->setOtherAddress($otherAddress);
-        }
 
         $shipmentPrice = $request
             ->request->get('price_shipment');
@@ -89,16 +74,9 @@ class ShipmentService
         $createdAt = new \DateTime();
         $shipment->setPrice(floatval($shipmentPrice));
         $shipment->setCreatedAt($createdAt);
-        $shipment->setStatus(Shipment::STATUS_WAITING_FOR_PAYMENT);
-        $shipment->setType("send");
-        $invoice->setCreatedAt($createdAt);
-        $invoice->setStatus(Invoice::STATUS_UNPAID);
-        $invoice->setPrice(floatval($shipmentPrice));
-        $shipment->setInvoice($invoice);
-
+        $shipment->setStatus(Shipment::STATUS_NOT_ASSIGNED);
         $em = $this->entityManager;
         $em->persist($shipment);
-        $em->persist($invoice);
         $em->flush();
 
         $conn = r\connect('localhost', '28015', 'roapp', '09126354397');
@@ -154,6 +132,7 @@ class ShipmentService
         $customer = $this->tokenStorage->getToken()->getUser();
         $nameSpace = $customer->getBusinessUnit()->getBusinessType()->getEntityNamespace();
         $shipment = new $nameSpace();
+        $shipment = $this->shipmentInit($shipment);
 
         return $shipment;
     }
@@ -168,5 +147,36 @@ class ShipmentService
         $nameSpace = $customer->getBusinessUnit()->getBusinessType()->getFormNamespace();
 
         return $nameSpace;
+    }
+
+    /**
+     * @param Shipment $shipment
+     * @return Shipment $shipment
+     */
+    public function shipmentInit(Shipment $shipment)
+    {
+        $customer = $this->tokenStorage->getToken()->getUser();
+        $ownerAddress = $customer->getBusinessUnit()->getDefaultAddress();
+        $shipment->setOwnerAddress($ownerAddress);
+        $em = $this->entityManager;
+        $em->persist($ownerAddress);
+        $em->flush();
+
+        return $shipment;
+    }
+
+    /**
+     * @param Shipment $shipment
+     * @param integer  $driverId
+     * @return bool
+     */
+    public function shipmentAssign(Shipment $shipment, $driverId)
+    {
+        $em = $this->entityManager;
+        $driver = $em->getRepository('AppBundle:Driver')
+            ->find($driverId);
+        $this->assignmentShipment->sendRequest($shipment, $driver);
+
+        return true;
     }
 }
