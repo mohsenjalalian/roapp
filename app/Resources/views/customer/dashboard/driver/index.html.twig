@@ -1,0 +1,44 @@
+{% extends ':customer/dashboard:layout.html.twig' %}
+{% block breadcrumbs %}
+    <li class="active">راننده ها</li>
+{% endblock %}
+{% block page_title %}
+    لیست راننده ها
+{% endblock %}
+{% block header_link %}
+    <a href="{{ path('app_customer_dashboard_driver_new') }}" class="btn btn-sm btn-labeled btn-primary"><span class="btn-label icon fa fa-plus-square"></span>ایجاد راننده ی جدید</a>
+{% endblock %}
+{% block main %}
+    <div class="panel">
+        <div class="panel-body">
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th>{{ knp_pagination_sortable(pagination, 'نام و نام خانوادگی','d.fullName') }}</th>
+                    <th{% if pagination.isSorted('d.phone') %} class="sorted"{% endif %}>{{ knp_pagination_sortable(pagination, 'تلفن', 'd.phone') }}</th>
+                    <th{% if pagination.isSorted('d.is_active') %} class="sorted"{% endif %}>{{ knp_pagination_sortable(pagination, 'وضعیت', 'd.is_active') }}</th>
+                    <th>Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for driver in pagination %}
+                    <tr>
+                        <td><a href="{{ path('app_customer_dashboard_driver_show', { 'id': driver.id }) }}">{{ driver.fullName }}</a></td>
+                        <td>{{ driver.phone }}</td>
+                        <td>{% if driver.isActive %}فعال{% else %}غیر فعال{% endif %}</td>
+                        <td>
+                            <a href="{{ path('app_customer_dashboard_driver_show', { 'id': driver.id }) }}" class="btn btn-sm btn-labeled btn-success"><span class="btn-label icon fa fa-eye"></span>نمایش</a>&nbsp;&nbsp;
+                            <a href="{{ path('app_customer_dashboard_driver_edit', { 'id': driver.id }) }}" class="btn btn-sm btn-labeled btn-info"><span class="btn-label icon fa fa-pencil-square-o"></span>ویرایش</a>&nbsp;&nbsp;
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-offset-3 col-sm-10">
+                {{ knp_pagination_render(pagination) }}
+            </div>
+        </div>
+    </div>
+{% endblock %}
