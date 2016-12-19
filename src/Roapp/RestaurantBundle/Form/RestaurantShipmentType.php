@@ -32,6 +32,8 @@ class RestaurantShipmentType extends AbstractType
             [
                 'data_class' => RestaurantShipment::class,
                 'template' => 'RoappRestaurantBundle:Shipment:_shipment_form.html.twig',
+                'javascript' => 'bundles/roapprestaurant/javascript/form.js',
+                'stylesheet' => 'bundles/roapprestaurant/stylesheet/form.css',
             ]
         );
     }

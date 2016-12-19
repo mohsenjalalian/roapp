@@ -107,6 +107,8 @@ class ShipmentController extends Controller
                 'shipment' => $shipment,
                 'form' => $form->createView(),
                 'child_form_template' => $form->getConfig()->getOption('template'),
+                'child_form_javascript' => $form->getConfig()->getOption('javascript'),
+                'child_form_stylesheet' => $form->getConfig()->getOption('stylesheet'),
             ]
         );
     }
