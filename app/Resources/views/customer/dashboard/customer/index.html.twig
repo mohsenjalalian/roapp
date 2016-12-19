@@ -1,0 +1,35 @@
+{% extends ':customer/dashboard:layout.html.twig' %}
+{% block breadcrumbs %}
+    <li class="active">پروفایل</li>
+{% endblock %}
+{% block page_title %}
+   پروفایل {{ customer.fullName }}
+{% endblock %}
+{% block header_link %}
+    <a href="{{ path ('app_customer_dashboard_customer_edit', {'id' : customer.id }) }}" class="btn btn-sm btn-labeled btn-info"><span class="btn-label icon fa fa-pencil-square-o"></span>ویرایش پروفایل</a>
+{% endblock %}
+{% block main %}
+    <div class="panel">
+        <div class="panel-heading">
+            <span class="panel-title">پروفایل</span>
+        </div>
+        <div class="panel-body">
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th>نام و نام خانوادگی</th>
+                    <th>ایمیل</th>
+                    <th>تلفن</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>{{ customer.fullName }}</td>
+                    <td>{{ customer.username }}</td>
+                    <td>{{ customer.phone }}</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}

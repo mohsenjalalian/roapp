@@ -29,6 +29,16 @@ class Customer extends Person implements AdvancedUserInterface, \Serializable
     private $businessUnit;
 
     /**
+     * @var string
+     */
+    private $currentPassword;
+
+    /**
+     * @var string
+     */
+    private $newPassword;
+
+    /**
      * @inheritdoc
      * @return array
      */
@@ -228,7 +238,7 @@ class Customer extends Person implements AdvancedUserInterface, \Serializable
      *
      * @return Customer
      */
-    public function setBusinessUnit(\AppBundle\Entity\BusinessUnit $businessUnit = null)
+    public function setBusinessUnit(BusinessUnit $businessUnit = null)
     {
         $this->businessUnit = $businessUnit;
 
@@ -243,5 +253,43 @@ class Customer extends Person implements AdvancedUserInterface, \Serializable
     public function getBusinessUnit()
     {
         return $this->businessUnit;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCurrentPassword()
+    {
+        return $this->currentPassword;
+    }
+
+    /**
+     * @param mixed $currentPassword
+     * @return $this
+     */
+    public function setCurrentPassword($currentPassword)
+    {
+        $this->currentPassword = $currentPassword;
+
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getNewPassword()
+    {
+        return $this->newPassword;
+    }
+
+    /**
+     * @param mixed $newPassword
+     * @return $this
+     */
+    public function setNewPassword($newPassword)
+    {
+        $this->newPassword = $newPassword;
+
+        return $this;
     }
 }
