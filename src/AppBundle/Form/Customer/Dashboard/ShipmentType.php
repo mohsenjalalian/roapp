@@ -61,6 +61,13 @@ class ShipmentType extends AbstractType
                     'class' => 'AppBundle\Entity\Address',
                 ]
             )
+            ->add(
+                'selected_driver',
+                HiddenType::class,
+                [
+                    'mapped' => false,
+                ]
+            )
         ;
         $builder->get('pickUpTime')
             ->addModelTransformer(new DateTimeTransformer());

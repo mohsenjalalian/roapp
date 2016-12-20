@@ -101,7 +101,7 @@ class ShipmentController extends Controller
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $this->get('app.shipment_service')->create($shipment, $request, $form);
-            $selectedDriver = $request->get('selected-driver');
+            $selectedDriver = $form->get('selected_driver')->getData();
             if ($selectedDriver) {
                 $this->get('app.shipment_service')->shipmentAssign($shipment, $selectedDriver);
             }
