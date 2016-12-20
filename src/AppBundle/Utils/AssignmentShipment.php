@@ -74,8 +74,6 @@ class AssignmentShipment
             ->getDescription();
         $shipmentPrice =  $assignmentObj->getShipment()
             ->getPrice();
-        $shipmentValue = $assignmentObj->getShipment()
-            ->getValue();
         $shipmentPickUpTime = $assignmentObj->getShipment()
             ->getPickUpTime()->getTimestamp();
         $shipmentDescription = $assignmentObj->getShipment()
@@ -94,7 +92,6 @@ class AssignmentShipment
                     'sourceAddress' => $ownerDescription,
                     'destinationAddress' => $otherDescription,
                     'shipmentPrice' => $shipmentPrice,
-                    'shipmentValue' => $shipmentValue,
                     'shipmentPickUpTime' => $shipmentPickUpTime,
                     'shipmentDescription' => $shipmentDescription,
                 ],

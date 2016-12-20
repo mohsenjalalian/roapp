@@ -101,6 +101,7 @@ services:
             - "@doctrine.orm.default_entity_manager"
             - "@router"
             - "@security.token_storage"
+            - "@app.shipment_assignment"
 
     app.shipment_discriminator_map_listener:
         class: AppBundle\EventListener\ShipmentDiscriminatorMapListener
@@ -114,3 +115,9 @@ services:
 
     app.business_unit_service:
         class: AppBundle\Utils\Services\BusinessUnitService
+
+    app.type.entity_hidden:
+        class: AppBundle\Form\Customer\Dashboard\EntityHiddenType
+        arguments: ["@doctrine.orm.entity_manager"]
+        tags:
+        - { name: form.type, alias: entity_hidden }

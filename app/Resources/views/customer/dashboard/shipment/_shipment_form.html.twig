@@ -2,7 +2,6 @@
 
 {% block shipment_row %}
     <form action="{{ path('app_customer_dashboard_shipment_new') }}" method="POST" class="panel form-horizontal">
-
         {{ form_errors(form) }}
         <div class="panel-heading">
             <span class="panel-title">ثبت درخواست ارسال</span>
@@ -14,7 +13,6 @@
                 <div class="col-sm-10">{{ form_widget(form.description, { 'attr': {'class': 'form-control'} } ) }}</div>
             </div>
             {% endblock %}
-
             <div class="form-group row">
                 <div class="col-md-6">
                     <div class="form-group row">
@@ -23,36 +21,16 @@
                     </div>
                 </div>
             </div>
-
-
             <div class="form-group row">
                 <div class="col-md-6">
                     <div class="form-group row">
-                        {#<label>شماره گیرنده</label>#}
                         <label class="col-sm-4">{{ form_label(form.other_phone) }}</label>
                         <div class="col-sm-8">
                             {{ form_widget(form.other_phone) }}
-                            {#<input id="mobile_reciver"  name="reciver_mobile_number" placeholder="وارد کردن شماره تلفن همراه" type="text">#}
-                            <div id="reciver_address" class="ui toggle" style="margin-top: 5px">
-                                <label class="switch">
-                                    <input class="calc_price_item col-sm-6"  id="show_reciver_address_btn" name="public" type="checkbox" disabled>
-                                    <div class="slider round"></div>
-                                </label>
-                            </div>
-                            <div id="reciver_info_box" class="calc_price_item" style="margin-top: 15px;display: none">
-
-                            </div>
-                            <div id="noAddress"  style="margin-top:10px;display: none">
-                                <span>آدرسی وجود ندارد</span>
-                            </div>
-                            <div id="reciver_modal_box" style="margin-top: 15px">
-                                <a class="address_modal" name="otherFormModal" style="cursor: pointer;display: none">افزودن آدرس جدید</a>
-                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-
             <div class="form-group row">
                 <div class="col-xs-12">
                     {% block child_form %}{% endblock %}
@@ -68,59 +46,9 @@
             <div class="price_send">
 
             </div>
-            <input  class="ui button creator_shipment" type="submit" tabindex="0" value="ایجاد سفارش" disabled />
+            <input type="hidden" value="" id="hidden-driver" name="selected-driver">
+            <input  class="btn btn-flat btn-sm btn-labeled btn-success creator_shipment" type="submit" tabindex="0" value="ایجاد سفارش" disabled />
             {{ form_rest(form) }}
         </div>
     </form>
-
-{% endblock %}
-
-
-{% block address %}
-    <div class="row">
-        <div class="col-md-6">
-            <div class="form-group col-sm-4">
-                <label>آدرس فرستنده</label>
-                <div class="calc_price_item" style="margin-top: 10px" id="address_show_section">
-                    {% for infoAddress in address %}
-                        {% if infoAddress.customer.id == customerId %}
-                            {% if loop.index <=4 %}
-                                <div class="" style="margin-top: 10px">
-                                    {% if loop.index == 1 %}
-                                        <input checked type="radio"  name="publicAddress" value="{{ infoAddress.id }}"><span>{{ infoAddress.description }}</span>
-                                    {% else %}
-                                        <input type="radio"  name="publicAddress" value="{{ infoAddress.id }}"><span>{{ infoAddress.description }}</span>
-                                    {% endif %}
-                                </div>
-                            {% endif %}
-                        {% endif %}
-                    {% endfor %}
-                </div>
-                {% if address|length >= 5 %}
-                    <div class="ui accordion">
-                        <div class="title">
-                            <i class="dropdown icon"></i>
-                            <span style="color:#2b669a">آدرس های دیگر</span>
-                        </div>
-                        {#<a id="addressContinue" style="cursor: pointer"> آدرس های دیگر+</a>#}
-                        <div class="otherAddress content calc_price_item" id="bbb">
-                            {% for infoAddress in address %}
-                                {% if infoAddress.customer.id == customerId %}
-                                    {% if loop.index >=5 %}
-                                        <input id="" type="radio"  name="publicAddress" value="{{ infoAddress.id }}"><span>{{ infoAddress.description }}</span>
-                                        <br>
-                                    {% endif %}
-                                {% endif %}
-                            {% endfor %}
-                        </div>
-                    </div>
-                {% endif %}
-                <div style="margin-top: 10px">
-                    <a class="address_modal" name="ownerFormModal" style="cursor: pointer">افزودن آدرس جدید</a>
-                </div>
-            </div>
-        </div>
-    </div>
-
-
 {% endblock %}

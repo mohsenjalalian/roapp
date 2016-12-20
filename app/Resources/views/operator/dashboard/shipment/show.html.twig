@@ -37,23 +37,19 @@
                 <thead>
                 <tr>
                     <th>توضیحات</th>
-                    <th>ارزش</th>
                     <th>وضعیت</th>
                     <th>زمان انجام</th>
                     <th>زمان ایجاد</th>
                     <th>قیمت</th>
-                    <th>نوع</th>
                 </tr>
                 </thead>
                 <tbody>
                 <tr>
                     <td>{{ shipment.description }}</td>
-                    <td>{{ shipment.value }}</td>
                     <td>{{ shipment.status }}</td>
                     <td>{% if shipment.pickUpTime %}{{ shipment.pickUpTime|date('Y-m-d H:i:s') }}{% endif %}</td>
                     <td>{% if shipment.createdAt %}{{ shipment.createdAt|date('Y-m-d H:i:s') }}{% endif %}</td>
                     <td>{{ shipment.price }}</td>
-                    <td>{{ shipment.type }}</td>
                 </tr>
                 </tbody>
             </table>

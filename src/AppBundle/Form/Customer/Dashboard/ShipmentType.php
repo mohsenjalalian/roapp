@@ -5,8 +5,6 @@ namespace AppBundle\Form\Customer\Dashboard;
 use AppBundle\Entity\Shipment;
 use AppBundle\Form\DataTransformer\DateTimeTransformer;
 use AppBundle\Repository\AddressRepository;
-use Doctrine\ORM\EntityRepository;
-use Roapp\MediaBundle\Form\RoappImageType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -15,6 +13,7 @@ use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 
 /**
  * Class ShipmentType
@@ -55,12 +54,21 @@ class ShipmentType extends AbstractType
                     'translation_domain' => 'messages',
                 ]
             )
+            ->add(
+                'ownerAddress',
+                EntityHiddenType::class,
+                [
+                    'class' => 'AppBundle\Entity\Address',
+                ]
+            )
         ;
         $builder->get('pickUpTime')
             ->addModelTransformer(new DateTimeTransformer());
 
         $formModifier = function (FormInterface $form, $phone) {
-            $form->add('otherAddress', EntityType::class, array(
+            $form->add('otherAddress', EntityType::class, [
+                'attr'      => ['class' => 'select-address'],
+                'label'     =>  'آدرس گیرنده',
                 'class'       => 'AppBundle:Address',
                 'placeholder' => '',
                 'expanded' => true,
@@ -72,7 +80,7 @@ class ShipmentType extends AbstractType
                         ->andWhere('address.isPublic = :public or address.creator = customer')
                         ->setParameter('public', true);
                 },
-            ));
+            ]);
         };
 
         $builder->addEventListener(
