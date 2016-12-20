@@ -1,0 +1,37 @@
+{% extends ':customer/dashboard:layout.html.twig' %}
+
+{% block page_title %}
+    راننده
+{% endblock %}
+{% block breadcrumbs %}
+    <li><a href="{{ path('app_customer_dashboard_driver_index') }}">راننده ها</a></li>
+    <li class="active">نمایش</li>
+{% endblock %}
+{% block main %}
+    <div class="panel">
+        <div class="panel-heading">
+            <span class="panel-title">راننده</span>
+        </div>
+        <div class="panel-body">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>نام و نام خانوادگی</th>
+                        <th>تلفن</th>
+                        <th>وضعیت</th>
+                    </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>{{ driver.fullName }}</td>
+                    <td>{{ driver.phone }}</td>
+                    <td>{% if driver.isActive %}فعال{% else %}غیر فعال{% endif %}</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div>
+            <a style="margin-right: 10px;margin-bottom: 10px" class="btn btn-sm btn-labeled btn-primary" href="{{ path('app_customer_dashboard_driver_index') }}">لیست کل راننده ها</a>
+        </div>
+    </div>
+{% endblock %}

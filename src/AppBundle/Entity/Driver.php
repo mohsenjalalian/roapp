@@ -3,6 +3,8 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping\JoinColumn;
+use Doctrine\ORM\Mapping\ManyToOne;
 use Symfony\Component\Validator\Constraints as Assert;
 use AppBundle\Annotation\Permissions;
 use AppBundle\Annotation\Permission as PermissionAnnotation;
@@ -39,6 +41,12 @@ class Driver extends Person
      * @var string
      */
     private $newPassword;
+
+    /**
+     * @ManyToOne(targetEntity="BusinessUnit")
+     * @JoinColumn(name="business_unit_id", referencedColumnName="id")
+     */
+    private $businessUnit;
 
     /**
      * @inheritdoc
@@ -210,6 +218,25 @@ class Driver extends Person
     public function setNewPassword($newPassword)
     {
         $this->newPassword = $newPassword;
+
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getBusinessUnit()
+    {
+        return $this->businessUnit;
+    }
+
+    /**
+     * @param mixed $businessUnit
+     * @return $this
+     */
+    public function setBusinessUnit($businessUnit)
+    {
+        $this->businessUnit = $businessUnit;
 
         return $this;
     }
