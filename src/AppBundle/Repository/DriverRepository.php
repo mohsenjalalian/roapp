@@ -2,6 +2,7 @@
 
 namespace AppBundle\Repository;
 
+use AppBundle\Entity\BusinessUnit;
 use AppBundle\Entity\ShipmentAssignment;
 use AppBundle\Entity\Shipment;
 use Doctrine\ORM\EntityRepository;
@@ -59,5 +60,25 @@ class DriverRepository extends EntityRepository
         ;
 
         return $result;
+    }
+
+    /**
+     * @param BusinessUnit $businessUnit
+     * @param integer      $status
+     * @return array       $drivers
+     */
+    public function businessUnitDriver(BusinessUnit $businessUnit, $status)
+    {
+        $drivers = $this->getEntityManager()->getRepository('AppBundle:Driver')
+            ->createQueryBuilder('driver')
+            ->join('driver.businessUnit', 'businessUnit')
+            ->where('driver.businessUnit = :businessUnit')
+            ->andWhere('driver.status = :status')
+            ->setParameter('businessUnit', $businessUnit)
+            ->setParameter('status', $status)
+            ->getQuery()
+            ->getResult();
+
+        return $drivers;
     }
 }

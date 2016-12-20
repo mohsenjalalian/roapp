@@ -10,7 +10,6 @@ use Doctrine\ORM\EntityManager;
 use Symfony\Bundle\FrameworkBundle\Routing\Router;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
-
 use r;
 
 /**
@@ -49,7 +48,7 @@ class ShipmentService
      * @param EntityManager      $entityManager
      * @param Router             $router
      * @param TokenStorage       $tokenStorage
-     * @param $assignmentShipment $assignmentShipment
+     * @param AssignmentShipment $assignmentShipment
      */
     public function __construct(EntityManager $entityManager, Router $router, TokenStorage $tokenStorage, AssignmentShipment $assignmentShipment)
     {

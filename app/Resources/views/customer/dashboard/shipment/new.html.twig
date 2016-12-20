@@ -23,7 +23,7 @@
                     </div>
                     <div class="modal-body">
                         <ul class="drivers">
-                            {% if drivers is not null %}
+                            {% if drivers is not empty %}
                                 {% for driver in drivers %}
                                     <li>
                                         <input class="driver-input" type="radio" name="driver" value="{{ driver.id }}">
