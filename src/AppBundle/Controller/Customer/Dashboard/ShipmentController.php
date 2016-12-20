@@ -3,6 +3,7 @@
 namespace AppBundle\Controller\Customer\Dashboard;
 
 use AppBundle\Entity\Address;
+use AppBundle\Entity\BusinessUnit;
 use AppBundle\Entity\Customer;
 use AppBundle\Form\Customer\Dashboard\AddressType;
 use AppBundle\Form\Customer\Dashboard\ShipmentType;
@@ -15,6 +16,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use AppBundle\Entity\Shipment;
 use Symfony\Component\HttpFoundation\Response;
+use AppBundle\Entity\Driver;
 use r;
 
 /**
@@ -70,13 +72,7 @@ class ShipmentController extends Controller
         $businessUnit = $customer->getBusinessUnit();
         $em = $this->getDoctrine()->getManager();
         $drivers = $em->getRepository('AppBundle:Driver')
-            ->createQueryBuilder('driver')
-            ->join('driver.businessUnit', 'businessUnit')
-            ->where('driver.businessUnit = :businessUnit')
-            ->andWhere('driver.status = 1')
-            ->setParameter('businessUnit', $businessUnit)
-            ->getQuery()
-            ->getResult();
+            ->businessUnitDriver($businessUnit, Driver::STATUS_FREE);
         $shipmentService = $this->get('app.shipment_service');
         $shipment = $shipmentService->shipmentFactory();
         $addressEntity = new Address();
@@ -105,7 +101,7 @@ class ShipmentController extends Controller
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $this->get('app.shipment_service')->create($shipment, $request, $form);
-            $selectedDriver = $request->get('selected-driver');
+            $selectedDriver = $form->get('selected_driver')->getData();
             if ($selectedDriver) {
                 $this->get('app.shipment_service')->shipmentAssign($shipment, $selectedDriver);
             }
