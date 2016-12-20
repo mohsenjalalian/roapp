@@ -65,16 +65,10 @@ class Payment
     private $data;
 
     /**
-     * @ManyToOne(targetEntity="AppBundle\Entity\Invoice", inversedBy="payments")
-     * @JoinColumn(name="invoice_id", referencedColumnName="id")
+     * @ManyToOne(targetEntity="AppBundle\Entity\AbstractInvoice", inversedBy="payments")
+     * @JoinColumn(name="abstract_invoice_id", referencedColumnName="id")
      */
     private $invoice;
-
-    /**
-     * @ManyToOne(targetEntity="AppBundle\Entity\Shipment", inversedBy="payment")
-     * @JoinColumn(name="shipment_id", referencedColumnName="id")
-     */
-    private $shipment;
 
     /**
      * @ManyToOne(targetEntity="Person", inversedBy="payment")
@@ -215,11 +209,11 @@ class Payment
     /**
      * Set invoice
      *
-     * @param \AppBundle\Entity\Invoice $invoice
+     * @param \AppBundle\Entity\AbstractInvoice $invoice
      *
      * @return Payment
      */
-    public function setInvoice(Invoice $invoice = null)
+    public function setInvoice(AbstractInvoice $invoice = null)
     {
         $this->invoice = $invoice;
 
@@ -229,35 +223,11 @@ class Payment
     /**
      * Get invoice
      *
-     * @return \AppBundle\Entity\Invoice
+     * @return \AppBundle\Entity\AbstractInvoice
      */
     public function getInvoice()
     {
         return $this->invoice;
-    }
-
-    /**
-     * Set shipment
-     *
-     * @param \AppBundle\Entity\Shipment $shipment
-     *
-     * @return Payment
-     */
-    public function setShipment(Shipment $shipment = null)
-    {
-        $this->shipment = $shipment;
-
-        return $this;
-    }
-
-    /**
-     * Get shipment
-     *
-     * @return \AppBundle\Entity\Shipment
-     */
-    public function getShipment()
-    {
-        return $this->shipment;
     }
 
     /**

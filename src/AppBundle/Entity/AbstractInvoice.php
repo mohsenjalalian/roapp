@@ -3,17 +3,19 @@
 namespace AppBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\OneToMany;
-use Doctrine\ORM\Mapping\OneToOne;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Invoice
- *
- * @ORM\Table(name="invoice")
- * @ORM\Entity(repositoryClass="AppBundle\Repository\InvoiceRepository")
+ * Class AbstractInvoice
+ * @package AppBundle\Entity
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\AbstractInvoiceRepository")
+ * @ORM\Table(name="abstract_invoice")
+ * @ORM\InheritanceType("JOINED")
+ * @ORM\DiscriminatorColumn(name="type", type="string")
+ * @ORM\DiscriminatorMap({"perShipment" = "ShipmentInvoice", "period" = "PeriodInvoice", "subscription" = "SubscriptionInvoice"})
  */
-class Invoice
+abstract class AbstractInvoice
 {
     const STATUS_UNPAID = 0;
     const STATUS_PAID = 1;
@@ -49,12 +51,6 @@ class Invoice
      * @OneToMany(targetEntity="AppBundle\Entity\Payment", mappedBy="invoice")
      */
     private $payments;
-
-    /**
-     * @OneToOne(targetEntity="Shipment", mappedBy="invoice")
-     */
-    private $shipment;
-
     /**
      * Get id
      *
@@ -70,7 +66,7 @@ class Invoice
      *
      * @param \DateTime $createdAt
      *
-     * @return Invoice
+     * @return AbstractInvoice
      */
     public function setCreatedAt($createdAt)
     {
@@ -94,7 +90,7 @@ class Invoice
      *
      * @param string $status
      *
-     * @return Invoice
+     * @return AbstractInvoice
      */
     public function setStatus($status)
     {
@@ -125,7 +121,7 @@ class Invoice
      *
      * @param \AppBundle\Entity\Payment $payment
      *
-     * @return Invoice
+     * @return AbstractInvoice
      */
     public function addPayment(Payment $payment)
     {
@@ -159,7 +155,7 @@ class Invoice
      *
      * @param string $price
      *
-     * @return Invoice
+     * @return AbstractInvoice
      */
     public function setPrice($price)
     {
@@ -176,29 +172,5 @@ class Invoice
     public function getPrice()
     {
         return $this->price;
-    }
-
-    /**
-     * Set shipment
-     *
-     * @param \AppBundle\Entity\shipment $shipment
-     *
-     * @return Invoice
-     */
-    public function setShipment(Shipment $shipment = null)
-    {
-        $this->shipment = $shipment;
-
-        return $this;
-    }
-
-    /**
-     * Get shipment
-     *
-     * @return \AppBundle\Entity\Shipment
-     */
-    public function getShipment()
-    {
-        return $this->shipment;
     }
 }
