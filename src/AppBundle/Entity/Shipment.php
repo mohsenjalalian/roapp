@@ -4,10 +4,6 @@ namespace AppBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
-use Doctrine\ORM\Mapping\JoinColumn;
-use Doctrine\ORM\Mapping\OneToMany;
-use Doctrine\ORM\Mapping\OneToOne;
-use Roapp\MediaBundle\Annotation\UploadableField;
 
 /**
  * Shipment
@@ -90,12 +86,6 @@ class Shipment
      * @ORM\Column(type="decimal", name="price",nullable=true)
      */
     protected $price;
-
-    /**
-     * @OneToOne(targetEntity="AppBundle\Entity\Invoice", inversedBy="shipment")
-     * @JoinColumn(name="invoice_id", referencedColumnName="id")
-     */
-    private $invoice;
 
     /**
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\ShipmentAssignment",mappedBy="shipment")
@@ -321,30 +311,6 @@ class Shipment
     public function getOtherAddress()
     {
         return $this->otherAddress;
-    }
-
-    /**
-     * Set invoice
-     *
-     * @param \AppBundle\Entity\Invoice $invoice
-     *
-     * @return Shipment
-     */
-    public function setInvoice(Invoice $invoice = null)
-    {
-        $this->invoice = $invoice;
-
-        return $this;
-    }
-
-    /**
-     * Get invoice
-     *
-     * @return \AppBundle\Entity\Invoice
-     */
-    public function getInvoice()
-    {
-        return $this->invoice;
     }
 
     /**
