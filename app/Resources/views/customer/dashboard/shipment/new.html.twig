@@ -8,13 +8,20 @@
     <li class="active">ثبت درخواست ارسال</li>
 {% endblock %}
 {% block main %}
+    {% if contractType == 1 %}
+        <!-- Trigger the modal with a button -->
+        <button id="select-driver" disabled type="button" class="btn btn-sm btn-labeled btn-primary disabled" data-toggle="modal" data-target="#myModal">انتخاب راننده</button>
+        <label class="switch">
+            <input type="checkbox" id="shipment-switch">
+            <div class="slider round"></div>
+        </label>
+    {% endif %}
     {% form_theme form child_form_template %}
     {{ form_row(form) }}
     <div style="margin-top: 10px">
         <!-- Modal -->
         <div id="myModal" class="modal fade" role="dialog">
             <div class="modal-dialog">
-
                 <!-- Modal content-->
                 <div class="modal-content">
                     <div class="modal-header">
@@ -39,7 +46,6 @@
                         <button id="assign-driver" type="button" class="btn btn-default" data-dismiss="modal">انتخاب</button>
                     </div>
                 </div>
-
             </div>
         </div>
     </div>
@@ -59,19 +65,16 @@
         <link rel="stylesheet" href="{{ asset(child_form_stylesheet) }}" />
     {% endblock %}
 
-
     {% block javascripts %}
         {{ parent()  }}
         {% javascripts
             'assets/vendor/persian-datepicker/lib/persian-date.js'
             'assets/vendor/persian-datepicker/dist/js/persian-datepicker-0.4.5.min.js'
-
             'bundles/app/javascript/customer/dashboard/address/script.js'
             'assets/vendor/dropzone/dist/min/dropzone.min.js'
             'bundles/roappmedia/roapp-upload.js'
         %}
         <script type="text/javascript" src="{{ asset_url }}" ></script>
-
         {% endjavascripts %}
         <script src="{{ asset(child_form_javascript) }}" type="application/javascript"></script>
         <script>
@@ -96,7 +99,7 @@
         </script>
         <script>
             $(document).ready(function() {
-                var $otherPhone = $('#restaurant_shipment_other_phone');
+                var $otherPhone = $('.other-phone');
                 // When sport gets selected ...
                 $otherPhone.on('keyup', function () {
                     // ... retrieve the corresponding form.
@@ -112,21 +115,21 @@
                         data: data,
                         success: function (html) {
                             // Replace current position field ...
-                            $('#restaurant_shipment_otherAddress').replaceWith(
+                            $('.select-address').replaceWith(
                                 // ... with the returned one from the AJAX response.
-                                $(html).find('#restaurant_shipment_otherAddress')
+                                $(html).find('.select-address')
                             );
                             // Position field now displays the appropriate positions.
                         }
                     });
                 });
-            })
+            });
 
             $(".calc_price_item").on('change', function () {
-                var ownerAddressId = $('#restaurant_shipment_ownerAddress').val();
-                var otherAddressId = $('#restaurant_shipment_otherAddress input:checked').val();
+                var ownerAddressId = $('.owner-address').val();
+                var otherAddressId = $('.select-address input:checked').val();
                 var shipmentValue = 1000;
-                var shipmentPickUpTime = $("#restaurant_shipment_pickUpTime").val();
+                var shipmentPickUpTime = $(".js-datepicker").val();
                 $.ajax({
                     url: 'calc_shipment_price',
                     data: {
@@ -148,7 +151,7 @@
                 });
             });
             $('#assign-driver').on('click', function () {
-                $('#restaurant_shipment_selected_driver').val($('.driver-input:checked').val());
+                $('.selected-driver').val($('.driver-input:checked').val());
             })
 
         </script>

@@ -50,7 +50,11 @@ class ShipmentType extends AbstractType
                 TextType::class,
                 [
                     "label" => "شماره گیرنده",
-                    'attr' => ['placeHolder' => 'لطفا شماره تلفن همراه مورد نظر خود را وارد نمایید.', 'class' => 'calc_price_item'],
+                    'attr' =>
+                        [
+                            'placeHolder' => 'لطفا شماره تلفن همراه مورد نظر خود را وارد نمایید.',
+                            'class' => 'calc_price_item other-phone',
+                        ],
                     'translation_domain' => 'messages',
                 ]
             )
@@ -59,6 +63,10 @@ class ShipmentType extends AbstractType
                 EntityHiddenType::class,
                 [
                     'class' => 'AppBundle\Entity\Address',
+                    'attr'  =>
+                    [
+                        'class' =>  'owner-address',
+                    ],
                 ]
             )
             ->add(
@@ -66,6 +74,10 @@ class ShipmentType extends AbstractType
                 HiddenType::class,
                 [
                     'mapped' => false,
+                    'attr'  =>
+                    [
+                      'class'   =>  'selected-driver',
+                    ],
                 ]
             )
         ;

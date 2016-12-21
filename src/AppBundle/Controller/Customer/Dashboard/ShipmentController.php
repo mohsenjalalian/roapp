@@ -70,6 +70,7 @@ class ShipmentController extends Controller
     {
         $customer = $this->getUser();
         $businessUnit = $customer->getBusinessUnit();
+        $contractType = $businessUnit->getContractType();
         $em = $this->getDoctrine()->getManager();
         $drivers = $em->getRepository('AppBundle:Driver')
             ->businessUnitDriver($businessUnit, Driver::STATUS_FREE);
@@ -119,6 +120,7 @@ class ShipmentController extends Controller
                 'shipment' => $shipment,
                 'form' => $form->createView(),
                 'drivers'   =>  $drivers,
+                'contractType'  =>  $contractType,
                 'child_form_template' => $form->getConfig()->getOption('template'),
                 'child_form_javascript' => $form->getConfig()->getOption('javascript'),
                 'child_form_stylesheet' => $form->getConfig()->getOption('stylesheet'),
