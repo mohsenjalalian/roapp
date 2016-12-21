@@ -93,6 +93,13 @@ class Shipment
     private $assignments;
 
     /**
+     * @var bool
+     *
+     * @ORM\Column(name="customer_driver", type="boolean", options={"default"=false})
+     */
+    private $customerDriver = false;
+
+    /**
      * Get id
      *
      * @return int
@@ -327,5 +334,29 @@ class Shipment
     public function setOtherPhone($otherPhone)
     {
         $this->otherPhone = $otherPhone;
+    }
+
+    /**
+     * Set customerDriver
+     *
+     * @param boolean $customerDriver
+     *
+     * @return Shipment
+     */
+    public function setCustomerDriver($customerDriver)
+    {
+        $this->customerDriver = $customerDriver;
+
+        return $this;
+    }
+
+    /**
+     * Get customerDriver
+     *
+     * @return boolean
+     */
+    public function getCustomerDriver()
+    {
+        return $this->customerDriver;
     }
 }

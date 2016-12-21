@@ -38,7 +38,6 @@
                     shipment.status == constant('STATUS_ASSIGNMENT_SENT',shipment) or
                     shipment.status == constant('STATUS_ASSIGNMENT_REJECT',shipment)
                     %}
-                        <a class="btn btn-sm btn-labeled btn-info" href="{{ path('app_customer_dashboard_shipment_edit', { 'id': shipment.id }) }}"><span class="btn-label icon fa fa-pencil-square-o"></span>ویرایش</a>
                     {% endif %}
                 </td>
             </tr>

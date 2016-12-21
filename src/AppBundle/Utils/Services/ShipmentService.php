@@ -178,4 +178,15 @@ class ShipmentService
 
         return true;
     }
+
+    /**
+     * @param Shipment $shipment
+     */
+    public function customerDriver(Shipment $shipment)
+    {
+        $em = $this->entityManager;
+        $shipment->setCustomerDriver(true);
+        $em->persist($shipment);
+        $em->flush($shipment);
+    }
 }
