@@ -2,7 +2,7 @@
 
 namespace AppBundle\Utils\Services;
 
-use AppBundle\Entity\Invoice;
+use AppBundle\Entity\AbstractInvoice;
 use AppBundle\Entity\Payment;
 use AppBundle\Entity\Person;
 use AppBundle\Entity\Shipment;
@@ -44,12 +44,12 @@ class PaymentService
     }
 
     /**
-     * @param string  $paymentMethod
-     * @param Invoice $invoice
-     * @param Person  $person
+     * @param string          $paymentMethod
+     * @param AbstractInvoice $invoice
+     * @param Person          $person
      * @return RedirectResponse
      */
-    public function pay($paymentMethod, Invoice $invoice, Person $person)
+    public function pay($paymentMethod, AbstractInvoice $invoice, Person $person)
     {
         $em = $this->entityManager;
         $payment = $em->getRepository("AppBundle:Payment")
@@ -60,7 +60,7 @@ class PaymentService
             $payment->setMethod($paymentMethod);
             $payment->setCreatedDate(new \DateTime());
             $payment->setStatus(Payment::STATUS_WAITING_FOR_PAYMENT);
-            $payment->setShipment($invoice->getShipment());
+//            $payment->setShipment($invoice->getShipment());
             $payment->setPerson($person);
 
             $em->persist($payment);
@@ -105,7 +105,7 @@ class PaymentService
                 break;
             case Payment::STATUS_APPROVED:
                 $payment->setStatus(Payment::STATUS_APPROVED);
-                $payment->getInvoice()->setStatus(Invoice::STATUS_PAID);
+                $payment->getInvoice()->setStatus(AbstractInvoice::STATUS_PAID);
                 $payment->setPaidAt(new \DateTime());
                 $payment->setData($data);
                 $shipment = $this->entityManager->getRepository("AppBundle:Shipment")
@@ -142,8 +142,8 @@ class PaymentService
         $em = $this->entityManager;
         $payment->setStatus(Payment::STATUS_APPROVED);
         //@TODO move shipment related code to event listener
-        $payment->getShipment()->setStatus(Shipment::STATUS_NOT_ASSIGNED);
-        $payment->getInvoice()->setStatus(Invoice::STATUS_PAID);
+        $payment->getInvoice()->getShipment()->setStatus(Shipment::STATUS_NOT_ASSIGNED);
+        $payment->getInvoice()->setStatus(AbstractInvoice::STATUS_PAID);
 
         $em->persist($payment);
         $em->flush();

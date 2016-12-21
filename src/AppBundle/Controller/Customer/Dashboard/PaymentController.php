@@ -2,7 +2,6 @@
 
 namespace AppBundle\Controller\Customer\Dashboard;
 
-use AppBundle\Entity\Invoice;
 use AppBundle\Entity\Payment;
 use AppBundle\Form\Customer\Dashboard\PaymentManualType;
 use AppBundle\Form\Customer\Dashboard\PaymentStyle;
@@ -105,7 +104,7 @@ class PaymentController extends Controller
         if ($form->isSubmitted() && $form->isValid()) {
             $paymentMethod = $form->get('method')->getData();
             $invoiceId = $form->get('invoice_id')->getData();
-            $invoice = $em->getRepository("AppBundle:Invoice")
+            $invoice = $em->getRepository("AppBundle:AbstractInvoice")
                 ->find($invoiceId);
             $result = $this->get('app.payment_service')->pay($paymentMethod, $invoice, $this->getUser());
 
