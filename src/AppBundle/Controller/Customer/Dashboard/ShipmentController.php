@@ -104,6 +104,7 @@ class ShipmentController extends Controller
             $selectedDriver = $form->get('selected_driver')->getData();
             if ($selectedDriver) {
                 $this->get('app.shipment_service')->shipmentAssign($shipment, $selectedDriver);
+                $this->get('app.shipment_service')->customerDriver($shipment);
             }
 
             return $this->redirectToRoute('app_customer_dashboard_shipment_index');
