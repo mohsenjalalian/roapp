@@ -2,7 +2,7 @@
 
 namespace AppBundle\Repository;
 
-use AppBundle\Entity\Invoice;
+use AppBundle\Entity\AbstractInvoice;
 use AppBundle\Entity\Payment;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\NoResultException;
@@ -35,10 +35,10 @@ class PaymentRepository extends EntityRepository
     }
 
     /**
-     * @param Invoice $invoice
+     * @param AbstractInvoice $invoice
      * @return mixed
      */
-    public function findOpenPayment(Invoice $invoice)
+    public function findOpenPayment(AbstractInvoice $invoice)
     {
         try {
             $result = $this->createQueryBuilder("p")
