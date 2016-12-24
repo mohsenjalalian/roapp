@@ -2,6 +2,7 @@
 
 namespace AppBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -50,6 +51,13 @@ class BusinessUnit
     protected $businessType;
 
     /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="createdAt", type="datetime")
+     */
+    private $createdAt;
+
+    /**
      * Get id
      *
      * @return int
@@ -63,7 +71,8 @@ class BusinessUnit
      */
     public function __construct()
     {
-        $this->customers = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->customers = new ArrayCollection();
+        $this->setCreatedAt(new \DateTime());
     }
 
     /**
@@ -178,5 +187,24 @@ class BusinessUnit
     public function __toString()
     {
         return $this->name;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getCreatedAt()
+    {
+        return $this->createdAt;
+    }
+
+    /**
+     * @param \DateTime $createdAt
+     * @return $this
+     */
+    public function setCreatedAt($createdAt)
+    {
+        $this->createdAt = $createdAt;
+
+        return $this;
     }
 }
