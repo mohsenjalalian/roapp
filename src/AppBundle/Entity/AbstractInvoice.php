@@ -114,6 +114,7 @@ abstract class AbstractInvoice
     public function __construct()
     {
         $this->payments = new ArrayCollection();
+        $this->setCreatedAt(new \DateTime());
     }
 
     /**
