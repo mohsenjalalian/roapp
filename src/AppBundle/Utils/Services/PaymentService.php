@@ -7,6 +7,7 @@ use AppBundle\Entity\Payment;
 use AppBundle\Entity\Person;
 use AppBundle\Entity\Shipment;
 use AppBundle\Entity\ShipmentInvoice;
+use AppBundle\Entity\ShipmentHistory;
 use AppBundle\Utils\PaymentSystem\GatewayInterface;
 use Doctrine\ORM\EntityManager;
 use Symfony\Bundle\FrameworkBundle\Routing\Router;
@@ -34,14 +35,21 @@ class PaymentService
     private $gateways;
 
     /**
-     * PaymentService constructor.
-     * @param EntityManager $entityManager
-     * @param Router        $router
+     * @var ShipmentService
      */
-    public function __construct(EntityManager $entityManager, Router $router)
+    private $shipmentService;
+
+    /**
+     * PaymentService constructor.
+     * @param EntityManager   $entityManager
+     * @param Router          $router
+     * @param ShipmentService $shipmentService
+     */
+    public function __construct(EntityManager $entityManager, Router $router, ShipmentService $shipmentService)
     {
         $this->entityManager = $entityManager;
         $this->router = $router;
+        $this->shipmentService = $shipmentService;
     }
 
     /**
@@ -118,6 +126,7 @@ class PaymentService
                 $shipment->setStatus(Shipment::STATUS_NOT_ASSIGNED);
 
                 $em->persist($shipment);
+                $this->shipmentService->addHistory($shipment, ShipmentHistory::ACTION_PAY);
 
                 break;
             case Payment::STATUS_FAILED:
@@ -152,6 +161,8 @@ class PaymentService
 
         $em->persist($payment);
         $em->flush();
+
+        $this->shipmentService->addHistory($payment->getInvoice()->getShipment(), ShipmentHistory::ACTION_PAY);
     }
 
     /**

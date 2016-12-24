@@ -4,7 +4,9 @@ namespace AppBundle\Utils;
 
 use AppBundle\Entity\ShipmentAssignment;
 use AppBundle\Entity\Driver;
+use AppBundle\Entity\ShipmentHistory;
 use AppBundle\Entity\Task;
+use AppBundle\Utils\Services\ShipmentService;
 use Doctrine\ORM\EntityManager;
 use AppBundle\Entity\Shipment;
 use Symfony\Component\Translation\TranslatorInterface;
@@ -31,18 +33,25 @@ class AssignmentShipment
     private $translations;
 
     /**
+     * ShipmentService
+     */
+    private $shipmentService;
+
+    /**
      * AssignmentShipment constructor.
      * @param EntityManager       $entityManager
      * @param NotificationService $notificationService
      * @param TranslatorInterface $translation
+     * @param ShipmentService     $shipmentService
      * @internal param NotificationService $NotificationService
      * @internal param NotificationService $sendNotification
      */
-    public function __construct(EntityManager $entityManager, NotificationService $notificationService, TranslatorInterface $translation)
+    public function __construct(EntityManager $entityManager, NotificationService $notificationService, TranslatorInterface $translation, ShipmentService $shipmentService)
     {
         $this->entityManager = $entityManager;
         $this->notificationService = $notificationService;
         $this->translations = $translation;
+        $this->shipmentService = $shipmentService;
     }
 
     /**
@@ -126,6 +135,9 @@ class AssignmentShipment
         $assignmentId = $shipmentAssignmentObj;
         $em->flush();
 
+        $this->shipmentService->addHistory($shipment, ShipmentHistory::ACTION_SEND_ASSIGNMENT);
+
+
         return $assignmentId;
     }
 
@@ -170,6 +182,8 @@ class AssignmentShipment
 
         $em->persist($assignment);
         $em->flush();
+
+        $this->shipmentService->addHistory($assignment->getShipment(), ShipmentHistory::ACTION_TIMEOUT);
     }
 
     /**
@@ -214,6 +228,8 @@ class AssignmentShipment
 
         $em->persist($assignment);
         $em->flush();
+
+        $this->shipmentService->addHistory($assignment->getShipment(), ShipmentHistory::ACTION_PICKUP);
     }
 
     /**
@@ -254,6 +270,8 @@ class AssignmentShipment
 
         $em->persist($assignment);
         $em->flush();
+
+        $this->shipmentService->addHistory($assignment->getShipment(), ShipmentHistory::ACTION_REJECT_BY_DRIVER);
     }
 
     /**

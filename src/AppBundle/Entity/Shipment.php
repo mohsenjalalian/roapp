@@ -19,22 +19,24 @@ class Shipment
     const STATUS_ASSIGNED = 1;
     const STATUS_NOT_ASSIGNED = 0;
     const STATUS_ASSIGNMENT_SENT = 2;
-    const STATUS_ASSIGNMENT_CANCEL = 3;
-    const STATUS_ASSIGNMENT_REJECT = 4;
-    const STATUS_ASSIGNMENT_FAIL = 5;
+    const STATUS_CANCEL = 3;
+    const STATUS_REJECT = 4;
+    const STATUS_CUSTOMER_FAILED = 5;
     const STATUS_ON_PICK_UP = 6;
     const STATUS_PICKED_UP = 7;
     const STATUS_ON_DELIVERY = 8;
     const STATUS_DELIVERED = 9;
     const STATUS_FINISH = 10;
     const STATUS_WAITING_FOR_PAYMENT = 11;
+    const STATUS_DRIVER_FAILED = 12;
 
     const TRACK_ENABLED_STATUSES = [
         self::STATUS_ON_PICK_UP,
     ];
 
     const TRACK_DISABLED_STATUSES = [
-        self::STATUS_ASSIGNMENT_FAIL,
+        self::STATUS_CUSTOMER_FAILED,
+        self::STATUS_DRIVER_FAILED,
         self::STATUS_FINISH,
     ];
 
@@ -98,6 +100,11 @@ class Shipment
      * @ORM\Column(name="is_business_unit_driver", type="boolean", options={"default"=false})
      */
     private $isBusinessUnitDriver = false;
+
+    /**
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\ShipmentHistory", mappedBy="shipment")
+     */
+    private $shipmentHistories;
 
     /**
      * Get id
@@ -358,5 +365,39 @@ class Shipment
     public function getIsBusinessUnitDriver()
     {
         return $this->isBusinessUnitDriver;
+    }
+
+    /**
+     * Add shipmentHistory
+     *
+     * @param \AppBundle\Entity\ShipmentHistory $shipmentHistory
+     *
+     * @return Shipment
+     */
+    public function addShipmentHistory(\AppBundle\Entity\ShipmentHistory $shipmentHistory)
+    {
+        $this->shipmentHistories[] = $shipmentHistory;
+
+        return $this;
+    }
+
+    /**
+     * Remove shipmentHistory
+     *
+     * @param \AppBundle\Entity\ShipmentHistory $shipmentHistory
+     */
+    public function removeShipmentHistory(\AppBundle\Entity\ShipmentHistory $shipmentHistory)
+    {
+        $this->shipmentHistories->removeElement($shipmentHistory);
+    }
+
+    /**
+     * Get shipmentHistories
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getShipmentHistories()
+    {
+        return $this->shipmentHistories;
     }
 }

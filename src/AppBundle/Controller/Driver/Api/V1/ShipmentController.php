@@ -4,6 +4,7 @@ namespace AppBundle\Controller\Driver\Api\V1;
 
 use AppBundle\Entity\Driver;
 use AppBundle\Entity\Shipment;
+use AppBundle\Entity\ShipmentHistory;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -35,11 +36,13 @@ class ShipmentController extends Controller
             ->getRepository("AppBundle:Shipment")
             ->find($data->shipmentId);
         if ($shipment) {
-            $shipment->setStatus(Shipment::STATUS_ASSIGNMENT_FAIL);
+            $shipment->setStatus(Shipment::STATUS_DRIVER_FAILED);
             $shipment->setReason($data->reason);
 
             $em->persist($shipment);
             $em->flush();
+
+            $this->get('app.shipment_service')->addHistory($shipment, ShipmentHistory::ACTION_FAIL_BY_DRIVER);
 
             // send sms to customer
             $sendNotification = $this->get("logger");
@@ -77,6 +80,8 @@ class ShipmentController extends Controller
 
             $em->flush();
 
+            $this->get('app.shipment_service')->addHistory($assignment->getShipment(), ShipmentHistory::ACTION_DELIVER);
+
             // send sms to sender customer
             $logger = $this->get("logger");
             $logger->info("your package deliver to destination");
@@ -112,12 +117,15 @@ class ShipmentController extends Controller
             switch ($data->status) {
                 case 1: // status = on pick up
                     $shipment->setStatus(Shipment::STATUS_ON_PICK_UP);
+                    $this->get('app.shipment_service')->addHistory($shipment, ShipmentHistory::ACTION_START_PICKUP);
                     break;
                 case 2: // status =  on delivery
                     $shipment->setStatus(Shipment::STATUS_ON_DELIVERY);
+                    $this->get('app.shipment_service')->addHistory($shipment, ShipmentHistory::ACTION_START_DELIVERY);
                     break;
                 case 3: // status = finish
                     $shipment->setStatus(Shipment::STATUS_FINISH);
+                    $this->get('app.shipment_service')->addHistory($shipment, ShipmentHistory::ACTION_DELIVER);
                     $driverId = $this->getUser()
                         ->getId();
                     $driver = $this->getDoctrine()

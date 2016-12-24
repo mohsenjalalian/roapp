@@ -87,6 +87,12 @@ abstract class Person implements UserInterface, \Serializable
      */
     private $roles;
 
+
+    /**
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\ShipmentHistory", mappedBy="actor")
+     */
+    private $shipmentHistories;
+
     /**
      * Get id
      *
@@ -368,5 +374,39 @@ abstract class Person implements UserInterface, \Serializable
     public function __toString()
     {
         return $this->getFullName() ? $this->getFullName() : 'UNNAMED USER';
+    }
+
+    /**
+     * Add shipmentHistory
+     *
+     * @param \AppBundle\Entity\ShipmentHistory $shipmentHistory
+     *
+     * @return Person
+     */
+    public function addShipmentHistory(\AppBundle\Entity\ShipmentHistory $shipmentHistory)
+    {
+        $this->shipmentHistories[] = $shipmentHistory;
+
+        return $this;
+    }
+
+    /**
+     * Remove shipmentHistory
+     *
+     * @param \AppBundle\Entity\ShipmentHistory $shipmentHistory
+     */
+    public function removeShipmentHistory(\AppBundle\Entity\ShipmentHistory $shipmentHistory)
+    {
+        $this->shipmentHistories->removeElement($shipmentHistory);
+    }
+
+    /**
+     * Get shipmentHistories
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getShipmentHistories()
+    {
+        return $this->shipmentHistories;
     }
 }

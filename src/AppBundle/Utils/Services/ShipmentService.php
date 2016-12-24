@@ -4,12 +4,10 @@ namespace AppBundle\Utils\Services;
 
 use AppBundle\Entity\Customer;
 use AppBundle\Entity\Shipment;
-use AppBundle\Utils\AssignmentShipment;
+use AppBundle\Entity\ShipmentHistory;
 use AppBundle\Utils\Shipment\ShipmentProcessInterface;
-use Doctrine\ORM\EntityManager;
-use Symfony\Bundle\FrameworkBundle\Routing\Router;
+use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 use r;
 
 /**
@@ -19,51 +17,29 @@ use r;
 class ShipmentService
 {
     /**
-     * @var EntityManager
-     */
-    private $entityManager;
-
-    /**
-     * @var Router
-     */
-    private $router;
-
-    /**
      * @var ShipmentProcessInterface[]
      */
     private $shipments;
 
     /**
-     * @var TokenStorage
+     * @var \Symfony\Component\DependencyInjection\Container
      */
-    private $tokenStorage;
-
-    /**
-     * @var AssignmentShipment
-     */
-    private $assignmentShipment;
+    private $container;
 
     /**
      * PaymentService constructor.
-     * @param EntityManager      $entityManager
-     * @param Router             $router
-     * @param TokenStorage       $tokenStorage
-     * @param AssignmentShipment $assignmentShipment
+     * @param Container $container
      */
-    public function __construct(EntityManager $entityManager, Router $router, TokenStorage $tokenStorage, AssignmentShipment $assignmentShipment)
+    public function __construct(Container $container)
     {
-        $this->entityManager = $entityManager;
-        $this->router = $router;
-        $this->tokenStorage = $tokenStorage;
-        $this->assignmentShipment = $assignmentShipment;
+        $this->container = $container;
     }
     /**
      * @param Shipment $shipment
      * @param Request  $request
-     * @param Form     $form
      *
      */
-    public function create(Shipment $shipment, Request $request, $form)
+    public function create(Shipment $shipment, Request $request)
     {
         /** @var Customer $customer */
 
@@ -74,9 +50,11 @@ class ShipmentService
         $shipment->setPrice(floatval($shipmentPrice));
         $shipment->setCreatedAt($createdAt);
         $shipment->setStatus(Shipment::STATUS_NOT_ASSIGNED);
-        $em = $this->entityManager;
+        $em = $this->container->get('doctrine.orm.entity_manager');
         $em->persist($shipment);
         $em->flush();
+
+        $this->addHistory($shipment, ShipmentHistory::ACTION_CREATE);
 
         $conn = r\connect('localhost', '28015', 'roapp', '09126354397');
         $driverToken = uniqid();
@@ -128,7 +106,7 @@ class ShipmentService
     public function shipmentFactory()
     {
         /** @var Customer $customer */
-        $customer = $this->tokenStorage->getToken()->getUser();
+        $customer = $this->container->get('security.token_storage')->getToken()->getUser();
         $nameSpace = $customer->getBusinessUnit()->getBusinessType()->getEntityNamespace();
         $shipment = new $nameSpace();
         $shipment = $this->shipmentInit($shipment);
@@ -142,7 +120,7 @@ class ShipmentService
     public function getShipmentFormNamespace()
     {
         /** @var Customer $customer */
-        $customer = $this->tokenStorage->getToken()->getUser();
+        $customer = $this->container->get('security.token_storage')->getToken()->getUser();
         $nameSpace = $customer->getBusinessUnit()->getBusinessType()->getFormNamespace();
 
         return $nameSpace;
@@ -154,10 +132,10 @@ class ShipmentService
      */
     public function shipmentInit(Shipment $shipment)
     {
-        $customer = $this->tokenStorage->getToken()->getUser();
+        $customer = $this->container->get('security.token_storage')->getToken()->getUser();
         $ownerAddress = $customer->getBusinessUnit()->getDefaultAddress();
         $shipment->setOwnerAddress($ownerAddress);
-        $em = $this->entityManager;
+        $em = $this->container->get('doctrine.orm.entity_manager');
         $em->persist($ownerAddress);
         $em->flush();
 
@@ -171,11 +149,40 @@ class ShipmentService
      */
     public function shipmentAssign(Shipment $shipment, $driverId)
     {
-        $em = $this->entityManager;
+        $em = $this->container->get('doctrine.orm.entity_manager');
         $driver = $em->getRepository('AppBundle:Driver')
             ->find($driverId);
-        $this->assignmentShipment->sendRequest($shipment, $driver);
+        $this->container->get('app.shipment_assignment')->sendRequest($shipment, $driver);
 
         return true;
+    }
+
+    /**
+     * @param Shipment $shipment
+     */
+    public function customerDriver(Shipment $shipment)
+    {
+        $em = $this->container->get('doctrine.orm.entity_manager');
+        $shipment->setCustomerDriver(true);
+        $em->persist($shipment);
+        $em->flush($shipment);
+    }
+
+    /**
+     * @param Shipment $shipment
+     * @param integer  $action
+     */
+    public function addHistory(Shipment $shipment, $action)
+    {
+        $customer = $this->container->get('security.token_storage')->getToken()->getUser();
+        $em = $this->container->get('doctrine.orm.entity_manager');
+
+        $shipmentHistory = new ShipmentHistory();
+        $shipmentHistory->setAction($action);
+        $shipmentHistory->setActor($customer);
+        $shipmentHistory->setShipment($shipment);
+
+        $em->persist($shipmentHistory);
+        $em->flush($shipmentHistory);
     }
 }

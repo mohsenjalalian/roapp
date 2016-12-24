@@ -5,6 +5,7 @@ namespace AppBundle\Controller\Customer\Dashboard;
 use AppBundle\Entity\Address;
 use AppBundle\Entity\BusinessUnit;
 use AppBundle\Entity\Customer;
+use AppBundle\Entity\ShipmentHistory;
 use AppBundle\Form\Customer\Dashboard\AddressType;
 use AppBundle\Form\Customer\Dashboard\ShipmentType;
 use AppBundle\Form\Customer\Dashboard\ValidationCodeType;
@@ -347,10 +348,12 @@ class ShipmentController extends Controller
         $shipment = $this->getDoctrine()
             ->getRepository("AppBundle:Shipment")
             ->find($shipmentId);
-        $shipment->setStatus(Shipment::STATUS_ASSIGNMENT_CANCEL);
+        $shipment->setStatus(Shipment::STATUS_CANCEL);
         $em->persist($shipment);
 
         $em->flush();
+
+        $this->get('app.shipment_service')->addHistory($shipment, ShipmentHistory::ACTION_CANCEL_BY_CUSTOMER);
 
         return new Response("true");
     }
@@ -368,11 +371,13 @@ class ShipmentController extends Controller
         $shipment = $this->getDoctrine()
             ->getRepository("AppBundle:Shipment")
             ->find($shipmentId);
-        $shipment->setStatus(Shipment::STATUS_ASSIGNMENT_FAIL);
+        $shipment->setStatus(Shipment::STATUS_CUSTOMER_FAILED);
         $shipment->setReason($failReason);
 
         $em->persist($shipment);
         $em->flush();
+
+        $this->get('app.shipment_service')->addHistory($shipment, ShipmentHistory::ACTION_FAIL_BY_CUSTOMER);
 
         //send message to driver and operator
         $logger = $this->get('logger');
@@ -414,6 +419,8 @@ class ShipmentController extends Controller
                 $logger->info($reciverExchangeCode." sent to reciver customer");
                 $shipmentAssignment[0]->getShipment()
                     ->setStatus(Shipment::STATUS_PICKED_UP);
+
+                $this->get('app.shipment_service')->addHistory($shipment, ShipmentHistory::ACTION_PICKUP);
 
                 $em ->persist($shipmentAssignment[0]);
                 $em->flush();
