@@ -1,0 +1,43 @@
+{% extends ':customer/dashboard:layout.html.twig' %}
+
+{% block page_title %}
+    <h4>    لیست سفارشات در تاریخ : {{ pagination.0.createdAt|date('Y-m-d') }}</h4>
+{% endblock %}
+{% block breadcrumbs %}
+    <li><a href="{{ path('app_customer_dashboard_period_invoice_index') }}">لیست قبض ها</a></li>
+    <li class="active">نمایش</li>
+{% endblock %}
+{#{% block header_link %}#}
+    {#<a href="{{ path('app_customer_dashboard_period_invoice_index') }}" class="btn btn-sm btn-labeled btn-primary"><span class="btn-label icon"></span>لیست قبض ها</a>#}
+{#{% endblock %}#}
+{% block main %}
+    <div class="panel">
+        <div class="panel-body">
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th>{{ knp_pagination_sortable(pagination, 'توضیحات','s.description') }}</th>
+                    <th{% if pagination.isSorted('p.price') %} class="sorted"{% endif %}>{{ knp_pagination_sortable(pagination, 'قیمت', 'p.price') }}</th>
+                    <th{% if pagination.isSorted('p.createdAt') %} class="sorted"{% endif %}>{{ knp_pagination_sortable(pagination, 'ساعت', 'p.cratedAt') }}</th>
+                    <th><a>آدرس مقصد</a> </th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for shipment in pagination %}
+                        <tr>
+                            <td>{{ shipment.description }}</td>
+                            <td>{{shipment.price }}</td>
+                            <td>{{shipment.createdAt|date('H:i:s') }}</td>
+                            <td>{{shipment.otherAddress.description }}</td>
+                        </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-offset-3 col-sm-10">
+                {{ knp_pagination_render(pagination) }}
+            </div>
+        </div>
+    </div>
+{% endblock %}
