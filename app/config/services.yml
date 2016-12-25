@@ -121,3 +121,9 @@ services:
         arguments: ["@doctrine.orm.entity_manager"]
         tags:
         - { name: form.type, alias: entity_hidden }
+
+    app.form_shipment:
+        class: AppBundle\Form\Customer\Dashboard\ShipmentType
+        arguments: ["@security.token_storage"]
+        tags:
+        - { name: form.type }

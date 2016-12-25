@@ -2,9 +2,12 @@
 
 namespace AppBundle\Form\Customer\Dashboard;
 
+use AppBundle\Entity\Driver;
 use AppBundle\Entity\Shipment;
 use AppBundle\Form\DataTransformer\DateTimeTransformer;
 use AppBundle\Repository\AddressRepository;
+use AppBundle\Repository\DriverRepository;
+use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -14,6 +17,8 @@ use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
  * Class ShipmentType
@@ -21,6 +26,19 @@ use Symfony\Component\Form\Extension\Core\Type\HiddenType;
  */
 class ShipmentType extends AbstractType
 {
+    /**
+     * @var TokenStorageInterface
+     */
+    private $tokenStorage;
+
+    /**
+     * ShipmentType constructor.
+     * @param TokenStorageInterface $tokenStorage
+     */
+    public function __construct(TokenStorageInterface $tokenStorage)
+    {
+        $this->tokenStorage = $tokenStorage;
+    }
     /**
      * @param FormBuilderInterface $builder
      * @param array                $options
@@ -50,7 +68,11 @@ class ShipmentType extends AbstractType
                 TextType::class,
                 [
                     "label" => "شماره گیرنده",
-                    'attr' => ['placeHolder' => 'لطفا شماره تلفن همراه مورد نظر خود را وارد نمایید.', 'class' => 'calc_price_item'],
+                    'attr' =>
+                        [
+                            'placeHolder' => 'لطفا شماره تلفن همراه مورد نظر خود را وارد نمایید.',
+                            'class' => 'calc_price_item other-phone',
+                        ],
                     'translation_domain' => 'messages',
                 ]
             )
@@ -59,13 +81,10 @@ class ShipmentType extends AbstractType
                 EntityHiddenType::class,
                 [
                     'class' => 'AppBundle\Entity\Address',
-                ]
-            )
-            ->add(
-                'selected_driver',
-                HiddenType::class,
-                [
-                    'mapped' => false,
+                    'attr'  =>
+                    [
+                        'class' =>  'owner-address',
+                    ],
                 ]
             )
         ;
@@ -89,7 +108,7 @@ class ShipmentType extends AbstractType
                 },
             ]);
         };
-
+        $user = $this->tokenStorage->getToken()->getUser();
         $builder->addEventListener(
             FormEvents::PRE_SET_DATA,
             function (FormEvent $event) use ($formModifier) {
@@ -106,6 +125,55 @@ class ShipmentType extends AbstractType
                 $otherPhone = $event->getForm()->getData();
 
                 $formModifier($event->getForm()->getParent(), $otherPhone);
+            }
+        );
+        $builder->addEventListener(
+            FormEvents::PRE_SET_DATA,
+            function (FormEvent $event) use ($user, $builder) {
+                $form = $event->getForm();
+                $businessUnit = $user->getBusinessUnit();
+                $contractType = $businessUnit->getContractType();
+                if ($contractType == 1) {
+                    $form->add(
+                        'isBusinessUnitDriver',
+                        CheckboxType::class,
+                        [
+                            'block_name' => 'isBusinessUnitDriver',
+                        ]
+                    );
+                    $formOptions = [
+                      'class'   =>  Driver::class,
+                        'query_builder' =>  function (DriverRepository $er) use ($user) {
+                            $businessUnit = $user->getBusinessUnit();
+
+                            return $er->businessUnitDriver($businessUnit, Driver::STATUS_FREE);
+                        },
+                        'mapped'    =>  false,
+                        'expanded' => true,
+                        'multiple'  => false,
+                        'required'  =>  false,
+                    ];
+                    $form->add('driver', EntityType::class, $formOptions);
+
+                    $builder->addEventListener(FormEvents::SUBMIT, function (FormEvent $event) use ($user) {
+                        $form = $event->getForm();
+
+                        $formOptions = [
+                            'class'   =>  Driver::class,
+                            'query_builder' =>  function (DriverRepository $er) use ($user) {
+                                $businessUnit = $user->getBusinessUnit();
+
+                                return $er->businessUnitDriver($businessUnit, Driver::STATUS_FREE);
+                            },
+                            'mapped'    =>  false,
+                            'expanded' => true,
+                            'multiple'  => false,
+                            'required'  =>  true,
+                        ];
+
+                        $form->add('driver', EntityType::class, $formOptions);
+                    });
+                }
             }
         );
     }

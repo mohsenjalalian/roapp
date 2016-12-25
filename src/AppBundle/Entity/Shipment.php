@@ -95,9 +95,9 @@ class Shipment
     /**
      * @var bool
      *
-     * @ORM\Column(name="customer_driver", type="boolean", options={"default"=false})
+     * @ORM\Column(name="is_business_unit_driver", type="boolean", options={"default"=false})
      */
-    private $customerDriver = false;
+    private $isBusinessUnitDriver = false;
 
     /**
      * Get id
@@ -337,26 +337,26 @@ class Shipment
     }
 
     /**
-     * Set customerDriver
+     * Set isBusinessUnitDriver
      *
-     * @param boolean $customerDriver
+     * @param boolean $isBusinessUnitDriver
      *
      * @return Shipment
      */
-    public function setCustomerDriver($customerDriver)
+    public function setIsBusinessUnitDriver($isBusinessUnitDriver)
     {
-        $this->customerDriver = $customerDriver;
+        $this->isBusinessUnitDriver = $isBusinessUnitDriver;
 
         return $this;
     }
 
     /**
-     * Get customerDriver
+     * Get isBusinessUnitDriver
      *
      * @return boolean
      */
-    public function getCustomerDriver()
+    public function getIsBusinessUnitDriver()
     {
-        return $this->customerDriver;
+        return $this->isBusinessUnitDriver;
     }
 }
