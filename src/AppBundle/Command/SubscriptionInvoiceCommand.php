@@ -39,7 +39,7 @@ class SubscriptionInvoiceCommand extends ContainerAwareCommand
                 ->format('Y-m-d');
             $dueDate = date('Y-m-d', strtotime("+2 months", strtotime($createdAt)));
             $currentDate = date('Y-m-d');
-            if ($currentDate < $dueDate) {
+            if ($currentDate > $dueDate) {
                 $subscriptionInvoice = new SubscriptionInvoice();
                 $subscriptionInvoice->setStatus(AbstractInvoice::STATUS_UNPAID);
                 $subscriptionInvoice->setBusinessUnit($businessUnit);
