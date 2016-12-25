@@ -44,6 +44,30 @@ $(document).ready(function() {
             }
         });
     });
+
+    $isBusinessUnitDriver = $('#shipment-switch');
+    $isBusinessUnitDriver.on('change', function (e) {
+        var $form = $(this).closest('form');
+        // Simulate form data, but only include the selected sport value.
+        var data = {};
+        data[$isBusinessUnitDriver.attr('name')] = $isBusinessUnitDriver.val();
+        // Submit data via AJAX to the form's action path.
+        if ($isBusinessUnitDriver.is(":checked")) {
+            $.ajax({
+                url: $form.attr('action'),
+                type: $form.attr('method'),
+                data: data,
+                success: function (html) {
+                    // Replace current position field ...
+                    $('#restaurant_shipment_driver').replaceWith(
+                        // ... with the returned one from the AJAX response.
+                        $(html).find('#restaurant_shipment_driver')
+                    );
+                    // Position field now displays the appropriate positions.
+                }
+            });
+        }
+    })
 });
 
 $(".calc_price_item").on('change', function () {

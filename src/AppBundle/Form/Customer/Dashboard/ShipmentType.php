@@ -129,7 +129,7 @@ class ShipmentType extends AbstractType
         );
         $builder->addEventListener(
             FormEvents::PRE_SET_DATA,
-            function (FormEvent $event) use ($user) {
+            function (FormEvent $event) use ($user, $builder) {
                 $form = $event->getForm();
                 $businessUnit = $user->getBusinessUnit();
                 $contractType = $businessUnit->getContractType();
@@ -154,6 +154,25 @@ class ShipmentType extends AbstractType
                         'required'  =>  false,
                     ];
                     $form->add('driver', EntityType::class, $formOptions);
+
+                    $builder->addEventListener(FormEvents::SUBMIT, function (FormEvent $event) use ($user) {
+                        $form = $event->getForm();
+
+                        $formOptions = [
+                            'class'   =>  Driver::class,
+                            'query_builder' =>  function (DriverRepository $er) use ($user) {
+                                $businessUnit = $user->getBusinessUnit();
+
+                                return $er->businessUnitDriver($businessUnit, Driver::STATUS_FREE);
+                            },
+                            'mapped'    =>  false,
+                            'expanded' => true,
+                            'multiple'  => false,
+                            'required'  =>  true,
+                        ];
+
+                        $form->add('driver', EntityType::class, $formOptions);
+                    });
                 }
             }
         );
