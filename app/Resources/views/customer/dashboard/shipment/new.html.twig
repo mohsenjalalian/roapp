@@ -8,46 +8,9 @@
     <li class="active">ثبت درخواست ارسال</li>
 {% endblock %}
 {% block main %}
-    {% if contractType == 1 %}
-        <!-- Trigger the modal with a button -->
-        <button id="select-driver" disabled type="button" class="btn btn-sm btn-labeled btn-primary disabled" data-toggle="modal" data-target="#myModal">انتخاب راننده</button>
-        <label class="switch">
-            <input type="checkbox" id="shipment-switch">
-            <div class="slider round"></div>
-        </label>
-    {% endif %}
     {% form_theme form child_form_template %}
     {{ form_row(form) }}
     <div style="margin-top: 10px">
-        <!-- Modal -->
-        <div id="myModal" class="modal fade" role="dialog">
-            <div class="modal-dialog">
-                <!-- Modal content-->
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal">&times;</button>
-                        <h4 class="modal-title">انتخاب راننده</h4>
-                    </div>
-                    <div class="modal-body">
-                        <ul class="drivers">
-                            {% if drivers is not empty %}
-                                {% for driver in drivers %}
-                                    <li>
-                                        <input class="driver-input" type="radio" name="driver" value="{{ driver.id }}">
-                                        {{ driver.phone }}
-                                    </li>
-                                {% endfor %}
-                            {% else %}
-                                <li>راننده آزادی وجود ندارد</li>
-                            {% endif %}
-                        </ul>
-                    </div>
-                    <div class="modal-footer">
-                        <button id="assign-driver" type="button" class="btn btn-default" data-dismiss="modal">انتخاب</button>
-                    </div>
-                </div>
-            </div>
-        </div>
     </div>
 {% endblock %}
 
@@ -73,86 +36,9 @@
             'bundles/app/javascript/customer/dashboard/address/script.js'
             'assets/vendor/dropzone/dist/min/dropzone.min.js'
             'bundles/roappmedia/roapp-upload.js'
+            'bundles/app/javascript/customer/dashboard/shipment/scripts.js'
         %}
         <script type="text/javascript" src="{{ asset_url }}" ></script>
         {% endjavascripts %}
         <script src="{{ asset(child_form_javascript) }}" type="application/javascript"></script>
-        <script>
-            $(document).ready(function() {
-                $(".js-datepicker").pDatepicker(
-                        {
-                            timePicker: {
-                                enabled: true,
-                                showSeconds: true,
-                                showMeridian: true,
-                                scrollEnabled: true,
-                                showOn: 'button',
-                                buttonImageOnly: true,
-                                changeMonth: true,
-                                changeYear: true,
-                                dateFormat: 'dd-mm-yy',
-                                yearRange: "-0:+1"
-                            }
-                        }
-                );
-            });
-        </script>
-        <script>
-            $(document).ready(function() {
-                var $otherPhone = $('.other-phone');
-                // When sport gets selected ...
-                $otherPhone.on('keyup', function () {
-                    // ... retrieve the corresponding form.
-                    var $form = $(this).closest('form');
-                    // Simulate form data, but only include the selected sport value.
-                    var data = {};
-                    data[$otherPhone.attr('name')] = $otherPhone.val();
-                    data[$otherPhone.attr('name')] = $otherPhone.val();
-                    // Submit data via AJAX to the form's action path.
-                    $.ajax({
-                        url: $form.attr('action'),
-                        type: $form.attr('method'),
-                        data: data,
-                        success: function (html) {
-                            // Replace current position field ...
-                            $('.select-address').replaceWith(
-                                // ... with the returned one from the AJAX response.
-                                $(html).find('.select-address')
-                            );
-                            // Position field now displays the appropriate positions.
-                        }
-                    });
-                });
-            });
-
-            $(".calc_price_item").on('change', function () {
-                var ownerAddressId = $('.owner-address').val();
-                var otherAddressId = $('.select-address input:checked').val();
-                var shipmentValue = 1000;
-                var shipmentPickUpTime = $(".js-datepicker").val();
-                $.ajax({
-                    url: 'calc_shipment_price',
-                    data: {
-                        ownerAddressId: ownerAddressId,
-                        otherAddressId: otherAddressId,
-                        shipmentValue: shipmentValue,
-                        shipmentPickUpTime: shipmentPickUpTime
-                    },
-                    type: "POST",
-                    success: function (response) {
-                        $("#calculate_price").html("<b>قیمت کل :</b>");
-                        $("#cost_show").html(response);
-                        $("#cost_show").css('display', 'inline');
-                        $(".price_send").prepend(
-                                '<input name="price_shipment" type="hidden" value="'+response+'">'
-                        );
-                        $('.creator_shipment').prop('disabled', false);
-                    }
-                });
-            });
-            $('#assign-driver').on('click', function () {
-                $('.selected-driver').val($('.driver-input:checked').val());
-            })
-
-        </script>
     {% endblock %}

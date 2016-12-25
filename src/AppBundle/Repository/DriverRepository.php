@@ -75,9 +75,7 @@ class DriverRepository extends EntityRepository
             ->where('driver.businessUnit = :businessUnit')
             ->andWhere('driver.status = :status')
             ->setParameter('businessUnit', $businessUnit)
-            ->setParameter('status', $status)
-            ->getQuery()
-            ->getResult();
+            ->setParameter('status', $status);
 
         return $drivers;
     }

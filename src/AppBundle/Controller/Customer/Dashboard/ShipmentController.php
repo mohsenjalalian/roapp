@@ -69,11 +69,6 @@ class ShipmentController extends Controller
     public function newAction(Request $request)
     {
         $customer = $this->getUser();
-        $businessUnit = $customer->getBusinessUnit();
-        $contractType = $businessUnit->getContractType();
-        $em = $this->getDoctrine()->getManager();
-        $drivers = $em->getRepository('AppBundle:Driver')
-            ->businessUnitDriver($businessUnit, Driver::STATUS_FREE);
         $shipmentService = $this->get('app.shipment_service');
         $shipment = $shipmentService->shipmentFactory();
         $addressEntity = new Address();
@@ -102,10 +97,9 @@ class ShipmentController extends Controller
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $this->get('app.shipment_service')->create($shipment, $request, $form);
-            $selectedDriver = $form->get('selected_driver')->getData();
+            $selectedDriver = $form->get('driver')->getData();
             if ($selectedDriver) {
                 $this->get('app.shipment_service')->shipmentAssign($shipment, $selectedDriver);
-                $this->get('app.shipment_service')->customerDriver($shipment);
             }
 
             return $this->redirectToRoute('app_customer_dashboard_shipment_index');
@@ -119,8 +113,6 @@ class ShipmentController extends Controller
                 'address' => $address,
                 'shipment' => $shipment,
                 'form' => $form->createView(),
-                'drivers'   =>  $drivers,
-                'contractType'  =>  $contractType,
                 'child_form_template' => $form->getConfig()->getOption('template'),
                 'child_form_javascript' => $form->getConfig()->getOption('javascript'),
                 'child_form_stylesheet' => $form->getConfig()->getOption('stylesheet'),
