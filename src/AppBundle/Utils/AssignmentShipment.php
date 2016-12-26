@@ -137,7 +137,6 @@ class AssignmentShipment
 
         $this->shipmentService->addHistory($shipment, ShipmentHistory::ACTION_SEND_ASSIGNMENT);
 
-
         return $assignmentId;
     }
 
