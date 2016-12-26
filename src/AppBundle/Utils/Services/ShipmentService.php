@@ -159,17 +159,6 @@ class ShipmentService
 
     /**
      * @param Shipment $shipment
-     */
-    public function customerDriver(Shipment $shipment)
-    {
-        $em = $this->container->get('doctrine.orm.entity_manager');
-        $shipment->setCustomerDriver(true);
-        $em->persist($shipment);
-        $em->flush($shipment);
-    }
-
-    /**
-     * @param Shipment $shipment
      * @param integer  $action
      */
     public function addHistory(Shipment $shipment, $action)
