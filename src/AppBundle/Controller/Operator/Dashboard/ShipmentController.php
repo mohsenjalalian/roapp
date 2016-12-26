@@ -2,6 +2,7 @@
 
 namespace AppBundle\Controller\Operator\Dashboard;
 
+use AppBundle\Entity\ShipmentHistory;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -240,10 +241,11 @@ class ShipmentController extends Controller
         $shipment = $this->getDoctrine()
             ->getRepository("AppBundle:Shipment")
             ->find($shipmentId);
-        $shipment->setStatus(Shipment::STATUS_ASSIGNMENT_REJECT);
+        $shipment->setStatus(Shipment::STATUS_REJECT);
         $em->persist($shipment);
 
         $em->flush();
+        $this->get('app.shipment_service')->addHistory($shipment, ShipmentHistory::ACTION_REJECT);
 //        send notification to customer
         $customerId = $shipment->getOwnerAddress()
             ->getCustomer()

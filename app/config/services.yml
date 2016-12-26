@@ -40,6 +40,7 @@ services:
             - "@doctrine.orm.default_entity_manager"
             - "@app.notification_service"
             - "@translator"
+            - "@app.shipment_service"
 
     app.notification_service:
         class: AppBundle\Utils\NotificationService
@@ -94,14 +95,12 @@ services:
         arguments:
             - "@doctrine.orm.default_entity_manager"
             - "@router"
+            - "@app.shipment_service"
 
     app.shipment_service:
         class: AppBundle\Utils\Services\ShipmentService
         arguments:
-            - "@doctrine.orm.default_entity_manager"
-            - "@router"
-            - "@security.token_storage"
-            - "@app.shipment_assignment"
+            - "@service_container"
 
     app.shipment_discriminator_map_listener:
         class: AppBundle\EventListener\ShipmentDiscriminatorMapListener
