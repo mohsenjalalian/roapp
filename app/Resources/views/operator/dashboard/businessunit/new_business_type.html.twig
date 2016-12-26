@@ -1,5 +1,9 @@
 {% extends ':operator/dashboard:layout.html.twig' %}
 
 {% block main %}
-
+    <ol>
+        {% for business_type in business_types %}
+            <a href="{{ path('app_operator_dashboard_businessunit_new', {"businessType": business_type.id }) }}">{{ business_type.name }}</a>
+        {% endfor %}
+    </ol>
 {% endblock %}

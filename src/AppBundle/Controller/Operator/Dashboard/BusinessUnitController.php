@@ -61,8 +61,15 @@ class BusinessUnitController extends Controller
      */
     public function newAction(Request $request, BusinessType $businessType = null)
     {
-        if (!$businessType instanceof $businessType) {
-            return $this->render(':operator/dashboard/businessunit:new_business_type.html.twig');
+        if (!$businessType instanceof BusinessType) {
+            $businessTypes = $this
+                ->getDoctrine()
+                ->getRepository('AppBundle:BusinessType')
+                ->findAll();
+
+            return $this->render(':operator/dashboard/businessunit:new_business_type.html.twig', [
+                'business_types' => $businessTypes,
+            ]);
         }
 
         $businessUnit = $this->get('app.business_unit_service')->businessUnitFactory($businessType);
