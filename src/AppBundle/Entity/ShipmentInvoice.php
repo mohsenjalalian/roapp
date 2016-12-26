@@ -15,7 +15,7 @@ class ShipmentInvoice extends AbstractInvoice
 {
     /**
      * @OneToOne(targetEntity="AppBundle\Entity\Shipment")
-     * @JoinColumn(name="shipment_invoice_id", referencedColumnName="id")
+     * @JoinColumn(name="shipment_id", referencedColumnName="id")
      */
     private $shipment;
 

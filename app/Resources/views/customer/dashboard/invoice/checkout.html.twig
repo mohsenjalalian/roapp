@@ -1,37 +1,36 @@
 {% extends ':customer/dashboard:layout.html.twig' %}
-
+{% block breadcrumbs %}
+    <li class="active">روش پرداخت</li>
+{% endblock %}
+{% block page_title %}
+    تعیین روش پرداخت
+{% endblock %}
 {% block main %}
-    <div class="panel-body">
-    <table class="ui unstackable table">
-        <thead>
-        <tr>
-            <th>نام و نام خانودگی</th>
-            <th>وضعیت</th>
-            <th>مبلغ قابل پرداخت</th>
-            <th>عملیات</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr>
-            <td>{{ shipment.ownerAddress.customer.fullName }}</td>
-            {% if constant('STATUS_UNPAID',invoice) == 0 %}
-                <td>پرداخت نشده</td>
-            {% else %}
-                <td>پرداخت شده است</td>
-            {% endif %}
-            <td>{{ invoice.price }}</td>
-            <td>
-                <div class="ui form">
-                {{ form_start(form) }}
-                <div class="field">
-                {{ form_widget(form) }}
-                </div>
-                <input class="btn" type="submit" style="margin-top: 10px " value="پرداخت" />
-                {{ form_end(form) }}
-                </div>
-            </td>
-        </tr>
-        </tbody>
-    </table>
+    <div class="panel">
+        <div class="panel-body">
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th>مبلغ قابل پرداخت (تومان)</th>
+                    <th>روش پرداخت</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td><h4>{{ invoice.price }}</h4></td>
+                    <td>
+                        <div class="ui form">
+                            {{ form_start(form) }}
+                            <div class="field">
+                                {{ form_widget(form.method) }}
+                            </div>
+                            <input class="btn btn-success" type="submit" style="margin-top: 10px " value="پرداخت" />
+                            {{ form_end(form) }}
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
 {% endblock %}
