@@ -3,7 +3,7 @@
     <li class="active"> لیست رسید ها</li>
 {% endblock %}
 {% block page_title %}
-   لیست رسید ها
+    لیست رسید ها
 {% endblock %}
 {% block main %}
     <div class="panel">
@@ -22,9 +22,12 @@
                     <tr>
                         <td><a href="{{ path('app_customer_dashboard_period_invoice_show', {'id': periodInvoice.id}) }}">{{ periodInvoice.createdAt|date('Y-m-d') }}</a></td>
                         <td>{{ periodInvoice.price }}</td>
-                        <td>{% if periodInvoice.status == 0 %}پرداخت نشده{% else %}پرداخت شده{% endif %}</td>
+                        <td>{% if periodInvoice.status == constant('STATUS_UNPAID',periodInvoice)%}پرداخت نشده{% else %}پرداخت شده{% endif %}</td>
                         <td>
-                            <a href="{{ path('app_customer_dashboard_period_invoice_show', {'id': periodInvoice.id}) }}" class="btn btn-sm btn-labeled btn-success"><span class="btn-label icon fa fa-eye"></span>نمایش</a>&nbsp;&nbsp;
+                            <a href="{{ path('app_customer_dashboard_period_invoice_show', {'id': periodInvoice.id}) }}" class="btn btn-sm btn-labeled btn-success"><span class="btn-label icon fa fa-eye"></span>جزئیات</a>&nbsp;&nbsp;
+                            {% if periodInvoice.status != constant('STATUS_PAID',periodInvoice) %}
+                                <a href="{{ path('app_customer_dashboard_invoice_checkout', {'id': periodInvoice.id}) }}" class="btn btn-sm btn-labeled btn-success"><span class="btn-label icon fa fa-eye"></span>پرداخت</a>&nbsp;&nbsp;
+                            {% endif %}
                         </td>
                     </tr>
                 {% endfor %}

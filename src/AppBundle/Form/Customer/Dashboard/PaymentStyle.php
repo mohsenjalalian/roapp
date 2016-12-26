@@ -26,11 +26,9 @@ class PaymentStyle extends AbstractType
                 [
                     'choices' => [
                         'کارت به کارت' => 'manual',
-                        'پرداخت در محل' => 'cash_on_delivery',
                     ],
                     'expanded' => true,
                     'multiple' => false,
-                    'label' => 'روش های پرداخت :',
                 ]
             )
             ->add(

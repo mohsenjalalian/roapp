@@ -1,13 +1,50 @@
 {% extends ':customer/dashboard:layout.html.twig' %}
-
+{% block breadcrumbs %}
+    <li class="active">ثبت اطلاعات کارت بانکی</li>
+{% endblock %}
+{% block page_title %}
+  ثبت اطلاعات کارت بانکی
+{% endblock %}
 {% block main %}
-    <div class="panel-heading">
-    <h2>ثبت اطلاعات کارت</h2>
+    {{ form_start(form) }}
+    {{ form_errors(form) }}
+    <div class="panel-body">
+        {% form_theme form 'bootstrap_3_layout.html.twig' %}
+        <div class="form-group">
+            {{ form_label(form.first_name, null, {"label_attr":{"class": "col-sm-2 control-label"}}) }}
+            <div class="col-sm-10">
+                {{ form_widget(form.first_name, {"attr": {"placeholder": form.first_name.vars.label}}) }}
+            </div>
+        </div> <!-- / .form-group -->
+        <div class="form-group">
+            {{ form_label(form.last_name, null, {"label_attr":{"class": "col-sm-2 control-label"}}) }}
+            <div class="col-sm-10">
+                {{ form_widget(form.last_name, {"attr": {"placeholder": form.last_name.vars.label}}) }}
+            </div>
+        </div> <!-- / .form-group -->
+        <div class="form-group">
+            {{ form_label(form.card_number, null, {"label_attr":{"class": "col-sm-2 control-label"}}) }}
+            <div class="col-sm-10">
+                {{ form_widget(form.card_number, {"attr": {"placeholder": form.card_number.vars.label}}) }}
+            </div>
+        </div> <!-- / .form-group -->
+        <div class="form-group">
+            {{ form_label(form.bank_name, null, {"label_attr":{"class": "col-sm-2 control-label"}}) }}
+            <div class="col-sm-10">
+                {{ form_widget(form.bank_name, {"attr": {"placeholder": form.bank_name.vars.label}}) }}
+            </div>
+        </div>
+        <div class="form-group">
+            {{ form_label(form.tracking_code, null, {"label_attr":{"class": "col-sm-2 control-label"}}) }}
+            <div class="col-sm-10">
+                {{ form_widget(form.tracking_code, {"attr": {"placeholder": form.tracking_code.vars.label}}) }}
+            </div>
+        </div> <!-- / .form-group -->
+        <div class="form-group" style="margin-bottom: 0;">
+            <div class="col-sm-offset-2 col-sm-10">
+                <input class="btn btn-flat btn-sm btn-labeled btn-success" type="submit" value="ثبت اطلاعات" />
+            </div>
+        </div> <!-- / .form-group -->
     </div>
-<div class="panel-body">
-    {{ form_start(form)}}
-    {{ form_widget(form) }}
-    <input class="btn" type="submit" style="margin-top: 10px " value="ثبت اطلاعات" />
     {{ form_end(form) }}
-</div>
 {% endblock %}

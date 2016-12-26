@@ -26,7 +26,7 @@ class PeriodInvoiceController extends Controller
     public function indexAction(Request $request)
     {
         $em = $this->getDoctrine()->getManager();
-        $periodInvoices = $em->getRepository("AppBundle:PeriodInvoice")
+        $periodInvoicesQuery = $em->getRepository("AppBundle:PeriodInvoice")
             ->createQueryBuilder('p')
             ->join('p.shipments', 's')
             ->join('s.ownerAddress', 'ow')
@@ -37,7 +37,7 @@ class PeriodInvoiceController extends Controller
 
         $paginator  = $this->get('knp_paginator');
         $pagination = $paginator->paginate(
-            $periodInvoices, /* query NOT result */
+            $periodInvoicesQuery, /* query NOT result */
             $request->query->getInt('page', 1)/*page number*/,
             5/*limit per page*/
         );
@@ -61,13 +61,13 @@ class PeriodInvoiceController extends Controller
         }
         $em = $this->getDoctrine()->getManager();
         $qb = $em->createQueryBuilder();
-        $shipments = $qb->select('s')
+        $shipmentsQuery = $qb->select('s')
             ->from('AppBundle:Shipment', 's')
             ->Where($qb->expr()->in('s.id', $shipmentIds))
             ->getQuery();
         $paginator  = $this->get('knp_paginator');
         $pagination = $paginator->paginate(
-            $shipments, /* query NOT result */
+            $shipmentsQuery, /* query NOT result */
             $request->query->getInt('page', 1)/*page number*/,
             5/*limit per page*/
         );

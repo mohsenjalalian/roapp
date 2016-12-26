@@ -6,6 +6,7 @@ use AppBundle\Entity\AbstractInvoice;
 use AppBundle\Entity\Payment;
 use AppBundle\Entity\Person;
 use AppBundle\Entity\Shipment;
+use AppBundle\Entity\ShipmentInvoice;
 use AppBundle\Utils\PaymentSystem\GatewayInterface;
 use Doctrine\ORM\EntityManager;
 use Symfony\Bundle\FrameworkBundle\Routing\Router;
@@ -142,7 +143,11 @@ class PaymentService
         $em = $this->entityManager;
         $payment->setStatus(Payment::STATUS_APPROVED);
         //@TODO move shipment related code to event listener
-        $payment->getInvoice()->getShipment()->setStatus(Shipment::STATUS_NOT_ASSIGNED);
+        if ($payment->getInvoice()->getStatus() == 'perShipment') {
+            /** @var  $invoice ShipmentInvoice */
+            $invoice = $payment->getInvoice();
+            $invoice->getShipment()->setStatus(Shipment::STATUS_NOT_ASSIGNED);
+        }
         $payment->getInvoice()->setStatus(AbstractInvoice::STATUS_PAID);
 
         $em->persist($payment);

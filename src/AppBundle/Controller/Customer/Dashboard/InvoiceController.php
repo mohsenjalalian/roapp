@@ -26,9 +26,6 @@ class InvoiceController extends Controller
     public function checkoutAction(AbstractInvoice $invoice)
     {
         if ($invoice->getStatus() != AbstractInvoice::STATUS_PAID) {
-//            $shipment = $this->getDoctrine()
-//                ->getRepository("AppBundle:AbstractInvoice")
-//                ->findOneBy(['id' => $invoice->getId()]);
             $form = $this->createForm(
                 PaymentStyle::class,
                 [
@@ -42,8 +39,8 @@ class InvoiceController extends Controller
             return $this->render(
                 "customer/dashboard/invoice/checkout.html.twig",
                 [
+                    //"shipment" => $invoice->getShipments(),
                     "invoice" => $invoice,
-                    "shipment" => $invoice->getShipment(),
                     'form' => $form->createView(),
                 ]
             );
