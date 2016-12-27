@@ -1,9 +1,8 @@
-{% extends 'customer/dashboard/layout.html.twig' %}
+{% extends ':customer/dashboard:layout.html.twig' %}
 {% block page_title %}
     ویرایش واحد شغلی
 {% endblock %}
 {% block breadcrumbs %}
-    <li><a href="{{ path('app_operator_dashboard_businessunit_index') }}">لیست واحد شغلی</a></li>
     <li class="active">ویرایش واحد شغلی</li>
 {% endblock %}
 {% block main %}
@@ -33,19 +32,18 @@
                     {{ form_widget(edit_form.contractType, {"attr": {"placeholder": edit_form.contractType.vars.label}}) }}
                 </div>
             </div>
+            <div class="form-group">
+                {{ form_label(edit_form.defaultAddress, null, {"label_attr":{"class": "col-sm-2 control-label"}}) }}
+                <div class="col-sm-10">
+                    {{ form_widget(edit_form.defaultAddress, {"attr": {"placeholder": edit_form.defaultAddress.vars.label}}) }}
+                </div>
+            </div>
             <div class="form-group" style="margin-bottom: 10px;">
                 <div class="col-sm-offset-2 col-sm-10">
                     <input id="driver_edit_button" class="btn btn-flat btn-sm btn-labeled btn-info" type="submit" value="ویرایش" />
                 </div>
             </div>
             {{ form_end(edit_form) }}
-            <div class="form-group" style="margin-bottom: 10px;">
-                <div class="col-sm-offset-2 col-sm-10">
-                    {{ form_start(delete_form) }}
-                    <input class="btn btn-flat btn-sm btn-labeled btn-danger" type="submit" value="حذف">
-                    {{ form_end(delete_form) }}
-                </div>
-            </div>
         </div>
     </div>
 {% endblock %}

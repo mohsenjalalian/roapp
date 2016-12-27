@@ -39,7 +39,7 @@ class BusinessUnitController extends Controller
             return $this->redirectToRoute('app_customer_dashboard_businessunit_edit');
         }
 
-        return $this->render('operator/dashboard/businessunit/edit.html.twig', [
+        return $this->render('customer/dashboard/businessunit/edit.html.twig', [
             'businessUnit' => $businessUnit,
             'edit_form' => $editForm->createView(),
         ]);

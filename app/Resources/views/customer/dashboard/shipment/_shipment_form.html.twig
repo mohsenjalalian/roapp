@@ -44,6 +44,7 @@
                     {% block child_form %}{% endblock %}
                 </div>
             </div>
+            {% if form.isBusinessUnitDriver is defined %}
             <div class="form-group row">
                 <div class="col-md-6">
                     <div class="form-group row">
@@ -54,6 +55,8 @@
                     </div>
                 </div>
             </div>
+            {% endif %}
+            {% if form.driver is defined %}
             <!-- Modal -->
             <div id="myModal" class="modal fade" role="dialog">
                 <div class="modal-dialog">
@@ -74,6 +77,7 @@
                     </div>
                 </div>
             </div>
+            {% endif %}
             <h4 class="ui horizontal divider header">
                 <span>محاسبه قیمت و ایجاد سفارش</span>
             </h4>
