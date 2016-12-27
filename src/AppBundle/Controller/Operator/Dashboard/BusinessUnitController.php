@@ -4,7 +4,6 @@ namespace AppBundle\Controller\Operator\Dashboard;
 
 use AppBundle\Entity\BusinessType;
 use AppBundle\Entity\BusinessUnit;
-use AppBundle\Entity\Customer;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -62,14 +61,26 @@ class BusinessUnitController extends Controller
     public function newAction(Request $request, BusinessType $businessType = null)
     {
         if (!$businessType instanceof BusinessType) {
-            $businessTypes = $this
-                ->getDoctrine()
+            $businessTypesQuery = $this->getDoctrine()
                 ->getRepository('AppBundle:BusinessType')
-                ->findAll();
+                ->createQueryBuilder('b')
+                ->orderBy('b.id', 'Asc')
+                ->getQuery()
+            ;
 
-            return $this->render(':operator/dashboard/businessunit:new_business_type.html.twig', [
-                'business_types' => $businessTypes,
-            ]);
+            $paginator  = $this->get('knp_paginator');
+            $pagination = $paginator->paginate(
+                $businessTypesQuery, /* query NOT result */
+                $request->query->getInt('page', 1)/*page number*/,
+                5/*limit per page*/
+            );
+
+            return $this->render(
+                ':operator/dashboard/businessunit:new_business_type.html.twig',
+                [
+                    'pagination' => $pagination,
+                ]
+            );
         }
 
         $businessUnit = $this->get('app.business_unit_service')->businessUnitFactory($businessType);
@@ -85,6 +96,7 @@ class BusinessUnitController extends Controller
         }
 
         return $this->render('operator/dashboard/businessunit/new.html.twig', [
+            'businessType' => $businessType,
             'businessUnit' => $businessUnit,
             'form' => $form->createView(),
         ]);

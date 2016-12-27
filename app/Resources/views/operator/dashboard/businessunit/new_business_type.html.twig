@@ -1,9 +1,38 @@
 {% extends ':operator/dashboard:layout.html.twig' %}
-
+{% block page_title %}
+    انتخاب نوع شغل
+{% endblock %}
+{% block breadcrumbs %}
+    <li><a href="{{ path('app_operator_dashboard_businessunit_index') }}">لیست واحد شغلی</a></li>
+    <li class="active">انتخاب نوع شغل</li>
+{% endblock %}
 {% block main %}
-    <ol>
-        {% for business_type in business_types %}
-            <a href="{{ path('app_operator_dashboard_businessunit_new', {"businessType": business_type.id }) }}">{{ business_type.name }}</a>
-        {% endfor %}
-    </ol>
+    <div class="panel">
+        <div class="panel-body">
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th>نوع</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for business_type in pagination %}
+                <tr>
+                    <td>
+                        <h4><a href="{{ path('app_operator_dashboard_businessunit_new', {"businessType": business_type.id }) }}">{{ business_type.name }}</a></h4>
+                    </td>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+            <div>
+                <a style="margin-right: 10px;margin-bottom: 10px" class="btn btn-sm btn-labeled btn-primary" href="{{ path('app_operator_dashboard_businessunit_index') }}">لیست کل واحد های شغلی</a>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-offset-3 col-sm-10">
+                {{ knp_pagination_render(pagination) }}
+            </div>
+        </div>
+    </div>
 {% endblock %}
