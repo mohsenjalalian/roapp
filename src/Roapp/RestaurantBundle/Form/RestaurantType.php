@@ -30,6 +30,7 @@ class RestaurantType extends AbstractType
             /** @var Restaurant $restaurant */
             $restaurant = $event->getData();
             $event->getForm()->add('defaultAddress', EntityType::class, [
+                'label' => 'آدرس پیش فرض',
                 'class' => 'AppBundle\Entity\Address',
                 'query_builder' => function (AddressRepository $er) use ($restaurant) {
                     return $er->createQueryBuilder('address')
