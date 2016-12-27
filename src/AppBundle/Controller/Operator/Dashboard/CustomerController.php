@@ -3,6 +3,7 @@
 namespace AppBundle\Controller\Operator\Dashboard;
 
 use AppBundle\Entity\Customer;
+use AppBundle\Entity\Media;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -65,11 +66,17 @@ class CustomerController extends Controller
         $customer = new Customer();
         $form = $this->createForm('AppBundle\Form\Operator\Dashboard\CustomerType', $customer);
         $form->handleRequest($request);
-
         if ($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
             $em->persist($customer);
             $em->flush();
+
+            // send userName, password and login page link to customer's email
+            $router = $this->get('router');
+            $loginPageUrl = $router->generate("app_operator_dashboard_security_login");
+            $loginPageLink = $this->get("roapp_media.upload_manager")->getAbsoluteUrl($loginPageUrl);
+            $logger = $this->get('logger');
+            $logger->info("userName:".$customer->getPhone().' '."password:".$customer->getPassword().' '.'link:'.$loginPageLink);
 
             return $this->redirectToRoute('app_operator_dashboard_customer_show', ['id' => $customer->getId()]);
         }
