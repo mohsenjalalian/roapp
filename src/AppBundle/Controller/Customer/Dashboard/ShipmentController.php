@@ -5,6 +5,7 @@ namespace AppBundle\Controller\Customer\Dashboard;
 use AppBundle\Entity\Address;
 use AppBundle\Entity\Customer;
 use AppBundle\Entity\ShipmentHistory;
+use AppBundle\Exception\ShipmentException;
 use AppBundle\Form\Customer\Dashboard\AddressType;
 use AppBundle\Form\Customer\Dashboard\ShipmentType;
 use AppBundle\Form\Customer\Dashboard\ValidationCodeType;
@@ -69,7 +70,11 @@ class ShipmentController extends Controller
     {
         $customer = $this->getUser();
         $shipmentService = $this->get('app.shipment_service');
-        $shipment = $shipmentService->shipmentFactory();
+        try {
+            $shipment = $shipmentService->shipmentFactory();
+        } catch (ShipmentException $e) {
+            return $this->redirectToRoute('app_customer_dashboard_businessunit_edit');
+        }
         $addressEntity = new Address();
         $customerId = $customer->getId(); // get current customer id
         $address = $this->getDoctrine()

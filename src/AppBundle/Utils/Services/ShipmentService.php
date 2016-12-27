@@ -7,6 +7,7 @@ use AppBundle\Entity\Customer;
 use AppBundle\Entity\PeriodInvoice;
 use AppBundle\Entity\Shipment;
 use AppBundle\Entity\ShipmentHistory;
+use AppBundle\Exception\ShipmentException;
 use AppBundle\Utils\Shipment\ShipmentProcessInterface;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\HttpFoundation\Request;
@@ -141,6 +142,9 @@ class ShipmentService
     {
         $customer = $this->container->get('security.token_storage')->getToken()->getUser();
         $ownerAddress = $customer->getBusinessUnit()->getDefaultAddress();
+        if ($ownerAddress == null) {
+            throw new ShipmentException();
+        }
         $shipment->setOwnerAddress($ownerAddress);
         $em = $this->container->get('doctrine.orm.entity_manager');
         $em->persist($ownerAddress);
