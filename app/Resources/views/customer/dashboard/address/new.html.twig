@@ -18,18 +18,25 @@
 {% endblock %}
 
 {% block page_title %}
-    <h1>ثبت آدرس</h1>
+    ایجاد آدرس
+{% endblock %}
+{% block breadcrumbs %}
+    <li><a href="{{ path('app_customer_dashboard_address_index') }}">آدرس ها</a></li>
+    <li class="active">ایجاد آدرس</li>
 {% endblock %}
 
 {% block main %}
-    <div id="map"></div>
-    <input id="address" class="controls" type="text" placeholder="آدرس">
-    <div class="ui form">
-    {{ form_start(form) }}
-    {{ form_widget(form) }}
-    <input class="btn" type="submit" value="ایجاد" />
-    {{ form_end(form) }}
+    <div class="panel-heading">
+        <span class="panel-title">ایجاد آدرس</span>
     </div>
-
-    <a href="{{ path('app_customer_dashboard_address_index') }}"><button class="btn">برگشت به لیست</button></a>
+    <div class="panel-body">
+        <div id="map"></div>
+        <input id="address" class="controls" type="text" placeholder="آدرس">
+        <div class="ui form">
+            {{ form_start(form) }}
+            {{ form_errors(form) }}
+        <input class="btn btn-flat btn-sm btn-labeled btn-success" type="submit" value="ایجاد" />
+        {{ form_end(form) }}
+        </div>
+    </div>
 {% endblock %}
