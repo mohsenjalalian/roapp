@@ -1,0 +1,42 @@
+{% extends ':customer/dashboard:layout.html.twig' %}
+{% block breadcrumbs %}
+    <li class="active">لیست پرداخت اشتراک</li>
+{% endblock %}
+{% block page_title %}
+    لیست پرداخت اشتراک
+{% endblock %}
+{% block main %}
+    <div class="panel">
+        <div class="panel-body">
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th>{{ knp_pagination_sortable(pagination, 'تاریخ صدور','p.createdAt') }}</th>
+                    <th{% if pagination.isSorted('p.price') %} class="sorted"{% endif %}>{{ knp_pagination_sortable(pagination, 'قیمت', 'p.price') }}</th>
+                    <th{% if pagination.isSorted('p.status') %} class="sorted"{% endif %}>{{ knp_pagination_sortable(pagination, 'وضعیت', 'p.status') }}</th>
+                    <th>عملیات</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for periodInvoice in pagination %}
+                    <tr>
+                        <td><a href="{{ path('app_customer_dashboard_period_invoice_show', {'id': periodInvoice.id}) }}">{{ periodInvoice.createdAt|date('Y-m-d') }}</a></td>
+                        <td>{{ periodInvoice.price }}</td>
+                        <td>{% if periodInvoice.status == constant('STATUS_UNPAID',periodInvoice)%}پرداخت نشده{% else %}پرداخت شده{% endif %}</td>
+                        <td>
+                            {% if periodInvoice.status != constant('STATUS_PAID',periodInvoice) %}
+                                <a href="{{ path('app_customer_dashboard_invoice_checkout', {'id': periodInvoice.id}) }}" class="btn btn-sm btn-labeled btn-success"><span class="btn-label icon fa fa-eye"></span>پرداخت</a>&nbsp;&nbsp;
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-offset-3 col-sm-10">
+                {{ knp_pagination_render(pagination) }}
+            </div>
+        </div>
+    </div>
+{% endblock %}
