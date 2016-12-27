@@ -2,7 +2,9 @@
 
 namespace AppBundle\Utils\Services;
 
+use AppBundle\Entity\AbstractInvoice;
 use AppBundle\Entity\Customer;
+use AppBundle\Entity\PeriodInvoice;
 use AppBundle\Entity\Shipment;
 use AppBundle\Entity\ShipmentHistory;
 use AppBundle\Utils\Shipment\ShipmentProcessInterface;
@@ -34,10 +36,10 @@ class ShipmentService
     {
         $this->container = $container;
     }
+
     /**
      * @param Shipment $shipment
      * @param Request  $request
-     *
      */
     public function create(Shipment $shipment, Request $request)
     {
@@ -53,6 +55,11 @@ class ShipmentService
         $em = $this->container->get('doctrine.orm.entity_manager');
         $em->persist($shipment);
         $em->flush();
+
+        $isBusinessUnitDriver = $shipment->getIsBusinessUnitDriver();
+        if (!$isBusinessUnitDriver) {
+            $this->createInvoice($shipment);
+        }
 
         $this->addHistory($shipment, ShipmentHistory::ACTION_CREATE);
 
@@ -173,5 +180,32 @@ class ShipmentService
 
         $em->persist($shipmentHistory);
         $em->flush($shipmentHistory);
+    }
+
+    /**
+     * @param Shipment $shipment
+     */
+    public function createInvoice(Shipment $shipment)
+    {
+        $em = $this->container->get('doctrine.orm.entity_manager');
+        $todayPeriodInvoice = $em->getRepository("AppBundle:PeriodInvoice")->getTodayPeriodInvoice();
+        if ($todayPeriodInvoice instanceof PeriodInvoice) {
+            $previousPrice = intval($todayPeriodInvoice->getPrice());
+            $newPrice = intval($shipment->getPrice());
+            $totalPrice = $previousPrice + $newPrice;
+            $todayPeriodInvoice->setPrice($totalPrice);
+            $todayPeriodInvoice->addShipment($shipment);
+
+            $em->persist($todayPeriodInvoice);
+            $em->flush();
+        } else {
+            $periodInvoice =  new PeriodInvoice();
+            $periodInvoice->setPrice($shipment->getPrice());
+            $periodInvoice->setStatus(AbstractInvoice::STATUS_UNPAID);
+            $periodInvoice->addShipment($shipment);
+
+            $em->persist($periodInvoice);
+            $em->flush();
+        }
     }
 }

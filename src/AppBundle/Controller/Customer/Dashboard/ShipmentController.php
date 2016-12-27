@@ -97,7 +97,7 @@ class ShipmentController extends Controller
         ;
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->get('app.shipment_service')->create($shipment, $request, $form);
+            $this->get('app.shipment_service')->create($shipment, $request);
             //TODO: Refactor $selectedDriver get request
             $selectedDriver = $request->request->get('restaurant_shipment')['driver'];
             if ($selectedDriver) {
