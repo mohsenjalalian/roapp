@@ -1,38 +1,40 @@
 {% extends ':customer/dashboard:layout.html.twig' %}
-
+{% block breadcrumbs %}
+    <li class="active">آدرس ها</li>
+{% endblock %}
+{% block page_title %}
+   لیست آدرس ها
+{% endblock %}
+{% block header_link %}
+<a href="{{ path('app_customer_dashboard_address_new') }}" class="btn btn-sm btn-labeled btn-primary"><span class="btn-label icon fa fa-plus-square"></span>ایجاد آدرس جدید</a>
+{% endblock %}
 {% block main %}
-    <div class="page-header">
-        <h2 class="ui header" style="display: inline">لیست آدرس ها</h2>
-        <a style="margin-right: 10px" href="{{ path('app_customer_dashboard_address_new') }}"><button class="btn">ایجاد آدرس جدید</button></a>
-    </div>
-    <div class="panel-body">
-    <table class="ui celled table">
-        <thead>
-            <tr>
-                <th>{{ knp_pagination_sortable(pagination, 'Id','a.id') }}</th>
-                <th{% if pagination.isSorted('a.isPublic') %} class="sorted"{% endif %}>{{ knp_pagination_sortable(pagination, 'وضعیت نمایش', 'a.isPublic') }}</th>
-                <th{% if pagination.isSorted('a.description') %} class="sorted"{% endif %}>{{ knp_pagination_sortable(pagination, 'آدرس', 'a.description') }}</th>
-                {#<th>Latitude</th>#}
-                {#<th>Longitude</th>#}
-                <th>عملیات</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for address in pagination %}
-            <tr>
-                <td><a href="{{ path('app_customer_dashboard_address_show', { 'id': address.id }) }}">{{ address.id }}</a></td>
-                <td>{% if address.isPublic %}عمومی{% else %}محرمانه{% endif %}</td>
-                <td>{{ address.description }}</td>
-                {#<td>{{ address.latitude }}</td>#}
-                {#<td>{{ address.longitude }}</td>#}
-                <td>
-                            <a href="{{ path('app_customer_dashboard_address_show', { 'id': address.id }) }}"><button class="btn">نمایش</button></a>
-                            <a href="{{ path('app_customer_dashboard_address_edit', { 'id': address.id }) }}"><button class="btn">ویرایش</button></a>
-                </td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+    <div class="panel">
+        <div class="panel-body">
+            <table class="ui celled table">
+                <thead>
+                    <tr>
+                        <th>{{ knp_pagination_sortable(pagination, 'Id','a.id') }}</th>
+                        <th{% if pagination.isSorted('a.isPublic') %} class="sorted"{% endif %}>{{ knp_pagination_sortable(pagination, 'وضعیت نمایش', 'a.isPublic') }}</th>
+                        <th{% if pagination.isSorted('a.description') %} class="sorted"{% endif %}>{{ knp_pagination_sortable(pagination, 'آدرس', 'a.description') }}</th>
+                        <th>عملیات</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for address in pagination %}
+                    <tr>
+                        <td><a href="{{ path('app_customer_dashboard_address_show', { 'id': address.id }) }}">{{ address.id }}</a></td>
+                        <td>{% if address.isPublic %}عمومی{% else %}محرمانه{% endif %}</td>
+                        <td>{{ address.description }}</td>
+                        <td>
+                            <a href="{{ path('app_customer_dashboard_address_show', { 'id': address.id }) }}" class="btn btn-sm btn-labeled btn-success"><span class="btn-label icon fa fa-eye"></span>نمایش</a>
+                            <a href="{{ path('app_customer_dashboard_address_edit', { 'id': address.id }) }}" class="btn btn-sm btn-labeled btn-info"><span class="btn-label icon fa fa-eye"></span>ویرایش</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
     </div>
     <div class="ui one column stackable center aligned page grid navigation">
         <div class="pagination menu column twelve wide ui" style="font-size: 18px">

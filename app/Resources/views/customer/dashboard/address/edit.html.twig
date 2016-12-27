@@ -18,21 +18,33 @@
 {% endblock %}
 
 {% block page_title %}
-    <h1>ویرایش آدرس</h1>
+    ویرایش آدرس
+{% endblock %}
+{% block breadcrumbs %}
+    <li><a href="{{ path('app_customer_dashboard_driver_index') }}">آدرس ها</a></li>
+    <li class="active">ویرایش آدرس</li>
 {% endblock %}
 
 {% block main %}
 
-    <div id="map"></div>
-    <input data-lat="{{ edit_form.vars.data.latitude }}" data-lng="{{ edit_form.vars.data.longitude }}" data-addr="{{ edit_form.vars.data.description }}"  id="address" class="controls" type="text" placeholder="آدرس">
+    <div class="panel-heading">
+        <span class="panel-title">ویرایش آدرس</span>
+    </div>
+    <div class="panel-body">
+        <div id="map"></div>
+        <input data-lat="{{ edit_form.vars.data.latitude }}" data-lng="{{ edit_form.vars.data.longitude }}" data-addr="{{ edit_form.vars.data.description }}"  id="address" class="controls" type="text" placeholder="آدرس">
 
-    {{ form_start(edit_form) }}
-        {{ form_widget(edit_form) }}
-        <input class="btn" type="submit" value="ویرایش" />
-    {{ form_end(edit_form) }}
+        {{ form_start(edit_form) }}
+            {{ form_widget(edit_form) }}
+            <div class="form-group" style="margin-bottom: 10px;">
+            <input class="btn btn-flat btn-sm btn-labeled btn-info" type="submit" value="ویرایش" />
+            </div>
+        {{ form_end(edit_form) }}
 
-    <a href="{{ path('app_customer_dashboard_address_index') }}"><button class="btn">برگشت به لیست</button></a>
-    {{ form_start(delete_form) }}
-        <input class="btn" type="submit" value="حذف">
-    {{ form_end(delete_form) }}
+        {{ form_start(delete_form) }}
+            <div class="form-group">
+            <input class="btn btn-flat btn-sm btn-labeled btn-danger" type="submit" value="حذف">
+            </div>
+        {{ form_end(delete_form) }}
+    </div>
 {% endblock %}

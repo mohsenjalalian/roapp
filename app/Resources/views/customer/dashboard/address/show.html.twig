@@ -17,32 +17,35 @@
     {% endjavascripts %}
 {% endblock %}
 
+{% block page_title %}
+    آدرس
+{% endblock %}
+{% block breadcrumbs %}
+    <li><a href="{{ path('app_customer_dashboard_address_index') }}">آدرس ها</a></li>
+    <li class="active">نمایش</li>
+{% endblock %}
 {% block main %}
-
-    <div id="map"></div>
-
-    <h2 class="ui header">آدرس</h2>
-
-    <table class="ui celled table">
-        <tbody class="headColor">
-            <tr>
-                <th>Id</th>
-                <td>{{ address.id }}</td>
-            </tr>
-            <tr>
-                <th>وضعیت نمایش</th>
-                <td>{% if address.isPublic %}عمومی{% else %}محرمانه{% endif %}</td>
-            </tr>
-            <tr>
-                <th>آدرس</th>
-                <td id="address" data-lat="{{ address.latitude }}" data-lng="{{ address.longitude }}">{{ address.description }}</td>
-            </tr>
-        </tbody>
-    </table>
-
-            <a href="{{ path('app_customer_dashboard_address_index') }}"><button class="btn">برگشت به لیست</button></a>
-            <a href="{{ path('app_customer_dashboard_address_edit', { 'id': address.id }) }}"><button class="btn">ویرایش</button></a>
-            {{ form_start(delete_form) }}
-            <input class="btn" type="submit" value="حذف">
-
+    <div class="panel">
+        <div class="panel-heading">
+            <span class="panel-title">آدرس</span>
+        </div>
+        <div id="map"></div>
+        <div class="panel-body">
+            <table class="ui celled table">
+                <tbody class="headColor">
+                    <tr>
+                        <th>وضعیت نمایش</th>
+                        <td>{% if address.isPublic %}عمومی{% else %}محرمانه{% endif %}</td>
+                    </tr>
+                    <tr>
+                        <th>آدرس</th>
+                        <td id="address" data-lat="{{ address.latitude }}" data-lng="{{ address.longitude }}">{{ address.description }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div>
+            <a style="margin-right: 10px;margin-bottom: 10px" class="btn btn-sm btn-labeled btn-primary" href="{{ path('app_customer_dashboard_address_index') }}">برگشت به لیست</a>
+        </div>
+    </div>
 {% endblock %}
