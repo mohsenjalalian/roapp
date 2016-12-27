@@ -266,4 +266,48 @@ class UploadManager
 
         return $request->getSchemeAndHttpHost().$path;
     }
+
+    /**
+     * @param string $path
+     * @return string
+     */
+    public function getAbsoluteUrl($path)
+    {
+        if (false !== strpos($path, '://') || '//' === substr($path, 0, 2)) {
+            return $path;
+        }
+
+        if (!$request = $this->requestStack->getMasterRequest()) {
+            if (null !== $this->requestContext && '' !== $host = $this->requestContext->getHost()) {
+                $scheme = $this->requestContext->getScheme();
+                $port = '';
+
+                if ('http' === $scheme && 80 != $this->requestContext->getHttpPort()) {
+                    $port = ':'.$this->requestContext->getHttpPort();
+                } elseif ('https' === $scheme && 443 != $this->requestContext->getHttpsPort()) {
+                    $port = ':'.$this->requestContext->getHttpsPort();
+                }
+
+                if ('/' !== $path[0]) {
+                    $path = rtrim($this->requestContext->getBaseUrl(), '/').'/'.$path;
+                }
+
+                return $scheme.'://'.$host.$port.$path;
+            }
+
+            return $path;
+        }
+
+        if (!$path || '/' !== $path[0]) {
+            $prefix = $request->getPathInfo();
+            $last = strlen($prefix) - 1;
+            if ($last !== $pos = strrpos($prefix, '/')) {
+                $prefix = substr($prefix, 0, $pos).'/';
+            }
+
+            return $request->getUriForPath($prefix.$path);
+        }
+
+        return $request->getSchemeAndHttpHost().$path;
+    }
 }
