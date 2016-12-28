@@ -95,3 +95,40 @@ $(".calc_price_item").on('change', function () {
         }
     });
 });
+
+$("#add_address").on('submit', function (event) {
+    event.preventDefault();
+    var phoneNumber = $("#restaurant_shipment_other_phone").val();
+    $("#add_address #address").append('<input id="reciver_customer_mobile_number"  name="shipment_otherAddress_number" type="hidden" value="'+phoneNumber+'">');
+    var fd = new FormData($('form')[2]);
+    shipmentForm = $('.panel');
+    var $otherPhone = $('.other-phone');
+    var data = {};
+    data[$otherPhone.attr('name')] = $otherPhone.val();
+    var formURL = $(this).attr("action");
+    $.ajax(
+        {
+            url: formURL,
+            data:fd,
+            processData: false,
+            contentType: false,
+            type: "POST",
+            success: function (response) {
+                $('#mapModal').modal('hide');
+
+                $.ajax({
+                    url: shipmentForm.attr('action'),
+                    type: shipmentForm.attr('method'),
+                    data: data,
+                    success: function (html) {
+                        // Replace current position field ...
+                        $('.select-address').replaceWith(
+                            // ... with the returned one from the AJAX response.
+                            $(html).find('.select-address')
+                        );
+                        // Position field now displays the appropriate positions.
+                    }
+                });
+            }
+        });
+});

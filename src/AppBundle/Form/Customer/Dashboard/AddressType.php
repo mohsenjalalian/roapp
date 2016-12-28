@@ -48,7 +48,7 @@ class AddressType extends AbstractType
         $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
             $form = $event->getForm();
 
-            if (!$this->request->query->get('owner')) {
+            if (!$this->request->query->get('owner') && $this->request->get('_route') != 'app_customer_dashboard_shipment_new') {
                 $form->add(
                     'isPublic',
                     CheckboxType::class,

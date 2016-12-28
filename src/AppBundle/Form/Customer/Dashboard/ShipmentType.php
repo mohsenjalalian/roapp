@@ -88,6 +88,7 @@ class ShipmentType extends AbstractType
                 ]
             )
         ;
+        $user = $this->tokenStorage->getToken()->getUser();
         $builder->get('pickUpTime')
             ->addModelTransformer(new DateTimeTransformer());
 
@@ -100,15 +101,18 @@ class ShipmentType extends AbstractType
                 'expanded' => true,
                 'multiple' => false,
                 'query_builder' => function (AddressRepository $addressRepository) use ($phone) {
+                    $user = $this->tokenStorage->getToken()->getUser();
+
                     return $addressRepository->createQueryBuilder('address')
                         ->join('address.customer', 'customer')
-                        ->where('customer.phone = :phone')->setParameter('phone', $phone)
-                        ->andWhere('address.isPublic = :public or address.creator = customer')
-                        ->setParameter('public', true);
+                        ->where('customer.phone = :phone and address.isPublic = :public')
+                        ->orWhere('customer.phone = :phone and address.creator = :user')
+                        ->setParameter('phone', $phone)
+                        ->setParameter('public', true)
+                        ->setParameter('user', $user);
                 },
             ]);
         };
-        $user = $this->tokenStorage->getToken()->getUser();
         $builder->addEventListener(
             FormEvents::PRE_SET_DATA,
             function (FormEvent $event) use ($formModifier) {
