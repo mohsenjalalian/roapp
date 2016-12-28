@@ -4,6 +4,7 @@ namespace AppBundle\Controller\Customer\Dashboard;
 
 use AppBundle\Entity\Driver;
 use AppBundle\Form\Customer\Dashboard\DriverType;
+use Doctrine\ORM\EntityManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -66,7 +67,12 @@ class DriverController extends Controller
             $em = $this->getDoctrine()->getManager();
             $driver->setBusinessUnit($userBusinessUnit);
             $em->persist($driver);
+            /** @var EntityManager $em */
             $em->flush($driver);
+
+            $translated = $this->get('translator');
+            $this->addFlash('registered_success', $translated->trans('driver_registered_successfully'));
+
 
             return $this->redirectToRoute('app_customer_dashboard_driver_show', array('id' => $driver->getId()));
         }
@@ -112,6 +118,8 @@ class DriverController extends Controller
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
             $this->getDoctrine()->getManager()->flush();
+            $translated = $this->get('translator');
+            $this->addFlash('edited_success', $translated->trans('edited_successfully'));
 
             return $this->redirectToRoute('app_customer_dashboard_driver_edit', array('id' => $driver->getId()));
         }
@@ -140,10 +148,13 @@ class DriverController extends Controller
         if ($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
             $em->remove($driver);
+            /** @var EntityManager $em */
             $em->flush($driver);
+            $translated = $this->get('translator');
+            $this->addFlash('deleted_success', $translated->trans('driver_deleted_successfully'));
         }
 
-        return $this->redirectToRoute('driver_index');
+        return $this->redirectToRoute('app_customer_dashboard_driver_index');
     }
 
     /**
