@@ -60,7 +60,8 @@ class Shipment
     protected $otherPhone;
 
     /**
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Address" )
+     * @Assert\NotNull()
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Address")
      */
     protected $otherAddress;
 
