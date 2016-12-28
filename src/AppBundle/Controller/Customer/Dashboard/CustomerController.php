@@ -46,7 +46,7 @@ class CustomerController extends Controller
             $customer,
             [
                 'attr' => [
-                      'id' => 'profile_edit_form_customer',
+                    'id' => 'profile_edit_form_customer',
                 ],
             ]
         );
@@ -66,6 +66,9 @@ class CustomerController extends Controller
                     $em->persist($customer);
                     $em->flush();
 
+                    $translated = $this->get('translator');
+                    $this->addFlash('edited_success', $translated->trans('edited_successfully'));
+
                     return new JsonResponse();
                 } else {
                     return new JsonResponse("current password is wrong");
@@ -73,6 +76,9 @@ class CustomerController extends Controller
             } else {
                 $em->persist($customer);
                 $em->flush();
+
+                $translated = $this->get('translator');
+                $this->addFlash('edited_success', $translated->trans('edited_successfully'));
 
                 return new JsonResponse();
             }

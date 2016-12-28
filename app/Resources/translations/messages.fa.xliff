@@ -58,6 +58,30 @@
                 <source>please try for reassign.thanks</source>
                 <target>لطفا برای انتصاب مجدد تلاش نمایید. با تشکر</target>
              </trans-unit>
+             <trans-unit id="edited_successfully">
+                <source>edited successfully</source>
+                <target>ویرایش با موفقیت انجام شد.</target>
+             </trans-unit>
+             <trans-unit id="shipment_registered_successfully">
+                <source>shipment registered successfully</source>
+                <target>سفارش شما با موفقیت ثبت شد.</target>
+             </trans-unit>
+            <trans-unit id="driver_registered_successfully">
+                <source>driver registered successfully</source>
+                <target>راننده با موفقیت ثبت شد.</target>
+             </trans-unit>
+             <trans-unit id="address_registered_successfully">
+                <source>address registered successfully</source>
+                <target>آدرس با موفقیت ثبت شد.</target>
+             </trans-unit>
+             <trans-unit id="driver_deleted_successfully">
+                <source>drive deleted successfully</source>
+                <target>راننده ی مورد نظر با موفقیت حذف شد.</target>
+             </trans-unit>
+             <trans-unit id="address_deleted_successfully">
+                <source>address deleted successfully</source>
+                <target>آدرسی مورد نظر با موفقیت حذف شد.</target>
+             </trans-unit>
         </body>
     </file>
 </xliff>

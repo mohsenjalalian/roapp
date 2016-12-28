@@ -3,7 +3,6 @@
 namespace AppBundle\Controller\Customer\Dashboard;
 
 use AppBundle\Entity\Address;
-use AppBundle\Entity\BusinessUnit;
 use AppBundle\Entity\Customer;
 use AppBundle\Entity\ShipmentHistory;
 use AppBundle\Form\Customer\Dashboard\AddressType;
@@ -17,7 +16,6 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use AppBundle\Entity\Shipment;
 use Symfony\Component\HttpFoundation\Response;
-use AppBundle\Entity\Driver;
 use r;
 
 /**
@@ -103,6 +101,8 @@ class ShipmentController extends Controller
             if ($selectedDriver) {
                 $this->get('app.shipment_service')->shipmentAssign($shipment, $selectedDriver);
             }
+            $translated = $this->get('translator');
+            $this->addFlash('registered_success', $translated->trans('shipment_registered_successfully'));
 
             return $this->redirectToRoute('app_customer_dashboard_shipment_index');
         }

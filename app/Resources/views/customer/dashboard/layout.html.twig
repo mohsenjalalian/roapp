@@ -104,7 +104,23 @@
                 {% endif %}
             </div>
         {% endif %}
-        {% block main %}{% endblock %}
+        {% for flash_message in app.session.flashBag.get('edited_success') %}
+            <div class="alert alert-info">
+                {{ flash_message }}
+            </div>
+        {% endfor %}
+        {% for flash_message in app.session.flashBag.get('registered_success') %}
+            <div class="alert alert-success">
+                {{ flash_message }}
+            </div>
+        {% endfor %}
+        {% for flash_message in app.session.flashBag.get('deleted_success') %}
+            <div class="alert alert-danger">
+                {{ flash_message }}
+            </div>
+        {% endfor %}
+        {% block main %}
+        {% endblock %}
     </div> <!-- / #content-wrapper -->
     <div id="main-menu-bg"></div>
 {% endblock %}

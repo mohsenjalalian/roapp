@@ -93,6 +93,9 @@ class AddressController extends Controller
                 $em->persist($address);
                 $em->flush();
 
+                $translated = $this->get('translator');
+                $this->addFlash('registered_success', $translated->trans('address_registered_successfully'));
+
                 return $this->redirectToRoute(
                     'app_customer_dashboard_address_show',
                     [
@@ -146,6 +149,9 @@ class AddressController extends Controller
             $em->persist($address);
             $em->flush();
 
+            $translated = $this->get('translator');
+            $this->addFlash('edited_success', $translated->trans('edited_successfully'));
+
             return $this->redirectToRoute('app_customer_dashboard_address_edit', ['id' => $address->getId()]);
         }
 
@@ -174,6 +180,8 @@ class AddressController extends Controller
             $em = $this->getDoctrine()->getManager();
             $em->remove($address);
             $em->flush();
+            $translated = $this->get('translator');
+            $this->addFlash('deleted_success', $translated->trans('address_deleted_successfully'));
         }
 
         return $this->redirectToRoute('app_customer_dashboard_address_index');
