@@ -82,6 +82,10 @@
                 <source>address deleted successfully</source>
                 <target>آدرسی مورد نظر با موفقیت حذف شد.</target>
              </trans-unit>
+             <trans-unit id="address_deleted_unsuccessfully">
+                <source>address_deleted_unsuccessfully</source>
+                <target>آدرسی مورد نظر نمی تواند حذف شود.</target>
+             </trans-unit>
         </body>
     </file>
 </xliff>
