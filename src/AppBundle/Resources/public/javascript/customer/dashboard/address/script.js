@@ -85,3 +85,7 @@ function showMap() {
 $("#address").keyup(function() {
     $("#address_description").val($(this).val());
 });
+
+$('#mapModal').on('shown.bs.modal', function () {
+    google.maps.event.trigger(map, "resize");
+});

@@ -226,6 +226,7 @@ class AddressController extends Controller
                 'description' => $address->getDescription(),
                 'cId' => $address->getCustomer()->getId(),
                 'isPublic' => $address->getIsPublic(),
+                'addressId' => $address->getId(),
             ];
             $res = json_encode($arr);
 
