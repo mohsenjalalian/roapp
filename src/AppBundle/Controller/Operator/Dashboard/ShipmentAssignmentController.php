@@ -29,6 +29,9 @@ class ShipmentAssignmentController extends Controller
             $isSendRequest = $this->get("app.shipment_assignment")
                 ->sendRequest($shipment, $driver);
             if ($isSendRequest) {
+                $translator = $this->get('translator');
+                $this->addFlash('registered_success', $translator->trans('shipment_assigned_successfully'));
+
                 return $this->redirectToRoute(
                     "app_operator_dashboard_shipment_list"
                 );

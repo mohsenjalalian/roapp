@@ -103,8 +103,8 @@ class ShipmentController extends Controller
                 if ($selectedDriver) {
                     $this->get('app.shipment_service')->shipmentAssign($shipment, $selectedDriver);
                 }
-                $translated = $this->get('translator');
-                $this->addFlash('registered_success', $translated->trans('shipment_registered_successfully'));
+                $translator = $this->get('translator');
+                $this->addFlash('registered_success', $translator->trans('shipment_registered_successfully'));
 
                 return $this->redirectToRoute('app_customer_dashboard_shipment_index');
             }

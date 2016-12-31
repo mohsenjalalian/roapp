@@ -69,6 +69,9 @@ class DriverController extends Controller
             $em = $this->getDoctrine()->getManager();
             $em->persist($driver);
             $em->flush();
+            $translator = $this->get('translator');
+            $this->addFlash('registered_success', $translator->trans('driver_registered_successfully'));
+
 
             return $this->redirectToRoute('app_operator_dashboard_driver_show', ['id' => $driver->getId()]);
         }
@@ -132,6 +135,9 @@ class DriverController extends Controller
             $em = $this->getDoctrine()->getManager();
             $em->persist($driver);
             $em->flush();
+            $translator = $this->get('translator');
+            $this->addFlash('edited_success', $translator->trans('edited_successfully'));
+
 
             return new JsonResponse();
         }
@@ -161,6 +167,8 @@ class DriverController extends Controller
             $em = $this->getDoctrine()->getManager();
             $em->remove($driver);
             $em->flush();
+            $translator = $this->get('translator');
+            $this->addFlash('deleted_success', $translator->trans('driver_deleted_successfully'));
         }
 
         return $this->redirectToRoute('app_operator_dashboard_driver_index');

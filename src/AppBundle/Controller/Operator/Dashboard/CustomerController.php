@@ -3,7 +3,6 @@
 namespace AppBundle\Controller\Operator\Dashboard;
 
 use AppBundle\Entity\Customer;
-use AppBundle\Entity\Media;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -70,6 +69,9 @@ class CustomerController extends Controller
             $em = $this->getDoctrine()->getManager();
             $em->persist($customer);
             $em->flush();
+            $translator = $this->get('translator');
+            $this->addFlash('registered_success', $translator->trans('customer_registered_successfully'));
+
 
             // send userName, password and login page link to customer's email
             $router = $this->get('router');
@@ -124,6 +126,9 @@ class CustomerController extends Controller
             $em = $this->getDoctrine()->getManager();
             $em->persist($customer);
             $em->flush();
+            $translator = $this->get('translator');
+            $this->addFlash('edited_success', $translator->trans('edited_successfully'));
+
 
             return $this->redirectToRoute('app_operator_dashboard_customer_edit', ['id' => $customer->getId()]);
         }
@@ -153,10 +158,13 @@ class CustomerController extends Controller
             $em = $this->getDoctrine()->getManager();
             $em->remove($customer);
             $em->flush();
+            $translator = $this->get('translator');
+            $this->addFlash('deleted_success', $translator->trans('customer_deleted_successfully'));
         }
 
         return $this->redirectToRoute('app_operator_dashboard_customer_index');
     }
+
     /**
      * Creates a form to delete a Customer entity.
      *
