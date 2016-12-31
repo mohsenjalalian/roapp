@@ -2,6 +2,7 @@
 
 namespace AppBundle\Repository;
 
+use AppBundle\Entity\Address;
 use AppBundle\Entity\BusinessUnit;
 use AppBundle\Entity\Shipment;
 use Doctrine\ORM\EntityRepository;
@@ -42,5 +43,27 @@ class ShipmentRepository extends EntityRepository
             ->getResult();
 
         return $shipments;
+    }
+
+    /**
+     * @param Address $address
+     * @return bool
+     */
+    public function isShipmentExists(Address $address)
+    {
+        $result = $this->createQueryBuilder('s')
+            ->select('COUNT(s)')
+            ->where('s.ownerAddress=:owner_address')
+            ->orWhere('s.otherAddress=:other_address')
+            ->setParameter('owner_address', $address)
+            ->setParameter('other_address', $address)
+            ->getQuery()
+            ->getSingleScalarResult();
+
+        if ($result == 0) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }

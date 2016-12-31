@@ -4,6 +4,7 @@ namespace AppBundle\Controller\Customer\Dashboard;
 
 use AppBundle\Entity\Customer;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -177,11 +178,21 @@ class AddressController extends Controller
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $em->remove($address);
-            $em->flush();
-            $translated = $this->get('translator');
-            $this->addFlash('deleted_success', $translated->trans('address_deleted_successfully'));
+            try {
+                $em = $this->getDoctrine()->getManager();
+                $isShipmentExists = $this->getDoctrine()->getRepository("AppBundle:Shipment")->isShipmentExists($address);
+                if ($isShipmentExists) {
+                    $em->remove($address);
+                    $em->flush();
+                    $translator = $this->get('translator');
+                    $this->addFlash('deleted_success', $translator->trans('address_deleted_successfully'));
+                } else {
+                    throw new Exception();
+                }
+            } catch (Exception $e) {
+                $translator = $this->get('translator');
+                $this->addFlash('edited_success', $translator->trans('address_deleted_unsuccessfully'));
+            }
         }
 
         return $this->redirectToRoute('app_customer_dashboard_address_index');
