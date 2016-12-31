@@ -5,6 +5,7 @@ namespace AppBundle\Controller\Customer\Dashboard;
 use AppBundle\Entity\Address;
 use AppBundle\Entity\Customer;
 use AppBundle\Entity\ShipmentHistory;
+use AppBundle\Exception\ShipmentException;
 use AppBundle\Form\Customer\Dashboard\AddressType;
 use AppBundle\Form\Customer\Dashboard\ShipmentType;
 use AppBundle\Form\Customer\Dashboard\ValidationCodeType;
@@ -67,59 +68,63 @@ class ShipmentController extends Controller
      */
     public function newAction(Request $request)
     {
-        $customer = $this->getUser();
-        $shipmentService = $this->get('app.shipment_service');
-        $shipment = $shipmentService->shipmentFactory();
-        $addressEntity = new Address();
-        $customerId = $customer->getId(); // get current customer id
-        $address = $this->getDoctrine()
-            ->getRepository("AppBundle:Address")
-            ->getPublicAddressCustomer($customerId);
-        $now = new \DateTime();
-        $tomorrow = $now->add(new \DateInterval('P1D'));
-        $shipment->setPickUpTime($tomorrow);
-        $form = $this->createForm($shipmentService->getShipmentFormNamespace(), $shipment);
-        $addressForm = $this
-            ->createForm(
-                AddressType::class,
-                $addressEntity,
-                [
-                    'action' => $this->generateUrl(
-                        'customer_dashboard_address_add_address'
-                    ),
-                    'attr' => [
-                        'id' => 'add_address',
-                    ],
-                ]
-            )
-        ;
-        $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
-            $this->get('app.shipment_service')->create($shipment, $request);
-            //TODO: Refactor $selectedDriver get request
-            $selectedDriver = $request->request->get('restaurant_shipment')['driver'];
-            if ($selectedDriver) {
-                $this->get('app.shipment_service')->shipmentAssign($shipment, $selectedDriver);
+        try {
+            $customer = $this->getUser();
+            $shipmentService = $this->get('app.shipment_service');
+            $shipment = $shipmentService->shipmentFactory();
+            $addressEntity = new Address();
+            $customerId = $customer->getId(); // get current customer id
+            $address = $this->getDoctrine()
+                ->getRepository("AppBundle:Address")
+                ->getPublicAddressCustomer($customerId);
+            $now = new \DateTime();
+            $tomorrow = $now->add(new \DateInterval('P1D'));
+            $shipment->setPickUpTime($tomorrow);
+            $form = $this->createForm($shipmentService->getShipmentFormNamespace(), $shipment);
+            $addressForm = $this
+                ->createForm(
+                    AddressType::class,
+                    $addressEntity,
+                    [
+                        'action' => $this->generateUrl(
+                            'customer_dashboard_address_add_address'
+                        ),
+                        'attr' => [
+                            'id' => 'add_address',
+                        ],
+                    ]
+                )
+            ;
+            $form->handleRequest($request);
+            if ($form->isSubmitted() && $form->isValid()) {
+                $this->get('app.shipment_service')->create($shipment, $request);
+                //TODO: Refactor $selectedDriver get request
+                $selectedDriver = $request->request->get('restaurant_shipment')['driver'];
+                if ($selectedDriver) {
+                    $this->get('app.shipment_service')->shipmentAssign($shipment, $selectedDriver);
+                }
+                $translated = $this->get('translator');
+                $this->addFlash('registered_success', $translated->trans('shipment_registered_successfully'));
+
+                return $this->redirectToRoute('app_customer_dashboard_shipment_index');
             }
-            $translated = $this->get('translator');
-            $this->addFlash('registered_success', $translated->trans('shipment_registered_successfully'));
 
-            return $this->redirectToRoute('app_customer_dashboard_shipment_index');
+            return $this->render(
+                'customer/dashboard/shipment/new.html.twig',
+                [
+                    'customerId' => $customerId,
+                    'addressFrom' => $addressForm->createView(),
+                    'address' => $address,
+                    'shipment' => $shipment,
+                    'form' => $form->createView(),
+                    'child_form_template' => $form->getConfig()->getOption('template'),
+                    'child_form_javascript' => $form->getConfig()->getOption('javascript'),
+                    'child_form_stylesheet' => $form->getConfig()->getOption('stylesheet'),
+                ]
+            );
+        } catch (ShipmentException $e) {
+            return $this->redirectToRoute('app_customer_dashboard_businessunit_edit');
         }
-
-        return $this->render(
-            'customer/dashboard/shipment/new.html.twig',
-            [
-                'customerId' => $customerId,
-                'addressFrom' => $addressForm->createView(),
-                'address' => $address,
-                'shipment' => $shipment,
-                'form' => $form->createView(),
-                'child_form_template' => $form->getConfig()->getOption('template'),
-                'child_form_javascript' => $form->getConfig()->getOption('javascript'),
-                'child_form_stylesheet' => $form->getConfig()->getOption('stylesheet'),
-            ]
-        );
     }
 
     /**
