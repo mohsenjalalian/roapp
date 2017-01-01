@@ -22,7 +22,7 @@ class ShipmentController extends Controller
      */
     public function trackShipmentAction(Request $request)
     {
-        $conn = r\connect('localhost', '28015', 'roapp', '09126354397');
+        $conn = r\connect('localhost', '28015', 'roapp', $this->getParameter('rethink_password'));
         $result = r\table('shipment')
             ->filter(
                 [

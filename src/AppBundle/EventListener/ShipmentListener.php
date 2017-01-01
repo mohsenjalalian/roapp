@@ -7,6 +7,7 @@
 namespace AppBundle\EventListener;
 
 use AppBundle\Entity\Shipment;
+use Symfony\Component\DependencyInjection\Container;
 use Doctrine\ORM\Event\PreUpdateEventArgs;
 use r;
 
@@ -17,6 +18,20 @@ use r;
 class ShipmentListener
 {
     /**
+     * @var \Symfony\Component\DependencyInjection\Container
+     */
+    private $container;
+
+    /**
+     * ShipmentListener constructor.
+     * @param Container $container
+     */
+    public function __construct(Container $container)
+    {
+        $this->container = $container;
+    }
+
+    /**
      * @param PreUpdateEventArgs $eventArgs
      */
     public function preUpdate(PreUpdateEventArgs $eventArgs)
@@ -24,7 +39,7 @@ class ShipmentListener
         if ($eventArgs->getEntity() instanceof Shipment) {
             if ($eventArgs->hasChangedField('status')) {
                 if (in_array($eventArgs->getEntity()->getStatus(), Shipment::TRACK_ENABLED_STATUSES)) {
-                    $conn = r\connect('localhost', '28015', 'roapp', '09126354397');
+                    $conn = r\connect('localhost', '28015', 'roapp', $this->container->getParameter('rethink_password'));
                     r\table('shipment')
                         ->filter(
                             [
@@ -34,7 +49,7 @@ class ShipmentListener
                         ->update(['status' => "enabled"])
                         ->run($conn);
                 } elseif (in_array($eventArgs->getEntity()->getStatus(), Shipment::TRACK_DISABLED_STATUSES)) {
-                    $conn = r\connect('localhost', '28015', 'roapp', '09126354397');
+                    $conn = r\connect('localhost', '28015', 'roapp', $this->container->getParameter('rethink_password'));
                     r\table('shipment')
                         ->filter(
                             [
