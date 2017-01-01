@@ -1,21 +1,70 @@
-{% extends 'customer/dashboard/base.html.twig' %}
+{% extends 'track_shipment_layout.html.twig' %}
+
 {% block stylesheets %}
+    {{ parent()  }}
     {% stylesheets
     'bundles/app/stylesheets/customer/dashboard/shipment/show/style.css'
     %}
     <link rel="stylesheet" href="{{ asset_url }}" />
     {% endstylesheets %}
 {% endblock %}
+
 {% block javascripts %}
+    {{ parent()  }}
     {% javascripts
-    'assets/vendor/jquery/dist/jquery.js'
     'assets/vendor/socket.io-client/dist/socket.io.js'
     'bundles/app/javascript/track_shipment.js'
+    'bundles/app/javascript/register_rate.js'
     %}
     <script type="text/javascript" src="{{ asset_url }}" ></script>
     <script src="{{ getGoogleMapInitLink() }}"></script>
     {% endjavascripts %}
 {% endblock %}
-{% block body %}
-<div data-token = {{ tracking_token }} id="show_track_map"></div>
+
+{% block main %}
+    <div class="panel">
+    <div class="panel-body">
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>توضیحات</th>
+            <th>وضعیت</th>
+            <th>زمان تحویل</th>
+            <th>زمان ثبت سفارش</th>
+            <th>قیمت</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td>{{ shipment.description }}</td>
+            <td id="shipment_status_customer">
+                {% if shipment.status == constant('STATUS_NOT_ASSIGNED',shipment) %}
+                    <span>انتصاب نشده</span>
+                {% elseif shipment.status == constant('STATUS_ASSIGNED',shipment)  %}
+                    <span>انتصاب شده</span>
+                {% elseif shipment.status == constant('STATUS_CANCEL',shipment) or shipment.status == constant('STATUS_CUSTOMER_FAILED',shipment) %}
+                    <span>کنسل شده توسط مشتری</span>
+                {% elseif shipment.status == constant('STATUS_REJECT',shipment)  %}
+                    <span>کنسل شده توسط اپراتور</span>
+                {% elseif shipment.status == constant('STATUS_DRIVER_FAILED',shipment)  %}
+                    <span>کنسل شده توسط راننده</span>
+                {% else %}
+                    <span>نا معلوم</span>
+                {% endif %}
+            </td>
+            <td>{% if shipment.pickUpTime %}{{ shipment.pickUpTime|date('Y-m-d H:i:s') }}{% endif %}</td>
+            <td>{% if shipment.createdAt %}{{ shipment.createdAt|date('Y-m-d H:i:s') }}{% endif %}</td>
+            <td>{{ shipment.price }}</td>
+        </tr>
+        </tbody>
+    </table>
+    {% if rate ==  null %}
+        <div id="rate_box" class="col-sm-10">
+            <div><h3>ثبت امتیاز:</h3></div>
+            <div class="well">
+                {{ render(controller('AppBundle:Rate:register', { 'id': shipment.id })) }}
+            </div>
+        </div>
+    {% endif %}
+    <div data-token = {{ tracking_token }} id="show_track_map"></div>
 {% endblock %}

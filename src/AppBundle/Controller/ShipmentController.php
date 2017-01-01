@@ -2,9 +2,11 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Entity\Shipment;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use r;
 
@@ -33,12 +35,21 @@ class ShipmentController extends Controller
         /** @var \ArrayObject $current */
         $current = $result->current();
         $trackingToken = $current->getArrayCopy()['tracking_token'];
+        $shipmentId = $current->getArrayCopy()['shipment_id'];
+        $shipment = $this->getDoctrine()->getRepository("AppBundle:Shipment")->findOneBy(['id' => $shipmentId]);
+        if ($shipment instanceof Shipment) {
+            $rate = $this->getDoctrine()->getRepository("AppBundle:Rate")->findOneBy(['shipment' => $shipment]);
 
-        return $this->render(
-            "track_shipment.html.twig",
-            [
-               'tracking_token' => $trackingToken,
-            ]
-        );
+            return $this->render(
+                "track_shipment.html.twig",
+                [
+                    'rate' => $rate,
+                    'shipment' => $shipment,
+                    'tracking_token' => $trackingToken,
+                ]
+            );
+        } else {
+            throw new NotFoundHttpException();
+        }
     }
 }
