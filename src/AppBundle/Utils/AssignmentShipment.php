@@ -193,7 +193,7 @@ class AssignmentShipment
     {
         $currentTime = new \DateTime();
         $expireTime = $assignment->getExpireTime();
-        if ($currentTime <= $expireTime) {
+        if ($currentTime > $expireTime) {
             return true;
         } else {
             return false;
