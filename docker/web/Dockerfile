@@ -35,12 +35,16 @@ RUN apt-get update && DEBIAN_FRONTEND="noninteractive" apt-get install -y --forc
     && python3 /tmp_download/awscli-bundle/install -i /usr/local/aws -b /usr/local/bin/aws \
     && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-RUN apt-get update && \
-    DEBIAN_FRONTEND="noninteractive" apt-get install -y --force-yes php7.0-pgsql
+RUN apt-get update && DEBIAN_FRONTEND="noninteractive" apt-get install -y --force-yes wget \
+    && curl -sL https://deb.nodesource.com/setup_6.x | bash - \
+    && add-apt-repository -y ppa:ondrej/php \
+    && apt-get update \
+    && DEBIAN_FRONTEND="noninteractive" apt-get install -y --force-yes \
+        php7.0-pgsql \
+        nodejs\
+        git
 
-RUN DEBIAN_FRONTEND="noninteractive" apt-get install -y --force-yes nodejs npm git git-core && \
-    npm install -g bower
-
+RUN npm install -g bower
 RUN usermod -u 1000 www-data
 
 # misc commands and configs
@@ -56,6 +60,7 @@ RUN sed -i "s/;date.timezone =.*/date.timezone = UTC/" /etc/php/7.0/fpm/php.ini 
 
 # conf files
 COPY server/sites-enabled/* /etc/nginx/sites-enabled/
+COPY server/custom-nginx.conf /etc/nginx/conf.d/custom-nginx.conf
 COPY server/foodpanda-kibana.conf /etc/syslog-ng/conf.d/foodpanda-kibana.conf
 COPY server/pool.d/x-custom.conf /etc/php/7.0/fpm/pool.d/x-custom.conf
 
@@ -63,24 +68,25 @@ COPY server/pool.d/x-custom.conf /etc/php/7.0/fpm/pool.d/x-custom.conf
 COPY server/runit/nginx.sh  /etc/service/nginx/run
 COPY server/runit/phpfpm.sh /etc/service/phpfpm/run
 COPY server/runit/gearman.sh /etc/service/gearman/run
-#COPY server/runit/workers.sh /etc/service/workers/run
+COPY server/runit/workers.sh /etc/service/workers/run
 COPY server/runit/supervisor.sh /etc/service/supervisor/run
 
 # startup scripts
-COPY ./scripts/00_project_init.sh /etc/my_init.d/00_project_init.sh
 COPY ./scripts/01_get-configs.sh /etc/my_init.d/01_get-configs.sh
-#COPY ./scripts/02_new-relic.sh /etc/my_init.d/02_new-relic.sh
-#COPY ./scripts/03_configure-logging.sh /etc/my_init.d/03_configure-logging.sh
-#COPY ./scripts/04_enable-xdebug-if-dev.sh /etc/my_init.d/04_enable-xdebug-if-dev.sh
+COPY ./scripts/02_new-relic.sh /etc/my_init.d/02_new-relic.sh
+COPY ./scripts/03_configure-logging.sh /etc/my_init.d/03_configure-logging.sh
+COPY ./scripts/04_enable-xdebug-if-dev.sh /etc/my_init.d/04_enable-xdebug-if-dev.sh
+COPY ./scripts/05_init_project.sh /etc/my_init.d/05_init_project.sh
 
 WORKDIR /var/www
+ADD . .
 
 # permissions and owner files changes
 RUN chmod +x /etc/service/nginx/run \
     && chmod +x /etc/service/phpfpm/run \
     && chmod +x /etc/service/gearman/run \
     && chmod +x /etc/service/supervisor/run \
-    && chmod +x /etc/my_init.d/* \
+    && chmod +x ./scripts/* \
     && chown -R www-data:www-data . /data/log
 
 EXPOSE 80

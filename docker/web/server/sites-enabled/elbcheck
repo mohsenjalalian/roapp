@@ -1,0 +1,23 @@
+#this is not really a default vhost now, but purely a vhost for dealing with AWS ELB's hostcheck
+server {
+  listen 80;
+  server_name ~^(10\.)?(.+)$ localhost;
+
+  root /var/www;
+  add_header    Cache-Control  no-cache;
+
+  expires off;
+  autoindex off;
+  charset utf-8;
+
+  access_log off;
+
+  location / {
+    fastcgi_split_path_info ^(.+\.php)(/.+)$;
+    fastcgi_pass unix:/run/phpfpm.sock;
+    fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+    fastcgi_param SCRIPT_NAME $fastcgi_script_name;
+    fastcgi_index health.php;
+    include fastcgi_params;
+  }
+}

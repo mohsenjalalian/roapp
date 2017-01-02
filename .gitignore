@@ -31,3 +31,11 @@
 !/app/data
 /app/data/*
 !app/data/.gitkeep
+
+!/docker/web/.ssh
+/docker/web/.ssh/*
+!docker/web/.ssh/.gitkeep
+/.ssh/
+/.cache/
+/.local/
+/.config/
