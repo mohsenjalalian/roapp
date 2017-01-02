@@ -99,9 +99,11 @@ class ShipmentController extends Controller
             if ($form->isSubmitted() && $form->isValid()) {
                 $this->get('app.shipment_service')->create($shipment, $request);
                 //TODO: Refactor $selectedDriver get request
-                $selectedDriver = $request->request->get('restaurant_shipment')['driver'];
-                if ($selectedDriver) {
-                    $this->get('app.shipment_service')->shipmentAssign($shipment, $selectedDriver);
+                if (isset($request->request->get('restaurant_shipment')['driver'])) {
+                    $selectedDriver = $request->request->get('restaurant_shipment')['driver'];
+                    if ($selectedDriver) {
+                        $this->get('app.shipment_service')->shipmentAssign($shipment, $selectedDriver);
+                    }
                 }
                 $translated = $this->get('translator');
                 $this->addFlash('registered_success', $translated->trans('shipment_registered_successfully'));
