@@ -177,8 +177,9 @@ class ShipmentService
     {
         $em = $this->container->get('doctrine.orm.entity_manager');
         $shipmentHistory = new ShipmentHistory();
-        if ($this->container->get('security.token_storage')->getToken() instanceof TokenStorage) {
-            $shipmentHistory->setActor($this->container->get('security.token_storage')->getToken()->getUser());
+        $token = $this->container->get('security.token_storage')->getToken();
+        if ($token instanceof TokenStorage) {
+            $shipmentHistory->setActor($token);
         } else {
             $shipmentHistory->setActor(null);
         }
