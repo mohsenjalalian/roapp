@@ -174,12 +174,16 @@ class ShipmentService
      */
     public function addHistory(Shipment $shipment, $action)
     {
-        $customer = $this->container->get('security.token_storage')->getToken()->getUser();
         $em = $this->container->get('doctrine.orm.entity_manager');
-
         $shipmentHistory = new ShipmentHistory();
+        if ($this->container->get('security.token_storage')->getToken()->getUser() instanceof Customer) {
+            $customer = $this->container->get('security.token_storage')->getToken()->getUser();
+            $shipmentHistory->setActor($customer);
+        } else {
+            $shipmentHistory->setActor(null);
+        }
+
         $shipmentHistory->setAction($action);
-        $shipmentHistory->setActor($customer);
         $shipmentHistory->setShipment($shipment);
 
         $em->persist($shipmentHistory);
