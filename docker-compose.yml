@@ -8,10 +8,11 @@ services:
             - db
         volumes:
             - .:/var/www
+            - $HOME/.ssh:/var/.ssh
     db:
         image: postgres
         volumes:
-            - ./app/data:/var/lib/postgresql/data
+            - ./app/data/postgres:/var/lib/postgresql/data
         environment:
             POSTGRES_PASSWORD: roapp
             POSTGRES_USER: roapp

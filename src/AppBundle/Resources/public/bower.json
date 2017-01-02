@@ -20,6 +20,6 @@
     "jquery": "^3.1.1",
     "dropzone": "^4.3.0",
     "bootstrap": "^3.3.7",
-    "roapp-pixel-admin": "git@gitlab.com:mohsenjalalian.ir/roapp-pixel-admin.git"
+    "font-awesome": "fontawesome#^4.7.0"
   }
 }
