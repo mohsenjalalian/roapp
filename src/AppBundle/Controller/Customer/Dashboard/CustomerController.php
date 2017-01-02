@@ -66,8 +66,8 @@ class CustomerController extends Controller
                     $em->persist($customer);
                     $em->flush();
 
-                    $translated = $this->get('translator');
-                    $this->addFlash('edited_success', $translated->trans('edited_successfully'));
+                    $translator = $this->get('translator');
+                    $this->addFlash('edited_success', $translator->trans('edited_successfully'));
 
                     return new JsonResponse();
                 } else {
@@ -77,8 +77,8 @@ class CustomerController extends Controller
                 $em->persist($customer);
                 $em->flush();
 
-                $translated = $this->get('translator');
-                $this->addFlash('edited_success', $translated->trans('edited_successfully'));
+                $translator = $this->get('translator');
+                $this->addFlash('edited_success', $translator->trans('edited_successfully'));
 
                 return new JsonResponse();
             }

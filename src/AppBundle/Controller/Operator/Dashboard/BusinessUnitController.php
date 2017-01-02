@@ -91,6 +91,8 @@ class BusinessUnitController extends Controller
             $em = $this->getDoctrine()->getManager();
             $em->persist($businessUnit);
             $em->flush();
+            $translator = $this->get('translator');
+            $this->addFlash('registered_success', $translator->trans('business_unit_registered_successfully'));
 
             return $this->redirectToRoute('app_operator_dashboard_businessunit_show', ['id' => $businessUnit->getId()]);
         }
@@ -137,6 +139,9 @@ class BusinessUnitController extends Controller
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
             $this->getDoctrine()->getManager()->flush();
+            $translator = $this->get('translator');
+            $this->addFlash('edited_success', $translator->trans('edited_successfully'));
+
 
             return $this->redirectToRoute('app_operator_dashboard_businessunit_edit', ['id' => $businessUnit->getId()]);
         }

@@ -67,6 +67,9 @@ class OperatorController extends Controller
             $em = $this->getDoctrine()->getManager();
             $em->persist($operator);
             $em->flush($operator);
+            $translator = $this->get('translator');
+            $this->addFlash('registered_success', $translator->trans('operator_registered_successfully'));
+
 
             return $this->redirectToRoute('app_operator_dashboard_operator_show', array('id' => $operator->getId()));
         }
@@ -112,6 +115,9 @@ class OperatorController extends Controller
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
             $this->getDoctrine()->getManager()->flush();
+            $translator = $this->get('translator');
+            $this->addFlash('edited_success', $translator->trans('edited_successfully'));
+
 
             return $this->redirectToRoute('app_operator_dashboard_operator_edit', array('id' => $operator->getId()));
         }
@@ -141,6 +147,8 @@ class OperatorController extends Controller
             $em = $this->getDoctrine()->getManager();
             $em->remove($operator);
             $em->flush($operator);
+            $translator = $this->get('translator');
+            $this->addFlash('deleted_success', $translator->trans('operator_deleted_successfully'));
         }
 
         return $this->redirectToRoute('app_operator_dashboard_operator_index');

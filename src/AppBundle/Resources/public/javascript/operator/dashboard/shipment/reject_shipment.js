@@ -16,7 +16,10 @@ $(document).ready(function () {
             data: {id:shipmentID},
             type: "POST",
             success: function (response) {
+                $("#alert_msg_reject_shipment-by-operator").empty();
                 $(".shipment_assign_list"+response).remove();
+                $("#alert_msg_reject_shipment-by-operator").append('<p>سفارش مورد نظر با موفقیت لغو گردید.</p>').fadeIn().delay(3000).fadeOut();
+                $("#alert_msg_reject_shipment-by-operator").css('display','block');
             }
         });
     })

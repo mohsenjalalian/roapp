@@ -70,8 +70,8 @@ class DriverController extends Controller
             /** @var EntityManager $em */
             $em->flush($driver);
 
-            $translated = $this->get('translator');
-            $this->addFlash('registered_success', $translated->trans('driver_registered_successfully'));
+            $translator = $this->get('translator');
+            $this->addFlash('registered_success', $translator->trans('driver_registered_successfully'));
 
 
             return $this->redirectToRoute('app_customer_dashboard_driver_show', array('id' => $driver->getId()));
@@ -118,8 +118,8 @@ class DriverController extends Controller
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
             $this->getDoctrine()->getManager()->flush();
-            $translated = $this->get('translator');
-            $this->addFlash('edited_success', $translated->trans('edited_successfully'));
+            $translator = $this->get('translator');
+            $this->addFlash('edited_success', $translator->trans('edited_successfully'));
 
             return $this->redirectToRoute('app_customer_dashboard_driver_edit', array('id' => $driver->getId()));
         }
@@ -150,8 +150,8 @@ class DriverController extends Controller
             $em->remove($driver);
             /** @var EntityManager $em */
             $em->flush($driver);
-            $translated = $this->get('translator');
-            $this->addFlash('deleted_success', $translated->trans('driver_deleted_successfully'));
+            $translator = $this->get('translator');
+            $this->addFlash('deleted_success', $translator->trans('driver_deleted_successfully'));
         }
 
         return $this->redirectToRoute('app_customer_dashboard_driver_index');

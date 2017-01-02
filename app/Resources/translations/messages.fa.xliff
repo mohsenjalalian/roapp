@@ -59,27 +59,55 @@
                 <target>لطفا برای انتصاب مجدد تلاش نمایید. با تشکر</target>
              </trans-unit>
              <trans-unit id="edited_successfully">
-                <source>edited successfully</source>
+                <source>edited_successfully</source>
                 <target>ویرایش با موفقیت انجام شد.</target>
              </trans-unit>
              <trans-unit id="shipment_registered_successfully">
-                <source>shipment registered successfully</source>
+                <source>shipment_registered_successfully</source>
                 <target>سفارش شما با موفقیت ثبت شد.</target>
              </trans-unit>
+             <trans-unit id="shipment_assigned_successfully">
+                <source>shipment_assigned_successfully</source>
+                <target>سفارش شما با موفقیت انتصاب شد.</target>
+             </trans-unit>
             <trans-unit id="driver_registered_successfully">
-                <source>driver registered successfully</source>
+                <source>driver_registered_successfully</source>
                 <target>راننده با موفقیت ثبت شد.</target>
              </trans-unit>
              <trans-unit id="address_registered_successfully">
-                <source>address registered successfully</source>
+                <source>address_registered_successfully</source>
                 <target>آدرس با موفقیت ثبت شد.</target>
              </trans-unit>
+              <trans-unit id="business_unit_registered_successfully">
+                 <source>business_unit_registered_successfully</source>
+                 <target>واحد شغلی با موفقیت ثبت شد.</target>
+             </trans-unit>
+             <trans-unit id="operator_registered_successfully">
+                 <source>operator_registered_successfully</source>
+                 <target>اپراتور با موفقیت ثبت شد.</target>
+             </trans-unit>
+             <trans-unit id="customer_registered_successfully">
+                 <source>customer_registered_successfully</source>
+                 <target>مشتری با موفقیت ثبت شد.</target>
+             </trans-unit>
              <trans-unit id="driver_deleted_successfully">
-                <source>drive deleted successfully</source>
+                <source>driver_deleted_successfully</source>
                 <target>راننده ی مورد نظر با موفقیت حذف شد.</target>
              </trans-unit>
+             <trans-unit id="business_unit_deleted_successfully">
+                <source>business_unit_deleted_successfully</source>
+                <target>واحد شغلی مورد نظر با موفقیت حذف شد.</target>
+             </trans-unit>
+             <trans-unit id="operator_deleted_successfully">
+                <source>operator_deleted_successfully</source>
+                <target>اپراتور مورد نظر با موفقیت حذف شد.</target>
+             </trans-unit>
+             <trans-unit id="customer_deleted_successfully">
+                <source>customer_deleted_successfully</source>
+                <target>مشتری مورد نظر با موفقیت حذف شد.</target>
+             </trans-unit>
              <trans-unit id="address_deleted_successfully">
-                <source>address deleted successfully</source>
+                <source>address_deleted_successfully</source>
                 <target>آدرسی مورد نظر با موفقیت حذف شد.</target>
              </trans-unit>
              <trans-unit id="address_deleted_unsuccessfully">
