@@ -12,6 +12,7 @@ use AppBundle\Utils\Shipment\ShipmentProcessInterface;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\HttpFoundation\Request;
 use r;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 
 /**
  * Class PaymentService
@@ -174,12 +175,15 @@ class ShipmentService
      */
     public function addHistory(Shipment $shipment, $action)
     {
-        $customer = $this->container->get('security.token_storage')->getToken()->getUser();
         $em = $this->container->get('doctrine.orm.entity_manager');
-
         $shipmentHistory = new ShipmentHistory();
+        $token = $this->container->get('security.token_storage')->getToken();
+        if ($token instanceof TokenStorage) {
+            $shipmentHistory->setActor($token);
+        } else {
+            $shipmentHistory->setActor(null);
+        }
         $shipmentHistory->setAction($action);
-        $shipmentHistory->setActor($customer);
         $shipmentHistory->setShipment($shipment);
 
         $em->persist($shipmentHistory);
