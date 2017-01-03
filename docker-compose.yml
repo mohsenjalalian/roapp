@@ -3,12 +3,12 @@ services:
     web:
         build: ./docker/web
         ports:
-            - 80:80
+            - 8080:80
         depends_on:
             - db
+            - rethink_db
         volumes:
             - .:/var/www
-            - $HOME/.ssh:/var/.ssh
     db:
         image: postgres
         volumes:
@@ -17,3 +17,8 @@ services:
             POSTGRES_PASSWORD: roapp
             POSTGRES_USER: roapp
             POSTGRES_DB: roapp
+    rethink_db:
+        image: rethinkdb
+        volumes:
+            - ./app/data/rethinkdb:/data
+
