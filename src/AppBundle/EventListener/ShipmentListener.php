@@ -39,7 +39,12 @@ class ShipmentListener
         if ($eventArgs->getEntity() instanceof Shipment) {
             if ($eventArgs->hasChangedField('status')) {
                 if (in_array($eventArgs->getEntity()->getStatus(), Shipment::TRACK_ENABLED_STATUSES)) {
-                    $conn = r\connect('localhost', '28015', 'roapp', $this->container->getParameter('rethink_password'));
+                    $conn = r\connect(
+                        $this->container->getParameter('rethinkdb_host'),
+                        $this->container->getParameter('rethinkdb_port'),
+                        'roapp',
+                        $this->container->getParameter('rethink_password')
+                    );
                     r\table('shipment')
                         ->filter(
                             [
@@ -49,7 +54,12 @@ class ShipmentListener
                         ->update(['status' => "enabled"])
                         ->run($conn);
                 } elseif (in_array($eventArgs->getEntity()->getStatus(), Shipment::TRACK_DISABLED_STATUSES)) {
-                    $conn = r\connect('localhost', '28015', 'roapp', $this->container->getParameter('rethink_password'));
+                    $conn = r\connect(
+                        $this->container->getParameter('rethinkdb_host'),
+                        $this->container->getParameter('rethinkdb_port'),
+                        'roapp',
+                        $this->container->getParameter('rethink_password')
+                    );
                     r\table('shipment')
                         ->filter(
                             [
