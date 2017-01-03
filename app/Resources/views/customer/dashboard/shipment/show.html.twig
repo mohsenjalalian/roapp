@@ -99,11 +99,6 @@
         {#<a id="cancel_button"><button>کنسل</button></a>#}
         <a id="fail_button_customer"><button class="btn">لغو</button></a>
     {% endif %}
-    <div style="margin-top:10px;margin-bottom: 30px;">
-        {{ form_start(delete_form) }}
-        <input class="btn btn-danger" type="submit" value="حذف">
-        {{ form_end(delete_form) }}
-    </div>
     <div id="valid_code_form_section">
     {% if shipment.status == constant('STATUS_ON_PICK_UP',shipment) %}
         <div class="ui horizontal divider header">ارسال کد دریافتی</div>
