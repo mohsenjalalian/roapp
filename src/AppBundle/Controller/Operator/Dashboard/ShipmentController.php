@@ -146,7 +146,7 @@ class ShipmentController extends Controller
             ->getRepository('AppBundle:Shipment')
             ->createQueryBuilder('s')
             ->where('s.status=:notAssign')
-            ->setParameter('notAssign', 0)
+            ->setParameter('notAssign', Shipment::STATUS_NOT_ASSIGNED)
             ->orderBy('s.pickUpTime', 'Asc')
             ->getQuery()
         ;

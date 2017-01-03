@@ -31,6 +31,8 @@
                         <td>آزاد</td>
                     {% elseif driver.status == constant('STATUS_BUSY',driver) %}
                         <td>مشغول</td>
+                    {% elseif driver.status == constant('STATUS_NOT_AVAILABLE',driver) %}
+                        <td>خارج از دسترس</td>
                     {% else %}
                         <td>درحال بررسی درخواست</td>
                     {% endif %}

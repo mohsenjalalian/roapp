@@ -111,7 +111,7 @@ class Driver extends Person
     public function __construct()
     {
         parent::__construct();
-        $this->status = self::STATUS_FREE;
+        $this->status = self::STATUS_NOT_AVAILABLE;
         $this->isActive = true;
     }
 
