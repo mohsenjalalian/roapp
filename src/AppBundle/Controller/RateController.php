@@ -49,7 +49,7 @@ class RateController extends Controller
             return new JsonResponse(Response::HTTP_OK);
         }
 
-        return $this->render('register_rate.html.twig', [
+        return $this->render('shipment/register_rate.html.twig', [
             'shipment' => $shipment,
             'rate_form' => $rateForm->createView(),
         ]);
