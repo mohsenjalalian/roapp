@@ -2,17 +2,17 @@ var socket = io('http://localhost:4000');
 var map;
 var marker;
 var line;
-function initMap() {
-    var tehran = {lat: 35.78819000, lng: 51.45983810};
-    map = new google.maps.Map(document.getElementById('show_track_map'), {
-        zoom: 16,
-        center: tehran
-    });
-    marker = new google.maps.Marker({
-        position: tehran,
-        map: map
-    });
-}
+// function initMap() {
+//     var tehran = {lat: 35.78819000, lng: 51.45983810};
+//     map = new google.maps.Map(document.getElementById('show_track_map'), {
+//         zoom: 16,
+//         center: tehran
+//     });
+//     marker = new google.maps.Marker({
+//         position: tehran,
+//         map: map
+//     });
+// }
 $(document).ready(function () {
     var token = $("#show_track_map").data('token');
     socket.emit('data', token);

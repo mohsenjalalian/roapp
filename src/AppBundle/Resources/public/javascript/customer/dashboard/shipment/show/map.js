@@ -5,45 +5,45 @@ var socket = io('http://localhost:4000');
 var map;
 var marker;
 var line;
-var token = $("#show-shipment-map").data('token');
 
-function initMap() {
-    var tehran = {lat: 35.78819000, lng: 51.45983810};
-    map = new google.maps.Map(document.getElementById('show-shipment-map'), {
-        zoom: 16,
-        center: tehran
-    });
-    marker = new google.maps.Marker({
-        position: tehran,
-        map: map
-    });
-}
-socket.emit('data', token);
-socket.on('chat message', function(msg){
-    var obj = JSON.parse(msg);
-    newLat = obj.new_val.lat;
-    newLng = obj.new_val.lng;
 
-    oldLat = marker.position.lat();
-    oldLng = marker.position.lng();
-
-    marker.setPosition( new google.maps.LatLng( newLat, newLng) );
-    map.panTo( new google.maps.LatLng( newLat, newLng) );
-
-    line = new google.maps.Polyline({
-        path: [
-            new google.maps.LatLng(oldLat, oldLng),
-            new google.maps.LatLng(newLat, newLng)
-        ],
-        strokeColor: "#CCE6A4",
-        strokeOpacity: 1.0,
-        strokeWeight: 7,
-        map: map
-    });
-
-});
-
+// function initMap() {
+//     var tehran = {lat: 35.78819000, lng: 51.45983810};
+//     map = new google.maps.Map(document.getElementById('show-shipment-map'), {
+//         zoom: 16,
+//         center: tehran
+//     });
+//     marker = new google.maps.Marker({
+//         position: tehran,
+//         map: map
+//     });
+// }
 $(document).ready(function () {
+    var token = $("#show-shipment-map").data('token');
+    socket.emit('data', token);
+    socket.on('chat message', function(msg){
+        var obj = JSON.parse(msg);
+        newLat = obj.new_val.lat;
+        newLng = obj.new_val.lng;
+
+        oldLat = marker.position.lat();
+        oldLng = marker.position.lng();
+
+        marker.setPosition( new google.maps.LatLng( newLat, newLng) );
+        map.panTo( new google.maps.LatLng( newLat, newLng) );
+
+        line = new google.maps.Polyline({
+            path: [
+                new google.maps.LatLng(oldLat, oldLng),
+                new google.maps.LatLng(newLat, newLng)
+            ],
+            strokeColor: "#CCE6A4",
+            strokeOpacity: 1.0,
+            strokeWeight: 7,
+            map: map
+        });
+
+    });
     $.ajax({
         url: "load_map",
         dataType: "json",
