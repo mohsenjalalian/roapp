@@ -45,6 +45,13 @@ RUN apt-get update && DEBIAN_FRONTEND="noninteractive" apt-get install -y --forc
         git
 
 RUN npm install -g bower
+RUN apt-get install -y --force-yes git-core curl zlib1g-dev build-essential libssl-dev libreadline-dev libyaml-dev libsqlite3-dev sqlite3 libxml2-dev libxslt1-dev libcurl4-openssl-dev python-software-properties libffi-dev nodejs
+RUN apt-get install -y --force-yes  ruby-full
+
+
+RUN gem install sass --no-ri --no-rdoc
+RUN gem install compass --no-ri --no-rdoc
+
 RUN usermod -u 1000 www-data
 
 # misc commands and configs

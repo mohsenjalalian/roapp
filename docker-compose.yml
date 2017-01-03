@@ -3,7 +3,7 @@ services:
     web:
         build: ./docker/web
         ports:
-            - 8080:80
+            - 8086:80
         depends_on:
             - db
             - rethink_db
@@ -22,3 +22,9 @@ services:
         volumes:
             - ./app/data/rethinkdb:/data
 
+    phppgadmin:
+        image: clue/adminer
+        depends_on:
+            - db
+        ports:
+            - 8012:80
