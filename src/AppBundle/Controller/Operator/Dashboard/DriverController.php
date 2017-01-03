@@ -32,10 +32,12 @@ class DriverController extends Controller
     {
         $query = $this->getDoctrine()
             ->getRepository('AppBundle:Driver')
-            ->createQueryBuilder('a')
-            ->orderBy('a.id', 'Asc')
+            ->createQueryBuilder('d')
+            ->where('d.businessUnit IS NULL')
+            ->orderBy('d.id', 'Asc')
             ->getQuery()
         ;
+
         $paginator  = $this->get('knp_paginator');
         $pagination = $paginator->paginate(
             $query, /* query NOT result */
@@ -193,6 +195,7 @@ class DriverController extends Controller
                 ->getRepository('AppBundle:Driver')
                 ->createQueryBuilder('d')
                 ->where("d.status=:free")
+                ->andWhere('d.businessUnit IS NULL')
                 ->setParameter('free', Driver::STATUS_FREE)
                 ->orderBy('d.fullName', 'Asc')
                 ->getQuery()
