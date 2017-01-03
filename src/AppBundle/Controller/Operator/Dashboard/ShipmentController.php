@@ -62,7 +62,12 @@ class ShipmentController extends Controller
      */
     public function showAction(Shipment $shipment)
     {
-        $conn = r\connect('localhost', '28015', 'roapp', $this->getParameter('rethink_password'));
+        $conn = r\connect(
+            $this->getParameter('rethinkdb_host'),
+            $this->getParameter('rethinkdb_port'),
+            'roapp',
+            $this->getParameter('rethink_password')
+        );
         $t = r\table('shipment')
             ->filter(
                 [
@@ -174,7 +179,12 @@ class ShipmentController extends Controller
     public function loadMapAction(Request $request)
     {
 
-        $conn = r\connect('localhost', '28015', 'roapp', $this->getParameter('rethink_password'));
+        $conn = r\connect(
+            $this->getParameter('rethinkdb_host'),
+            $this->getParameter('rethinkdb_port'),
+            'roapp',
+            $this->getParameter('rethink_password')
+        );
         if (!isset($conn)) {
             return new JsonResponse(null);
         }

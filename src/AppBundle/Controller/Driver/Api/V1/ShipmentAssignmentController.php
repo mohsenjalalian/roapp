@@ -43,7 +43,12 @@ class ShipmentAssignmentController extends Controller
                 ]
             );
         } else {
-            $conn = r\connect('localhost', '28015', 'roapp', $this->getParameter('rethink_password'));
+            $conn = r\connect(
+                $this->getParameter('rethinkdb_host'),
+                $this->getParameter('rethinkdb_port'),
+                'roapp',
+                $this->getParameter('rethink_password')
+            );
             $result = r\table('shipment')
                 ->filter(
                     [

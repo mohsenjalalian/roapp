@@ -65,7 +65,12 @@ class ShipmentService
 
         $this->addHistory($shipment, ShipmentHistory::ACTION_CREATE);
 
-        $conn = r\connect('localhost', '28015', 'roapp', $this->container->getParameter('rethink_password'));
+        $conn = r\connect(
+            $this->container->getParameter('rethinkdb_host'),
+            $this->container->getParameter('rethinkdb_port'),
+            'roapp',
+            $this->container->getParameter('rethink_password')
+        );
         $driverToken = uniqid();
         $trackingToken = uniqid();
         $document = [
