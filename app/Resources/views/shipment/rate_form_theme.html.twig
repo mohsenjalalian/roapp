@@ -1,0 +1,23 @@
+{% extends 'bootstrap_3_layout.html.twig' %}
+
+{% block _rate_point_widget %}
+    <div class="form-group">
+        <label class="col-sm-5 control-label control-label required">امتیاز از 5 :</label>
+        <div class="col-sm-5">
+            <div id="rate_point" placeholder="امتیاز از 5 :">
+                <div class="stars">
+                    <input class="star star-5" type="radio" id="star-5" name="rate[point]" required="required" value="5" />
+                    <label class="required star star-5" for="star-5"></label>
+                    <input type="radio" class="star star-4" id="star-4" name="rate[point]" required="required" value="4" />
+                    <label class="required star star-4" for="star-4"></label>
+                    <input class="star star-3" type="radio" id="star-3" name="rate[point]" required="required" value="3" />
+                    <label class="required star star-3" for="star-3"></label>
+                    <input class="star star-2" type="radio" id="star-2" name="rate[point]" required="required" value="2" />
+                    <label class="required star star-2" for="star-2"></label>
+                    <input class="star star-1" type="radio" id="star-1" name="rate[point]" required="required" value="1" />
+                    <label class="required star star-1" for="star-1"></label>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -1,9 +1,10 @@
-{% extends 'track_shipment_layout.html.twig' %}
+{% extends 'shipment/track_shipment_layout.html.twig' %}
 
 {% block stylesheets %}
     {{ parent()  }}
     {% stylesheets
     'bundles/app/stylesheets/customer/dashboard/shipment/show/style.css'
+    'bundles/app/stylesheets/rate.css'
     %}
     <link rel="stylesheet" href="{{ asset_url }}" />
     {% endstylesheets %}
@@ -59,7 +60,7 @@
         </tbody>
     </table>
     {% if rate ==  null %}
-        <div id="rate_box" class="col-sm-10">
+        <div id="rate_box" class="col-sm-12">
             <div><h3>ثبت امتیاز:</h3></div>
             <div class="well">
                 {{ render(controller('AppBundle:Rate:register', { 'id': shipment.id })) }}

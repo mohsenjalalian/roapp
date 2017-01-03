@@ -41,7 +41,7 @@ class ShipmentController extends Controller
             $rate = $this->getDoctrine()->getRepository("AppBundle:Rate")->findOneBy(['shipment' => $shipment]);
 
             return $this->render(
-                "track_shipment.html.twig",
+                "shipment/track_shipment.html.twig",
                 [
                     'rate' => $rate,
                     'shipment' => $shipment,
