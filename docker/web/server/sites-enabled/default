@@ -1,5 +1,7 @@
 server {
-    server_name roapp.localhost;
+    server_name roapp.localhost
+                roapp.modi.ir
+                ;
     root /var/www/web;
 
     location / {
