@@ -2,8 +2,11 @@
  * Created by mohsenjalalian on 11/14/16.
  */
 var map;
-var marker;
+var marker = [];
+var markers = [];
 var line;
+var icon = $('.tracking-element').data('icon');
+var markerList = [];
 
 function initMap() {
     var tehran = {lat: 35.78819000, lng: 51.45983810};
@@ -11,8 +14,9 @@ function initMap() {
         zoom: 16,
         center: tehran
     });
-    marker = new google.maps.Marker({
+    markers ['init'] = new google.maps.Marker({
         position: tehran,
-        map: map
+        map: map,
+        icon: icon
     });
 }

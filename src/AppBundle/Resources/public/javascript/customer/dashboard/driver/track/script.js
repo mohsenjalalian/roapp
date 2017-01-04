@@ -7,13 +7,23 @@ $(".tracking-element").each(function (index, item) {
     socket.emit('data', token);
 
     socket.on('chat message', function (msg) {
+        var tracking_token = msg.tracking_token;
         var location = JSON.parse(msg.location);
         newLat = location.new_val.lat;
         newLng = location.new_val.lng;
 
-        marker = new google.maps.Marker({
-            position: new google.maps.LatLng(newLat, newLng),
-            map: map
-        });
+        if (markers.indexOf(tracking_token) == -1) {
+            marker [tracking_token] = new google.maps.Marker({
+                position: new google.maps.LatLng(newLat, newLng),
+                map: map,
+                icon: icon
+            });
+        } else {
+            marker[tracking_token].setPosition( new google.maps.LatLng( newLat, newLng) );
+            map.panTo( new google.maps.LatLng( newLat, newLng ) );
+        }
+
+        markers.push(tracking_token);
+
     })
 });

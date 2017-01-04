@@ -22,8 +22,8 @@
 {% block page_title %}
     ردیابی راننده
 {% endblock %}
-
 {% block main %}
+    {% set motorIcon = asset('bundles/app/images/motor.png') %}
     <div class="panel">
         <div class="panel-heading">
             <span class="panel-title">ردیابی راننده</span>
@@ -31,7 +31,7 @@
         <div class="panel-body">
             <div class="tracking-div">
                 {% for trackingToken in trackingTokens %}
-                    <div class="tracking-element" data-track = "{{ trackingToken }}"></div>
+                    <div class="tracking-element" data-track = "{{ trackingToken }}" data-icon = "{{ motorIcon }}"></div>
                 {% endfor %}
             </div>
             <div id="track-shipment-map"></div>
