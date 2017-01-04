@@ -27,3 +27,15 @@ $(".tracking-element").each(function (index, item) {
 
     })
 });
+
+$(document).ready(function () {
+    $.ajax({
+        url: "init_map",
+        dataType: "json",
+        data: {test: 'test'},
+        type: "POST",
+        success: function (result) {
+            console.log(result);
+        }
+    })
+});

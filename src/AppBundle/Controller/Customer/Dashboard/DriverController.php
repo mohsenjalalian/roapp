@@ -9,6 +9,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use r;
 
@@ -60,6 +61,16 @@ class DriverController extends Controller
         return $this->render('customer/dashboard/driver/track.html.twig', [
             'trackingTokens' => $trackingTokens,
         ]);
+    }
+
+    /**
+     * @Route("/init_map",name="app_customer_dashboard_driver_init_map")
+     * @param Request $request
+     * @return JsonResponse | null
+     */
+    public function initMapAction(Request $request)
+    {
+        return new JsonResponse('test');
     }
     /**
      * Lists all driver entities.
