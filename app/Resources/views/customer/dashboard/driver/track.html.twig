@@ -1,0 +1,40 @@
+{% extends ':customer/dashboard:layout.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent()  }}
+    {% stylesheets 'bundles/app/stylesheets/customer/dashboard/driver/track/style.css' %}
+    <link rel="stylesheet" href="{{ asset_url }}" />
+    {% endstylesheets %}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent()  }}
+    {% javascripts
+    'bundles/app/javascript/customer/dashboard/driver/track/map.js'
+    'assets/vendor/socket.io-client/dist/socket.io.js'
+    'bundles/app/javascript/customer/dashboard/driver/track/script.js'
+    %}
+    <script src="{{ asset_url }}"></script>
+    <script src="{{ getGoogleMapInitLink() }}"></script>
+    {% endjavascripts %}
+{% endblock %}
+
+{% block page_title %}
+    ردیابی راننده
+{% endblock %}
+
+{% block main %}
+    <div class="panel">
+        <div class="panel-heading">
+            <span class="panel-title">ردیابی راننده</span>
+        </div>
+        <div class="panel-body">
+            <div class="tracking-div">
+                {% for trackingToken in trackingTokens %}
+                    <div class="tracking-element" data-track = "{{ trackingToken }}"></div>
+                {% endfor %}
+            </div>
+            <div id="track-shipment-map"></div>
+        </div>
+    </div>
+{% endblock %}

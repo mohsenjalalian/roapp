@@ -10,6 +10,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Request;
+use r;
 
 /**
  * Driver controller.
@@ -19,6 +20,47 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class DriverController extends Controller
 {
+    /**
+     * @Route("/track", name="app_customer_dashboard_driver_track")
+     * @Method("GET")
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function trackAction()
+    {
+        $conn = r\connect('localhost', '28015', 'roapp', $this->getParameter('rethink_password'));
+        $em = $this->getDoctrine()->getManager();
+        $customer = $this->getUser();
+        $businessUnit = $customer->getBusinessUnit();
+        $shipments = $em->getRepository('AppBundle:Shipment')
+            ->createQueryBuilder('s')
+            ->join('s.ownerAddress', 'ow')
+            ->join('ow.businessUnit', 'oc')
+            ->where('oc.id =:business_unit_id')
+            ->setParameter('business_unit_id', $businessUnit)
+            ->getQuery()
+            ->getResult();
+
+        $trackingTokens = [];
+        foreach ($shipments as $shipment) {
+            /**
+             * @var Shipment $shipment
+             */
+            $rethinkShipment = r\table('shipment')
+                ->filter(
+                    [
+                        'shipment_id' => $shipment->getId(),
+                    ]
+                )
+                ->run($conn);
+            /** @var \ArrayObject $current */
+            $current = $rethinkShipment->current();
+            $trackingTokens[] = $current->getArrayCopy()['tracking_token'];
+        }
+
+        return $this->render('customer/dashboard/driver/track.html.twig', [
+            'trackingTokens' => $trackingTokens,
+        ]);
+    }
     /**
      * Lists all driver entities.
      *

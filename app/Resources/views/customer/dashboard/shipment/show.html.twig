@@ -81,14 +81,14 @@
             </div>
         </div>
     </div>
-    <a href="{{ path('app_customer_dashboard_shipment_index') }}"><button class="btn">برگشت به لیست</button></a>
+    <a href="{{ path('app_customer_dashboard_shipment_index') }}"><button class="btn btn-sm btn-labeled btn-primary">برگشت به لیست</button></a>
     {% if
     shipment.status == constant('STATUS_NOT_ASSIGNED',shipment) or
     shipment.status == constant('STATUS_ASSIGNMENT_SENT',shipment) or
     shipment.status == constant('STATUS_REJECT',shipment)
     %}
-        <a id="edit_button_customer_shipment" href="{{ path('app_customer_dashboard_shipment_edit', { 'id': shipment.id }) }}"><button class="btn">ویرایش</button></a>
-        <a id="cancel_button"><button class="btn">کنسل</button></a>
+        <a id="edit_button_customer_shipment" href="{{ path('app_customer_dashboard_shipment_edit', { 'id': shipment.id }) }}"><button class="btn btn-sm btn-labeled btn-info">ویرایش</button></a>
+        <a id="cancel_button"><button class="btn btn-sm btn-labeled btn-danger">کنسل</button></a>
     {% endif %}
     {% if
     shipment.status == constant('STATUS_ASSIGNED',shipment) or
@@ -97,7 +97,7 @@
     shipment.status == constant('STATUS_ON_DELIVERY',shipment)
     %}
         {#<a id="cancel_button"><button>کنسل</button></a>#}
-        <a id="fail_button_customer"><button class="btn">لغو</button></a>
+        <a id="fail_button_customer"><button class="btn btn-sm btn-labeled btn-danger">لغو</button></a>
     {% endif %}
     <div id="valid_code_form_section">
     {% if shipment.status == constant('STATUS_ON_PICK_UP',shipment) %}
