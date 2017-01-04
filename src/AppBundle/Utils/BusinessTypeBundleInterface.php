@@ -32,4 +32,19 @@ interface BusinessTypeBundleInterface
      * @return string
      */
     public static function getBusinessUnitEntityNamespace();
+
+    /**
+     * @return string
+     */
+    public static function getBusinessTypeSingleShipmentTitle();
+
+    /**
+     * @return string
+     */
+    public static function getBusinessTypePluralShipmentTitle();
+
+    /**
+     * @return string
+     */
+    public static function getBusinessTypePersianName();
 }

@@ -42,6 +42,9 @@ class BusinessTypeReloadCommand extends ContainerAwareCommand
                 $formNameSpace = $bundle->getShipmentFormNamespace();
                 $businessUnitForm = $bundle->getBusinessUnitFormNamespace();
                 $businessTypeName = $bundle->getBusinessTypeName();
+                $businessTypeSingleShipmentTitle = $bundle->getBusinessTypeSingleShipmentTitle();
+                $businessTypePluralShipmentTitle = $bundle->getBusinessTypePluralShipmentTitle();
+                $businessTypePersianName = $bundle->getBusinessTypePersianName();
                 try {
                     /** @var EntityManager $em */
                     $businessTypeEntity = $entityManager
@@ -59,6 +62,9 @@ class BusinessTypeReloadCommand extends ContainerAwareCommand
                 $businessTypeEntity->setFormNamespace($formNameSpace);
                 $businessTypeEntity->setBusinessUnitForm($businessUnitForm);
                 $businessTypeEntity->setName($businessTypeName);
+                $businessTypeEntity->setSingleShipmentTitle($businessTypeSingleShipmentTitle);
+                $businessTypeEntity->setPluralShipmentTitle($businessTypePluralShipmentTitle);
+                $businessTypeEntity->setPersianName($businessTypePersianName);
                 $entityManager->persist($businessTypeEntity);
                 $entityManager->flush();
             }
