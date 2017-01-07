@@ -29,13 +29,19 @@ $(".tracking-element").each(function (index, item) {
 });
 
 $(document).ready(function () {
-    $.ajax({
-        url: "init_map",
-        dataType: "json",
-        data: {test: 'test'},
-        type: "POST",
-        success: function (result) {
-            console.log(result);
-        }
-    })
+    $(".tracking-element").each(function (index, item) {
+        token = $(item).data('track');
+        $.ajax({
+            url: "init_map",
+            dataType: "json",
+            data: {token: token},
+            type: "POST",
+            success: function (result) {
+                lastLat = result[0].lat;
+                lastLng = result[0].lng;
+                markers ['init'].setPosition( new google.maps.LatLng( lastLat, lastLng) );
+                map.panTo( new google.maps.LatLng( lastLat, lastLng) );
+            }
+        });
+    });
 });

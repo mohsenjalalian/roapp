@@ -70,7 +70,43 @@ class DriverController extends Controller
      */
     public function initMapAction(Request $request)
     {
-        return new JsonResponse('test');
+        $conn = r\connect(
+            $this->getParameter('rethinkdb_host'),
+            $this->getParameter('rethinkdb_port'),
+            'roapp',
+            $this->getParameter('rethink_password')
+        );
+        if (!isset($conn)) {
+            return new JsonResponse(null);
+        }
+        $result = r\table('shipment')
+            ->filter(
+                [
+                    'tracking_token' => $request->get('token'),
+                ]
+            )
+            ->run($conn);
+        if (!isset($result)) {
+            return new JsonResponse(null);
+        }
+        /** @var \ArrayObject $current */
+        $current = $result->current();
+        $id = $current->getArrayCopy()['id'];
+        $lastLocation = r\table('driver_location')
+            ->filter(
+                [
+                    'shipment_id' => $id,
+                ]
+            )
+            ->orderBy(r\desc('date_time'))
+            ->limit(1)
+            ->run($conn);
+        if (!isset($lastLocation)) {
+            return new JsonResponse(null);
+        }
+
+
+        return new JsonResponse($lastLocation);
     }
     /**
      * Lists all driver entities.
