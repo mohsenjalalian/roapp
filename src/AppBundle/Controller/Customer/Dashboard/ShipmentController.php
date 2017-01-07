@@ -351,7 +351,7 @@ class ShipmentController extends Controller
     /**
      * @Route("/cancel_shipment", name="app_customer_dashboard_shipment_cancel_shipment")
      * @param Request $request
-     * @return Response
+     * @return JsonResponse
      */
     public function cancelShipmentAction(Request $request)
     {
@@ -359,15 +359,19 @@ class ShipmentController extends Controller
         $em = $this->getDoctrine()->getManager();
         $shipment = $this->getDoctrine()
             ->getRepository("AppBundle:Shipment")
-            ->find($shipmentId);
-        $shipment->setStatus(Shipment::STATUS_CANCEL);
-        $em->persist($shipment);
+            ->getShipmentCanCancel($shipmentId);
+        if ($shipment instanceof  Shipment) {
+            $shipment->setStatus(Shipment::STATUS_CANCEL);
+            $em->persist($shipment);
 
-        $em->flush();
+            $em->flush();
 
-        $this->get('app.shipment_service')->addHistory($shipment, ShipmentHistory::ACTION_CANCEL_BY_CUSTOMER);
+            $this->get('app.shipment_service')->addHistory($shipment, ShipmentHistory::ACTION_CANCEL_BY_CUSTOMER);
 
-        return new Response("true");
+            return new JsonResponse($shipment->getId());
+        } else {
+            return new JsonResponse(Response::HTTP_BAD_REQUEST);
+        }
     }
 
     /**

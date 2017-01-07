@@ -6,6 +6,7 @@ use AppBundle\Entity\Address;
 use AppBundle\Entity\BusinessUnit;
 use AppBundle\Entity\Shipment;
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\NoResultException;
 
 /**
  * ShipmentRepository
@@ -65,5 +66,32 @@ class ShipmentRepository extends EntityRepository
         } else {
             return false;
         }
+    }
+
+    /**
+     * @param int $shipmentId
+     * @return mixed|null
+     */
+    public function getShipmentCanCancel($shipmentId)
+    {
+        try {
+            $result = $this->createQueryBuilder('s')
+                ->where('s.id=:shipmentId')
+                ->andWhere('s.status IN (:status)')
+                ->setParameter('shipmentId', $shipmentId)
+                ->setParameter(
+                    'status',
+                    [
+                        Shipment::STATUS_NOT_ASSIGNED,
+                        Shipment::STATUS_ASSIGNMENT_SENT,
+                    ]
+                )
+                ->getQuery()
+                ->getSingleResult();
+        } catch (NoResultException $e) {
+            $result = null;
+        }
+
+        return $result;
     }
 }

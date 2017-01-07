@@ -1,4 +1,12 @@
 {% extends ':customer/dashboard:layout.html.twig' %}
+{% block javascripts %}
+    {{ parent()  }}
+    {% javascripts
+    'bundles/app/javascript/customer/dashboard/shipment/cancel_shipment.js'
+    %}
+    <script type="text/javascript" src="{{ asset_url }}" ></script>
+    {% endjavascripts %}
+{% endblock %}
 {% block breadcrumbs %}
     <li class="active">سفارشات</li>
 {% endblock %}
@@ -9,41 +17,88 @@
     <a class="btn btn-sm btn-labeled btn-primary" style="margin-right: 10px" href="{{ path('app_customer_dashboard_shipment_new') }}"><span class="btn-label icon fa fa-plus-square"></span>ایجاد سفارش جدید</a>
 {% endblock %}
 {% block main %}
-   <div class="panel-body">
-    <table class="table table-striped" >
-        <thead>
-        <tr>
-            <th>{{ knp_pagination_sortable(pagination, 'id','s.id') }}</th>
-            <th {% if pagination.isSorted('s.description') %} class="sorted"{% endif %}>{{ knp_pagination_sortable(pagination, 'توضیحات', 's.description') }}</th>
-            <th{% if pagination.isSorted('s.status') %} class="sorted"{% endif %}>{{ knp_pagination_sortable(pagination, 'وضعیت', 's.status') }}</th>
-            <th{% if pagination.isSorted('s.pickUptime') %} class="sorted"{% endif %}>{{ knp_pagination_sortable(pagination, 'زمان تحویل سفارش', 's.pickUpTime') }}</th>
-            <th{% if pagination.isSorted('s.createdAt') %} class="sorted"{% endif %}>{{ knp_pagination_sortable(pagination, 'زمان ایجاد سفارش', 's.createdAt') }}</th>
-            <th{% if pagination.isSorted('s.price') %} class="sorted"{% endif %}>{{ knp_pagination_sortable(pagination, 'قیمت تحویل سفارش', 's.price') }}</th>
-            <th>Actions</th>
-        </tr>
-        </thead>
-        <tbody>
-        {% for shipment in pagination %}
+    <div class="alert alert-info" id="alert_msg_cancel_shipment-by-customer" style="display: none">
+
+    </div>
+    <div class="panel-body">
+        <table class="table table-striped" >
+            <thead>
             <tr>
-                <td><a href="{{ path('app_customer_dashboard_shipment_show', { 'id': shipment.id }) }}">{{ shipment.id }}</a></td>
-                <td>{{ shipment.description }}</td>
-                <td>{{ shipment.status }}</td>
-                <td>{% if shipment.pickUpTime %}{{ shipment.pickUpTime|date('Y-m-d') }}{% endif %}</td>
-                <td>{% if shipment.createdAt %}{{ shipment.createdAt|date('Y-m-d') }}{% endif %}</td>
-                <td>{{ shipment.price }}</td>
-                <td>
-                    <a class="btn btn-sm btn-labeled btn-success" href="{{ path('app_customer_dashboard_shipment_show', { 'id': shipment.id }) }}"><span class="btn-label icon fa fa-eye"></span>نمایش</a>
+                <th>{{ knp_pagination_sortable(pagination, 'id','s.id') }}</th>
+                <th {% if pagination.isSorted('s.description') %} class="sorted"{% endif %}>{{ knp_pagination_sortable(pagination, 'توضیحات', 's.description') }}</th>
+                <th{% if pagination.isSorted('s.status') %} class="sorted"{% endif %}>{{ knp_pagination_sortable(pagination, 'وضعیت', 's.status') }}</th>
+                <th{% if pagination.isSorted('s.pickUptime') %} class="sorted"{% endif %}>{{ knp_pagination_sortable(pagination, 'زمان تحویل سفارش', 's.pickUpTime') }}</th>
+                <th{% if pagination.isSorted('s.createdAt') %} class="sorted"{% endif %}>{{ knp_pagination_sortable(pagination, 'زمان ایجاد سفارش', 's.createdAt') }}</th>
+                <th{% if pagination.isSorted('s.price') %} class="sorted"{% endif %}>{{ knp_pagination_sortable(pagination, 'قیمت تحویل سفارش', 's.price') }}</th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for shipment in pagination %}
+                <tr>
+                    <td><a href="{{ path('app_customer_dashboard_shipment_show', { 'id': shipment.id }) }}">{{ shipment.id }}</a></td>
+                    <td>{{ shipment.description }}</td>
+                    <td class="customer_shipment_status{{ shipment.id }}">
+                        {% if shipment.status == constant('STATUS_NOT_ASSIGNED',shipment) %}
+                            <span>انتصاب نشده</span>
+                        {% elseif  shipment.status == constant('STATUS_ASSIGNMENT_SENT',shipment) %}
+                            <span>در حال بررسی</span>
+                        {% elseif   shipment.status == constant('STATUS_REJECT',shipment) %}
+                            <span>لغو توسط اپراتور</span>
+                        {% elseif  shipment.status == constant('STATUS_ASSIGNED',shipment) %}
+                            <span>انتصاب شده</span>
+                        {% elseif  shipment.status == constant('STATUS_CANCEL',shipment) %}
+                            <span>کنسل شده توسط مشتری</span>
+                        {% elseif  shipment.status == constant('STATUS_CUSTOMER_FAILED',shipment) %}
+                            <span>لغو توسط مشتری</span>
+                        {% elseif  shipment.status == constant('STATUS_ON_PICK_UP',shipment) or  shipment.status == constant('STATUS_PICKED_UP',shipment)  %}
+                            <span> تحویل سفارش به راننده</span>
+                        {% elseif  shipment.status == constant('STATUS_DELIVERED',shipment) or  shipment.status == constant('STATUS_ON_DELIVERY',shipment)  %}
+                            <span>رساندن سفارش به مشتری</span>
+                        {% elseif  shipment.status == constant('STATUS_DRIVER_FAILED',shipment) %}
+                            <span>لغو توسط راننده</span>
+                        {% elseif  shipment.status == constant('STATUS_WAITING_FOR_PAYMENT',shipment) %}
+                            <span>پرداخت نشده</span>
+                        {% else %}
+                            <span>نامعلوم</span>
+                        {% endif %}
+                    </td>
+                    <td>{% if shipment.pickUpTime %}{{ shipment.pickUpTime|date('Y-m-d') }}{% endif %}</td>
+                    <td>{% if shipment.createdAt %}{{ shipment.createdAt|date('Y-m-d') }}{% endif %}</td>
+                    <td>{{ shipment.price }}</td>
+                    <td>
+                        <a class="btn btn-sm btn-labeled btn-success" href="{{ path('app_customer_dashboard_shipment_show', { 'id': shipment.id }) }}"><span class="btn-label icon fa fa-eye"></span>نمایش</a>
+                    </td>
                     {% if
                     shipment.status == constant('STATUS_NOT_ASSIGNED',shipment) or
-                    shipment.status == constant('STATUS_ASSIGNMENT_SENT',shipment) or
-                    shipment.status == constant('STATUS_REJECT',shipment)
+                    shipment.status == constant('STATUS_ASSIGNMENT_SENT',shipment)
                     %}
+                        <td class="customer_shipment_cancel_btn{{ shipment.id }}"><button value="{{ shipment.id }}" class="cancel_shipment_button btn btn-sm btn-labeled btn-danger">کنسل</button></td>
                     {% endif %}
-                </td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <div id="cancel_modal_customer" data-target="#uidemo-modals-alerts-danger" class="modal small fade modal modal-alert modal-warning fade">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <i class="fa fa-warning"></i>
+                </div>
+                <div class="modal-body">
+                    <input class="type" type="hidden">
+                    {#<div class="header">Header</div>#}
+                    <div class="content">
+                        <h3>مطمئن هستید ؟</h3>
+                    </div>
+                    <div  class="actions modal-footer" style="margin-right: 85px">
+                        <div id="accept_cancel_button" style="float: right;margin-bottom: 20px" class="ui approve button btn btn-success" data-value="" data-dismiss="modal">بلی</div>
+                        <div style="float: right" class="ui cancel button btn btn-danger" data-dismiss="modal">خیر</div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
     <div class="ui one column stackable center aligned page grid navigation">
         <div class="pagination menu column twelve wide ui" style="font-size: 18px">

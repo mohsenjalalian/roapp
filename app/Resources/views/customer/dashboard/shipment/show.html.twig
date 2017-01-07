@@ -13,7 +13,6 @@
     'bundles/app/javascript/customer/dashboard/shipment/show/init_map.js'
     'assets/vendor/socket.io-client/dist/socket.io.js'
     'bundles/app/javascript/customer/dashboard/shipment/show/map.js'
-    'bundles/app/javascript/customer/dashboard/shipment/cancel_shipment.js'
     'bundles/app/javascript/customer/dashboard/shipment/fail_shipment.js'
     'bundles/app/javascript/customer/dashboard/shipment/validation_code.js'
     %}
@@ -51,21 +50,6 @@
         </tr>
         </tbody>
     </table>
-    <div id="cancel_modal_customer" class="ui modal small fade">
-        {#<div class="header">Header</div>#}
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h3>مطمئن هستید ؟</h3>
-                </div>
-                <div  class="modal-body">
-                    <div id="accept_cancel_button" style="float: right;margin-bottom: 20px" class="ui approve button btn" data-dismiss="modal">بلی</div>
-                    <input id="shipment_id" type="hidden" value="{{ shipment.id }}">
-                    <div data-dismiss="modal" style="float: right" class="ui cancel button btn">خیر</div>
-                </div>
-            </div>
-        </div>
-    </div>
     <div id="fail_modal_customer" class="ui modal small fade">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -89,7 +73,6 @@
     shipment.status == constant('STATUS_REJECT',shipment)
     %}
         <a id="edit_button_customer_shipment" href="{{ path('app_customer_dashboard_shipment_edit', { 'id': shipment.id }) }}"><button class="btn btn-sm btn-labeled btn-info">ویرایش</button></a>
-        <a id="cancel_button"><button class="btn btn-sm btn-labeled btn-danger">کنسل</button></a>
     {% endif %}
     {% if
     shipment.status == constant('STATUS_ASSIGNED',shipment) or
@@ -97,7 +80,6 @@
     shipment.status == constant('STATUS_PICKED_UP',shipment) or
     shipment.status == constant('STATUS_ON_DELIVERY',shipment)
     %}
-        {#<a id="cancel_button"><button>کنسل</button></a>#}
         <a id="fail_button_customer"><button class="btn btn-sm btn-labeled btn-danger">لغو</button></a>
     {% endif %}
     <div id="valid_code_form_section">
