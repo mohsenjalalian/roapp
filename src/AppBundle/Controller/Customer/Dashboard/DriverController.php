@@ -9,6 +9,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use r;
 
@@ -60,6 +61,61 @@ class DriverController extends Controller
         return $this->render('customer/dashboard/driver/track.html.twig', [
             'trackingTokens' => $trackingTokens,
         ]);
+    }
+
+    /**
+     * @Route("/init_map",name="app_customer_dashboard_driver_init_map")
+     * @param Request $request
+     * @return JsonResponse | null
+     */
+    public function initMapAction(Request $request)
+    {
+        $token = $request->get('token');
+        $conn = r\connect(
+            $this->getParameter('rethinkdb_host'),
+            $this->getParameter('rethinkdb_port'),
+            'roapp',
+            $this->getParameter('rethink_password')
+        );
+        if (!isset($conn)) {
+            return new JsonResponse(null);
+        }
+        $result = r\table('shipment')
+            ->filter(
+                [
+                    'tracking_token' => $token,
+                ]
+            )
+            ->run($conn);
+        if (!isset($result)) {
+            return new JsonResponse(null);
+        }
+        /** @var \ArrayObject $current */
+        $current = $result->current();
+        $id = $current->getArrayCopy()['id'];
+        $lastLocation = r\table('driver_location')
+            ->filter(
+                [
+                    'shipment_id' => $id,
+                ]
+            )
+            ->orderBy(r\desc('date_time'))
+            ->limit(1)
+            ->run($conn);
+        if (!isset($lastLocation)) {
+            return new JsonResponse(null);
+        }
+        $counter = 0;
+        $output = [];
+        foreach ($lastLocation as $value) {
+            /** @var \ArrayObject $value */
+            $output[$counter]['lat'] = $value->getArrayCopy()['lat'];
+            $output[$counter]['lng'] = $value->getArrayCopy()['lng'];
+            $output[$counter]['tracking_token'] = $token;
+            $counter = $counter+1;
+        }
+
+        return new JsonResponse($output);
     }
     /**
      * Lists all driver entities.
