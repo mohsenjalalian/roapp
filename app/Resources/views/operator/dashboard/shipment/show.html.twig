@@ -47,8 +47,8 @@
                 <tr>
                     <td>{{ shipment.description }}</td>
                     <td>{{ shipment.status }}</td>
-                    <td>{% if shipment.pickUpTime %}{{ shipment.pickUpTime|date('Y-m-d H:i:s') }}{% endif %}</td>
-                    <td>{% if shipment.createdAt %}{{ shipment.createdAt|date('Y-m-d H:i:s') }}{% endif %}</td>
+                    <td>{% if shipment.pickUpTime %}{{ shipment.pickUpTime|jdate('Y/m/d H:i:s') }}{% endif %}</td>
+                    <td>{% if shipment.createdAt %}{{ shipment.createdAt|jdate('Y/m/d H:i:s') }}{% endif %}</td>
                     <td>{{ shipment.price }}</td>
                 </tr>
                 </tbody>

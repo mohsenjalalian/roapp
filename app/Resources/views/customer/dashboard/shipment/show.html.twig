@@ -69,11 +69,11 @@
                         </tr>
                         <tr>
                             <th>زمان تحویل</th>
-                            <td>{% if shipment.pickUpTime %}{{ shipment.pickUpTime|date('Y-m-d H:i:s') }}{% endif %}</td>
+                            <td>{% if shipment.pickUpTime %}{{ shipment.pickUpTime|jdate('Y/m/d H:i:s') }}{% endif %}</td>
                         </tr>
                         <tr>
                             <th>زمان ایجاد</th>
-                            <td>{% if shipment.createdAt %}{{ shipment.createdAt|date('Y-m-d H:i:s') }}{% endif %}</td>
+                            <td>{% if shipment.createdAt %}{{ shipment.createdAt|jdate('Y/m/d H:i:s') }}{% endif %}</td>
                         </tr>
                         <tr>
                             <th>قیمت</th>

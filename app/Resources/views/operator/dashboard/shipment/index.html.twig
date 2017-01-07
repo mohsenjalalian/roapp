@@ -24,8 +24,8 @@
             <tr>
                 <td>{{ shipment.description }}</td>
                 <td>{{ shipment.status }}</td>
-                <td>{% if shipment.pickUpTime %}{{ shipment.pickUpTime|date('Y-m-d H:i:s') }}{% endif %}</td>
-                <td>{% if shipment.createdAt %}{{ shipment.createdAt|date('Y-m-d H:i:s') }}{% endif %}</td>
+                <td>{% if shipment.pickUpTime %}{{ shipment.pickUpTime|jdate('Y/m/d H:i:s') }}{% endif %}</td>
+                <td>{% if shipment.createdAt %}{{ shipment.createdAt|jdate('Y/m/d H:i:s') }}{% endif %}</td>
                 <td>{{ shipment.price }}</td>
                 <td>
                     <a href="{{ path('app_operator_dashboard_shipment_show', { 'id': shipment.id }) }}" class="btn btn-sm btn-labeled btn-success"><span class="btn-label icon fa fa-eye"></span>نمایش</a>

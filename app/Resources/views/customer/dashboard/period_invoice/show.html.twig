@@ -1,7 +1,7 @@
 {% extends ':customer/dashboard:layout.html.twig' %}
 
 {% block page_title %}
-    <h4>    لیست سفارشات در تاریخ : {{ pagination.0.createdAt|date('Y-m-d') }}</h4>
+    <h4>    لیست سفارشات در تاریخ : {{ pagination.0.createdAt|jdate('Y/m/d') }}</h4>
 {% endblock %}
 {% block breadcrumbs %}
     <li><a href="{{ path('app_customer_dashboard_period_invoice_index') }}">لیست رسید ها</a></li>
@@ -27,7 +27,7 @@
                         <tr>
                             <td>{{ shipment.description }}</td>
                             <td>{{shipment.price }}</td>
-                            <td>{{shipment.createdAt|date('H:i:s') }}</td>
+                            <td>{{shipment.createdAt|jdate('H:i:s') }}</td>
                             <td>{{shipment.otherAddress.description }}</td>
                         </tr>
                 {% endfor %}

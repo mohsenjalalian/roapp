@@ -26,8 +26,8 @@
                         <td>{{ payment.person.fullName }}</td>
                         <td>{{ payment.invoice.price }}</td>
                         <td>{{ payment.status }}</td>
-                        <td>{{ payment.createdDate|date('Y-m-d H:i:s')}}</td>
-                        <td>{{ payment.paidAt|date('Y-m-d H:i:s')}}</td>
+                        <td>{{ payment.createdDate|jdate('Y/m/d H:i:s')}}</td>
+                        <td>{{ payment.paidAt|jdate('Y/m/d H:i:s')}}</td>
                         <td>{{ payment.method }}</td>
                         <td><a href="{{ path('app_operator_dashboard_payment_show', { 'id': payment.id }) }}" class="btn btn-sm btn-labeled btn-success"><span class="btn-label icon fa fa-eye"></span>مشاهده ی جزئیات</a></td>
                     </tr>

@@ -63,8 +63,8 @@
                             <span>نامعلوم</span>
                         {% endif %}
                     </td>
-                    <td>{% if shipment.pickUpTime %}{{ shipment.pickUpTime|date('Y-m-d') }}{% endif %}</td>
-                    <td>{% if shipment.createdAt %}{{ shipment.createdAt|date('Y-m-d') }}{% endif %}</td>
+                    <td>{% if shipment.pickUpTime %}{{ shipment.pickUpTime|jdate('Y/m/d') }}{% endif %}</td>
+                    <td>{% if shipment.createdAt %}{{ shipment.createdAt|jdate('Y/m/d') }}{% endif %}</td>
                     <td>{{ shipment.price }}</td>
                     <td>
                         <a class="btn btn-sm btn-labeled btn-success" href="{{ path('app_customer_dashboard_shipment_show', { 'id': shipment.id }) }}"><span class="btn-label icon fa fa-eye"></span>نمایش</a>
