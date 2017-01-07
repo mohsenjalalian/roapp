@@ -20,7 +20,6 @@ $(".tracking-element").each(function (index, item) {
             });
         } else {
             marker[tracking_token].setPosition( new google.maps.LatLng( newLat, newLng) );
-            map.panTo( new google.maps.LatLng( newLat, newLng ) );
         }
 
         markers.push(tracking_token);
@@ -37,10 +36,15 @@ $(document).ready(function () {
             data: {token: token},
             type: "POST",
             success: function (result) {
+                tracking_token = result[0].tracking_token;
                 lastLat = result[0].lat;
                 lastLng = result[0].lng;
-                markers ['init'].setPosition( new google.maps.LatLng( lastLat, lastLng) );
-                map.panTo( new google.maps.LatLng( lastLat, lastLng) );
+                marker [tracking_token] = new google.maps.Marker({
+                    position: new google.maps.LatLng(lastLat, lastLng),
+                    map: map,
+                    icon: icon
+                });
+                markers.push(tracking_token);
             }
         });
     });

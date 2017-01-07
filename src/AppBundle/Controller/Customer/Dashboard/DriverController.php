@@ -70,6 +70,7 @@ class DriverController extends Controller
      */
     public function initMapAction(Request $request)
     {
+        $token = $request->get('token');
         $conn = r\connect(
             $this->getParameter('rethinkdb_host'),
             $this->getParameter('rethinkdb_port'),
@@ -82,7 +83,7 @@ class DriverController extends Controller
         $result = r\table('shipment')
             ->filter(
                 [
-                    'tracking_token' => $request->get('token'),
+                    'tracking_token' => $token,
                 ]
             )
             ->run($conn);
@@ -104,9 +105,17 @@ class DriverController extends Controller
         if (!isset($lastLocation)) {
             return new JsonResponse(null);
         }
+        $counter = 0;
+        $output = [];
+        foreach ($lastLocation as $value) {
+            /** @var \ArrayObject $value */
+            $output[$counter]['lat'] = $value->getArrayCopy()['lat'];
+            $output[$counter]['lng'] = $value->getArrayCopy()['lng'];
+            $output[$counter]['tracking_token'] = $token;
+            $counter = $counter+1;
+        }
 
-
-        return new JsonResponse($lastLocation);
+        return new JsonResponse($output);
     }
     /**
      * Lists all driver entities.
