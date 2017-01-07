@@ -63,4 +63,28 @@ class RoappRestaurantBundle extends Bundle implements BusinessTypeBundleInterfac
     {
         return Restaurant::class;
     }
+
+    /**
+     * @return string
+     */
+    public static function getBusinessTypeSingleShipmentTitle()
+    {
+        return 'سفارش';
+    }
+
+    /**
+     * @return string
+     */
+    public static function getBusinessTypePluralShipmentTitle()
+    {
+        return 'سفارش ها';
+    }
+
+    /**
+     * @return string
+     */
+    public static function getBusinessTypePersianName()
+    {
+        return 'رستوران';
+    }
 }

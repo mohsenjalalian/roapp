@@ -3,6 +3,7 @@
 namespace AppBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\DBAL\Types\JsonArrayType;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -67,6 +68,96 @@ class BusinessType
      */
     private $businessUnits;
 
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="persian_name", type="string", length=255, unique=true, nullable=true)
+     */
+    private $persianName;
+
+    /**
+     * @var JsonArrayType
+     *
+     * @ORM\Column(name="data", type="json_array", nullable=true)
+     */
+    private $data;
+
+    /**
+     * @return JsonArrayType
+     */
+    public function getData()
+    {
+        return $this->data;
+    }
+
+    /**
+     * @param JsonArrayType $data
+     * @return $this
+     */
+    public function setData($data)
+    {
+        $this->data = $data;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getSingleShipmentTitle()
+    {
+        return $this->data['single_shipment_title'];
+    }
+
+    /**
+     * @param string $data
+     * @return $this
+     */
+    public function setSingleShipmentTitle($data)
+    {
+        $this->data['single_shipment_title'] = $data;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPersianName()
+    {
+        return $this->persianName;
+    }
+
+    /**
+     * @param string $persianName
+     * @return $this
+     */
+    public function setPersianName($persianName)
+    {
+        $this->persianName = $persianName;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPluralShipmentTitle()
+    {
+        return $this->data['plural_shipment_title'];
+    }
+
+    /**
+     * @param string $data
+     * @return $this
+     */
+    public function setPluralShipmentTitle($data)
+    {
+        $this->data['plural_shipment_title'] = $data;
+
+        return $this;
+    }
+
 
     /**
      * Get id
@@ -84,6 +175,7 @@ class BusinessType
     public function __construct()
     {
         $this->businessUnits = new ArrayCollection();
+        $this->date = [];
     }
 
     /**
