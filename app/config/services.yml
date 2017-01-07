@@ -128,3 +128,9 @@ services:
         arguments: ["@security.token_storage"]
         tags:
         - { name: form.type }
+
+    app.form_business_unit:
+        class: AppBundle\Form\Operator\Dashboard\BusinessUnitType
+        arguments: ["@security.token_storage"]
+        tags:
+        - { name: form.type }
