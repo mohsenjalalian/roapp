@@ -33,6 +33,7 @@ class PeriodInvoiceController extends Controller
             ->join('ow.customer', 'c')
             ->where('c.id=:user_id')
             ->setParameter('user_id', $this->getUser()->getId())
+            ->orderBy('p.createdAt', 'DESC')
             ->getQuery();
 
         $paginator  = $this->get('knp_paginator');

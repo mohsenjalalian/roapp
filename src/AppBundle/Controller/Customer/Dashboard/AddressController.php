@@ -37,6 +37,7 @@ class AddressController extends Controller
             ->createQueryBuilder('a')
             ->where('a.customer =:user_id')
             ->setParameter('user_id', $this->getUser()->getId())
+            ->orderBy('a.id')
             ->getQuery();
 
         $paginator  = $this->get('knp_paginator');

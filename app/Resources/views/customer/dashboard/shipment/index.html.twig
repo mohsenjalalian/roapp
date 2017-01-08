@@ -27,8 +27,8 @@
                 <th>{{ knp_pagination_sortable(pagination, 'شماره مرسوله','s.id') }}</th>
                 <th {% if pagination.isSorted('s.description') %} class="sorted"{% endif %}>{{ knp_pagination_sortable(pagination, 'توضیحات', 's.description') }}</th>
                 <th{% if pagination.isSorted('s.status') %} class="sorted"{% endif %}>{{ knp_pagination_sortable(pagination, 'وضعیت', 's.status') }}</th>
-                <th{% if pagination.isSorted('s.pickUptime') %} class="sorted"{% endif %}>{{ knp_pagination_sortable(pagination, 'زمان تحویل سفارش', 's.pickUpTime') }}</th>
-                <th{% if pagination.isSorted('s.createdAt') %} class="sorted"{% endif %}>{{ knp_pagination_sortable(pagination, 'زمان ایجاد سفارش', 's.createdAt') }}</th>
+                <th{% if pagination.isSorted('s.pickUptime') %} class="sorted"{% endif %}>{{ knp_pagination_sortable(pagination, 'تاریخ تحویل سفارش', 's.pickUpTime') }}</th>
+                <th{% if pagination.isSorted('s.createdAt') %} class="sorted"{% endif %}>{{ knp_pagination_sortable(pagination, 'تاریخ ایجاد سفارش', 's.createdAt') }}</th>
                 <th{% if pagination.isSorted('s.price') %} class="sorted"{% endif %}>{{ knp_pagination_sortable(pagination, 'هزینه ارسال', 's.price') }}</th>
                 <th>نام راننده</th>
                 <th>عملیات</th>

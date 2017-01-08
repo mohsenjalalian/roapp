@@ -30,7 +30,7 @@ class BusinessUnitController extends Controller
         $query = $this->getDoctrine()
             ->getRepository('AppBundle:BusinessUnit')
             ->createQueryBuilder('a')
-            ->orderBy('a.id', 'Asc')
+            ->orderBy('a.createdAt')
             ->getQuery()
         ;
 
