@@ -1,10 +1,10 @@
 {% extends ':customer/dashboard:layout.html.twig' %}
 
 {% block page_title %}
-    <h4>    لیست سفارشات در تاریخ : {{ pagination.0.createdAt|jdate('Y/m/d') }}</h4>
+    <h4>    فهرست مرسوله ها در تاریخ : {{ pagination.0.createdAt|jdate('Y/m/d') }}</h4>
 {% endblock %}
 {% block breadcrumbs %}
-    <li><a href="{{ path('app_customer_dashboard_period_invoice_index') }}">لیست رسید ها</a></li>
+    <li><a href="{{ path('app_customer_dashboard_period_invoice_index') }}">رسید ها</a></li>
     <li class="active">نمایش</li>
 {% endblock %}
 {#{% block header_link %}#}

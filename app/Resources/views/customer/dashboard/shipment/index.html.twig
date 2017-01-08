@@ -8,13 +8,13 @@
     {% endjavascripts %}
 {% endblock %}
 {% block breadcrumbs %}
-    <li class="active">سفارشات</li>
+    <li class="active">مرسوله ها</li>
 {% endblock %}
 {% block page_title %}
-    لیست سفارشات
+    فهرست مرسوله ها
 {% endblock %}
 {% block header_link %}
-    <a class="btn btn-sm btn-labeled btn-primary" style="margin-right: 10px" href="{{ path('app_customer_dashboard_shipment_new') }}"><span class="btn-label icon fa fa-plus-square"></span>ایجاد سفارش جدید</a>
+    <a class="btn btn-sm btn-labeled btn-primary" style="margin-right: 10px" href="{{ path('app_customer_dashboard_shipment_new') }}"><span class="btn-label icon fa fa-plus-square"></span>درخواست مرسوله ی جدید</a>
 {% endblock %}
 {% block main %}
     <div class="alert alert-info" id="alert_msg_cancel_shipment-by-customer" style="display: none">
@@ -30,7 +30,7 @@
                 <th{% if pagination.isSorted('s.pickUptime') %} class="sorted"{% endif %}>{{ knp_pagination_sortable(pagination, 'زمان تحویل سفارش', 's.pickUpTime') }}</th>
                 <th{% if pagination.isSorted('s.createdAt') %} class="sorted"{% endif %}>{{ knp_pagination_sortable(pagination, 'زمان ایجاد سفارش', 's.createdAt') }}</th>
                 <th{% if pagination.isSorted('s.price') %} class="sorted"{% endif %}>{{ knp_pagination_sortable(pagination, 'قیمت تحویل سفارش', 's.price') }}</th>
-                <th>Actions</th>
+                <th>عملیات</th>
             </tr>
             </thead>
             <tbody>
