@@ -8,6 +8,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Request;
+use r;
 
 /**
  * Class BusinessUnitController
@@ -91,6 +92,20 @@ class BusinessUnitController extends Controller
             $em = $this->getDoctrine()->getManager();
             $em->persist($businessUnit);
             $em->flush();
+            $businessUnitToken = uniqid();
+            $conn = r\connect(
+                $this->getParameter('rethinkdb_host'),
+                $this->getParameter('rethinkdb_port'),
+                'roapp',
+                $this->getParameter('rethink_password')
+            );
+            $document = [
+                'business_unit_id' => $businessUnit->getId(),
+                'tracking_token' => $businessUnitToken,
+            ];
+            r\table("business_unit")
+                ->insert($document)
+                ->run($conn);
             $translator = $this->get('translator');
             $this->addFlash('registered_success', $translator->trans('business_unit_registered_successfully'));
 
