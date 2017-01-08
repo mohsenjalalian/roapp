@@ -388,7 +388,7 @@ class Shipment
      *
      * @param \AppBundle\Entity\ShipmentHistory $shipmentHistory
      */
-    public function removeShipmentHistory(\AppBundle\Entity\ShipmentHistory $shipmentHistory)
+    public function removeShipmentHistory(ShipmentHistory $shipmentHistory)
     {
         $this->shipmentHistories->removeElement($shipmentHistory);
     }
@@ -401,5 +401,29 @@ class Shipment
     public function getShipmentHistories()
     {
         return $this->shipmentHistories;
+    }
+
+    /**
+     * @return Driver|null
+     */
+    public function getAssignedDriver()
+    {
+        $assigned = $this->assignments->filter(
+            function (ShipmentAssignment $assignment) {
+                if ($assignment->getStatus() == ShipmentAssignment::STATUS_ACCEPTED
+                    && $assignment->getDriver() instanceof Driver
+                ) {
+                    return true;
+                }
+
+                return false;
+            }
+        );
+
+        if ($assigned->first() instanceof ShipmentAssignment) {
+            return $assigned->first()->getDriver();
+        } else {
+            return null;
+        }
     }
 }
