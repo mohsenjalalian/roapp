@@ -58,7 +58,7 @@ class OperatorType extends AbstractType
                 'isActive',
                 null,
                 [
-                    'label' => 'وضعیت',
+                    'label' => 'فعال',
                 ]
             );
     }

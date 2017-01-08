@@ -17,7 +17,7 @@
                 <tr>
                     <th>نام</th>
                     <th>رمز عبور</th>
-                    <th>وضعیت</th>
+                    <th>وضعیت حساب</th>
                     <th>وضعیت فعالیت</th>
                     <th>تلفن</th>
                 </tr>
@@ -27,15 +27,17 @@
                     <td>{{ driver.fullName }}</td>
                     <td>{{ driver.password }}</td>
                     <td>{% if driver.isActive %}فعال{% else %}غیر فعال{% endif %}</td>
-                    {% if driver.status == constant('STATUS_FREE',driver) %}
-                        <td>آزاد</td>
-                    {% elseif driver.status == constant('STATUS_BUSY',driver) %}
-                        <td>مشغول</td>
-                    {% elseif driver.status == constant('STATUS_NOT_AVAILABLE',driver) %}
-                        <td>خارج از دسترس</td>
-                    {% else %}
-                        <td>درحال بررسی درخواست</td>
-                    {% endif %}
+                    <td>
+                        {% if driver.status == constant('STATUS_FREE',driver) %}
+                            <span>آزاد</span>
+                        {% elseif driver.status == constant('STATUS_BUSY',driver) %}
+                            <span>مشغول</span>
+                        {% elseif driver.status == constant('STATUS_NOT_AVAILABLE',driver) %}
+                            <span>خارج از دسترس</span>
+                        {% else %}
+                            <span>درحال بررسی درخواست</span>
+                        {% endif %}
+                    </td>
                     <td>{{ driver.phone }}</td>
                 </tr>
                 </tbody>

@@ -19,7 +19,7 @@
                 {% for business_type in pagination %}
                 <tr>
                     <td>
-                        <h4><a href="{{ path('app_operator_dashboard_businessunit_new', {"businessType": business_type.id }) }}">{{ business_type.name }}</a></h4>
+                        <h4><a href="{{ path('app_operator_dashboard_businessunit_new', {"businessType": business_type.id }) }}">{{ business_type.persianName }}</a></h4>
                     </td>
                 </tr>
                 {% endfor %}
