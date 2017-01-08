@@ -23,12 +23,12 @@
                 <tbody>
                 <tr>
                     <td>{{ businessUnit.name }}</td>
-                    <td>{{ businessUnit.businessType.name }}</td>
+                    <td>{{ businessUnit.businessType.persianName }}</td>
                     <td>
-                        {% if businessUnit.contractType == 1 %}
+                        {% if businessUnit.contractType == constant('AppBundle\\DBAL\\EnumContractType::ENUM_PER_MONTH') %}
                             <span>ماهیانه</span>
                         {% else %}
-                            <span>به ازای هر سفارش</span>
+                            <span>به ازای هر مرسوله</span>
                         {% endif %}
                     </td>
                 </tr>

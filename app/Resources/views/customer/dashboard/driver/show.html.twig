@@ -15,17 +15,29 @@
         <div class="panel-body">
             <table class="table table-striped">
                 <thead>
-                    <tr>
-                        <th>نام و نام خانوادگی</th>
-                        <th>تلفن</th>
-                        <th>وضعیت</th>
-                    </tr>
+                <tr>
+                    <th>نام و نام خانوادگی</th>
+                    <th>تلفن</th>
+                    <th>وضعیت حساب</th>
+                    <th>وضعیت فعالیت</th>
+                </tr>
                 </thead>
                 <tbody>
                 <tr>
                     <td>{{ driver.fullName }}</td>
                     <td>{{ driver.phone }}</td>
                     <td>{% if driver.isActive %}فعال{% else %}غیر فعال{% endif %}</td>
+                    <td>
+                        {% if driver.status == constant('STATUS_FREE',driver) %}
+                            <span>آزاد</span>
+                        {% elseif driver.status == constant('STATUS_BUSY',driver) %}
+                            <span>مشغول</span>
+                        {% elseif driver.status == constant('STATUS_NOT_AVAILABLE',driver) %}
+                            <span>خارج از دسترس</span>
+                        {% else %}
+                            <span>درحال بررسی درخواست</span>
+                        {% endif %}
+                    </td>
                 </tr>
                 </tbody>
             </table>

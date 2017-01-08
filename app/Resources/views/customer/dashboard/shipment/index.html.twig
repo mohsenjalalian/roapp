@@ -52,13 +52,15 @@
                         {% elseif  shipment.status == constant('STATUS_CUSTOMER_FAILED',shipment) %}
                             <span>لغو توسط مشتری</span>
                         {% elseif  shipment.status == constant('STATUS_ON_PICK_UP',shipment) or  shipment.status == constant('STATUS_PICKED_UP',shipment)  %}
-                            <span> تحویل سفارش به راننده</span>
-                        {% elseif  shipment.status == constant('STATUS_DELIVERED',shipment) or  shipment.status == constant('STATUS_ON_DELIVERY',shipment)  %}
-                            <span>رساندن سفارش به مشتری</span>
+                            <span> تحویل مرسوله به راننده</span>
+                        {% elseif shipment.status == constant('STATUS_ON_DELIVERY',shipment)  %}
+                            <span>در حال رساندن مرسوله به مشتری</span>
                         {% elseif  shipment.status == constant('STATUS_DRIVER_FAILED',shipment) %}
                             <span>لغو توسط راننده</span>
                         {% elseif  shipment.status == constant('STATUS_WAITING_FOR_PAYMENT',shipment) %}
                             <span>پرداخت نشده</span>
+                        {% elseif shipment.status == constant('STATUS_DELIVERED',shipment) %}
+                            <span>تحویل مرسوله با موفقیت</span>
                         {% else %}
                             <span>نامعلوم</span>
                         {% endif %}

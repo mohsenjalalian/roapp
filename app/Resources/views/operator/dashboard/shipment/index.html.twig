@@ -6,38 +6,64 @@
     فهرست مرسوله ها
 {% endblock %}
 {% block main %}
-<div class="panel">
-    <div class="panel-body">
-    <table class="table table-striped">
-        <thead>
-        <tr>
-            <th{% if pagination.isSorted('a.description') %} class="sorted"{% endif %}>{{ knp_pagination_sortable(pagination, 'توضیحات', 'a.description') }}</th>
-            <th{% if pagination.isSorted('a.status') %} class="sorted"{% endif %}>{{ knp_pagination_sortable(pagination, 'وضعیت', 'a.status') }}</th>
-            <th{% if pagination.isSorted('a.pickUpTime') %} class="sorted"{% endif %}>{{ knp_pagination_sortable(pagination, 'زمان انجام', 'a.pickUpTime') }}</th>
-            <th{% if pagination.isSorted('a.createdAt') %} class="sorted"{% endif %}>{{ knp_pagination_sortable(pagination, 'زمان ایجاد', 'a.createdAt') }}</th>
-            <th{% if pagination.isSorted('a.price') %} class="sorted"{% endif %}>{{ knp_pagination_sortable(pagination, 'قیمت', 'a.price') }}</th>
-            <th>عملیات</th>
-        </tr>
-        </thead>
-        <tbody>
-        {% for shipment in pagination %}
-            <tr>
-                <td>{{ shipment.description }}</td>
-                <td>{{ shipment.status }}</td>
-                <td>{% if shipment.pickUpTime %}{{ shipment.pickUpTime|jdate('Y/m/d H:i:s') }}{% endif %}</td>
-                <td>{% if shipment.createdAt %}{{ shipment.createdAt|jdate('Y/m/d H:i:s') }}{% endif %}</td>
-                <td>{{ shipment.price }}</td>
-                <td>
-                    <a href="{{ path('app_operator_dashboard_shipment_show', { 'id': shipment.id }) }}" class="btn btn-sm btn-labeled btn-success"><span class="btn-label icon fa fa-eye"></span>نمایش</a>
-                    {#<a href="{{ path('app_operator_dashboard_shipment_show', { 'id': shipment.id }) }}"><button class="btn">نمایش</button></a>#}
-                    {#<a href="{{ path('app_operator_dashboard_shipment_edit', { 'id': shipment.id }) }}"><button>ویرایش</button></a>#}
-                </td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+    <div class="panel">
+        <div class="panel-body">
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th{% if pagination.isSorted('a.description') %} class="sorted"{% endif %}>{{ knp_pagination_sortable(pagination, 'توضیحات', 'a.description') }}</th>
+                    <th{% if pagination.isSorted('a.status') %} class="sorted"{% endif %}>{{ knp_pagination_sortable(pagination, 'وضعیت', 'a.status') }}</th>
+                    <th{% if pagination.isSorted('a.pickUpTime') %} class="sorted"{% endif %}>{{ knp_pagination_sortable(pagination, 'زمان انجام', 'a.pickUpTime') }}</th>
+                    <th{% if pagination.isSorted('a.createdAt') %} class="sorted"{% endif %}>{{ knp_pagination_sortable(pagination, 'زمان ایجاد', 'a.createdAt') }}</th>
+                    <th{% if pagination.isSorted('a.price') %} class="sorted"{% endif %}>{{ knp_pagination_sortable(pagination, 'قیمت', 'a.price') }}</th>
+                    <th>عملیات</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for shipment in pagination %}
+                    <tr>
+                        <td>{{ shipment.description }}</td>
+                        <td>
+                            {% if shipment.status == constant('STATUS_NOT_ASSIGNED',shipment) %}
+                                <span>انتصاب نشده</span>
+                            {% elseif  shipment.status == constant('STATUS_ASSIGNMENT_SENT',shipment) %}
+                                <span>در حال بررسی</span>
+                            {% elseif   shipment.status == constant('STATUS_REJECT',shipment) %}
+                                <span>لغو توسط اپراتور</span>
+                            {% elseif  shipment.status == constant('STATUS_ASSIGNED',shipment) %}
+                                <span>انتصاب شده</span>
+                            {% elseif  shipment.status == constant('STATUS_CANCEL',shipment) %}
+                                <span>کنسل شده توسط مشتری</span>
+                            {% elseif  shipment.status == constant('STATUS_CUSTOMER_FAILED',shipment) %}
+                                <span>لغو توسط مشتری</span>
+                            {% elseif  shipment.status == constant('STATUS_ON_PICK_UP',shipment) or  shipment.status == constant('STATUS_PICKED_UP',shipment)  %}
+                                <span> تحویل مرسوله به راننده</span>
+                            {% elseif shipment.status == constant('STATUS_ON_DELIVERY',shipment)  %}
+                                <span>در حال رساندن مرسوله به مشتری</span>
+                            {% elseif  shipment.status == constant('STATUS_DRIVER_FAILED',shipment) %}
+                                <span>لغو توسط راننده</span>
+                            {% elseif  shipment.status == constant('STATUS_WAITING_FOR_PAYMENT',shipment) %}
+                                <span>پرداخت نشده</span>
+                            {% elseif shipment.status == constant('STATUS_DELIVERED',shipment) %}
+                                <span>تحویل مرسوله با موفقیت</span>
+                            {% else %}
+                                <span>نامعلوم</span>
+                            {% endif %}
+                        </td>
+                        <td>{% if shipment.pickUpTime %}{{ shipment.pickUpTime|jdate('Y/m/d H:i:s') }}{% endif %}</td>
+                        <td>{% if shipment.createdAt %}{{ shipment.createdAt|jdate('Y/m/d H:i:s') }}{% endif %}</td>
+                        <td>{{ shipment.price }}</td>
+                        <td>
+                            <a href="{{ path('app_operator_dashboard_shipment_show', { 'id': shipment.id }) }}" class="btn btn-sm btn-labeled btn-success"><span class="btn-label icon fa fa-eye"></span>نمایش</a>
+                            {#<a href="{{ path('app_operator_dashboard_shipment_show', { 'id': shipment.id }) }}"><button class="btn">نمایش</button></a>#}
+                            {#<a href="{{ path('app_operator_dashboard_shipment_edit', { 'id': shipment.id }) }}"><button>ویرایش</button></a>#}
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
     </div>
-</div>
     {% if pagination.getTotalItemCount > 5 %}
         <div class="ui one column stackable center aligned page grid navigation">
             <div class="pagination menu column twelve wide ui" style="font-size: 18px">

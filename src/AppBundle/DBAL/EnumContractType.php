@@ -17,8 +17,8 @@ class EnumContractType extends EnumType
     public static function getValues()
     {
         return [
-            self::ENUM_PER_MONTH => 'Per Month',
-            self::ENUM_PER_SHIPMENT => 'Per Shipment',
+            self::ENUM_PER_MONTH => 'ماهیانه',
+            self::ENUM_PER_SHIPMENT => 'به ازای هر مرسوله',
         ];
     }
 }

@@ -31,10 +31,10 @@
                             <a href="{{ path('app_operator_dashboard_businessunit_show', { 'id': businessunit.id }) }}">{{ businessunit.name }}</a>
                         </td>
                         <td>
-                            {{ businessunit.businessType.name }}
+                            {{ businessunit.businessType.persianName }}
                         </td>
                         <td>
-                            {% if businessunit.contractType == 1 %}
+                            {% if businessunit.contractType == constant('AppBundle\\DBAL\\EnumContractType::ENUM_PER_MONTH') %}
                                 <span>ماهیانه</span>
                             {% else %}
                                 <span>به ازای هر سفارش</span>

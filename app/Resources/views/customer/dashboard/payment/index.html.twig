@@ -27,7 +27,21 @@
                         <td>{{ payment.id }}</td>
                         <td>{{ payment.person.fullName }}</td>
                         <td>{{ payment.invoice.price }}</td>
-                        <td>{{ payment.status }}</td>
+                        <td>
+                            {% if payment.status == constant('STATUS_WAITING_FOR_PAYMENT', payment) or payment.status == constant('STATUS_IN_PROGRESS', payment) %}
+                                <span>پرداخت نشده</span>
+                            {% elseif payment.status == constant('STATUS_APPROVED', payment) %}
+                                <span>پرداخت شده</span>
+                            {% elseif payment.status == constant('STATUS_FAILED', payment) %}
+                                <span>پرداخت ناموفق</span>
+                            {% elseif payment.status == constant('STATUS_WAITING_FOR_APPROVE', payment) %}
+                                <span>در انتظار تایید پرداخت</span>
+                            {% elseif payment.status == constant('STATUS_WAITING_FOR_APPROVE', payment) %}
+                                <span>عدم تایید پرداخت</span>
+                            {% else %}
+                                <span>نامعلوم</span>
+                            {% endif %}
+                        </td>
                         <td>{{ payment.createdDate|jdate('Y/m/d H:i:s')}}</td>
                         <td>{{ payment.paidAt|jdate('Y/m/d H:i:s')}}</td>
                         <td>{{ payment.method }}</td>
