@@ -28,80 +28,122 @@
     <li class="active">نمایش</li>
 {% endblock %}
 {% block main %}
-    <div class="panel">
-    <div class="panel-body">
-    <table class="table table-striped">
-        <thead>
-        <tr>
-            <th>Description</th>
-            <th>Status</th>
-            <th>Pickuptime</th>
-            <th>Createdat</th>
-            <th>Price</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr>
-            <td>{{ shipment.description }}</td>
-            <td id="shipment_status_customer">{{ shipment.status }}</td>
-            <td>{% if shipment.pickUpTime %}{{ shipment.pickUpTime|date('Y-m-d H:i:s') }}{% endif %}</td>
-            <td>{% if shipment.createdAt %}{{ shipment.createdAt|date('Y-m-d H:i:s') }}{% endif %}</td>
-            <td>{{ shipment.price }}</td>
-        </tr>
-        </tbody>
-    </table>
-    <div id="fail_modal_customer" class="ui modal small fade">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">دلیل لغو سفارش</div>
-                <div class="modal-body">
-                    <div class="ui form field">
-                        <textarea id="fail_customer_reason" placeholder="دلیل لغو سفارش را خود را یادداشت نمایید" class="form-control"></textarea>
+    <div class="col-sm-12">
+        <div class="row">
+            <div class="panel col-sm-6">
+                <div class="panel-body">
+                    <table class="table table-striped">
+                        <tbody>
+                        <tr>
+                            <th>توضیحات</th>
+                            <td>{{ shipment.description }}</td>
+                        </tr>
+                        <tr>
+                            <th>وضعیت</th>
+                            <td id="shipment_status_customer">
+                                {% if shipment.status == constant('STATUS_NOT_ASSIGNED',shipment) %}
+                                    <span>انتصاب نشده</span>
+                                {% elseif  shipment.status == constant('STATUS_ASSIGNMENT_SENT',shipment) %}
+                                    <span>در حال بررسی</span>
+                                {% elseif   shipment.status == constant('STATUS_REJECT',shipment) %}
+                                    <span>لغو توسط اپراتور</span>
+                                {% elseif  shipment.status == constant('STATUS_ASSIGNED',shipment) %}
+                                    <span>انتصاب شده</span>
+                                {% elseif  shipment.status == constant('STATUS_CANCEL',shipment) %}
+                                    <span>کنسل شده توسط مشتری</span>
+                                {% elseif  shipment.status == constant('STATUS_CUSTOMER_FAILED',shipment) %}
+                                    <span>لغو توسط مشتری</span>
+                                {% elseif  shipment.status == constant('STATUS_ON_PICK_UP',shipment) or  shipment.status == constant('STATUS_PICKED_UP',shipment)  %}
+                                    <span> تحویل سفارش به راننده</span>
+                                {% elseif  shipment.status == constant('STATUS_DELIVERED',shipment) or  shipment.status == constant('STATUS_ON_DELIVERY',shipment)  %}
+                                    <span>رساندن سفارش به مشتری</span>
+                                {% elseif  shipment.status == constant('STATUS_DRIVER_FAILED',shipment) %}
+                                    <span>لغو توسط راننده</span>
+                                {% elseif  shipment.status == constant('STATUS_WAITING_FOR_PAYMENT',shipment) %}
+                                    <span>پرداخت نشده</span>
+                                {% else %}
+                                    <span>نامعلوم</span>
+                                {% endif %}
+
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>زمان تحویل</th>
+                            <td>{% if shipment.pickUpTime %}{{ shipment.pickUpTime|date('Y-m-d H:i:s') }}{% endif %}</td>
+                        </tr>
+                        <tr>
+                            <th>زمان ایجاد</th>
+                            <td>{% if shipment.createdAt %}{{ shipment.createdAt|date('Y-m-d H:i:s') }}{% endif %}</td>
+                        </tr>
+                        <tr>
+                            <th>قیمت</th>
+                            <td>{{ shipment.price }}</td>
+                        </tr>
+                        {% if shipment.status == constant('STATUS_ON_PICK_UP',shipment)%}
+                        <tr>
+                            <th>ارسال کد دریافتی</th>
+                            <td>
+                                <div id="valid_code_form_section">
+                                    {% if shipment.status == constant('STATUS_ON_PICK_UP',shipment) %}
+                                    {#<div class="ui horizontal divider header">ارسال کد دریافتی</div>#}
+                                    <div id="send_code_button" class="ui form">
+                                        {{ form_start(form) }}
+                                        <div class="four wide field">
+                                            {#<label>{{ form_label(form.exchange_code) }}</label>#}
+                                            <div>{{ form_widget(form.exchange_code ) }}</div>
+                                        </div>
+                                        <div class="field">
+                                            <input type="hidden" style="" value="{{ shipment.id }}" name="shipment_id" />
+                                        </div>
+                                        <div class="field">
+                                            <input id="" type="submit" style="" value="ارسال" />
+                                        </div>
+                                        {{ form_end(form) }}
+                                    </div>
+                                </div>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endif %}
+                        </tbody>
+                    </table>
+                    <div id="fail_modal_customer" class="ui modal small fade">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">دلیل لغو سفارش</div>
+                                <div class="modal-body">
+                                    <div class="ui form field">
+                                        <textarea id="fail_customer_reason" placeholder="دلیل لغو سفارش را خود را یادداشت نمایید" class="form-control"></textarea>
+                                    </div>
+                                </div>
+                                <div  class="modal-footer">
+                                    <div id="accept_fail_button_customer" style="float: right;margin-bottom: 20px" class="ui approve button btn" data-dismiss="modal">تایید</div>
+                                    <div style="float: right" class="ui cancel button btn" data-dismiss="modal">کنسل</div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
+                    <a href="{{ path('app_customer_dashboard_shipment_index') }}"><button class="btn btn-sm btn-labeled btn-primary">برگشت به لیست</button></a>
+                    {% if
+                    shipment.status == constant('STATUS_NOT_ASSIGNED',shipment) or
+                    shipment.status == constant('STATUS_ASSIGNMENT_SENT',shipment) or
+                    shipment.status == constant('STATUS_REJECT',shipment)
+                    %}
+                        <a id="edit_button_customer_shipment" href="{{ path('app_customer_dashboard_shipment_edit', { 'id': shipment.id }) }}"><button class="btn btn-sm btn-labeled btn-info">ویرایش</button></a>
+                    {% endif %}
+                    {% if
+                    shipment.status == constant('STATUS_ASSIGNED',shipment) or
+                    shipment.status == constant('STATUS_ON_PICK_UP',shipment) or
+                    shipment.status == constant('STATUS_PICKED_UP',shipment) or
+                    shipment.status == constant('STATUS_ON_DELIVERY',shipment)
+                    %}
+                        <a id="fail_button_customer"><button class="btn btn-sm btn-labeled btn-danger">لغو</button></a>
+                    {% endif %}
                 </div>
-                <div  class="modal-footer">
-                    <div id="accept_fail_button_customer" style="float: right;margin-bottom: 20px" class="ui approve button btn" data-dismiss="modal">تایید</div>
-                    <div style="float: right" class="ui cancel button btn" data-dismiss="modal">کنسل</div>
-                </div>
+            </div>
+            <div class="col-sm-6">
+                <div  style="height: 273px"  data-token = {{ tracking_token }} id="show-shipment-map"></div>
             </div>
         </div>
     </div>
-    <a href="{{ path('app_customer_dashboard_shipment_index') }}"><button class="btn btn-sm btn-labeled btn-primary">برگشت به لیست</button></a>
-    {% if
-    shipment.status == constant('STATUS_NOT_ASSIGNED',shipment) or
-    shipment.status == constant('STATUS_ASSIGNMENT_SENT',shipment) or
-    shipment.status == constant('STATUS_REJECT',shipment)
-    %}
-        <a id="edit_button_customer_shipment" href="{{ path('app_customer_dashboard_shipment_edit', { 'id': shipment.id }) }}"><button class="btn btn-sm btn-labeled btn-info">ویرایش</button></a>
-    {% endif %}
-    {% if
-    shipment.status == constant('STATUS_ASSIGNED',shipment) or
-    shipment.status == constant('STATUS_ON_PICK_UP',shipment) or
-    shipment.status == constant('STATUS_PICKED_UP',shipment) or
-    shipment.status == constant('STATUS_ON_DELIVERY',shipment)
-    %}
-        <a id="fail_button_customer"><button class="btn btn-sm btn-labeled btn-danger">لغو</button></a>
-    {% endif %}
-    <div id="valid_code_form_section">
-    {% if shipment.status == constant('STATUS_ON_PICK_UP',shipment) %}
-        <div class="ui horizontal divider header">ارسال کد دریافتی</div>
-        <div id="send_code_button" class="ui form">
-            {{ form_start(form) }}
-            <div class="four wide field">
-                <label>{{ form_label(form.exchange_code) }}</label>
-                <div>{{ form_widget(form.exchange_code ) }}</div>
-            </div>
-            <div class="field">
-                <input type="hidden" style="" value="{{ shipment.id }}" name="shipment_id" />
-            </div>
-            <div class="field">
-                <input id="" type="submit" style="" value="ارسال" />
-            </div>
-            {{ form_end(form) }}
-        </div>
-        </div>
-        </div>
-        </div>
-    {% endif %}
-    <div data-token = {{ tracking_token }} id="show-shipment-map"></div>
 {% endblock %}
