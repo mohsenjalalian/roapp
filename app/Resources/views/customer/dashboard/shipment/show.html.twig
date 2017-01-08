@@ -21,10 +21,10 @@
     {% endjavascripts %}
 {% endblock %}
 {% block page_title %}
-    سفارش
+    مرسوله
 {% endblock %}
 {% block breadcrumbs %}
-    <li><a href="{{ path('app_customer_dashboard_shipment_index') }}">لیست سفارشات</a></li>
+    <li><a href="{{ path('app_customer_dashboard_shipment_index') }}">فهرست مرسوله ها</a></li>
     <li class="active">نمایش</li>
 {% endblock %}
 {% block main %}
@@ -110,7 +110,7 @@
                     <div id="fail_modal_customer" class="ui modal small fade">
                         <div class="modal-dialog">
                             <div class="modal-content">
-                                <div class="modal-header">دلیل لغو سفارش</div>
+                                <div class="modal-header">دلیل لغو مرسوله</div>
                                 <div class="modal-body">
                                     <div class="ui form field">
                                         <textarea id="fail_customer_reason" placeholder="دلیل لغو سفارش را خود را یادداشت نمایید" class="form-control"></textarea>
@@ -123,7 +123,7 @@
                             </div>
                         </div>
                     </div>
-                    <a href="{{ path('app_customer_dashboard_shipment_index') }}"><button class="btn btn-sm btn-labeled btn-primary">برگشت به لیست</button></a>
+                    <a href="{{ path('app_customer_dashboard_shipment_index') }}"><button class="btn btn-sm btn-labeled btn-primary">فهرست مرسوله ها</button></a>
                     {% if
                     shipment.status == constant('STATUS_NOT_ASSIGNED',shipment) or
                     shipment.status == constant('STATUS_ASSIGNMENT_SENT',shipment) or

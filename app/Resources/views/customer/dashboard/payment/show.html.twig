@@ -1,6 +1,6 @@
 {% extends ':customer/dashboard:layout.html.twig' %}
 {% block page_title %}
-    پرداخت ها
+   جزئیات پرداخت
 {% endblock %}
 {% block breadcrumbs %}
     <li><a href="{{ path('app_dashboard_customer_payment_index') }}">پرداخت ها</a></li>
@@ -35,7 +35,7 @@
                 </tbody>
             </table>
             <div>
-                <a style="margin-right: 10px;margin-bottom: 10px" class="btn btn-sm btn-labeled btn-primary" href="{{ path('app_dashboard_customer_payment_index') }}">لیست کل پرداخت ها</a>
+                <a style="margin-right: 10px;margin-bottom: 10px" class="btn btn-sm btn-labeled btn-primary" href="{{ path('app_dashboard_customer_payment_index') }}">فهرست پرداخت ها</a>
             </div>
         </div>
     </div>

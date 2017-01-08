@@ -1,9 +1,9 @@
 {% extends ':operator/dashboard:layout.html.twig' %}
 {% block page_title %}
-    سفارش
+    مرسوله
 {% endblock %}
 {% block breadcrumbs %}
-    <li><a href="{{ path('app_operator_dashboard_shipment_index') }}">سفارشات</a></li>
+    <li><a href="{{ path('app_operator_dashboard_shipment_index') }}">مرسوله ها</a></li>
     <li class="active">نمایش</li>
 {% endblock %}
 {% block stylesheets %}
@@ -30,7 +30,7 @@
 {% block main %}
     <div class="panel">
         <div class="panel-heading">
-            <span class="panel-title">سفارش</span>
+            <span class="panel-title">مرسوله</span>
         </div>
         <div class="panel-body">
             <table class="table table-striped">
@@ -55,7 +55,7 @@
             </table>
             <div data-token = {{ tracking_token }} id="show-shipment-map"></div>
             <div>
-                <a style="margin-right: 10px;margin-top: 20px" class="btn btn-sm btn-labeled btn-primary" href="{{ path('app_operator_dashboard_shipment_index') }}">لیست کل سفارشات</a>
+                <a style="margin-right: 10px;margin-top: 20px" class="btn btn-sm btn-labeled btn-primary" href="{{ path('app_operator_dashboard_shipment_index') }}">فهرست مرسوله ها</a>
                 {#<a style="color: black" href="{{ path('app_operator_dashboard_shipment_edit', { 'id': shipment.id }) }}"><button>ویرایش</button></a>#}
                 {#{{ form_start(delete_form) }}#}
                 {#<input type="submit" value="حذف">#}
