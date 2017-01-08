@@ -134,3 +134,9 @@ services:
         arguments: ["@security.token_storage"]
         tags:
         - { name: form.type }
+
+    app.date_twig_extension:
+            class: AppBundle\Twig\DateExtension
+            public: false
+            tags:
+                - { name: twig.extension }

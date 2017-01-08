@@ -20,7 +20,7 @@
                 <tbody>
                 {% for periodInvoice in pagination %}
                     <tr>
-                        <td><a href="{{ path('app_customer_dashboard_period_invoice_show', {'id': periodInvoice.id}) }}">{{ periodInvoice.createdAt|date('Y-m-d') }}</a></td>
+                        <td><a href="{{ path('app_customer_dashboard_period_invoice_show', {'id': periodInvoice.id}) }}">{{ periodInvoice.createdAt|jdate('Y/m/d') }}</a></td>
                         <td>{{ periodInvoice.price }}</td>
                         <td>{% if periodInvoice.status == constant('STATUS_UNPAID',periodInvoice)%}پرداخت نشده{% else %}پرداخت شده{% endif %}</td>
                         <td>

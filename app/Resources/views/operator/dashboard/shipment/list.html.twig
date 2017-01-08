@@ -37,7 +37,7 @@
                     <tr class="shipment_assign_list{{ shipment.id }}">
                         <td>{{ shipment.id }}</td>
                         <td>{{ shipment.ownerAddress.customer.fullName }}</td>
-                        <td>{{ shipment.pickUpTime|date('Y-m-d H:i:s') }}</td>
+                        <td>{{ shipment.pickUpTime|jdate('Y/m/d H:i:s') }}</td>
                         <td>انتصاب نشده</td>
                         <td>{{ shipment.ownerAddress.latitude }}</td>
                         <td>{{ shipment.ownerAddress.longitude }}</td>
