@@ -87,7 +87,6 @@ class BusinessUnitController extends Controller
         $businessUnit = $this->get('app.business_unit_service')->businessUnitFactory($businessType);
         $form = $this->createForm('AppBundle\Form\Operator\Dashboard\BusinessUnitType', $businessUnit);
         $form->handleRequest($request);
-
         if ($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
             $em->persist($businessUnit);
@@ -149,14 +148,13 @@ class BusinessUnitController extends Controller
     public function editAction(Request $request, BusinessUnit $businessUnit)
     {
         $deleteForm = $this->createDeleteForm($businessUnit);
-        $editForm = $this->createForm('AppBundle\Form\Operator\Dashboard\BusinessUnitType', $businessUnit);
+        $editForm = $this->createForm($businessUnit->getBusinessType()->getBusinessUnitForm(), $businessUnit);
         $editForm->handleRequest($request);
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
             $this->getDoctrine()->getManager()->flush();
             $translator = $this->get('translator');
             $this->addFlash('edited_success', $translator->trans('edited_successfully'));
-
 
             return $this->redirectToRoute('app_operator_dashboard_businessunit_edit', ['id' => $businessUnit->getId()]);
         }
