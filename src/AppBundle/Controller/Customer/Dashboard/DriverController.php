@@ -133,6 +133,7 @@ class DriverController extends Controller
             ->createQueryBuilder('d')
             ->where('d.businessUnit =:user_business_unit')
             ->setParameter('user_business_unit', $userBusinessUnit)
+            ->orderBy('d.id')
             ->getQuery();
 
         $paginator  = $this->get('knp_paginator');

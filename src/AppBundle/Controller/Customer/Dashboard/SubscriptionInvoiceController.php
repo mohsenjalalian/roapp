@@ -29,6 +29,7 @@ class SubscriptionInvoiceController extends Controller
             ->createQueryBuilder('s')
             ->where('s.businessUnit=:user_business_unit')
             ->setParameter('user_business_unit', $this->getUser()->getBusinessUnit())
+            ->orderBy('s.createdAt', 'DESC')
             ->getQuery();
 
         $paginator  = $this->get('knp_paginator');

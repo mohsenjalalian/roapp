@@ -34,7 +34,7 @@ class ShipmentController extends Controller
         $query = $this->getDoctrine()
             ->getRepository('AppBundle:Shipment')
             ->createQueryBuilder('a')
-            ->orderBy('a.id', 'Asc')
+            ->orderBy('a.createdAt', 'DESC')
             ->getQuery()
         ;
         $paginator  = $this->get('knp_paginator');

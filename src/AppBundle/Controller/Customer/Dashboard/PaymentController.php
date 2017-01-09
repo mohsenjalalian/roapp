@@ -44,7 +44,7 @@ class PaymentController extends Controller
                     Payment::STATUS_CANCEL,
                 ]
             )
-            ->orderBy('p.id', 'Asc')
+            ->orderBy('p.createdDate', 'DESC')
             ->getQuery()
         ;
         $paginator  = $this->get('knp_paginator');

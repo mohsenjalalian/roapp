@@ -44,7 +44,7 @@ class ShipmentController extends Controller
             ->join('ow.customer', 'oc')
             ->where('oc.id =:user_id')
             ->setParameter('user_id', $this->getUser()->getId())
-            ->orderBy('s.pickUpTime', 'Desc')
+            ->orderBy('s.createdAt', 'DESC')
             ->getQuery();
         $paginator  = $this->get('knp_paginator');
         $pagination = $paginator->paginate(
