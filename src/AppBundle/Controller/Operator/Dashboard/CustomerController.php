@@ -7,6 +7,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -28,7 +29,7 @@ class CustomerController extends Controller
     public function indexAction(Request $request, $id = null)
     {
         if ($id) {
-          //TODO implement query for get each customer in businessUnit
+            //TODO implement query for get each customer in businessUnit
         } else {
             $query = $this->getDoctrine()
                 ->getRepository('AppBundle:Customer')
@@ -119,18 +120,46 @@ class CustomerController extends Controller
     public function editAction(Request $request, Customer $customer)
     {
         $deleteForm = $this->createDeleteForm($customer);
-        $editForm = $this->createForm('AppBundle\Form\Operator\Dashboard\CustomerType', $customer);
+        $editForm = $this
+            ->createForm(
+                'AppBundle\Form\Operator\Dashboard\CustomerType',
+                $customer,
+                [
+                    'attr' => [
+                        'id' => 'customer_form_operator_dashboard',
+                    ],
+                ]
+            );
         $editForm->handleRequest($request);
-
         if ($editForm->isSubmitted() && $editForm->isValid()) {
             $em = $this->getDoctrine()->getManager();
-            $em->persist($customer);
-            $em->flush();
-            $translator = $this->get('translator');
-            $this->addFlash('edited_success', $translator->trans('edited_successfully'));
+            $currentPass = $editForm->get('currentPassword')->getData();
+            if (trim($currentPass)) {
+                $result = $this->getDoctrine()
+                    ->getRepository("AppBundle:Customer")
+                    ->validationCurrentPassword($customer->getId(), $currentPass);
+                // check current password is correct
+                if ($result instanceof Customer) {
+                    $newPassword = $editForm->get('newPassword')->getData();
+                    $customer->setPassword($newPassword);
+                    $em->persist($customer);
+                    $em->flush();
 
+                    $translator = $this->get('translator');
+                    $this->addFlash('edited_success', $translator->trans('edited_successfully'));
 
-            return $this->redirectToRoute('app_operator_dashboard_customer_edit', ['id' => $customer->getId()]);
+                    return new JsonResponse();
+                } else {
+                    return new JsonResponse("current password is wrong");
+                }
+            } else {
+                $em->persist($customer);
+                $em->flush();
+                $translator = $this->get('translator');
+                $this->addFlash('edited_success', $translator->trans('edited_successfully'));
+
+                return new JsonResponse();
+            }
         }
 
         return $this->render('operator/dashboard/customer/edit.html.twig', [
