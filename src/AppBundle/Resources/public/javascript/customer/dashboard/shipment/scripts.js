@@ -70,9 +70,9 @@ $(document).ready(function() {
     })
 });
 
-$(".calc_price_item").on('change', function () {
+$(".calc_price_item, .select-address input").on('change', function () {
     var ownerAddressId = $('.owner-address').val();
-    var otherAddressId = $('.select-address input:checked').val();
+    var otherAddressId = $('.select-address input').val();
     var shipmentValue = 1000;
     var shipmentPickUpTime = $(".js-datepicker").val();
     $.ajax({
@@ -136,10 +136,12 @@ $("#add_address").on('submit', function (event) {
                     success: function (html) {
                         // Replace current position field ...
                         $('.select-address').replaceWith(
+
                             // ... with the returned one from the AJAX response.
                             $(html).find('.select-address')
                         );
                         // Position field now displays the appropriate positions.
+                        $("#restaurant_shipment_otherAddress:last-child label input").prop('checked', 'checked');
                     }
                 });
             }
