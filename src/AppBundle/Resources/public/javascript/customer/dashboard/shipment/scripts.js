@@ -95,7 +95,19 @@ $(".calc_price_item").on('change', function () {
         }
     });
 });
-
+$('#mapModal').on('hidden.bs.modal', function () {
+    $("#address").val("");
+    map = new google.maps.Map(document.getElementById('map'), {
+        zoom: 13,
+        center: {lat: 35.6891975, lng: 51.388973599999986}
+    });
+    marker = new google.maps.Marker({
+        position: {lat: 35.6891975, lng: 51.388973599999986},
+        map: map,
+        title: 'تهران',
+        draggable:true
+    });
+});
 $("#add_address").on('submit', function (event) {
     event.preventDefault();
     var phoneNumber = $("#restaurant_shipment_other_phone").val();
@@ -114,6 +126,7 @@ $("#add_address").on('submit', function (event) {
             contentType: false,
             type: "POST",
             success: function (response) {
+                $("#address").val("");
                 $('#mapModal').modal('hide');
 
                 $.ajax({

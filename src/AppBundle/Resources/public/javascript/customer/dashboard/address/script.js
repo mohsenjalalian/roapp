@@ -1,10 +1,12 @@
+var marker;
+var map;
 function initMap() {
-    var map = new google.maps.Map(document.getElementById('map'), {
+    map = new google.maps.Map(document.getElementById('map'), {
         zoom: 13,
         center: {lat: 35.6891975, lng: 51.388973599999986}
     });
 
-    var marker = new google.maps.Marker({
+    marker = new google.maps.Marker({
         position: {lat: 35.6891975, lng: 51.388973599999986},
         map: map,
         title: 'تهران',
@@ -45,12 +47,12 @@ function editMap() {
     var lng = parseFloat($("#address").data('lng'));
     $("#address").val($("#address").data('addr'));
 
-    var map = new google.maps.Map(document.getElementById('map'), {
+    map = new google.maps.Map(document.getElementById('map'), {
         zoom: 13,
         center: {lat: lat, lng: lng}
     });
 
-    var marker = new google.maps.Marker({
+    marker = new google.maps.Marker({
         position: {lat: lat, lng: lng},
         map: map,
         title: 'تهران',
@@ -69,12 +71,12 @@ function showMap() {
     var lat = parseFloat($("#address").data('lat'));
     var lng = parseFloat($("#address").data('lng'));
 
-    var map = new google.maps.Map(document.getElementById('map'), {
+    map = new google.maps.Map(document.getElementById('map'), {
         zoom: 13,
         center: {lat: lat, lng: lng}
     });
 
-    var marker = new google.maps.Marker({
+    marker = new google.maps.Marker({
         position: {lat: lat, lng: lng},
         map: map,
         title: 'تهران',

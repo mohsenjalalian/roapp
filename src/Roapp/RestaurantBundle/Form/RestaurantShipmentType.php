@@ -25,7 +25,7 @@ class RestaurantShipmentType extends AbstractType
                 'value',
                 null,
                 [
-                    'label' => 'هزینه',
+                    'label' => 'مبلغ پرداختی گیرنده',
                 ]
             );
     }
