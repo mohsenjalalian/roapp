@@ -65,6 +65,20 @@ class BusinessUnitType extends AbstractType
                                 'choices' => array_combine(array_values(EnumContractType::getValues()), array_keys(EnumContractType::getValues())),
                             ]
                         );
+                        $form->add(
+                            'address',
+                            null,
+                            [
+                                'label' => 'آدرس',
+                            ]
+                        );
+                        $form->add(
+                            'phone',
+                            null,
+                            [
+                                'label' => 'تلفن',
+                            ]
+                        );
                     }
                 }
             )
