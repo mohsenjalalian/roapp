@@ -117,6 +117,104 @@ class DriverController extends Controller
 
         return new JsonResponse($output);
     }
+
+    /**
+     * @Route("/init_location_map",name="app_customer_dashboard_driver_init_location_map")
+     * @param Request $request
+     * @return JsonResponse | null
+     */
+    public function initLocationMapAction(Request $request)
+    {
+        $token = $request->get('token');
+        $conn = r\connect(
+            $this->getParameter('rethinkdb_host'),
+            $this->getParameter('rethinkdb_port'),
+            'roapp',
+            $this->getParameter('rethink_password')
+        );
+        if (!isset($conn)) {
+            return new JsonResponse(null);
+        }
+
+        $result = r\table('driver')
+            ->filter(
+                [
+                    'tracking_token' => $token,
+                ]
+            )
+            ->run($conn);
+        if (!isset($result)) {
+            return new JsonResponse(null);
+        }
+        /** @var \ArrayObject $current */
+        $current = $result->current();
+        $id = $current->getArrayCopy()['id'];
+
+        $lastLocation = r\table('location')
+            ->filter(
+                [
+                    'driver_id' => $id,
+                ]
+            )
+            ->orderBy(r\desc('date_time'))
+            ->limit(1)
+            ->run($conn);
+        if (!isset($lastLocation)) {
+            return new JsonResponse(null);
+        }
+
+        $counter = 0;
+        $output = [];
+        foreach ($lastLocation as $value) {
+            /** @var \ArrayObject $value */
+            $output[$counter]['lat'] = $value->getArrayCopy()['lat'];
+            $output[$counter]['lng'] = $value->getArrayCopy()['lng'];
+            $output[$counter]['tracking_token'] = $token;
+            $counter = $counter+1;
+        }
+
+        return new JsonResponse($output);
+    }
+
+    /**
+     * @Route("/location", name="app_customer_dashboard_driver_location")
+     * @param Request $request
+     * @Method("GET")
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function locationAction(Request $request)
+    {
+        $customer = $this->getUser();
+        $businessUnit = $customer->getBusinessUnit();
+
+        $conn = r\connect(
+            $this->getParameter('rethinkdb_host'),
+            $this->getParameter('rethinkdb_port'),
+            'roapp',
+            $this->getParameter('rethink_password')
+        );
+        if (!isset($conn)) {
+            return new JsonResponse(null);
+        }
+        $driverRethink = r\table("driver")
+            ->filter(
+                [
+                    'business_unit_id' => $businessUnit->getId(),
+                ]
+            )
+            ->run($conn);
+
+        $trackingTokens = [];
+        foreach ($driverRethink as $value) {
+            /** @var \ArrayObject $value */
+            $trackingTokens[] = $value->getArrayCopy()['tracking_token'];
+        }
+
+        return $this->render('customer/dashboard/driver/location.html.twig', [
+            'trackingTokens' => $trackingTokens,
+        ]);
+    }
+
     /**
      * Lists all driver entities.
      *

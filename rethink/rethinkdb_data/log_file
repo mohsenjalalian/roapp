@@ -1,0 +1,20 @@
+2017-01-03T18:41:18.863416962 0.123716s notice: Recursively removing directory /home/mohsen/projects/php/roapp/rethink/rethinkdb_data/tmp
+2017-01-03T18:41:18.914747368 0.175045s notice: Initializing directory /home/mohsen/projects/php/roapp/rethink/rethinkdb_data
+2017-01-03T18:41:18.914963701 0.175261s info: Creating a default database for your convenience. (This is because you ran 'rethinkdb' without 'create', 'serve', or '--join', and the directory '/home/mohsen/projects/php/roapp/rethink/rethinkdb_data' did not already exist or is empty.)
+2017-01-03T18:41:18.915160280 0.175457s notice: Running rethinkdb 2.3.5~0xenial (GCC 5.3.1)...
+2017-01-03T18:41:18.923358198 0.183662s notice: Running on Linux 4.4.0-57-generic x86_64
+2017-01-03T18:41:18.923510119 0.183807s notice: Loading data from directory /home/mohsen/projects/php/roapp/rethink/rethinkdb_data
+2017-01-03T18:41:19.232951506 0.493249s info: Automatically using cache size of 2297 MB
+2017-01-03T18:41:19.236074145 0.496372s notice: Listening for intracluster connections on port 29015
+2017-01-03T18:41:19.241902007 0.502199s notice: Listening for client driver connections on port 28015
+2017-01-03T18:41:19.242384894 0.502682s notice: Listening for administrative HTTP connections on port 8080
+2017-01-03T18:41:19.242395009 0.502691s notice: Listening on cluster addresses: 127.0.0.1, 127.0.1.1, ::1
+2017-01-03T18:41:19.242408714 0.502705s notice: Listening on driver addresses: 127.0.0.1, 127.0.1.1, ::1
+2017-01-03T18:41:19.242417176 0.502713s notice: Listening on http addresses: 127.0.0.1, 127.0.1.1, ::1
+2017-01-03T18:41:19.242429822 0.502726s notice: To fully expose RethinkDB on the network, bind to all addresses by running rethinkdb with the `--bind all` command line option.
+2017-01-03T18:41:19.242442336 0.502739s notice: Server ready, "mohsen_X456UR_mi5" b11b95d9-6f98-4283-9d55-a33afa25f5e5
+2017-01-03T18:41:21.541989571 2.802287s notice: Server got SIGINT from pid 0, uid 0; shutting down...
+2017-01-03T18:41:21.542169100 2.802466s notice: Shutting down client connections...
+2017-01-03T18:41:21.542490127 2.802787s notice: All client connections closed.
+2017-01-03T18:41:21.542509695 2.802806s notice: Shutting down storage engine... (This may take a while if you had a lot of unflushed data in the writeback cache.)
+2017-01-03T18:41:21.570037498 2.830335s notice: Storage engine shut down.
