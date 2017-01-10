@@ -147,3 +147,6 @@ $("#add_address").on('submit', function (event) {
             }
         });
 });
+$("#add-addr").on("click", function (event) {
+    event.preventDefault();
+});
