@@ -8,6 +8,22 @@
     </label>
 {% endblock %}
 
+{%- block form_rows -%}
+    {% if form is not empty %}
+        {% for child in form %}
+            {{- form_row(child) -}}
+        {% endfor %}
+    {% else %}
+        <div class="empty-address">آدرسی وجود ندارد</div>
+    {% endif %}
+{%- endblock form_rows -%}
+
+{% block _restaurant_shipment_otherAddress_widget %}
+    <div {{ block('widget_container_attributes') }}>
+        {{- block('form_rows') -}}
+    </div>
+{% endblock %}
+
 {% block shipment_row %}
     <form action="{{ path('app_customer_dashboard_shipment_new') }}" method="POST" class="panel form-horizontal">
         {{ form_errors(form) }}
@@ -39,20 +55,22 @@
                     </div>
                 </div>
             </div>
-            <div class="form-group row">
-                <div class="col-md-6">
-                    <div class="form-group row">
-                        <label class="col-sm-4"><button id="add-addr" class="btn btn-sm btn-labeled btn-primary" data-toggle="modal" data-target="#mapModal">افزودن آدرس</button></label>
-                        <div class="col-sm-8">
+            <div class="note note-info">
+                <div class="form-group row">
+                    <div class="col-md-6">
+                        <div class="form-group row">
+                            <label class="col-sm-4"><button id="add-addr" class="btn btn-sm btn-labeled btn-primary" data-toggle="modal" data-target="#mapModal">افزودن آدرس</button></label>
+                            <div class="col-sm-8">
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="form-group row">
-                <div class="col-md-6">
-                    <div class="form-group row">
-                        <label class="col-sm-4">{{ form_label(form.otherAddress) }}</label>
-                        <div class="calc_price_item col-sm-8" style="direction: rtl !important;">{{ form_widget(form.otherAddress ) }}</div>
+                <div class="form-group row">
+                    <div class="col-md-6">
+                        <div class="form-group row">
+                            <label class="col-sm-4">{{ form_label(form.otherAddress) }}</label>
+                            <div class="calc_price_item col-sm-8" style="direction: rtl !important;">{{ form_widget(form.otherAddress ) }}</div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -102,6 +120,7 @@
             <div style="margin-top: 10px;margin-bottom: 10px">
                 <span id="calculate_price" style="color: red" class=""><b>قیمت کل :</b></span>
                 <h5 id="cost_show" style="display: inline">---</h5>
+                <span>تومان</span>
             </div>
             <div class="price_send">
 
