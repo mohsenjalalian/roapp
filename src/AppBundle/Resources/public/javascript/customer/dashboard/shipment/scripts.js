@@ -23,26 +23,29 @@ $(document).ready(function() {
     var $otherPhone = $('.other-phone');
     // When sport gets selected ...
     $otherPhone.on('keyup', function () {
-        // ... retrieve the corresponding form.
-        var $form = $(this).closest('form');
-        // Simulate form data, but only include the selected sport value.
-        var data = {};
-        data[$otherPhone.attr('name')] = $otherPhone.val();
-        data[$otherPhone.attr('name')] = $otherPhone.val();
-        // Submit data via AJAX to the form's action path.
-        $.ajax({
-            url: $form.attr('action'),
-            type: $form.attr('method'),
-            data: data,
-            success: function (html) {
-                // Replace current position field ...
-                $('.select-address').replaceWith(
-                    // ... with the returned one from the AJAX response.
-                    $(html).find('.select-address')
-                );
-                // Position field now displays the appropriate positions.
-            }
-        });
+        $('.select-address').empty();
+        if  ($otherPhone.val().length == 11) {
+            // ... retrieve the corresponding form.
+            var $form = $(this).closest('form');
+            // Simulate form data, but only include the selected sport value.
+            var data = {};
+            data[$otherPhone.attr('name')] = $otherPhone.val();
+            data[$otherPhone.attr('name')] = $otherPhone.val();
+            // Submit data via AJAX to the form's action path.
+            $.ajax({
+                url: $form.attr('action'),
+                type: $form.attr('method'),
+                data: data,
+                success: function (html) {
+                    // Replace current position field ...
+                    $('.select-address').replaceWith(
+                        // ... with the returned one from the AJAX response.
+                        $(html).find('.select-address')
+                    );
+                    // Position field now displays the appropriate positions.
+                }
+            });
+        }
     });
 
     $isBusinessUnitDriver = $('#shipment-switch');

@@ -72,6 +72,7 @@ class ShipmentType extends AbstractType
                         [
                             'placeHolder' => 'لطفا شماره تلفن همراه مورد نظر خود را وارد نمایید.',
                             'class' => 'calc_price_item other-phone',
+                            'autocomplete' => 'off',
                         ],
                     'translation_domain' => 'messages',
                 ]
