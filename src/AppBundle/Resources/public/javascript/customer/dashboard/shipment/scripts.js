@@ -77,7 +77,7 @@ $(".calc_price_item, .select-address input").on('change', function () {
     var ownerAddressId = $('.owner-address').val();
     var otherAddressId = $('.select-address input').val();
     var shipmentValue = 1000;
-    var shipmentPickUpTime = $(".js-datepicker").val();
+    var shipmentPickUpTime = $(".duration").val();
     $.ajax({
         url: 'calc_shipment_price',
         data: {
