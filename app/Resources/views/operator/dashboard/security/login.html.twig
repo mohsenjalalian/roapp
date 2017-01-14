@@ -2,9 +2,8 @@
 <html>
 <head>
     <meta charset="UTF-8" />
-    <title>{% block title %}Welcome!{% endblock %}</title>
+    <title>{% block title %}ورود به سامانه{% endblock %}</title>
     {% block stylesheets %}
-
         {% stylesheets
         'assets/vendor/bootstrap/dist/css/bootstrap.min.css'
         'bundles/app/pixeladmin/assets/stylesheets/pixel-admin.min.css'
@@ -12,10 +11,21 @@
         'bundles/app/pixeladmin/assets/stylesheets/rtl.min.css'
         'bundles/app/pixeladmin/assets/stylesheets/themes.min.css'
         'assets/vendor/font-awesome/css/font-awesome.css'
+        'bundles/app/stylesheets/operator/dashboard/layout.css'
         'bundles/app/stylesheets/operator/dashboard/security/login/style.css'
         %}
         <link rel="stylesheet" href="{{ asset_url }}" />
         {% endstylesheets %}
+    {% endblock %}
+    {% block javascripts %}
+        {% javascripts
+        'assets/vendor/jquery/dist/jquery.js'
+        'bundles/app/pixeladmin/assets/javascripts/bootstrap.min.js'
+        'bundles/app/pixeladmin/assets/javascripts/pixel-admin.min.js'
+        'bundles/app/javascript/operator/dashboard/security/reset_password.js'
+        %}
+        <script type="text/javascript" src="{{ asset_url }}" ></script>
+        {% endjavascripts %}
     {% endblock %}
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -24,37 +34,97 @@
 
     <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
 </head>
-<body dir="rtl" class="theme-default page-signin-alt">
+<body dir="rtl" class="theme-default page-signin">
+<!-- Page background -->
+<div id="page-signin-bg">
+    <!-- Background overlay -->
+    <div class="overlay"></div>
+    <!-- Replace this with your bg image -->
+    <img src="{{ asset('bundles/app/pixeladmin/assets/demo/signin-bg-1.jpg') }}" alt="">
+</div>
+<!-- / Page background -->
 
-{% if error %}
-    <div class="alert alert-danger">
-        <button type="button" class="close" data-dismiss="alert">×</button>
-        {{ error.messageKey|trans(error.messageData, 'security') }}<
+<!-- Container -->
+<div class="signin-container">
+    <!-- Left side -->
+    <div class="signin-info">
+        <a href="" class="logo">
+            <img src="{{ asset('bundles/app/pixeladmin/assets/demo/logo-big.png') }}" alt="" style="margin-top: -5px;">&nbsp;
+            Roapp
+        </a> <!-- / .logo -->
+        <div class="slogan">
+          سریع و مطمئن
+        </div> <!-- / .slogan -->
+        <ul>
+            <li><i class="fa fa-sitemap signin-icon"></i> مدیریت مرسوله ها</li>
+            <li><i class="fa fa-file-text-o signin-icon"></i>مدیریت راننده ها</li>
+            {#<li><i class="fa fa-outdent signin-icon"></i> RTL direction support</li>#}
+            {#<li><i class="fa fa-heart signin-icon"></i> Crafted with love</li>#}
+        </ul> <!-- / Info list -->
     </div>
-{% endif %}
+    <!-- / Left side -->
 
-<div class="signin-header">
-    <a href="index.html" class="logo">
-        <div class="demo-logo bg-primary"><img src="assets/demo/logo-big.png" alt="" style="margin-top: -4px;"></div>&nbsp;
-        <strong>Roapp</strong>
-    </a> <!-- / .logo -->
-</div> <!-- / .header -->
-<h1 class="form-header">ورود به سامانه</h1>
-<!-- Form -->
-<form action="{{ path('app_operator_dashboard_security_login') }}" id="signin-form_id" class="panel" method="post">
-    <div class="form-group">
-        <input type="text" value="{{ last_username }}" name="_username" id="username" class="form-control input-lg" placeholder="پست الکترونیکی">
-        <input type="hidden" name="_target_path" value="{{ url('app_operator_dashboard_shipment_list') }}" />
-    </div> <!-- / Username -->
+    <!-- Right side -->
+    <div class="signin-form">
+        {% if error %}
+            <div class="alert alert-danger" id="error_login_operator">
+                {{ error.messageKey|trans(error.messageData, 'security') }}
+            </div>
+        {% endif %}
+        <!-- Form -->
+        <div class="signin-text">
+            <span><b>ورود به سامانه</b></span>
+        </div>
+        <form action="{{ path('app_operator_dashboard_security_login') }}" id="signin-form_id" class="panel" method="post">
+           <!-- / .signin-text -->
 
-    <div class="form-group signin-password">
-        <input type="password" name="_password" id="password" class="form-control input-lg" placeholder="رمز عبور">
-        <a href="#" class="forgot">فراموشی?</a>
-    </div> <!-- / Password -->
+            <div class="form-group  w-icon">
+                <input type="text" value="{{ last_username }}" name="_username" id="username" class="form-control input-lg" placeholder="پست الکترونیکی">
+                <span class="fa fa-user signin-form-icon"></span>
+                <input type="hidden" name="_target_path" value="{{ url('app_operator_dashboard_shipment_list') }}" />
+            </div> <!-- / Username -->
 
-    <div class="form-actions">
-        <input type="submit" value="ورود" class="btn btn-primary btn-block btn-lg">
-    </div> <!-- / .form-actions -->
-</form>
-<!-- / Form -->
+            <div class="form-group signin-password w-icon">
+                <input type="password" name="_password" id="password" class="form-control input-lg" placeholder="رمز عبور">
+                <span class="fa fa-lock signin-form-icon"></span>
+                {#<a href="#" class="forgot">فراموشی?</a>#}
+            </div> <!-- / Password -->
+
+            <div class="form-actions text-center">
+                <input type="submit" value="ورود" class="btn btn-primary btn-md">
+                <a style="font-size:13px " href="#" class="forgot-password" id="forgot-password-link">فراموشی؟</a>
+            </div> <!-- / .form-actions -->
+        </form>
+
+        <!-- Password reset form -->
+        <div class="password-reset-form" id="password-reset-form">
+            <div class="header">
+                <div class="signin-text">
+                    <span>بازیابی پسورد</span>
+                    <div class="close">&times;</div>
+                </div> <!-- / .signin-text -->
+            </div> <!-- / .header -->
+
+            <!-- Form -->
+            <form action="#" id="password-reset-form_id">
+                <div class="form-group w-icon">
+                    <input type="text" name="password_reset_email" id="p_email_id" class="form-control input-lg" placeholder="ایمیل خود را وارد نمایید">
+                    <span class="fa fa-envelope signin-form-icon"></span>
+                </div> <!-- / Email -->
+
+                <div class="form-actions">
+                    <input type="submit" value="ارسال" class="signin-btn bg-primary">
+                </div> <!-- / .form-actions -->
+            </form>
+            <!-- / Form -->
+        </div>
+        <!-- / Password reset form -->
+    </div>
+    <!-- Right side -->
+</div>
+<!-- / Container -->
+
+<div class="not-a-member">
+عضو نیستم ؟ <a href="#">ثبت نام</a>
+</div>
 </body>
