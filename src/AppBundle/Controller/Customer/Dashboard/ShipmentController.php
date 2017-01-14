@@ -18,6 +18,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use AppBundle\Entity\Shipment;
 use Symfony\Component\HttpFoundation\Response;
 use r;
+use Symfony\Component\Validator\Constraints\DateTime;
 
 /**
  * Shipment controller.
@@ -77,9 +78,6 @@ class ShipmentController extends Controller
             $address = $this->getDoctrine()
                 ->getRepository("AppBundle:Address")
                 ->getPublicAddressCustomer($customerId);
-            $now = new \DateTime();
-            $tomorrow = $now->add(new \DateInterval('P1D'));
-            $shipment->setPickUpTime($tomorrow);
             $form = $this->createForm($shipmentService->getShipmentFormNamespace(), $shipment);
             $addressForm = $this
                 ->createForm(
@@ -316,8 +314,8 @@ class ShipmentController extends Controller
         $otherAddressId = $request->request->get('otherAddressId');
         $shipmentValue = $request->request->get('shipmentValue');
         $shipmentPickUpTime = $request->request->get('shipmentPickUpTime');
-        $shipmentPickUpTime = $this->get("app.jdate_service")
-            ->convertToGregorian($shipmentPickUpTime);
+        $now = new \DateTime();
+        $shipmentPickUpTime = $now->add(new \DateInterval('PT'.$shipmentPickUpTime.'M'));
         $ownerAddress = $this->getDoctrine()
             ->getRepository("AppBundle:Address")
             ->find($ownerAddressId);

@@ -4,12 +4,13 @@ namespace AppBundle\Form\Customer\Dashboard;
 
 use AppBundle\Entity\Driver;
 use AppBundle\Entity\Shipment;
-use AppBundle\Form\DataTransformer\DateTimeTransformer;
+use AppBundle\Form\DataTransformer\TimeTransformer;
 use AppBundle\Repository\AddressRepository;
 use AppBundle\Repository\DriverRepository;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
@@ -19,6 +20,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Validator\Constraints\Choice;
 
 /**
  * Class ShipmentType
@@ -56,11 +58,15 @@ class ShipmentType extends AbstractType
             )
             ->add(
                 'pickUpTime',
-                TextType::class,
+                ChoiceType::class,
                 [
                     "label" => "تعیین زمان تحویل",
+                    'attr' => ['class' => 'duration'],
                     'translation_domain' => 'messages',
-                    'attr' => ['class' => 'js-datepicker'],
+                    'choices' => $this->durations(),
+                    'choice_label' => function ($key, $index) {
+                        return $index;
+                    },
                 ]
             )
             ->add(
@@ -91,7 +97,7 @@ class ShipmentType extends AbstractType
         ;
         $user = $this->tokenStorage->getToken()->getUser();
         $builder->get('pickUpTime')
-            ->addModelTransformer(new DateTimeTransformer());
+            ->addModelTransformer(new TimeTransformer());
 
         $formModifier = function (FormInterface $form, $phone) {
             $form->add('otherAddress', EntityType::class, [
@@ -193,5 +199,25 @@ class ShipmentType extends AbstractType
                 'data_class' => 'AppBundle\Entity\Shipment',
             ]
         );
+    }
+
+    /**
+     * @return array
+     */
+    public function durations()
+    {
+        $times = [];
+        $x = 30;
+        while ($x <= 720) {
+            if ($x >= 60) {
+                $h = $x / 60;
+                $times[$h.'h'] = $x;
+            } else {
+                $times[$x.'min'] = $x;
+            }
+            $x = $x + 30;
+        }
+
+        return $times;
     }
 }
