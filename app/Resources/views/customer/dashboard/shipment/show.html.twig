@@ -28,6 +28,7 @@
     <li class="active">نمایش</li>
 {% endblock %}
 {% block main %}
+    {% set motorIcon = asset('bundles/app/images/motor.png') %}
     <div class="col-sm-12">
         <div class="row">
             <div class="panel col-sm-6">
@@ -142,7 +143,7 @@
                 </div>
             </div>
             <div class="col-sm-6">
-                <div  style="height: 273px"  data-token = {{ tracking_token }} id="show-shipment-map"></div>
+                <div  style="height: 273px"  data-token = {{ tracking_token }} id="show-shipment-map" data-icon = "{{ motorIcon }}"></div>
             </div>
         </div>
     </div>

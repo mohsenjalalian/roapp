@@ -32,17 +32,6 @@ $(document).ready(function () {
         marker.setPosition( new google.maps.LatLng( newLat, newLng) );
         map.panTo( new google.maps.LatLng( newLat, newLng) );
 
-        line = new google.maps.Polyline({
-            path: [
-                new google.maps.LatLng(oldLat, oldLng),
-                new google.maps.LatLng(newLat, newLng)
-            ],
-            strokeColor: "#CCE6A4",
-            strokeOpacity: 1.0,
-            strokeWeight: 7,
-            map: map
-        });
-
     });
     $.ajax({
         url: "load_map",
@@ -50,23 +39,17 @@ $(document).ready(function () {
         data: {token: token},
         type: "POST",
         success: function (result) {
-            var lineCoordinates = result.map(function (result) {
-                return new google.maps.LatLng(result.lat, result.lng);
-            });
 
             lastLat = result[0].lastLat;
             lastLng = result[0].lastLng;
 
-            marker.setPosition( new google.maps.LatLng( lastLat, lastLng) );
-            map.panTo( new google.maps.LatLng( lastLat, lastLng) );
-
-            line = new google.maps.Polyline({
-                path: lineCoordinates,
-                strokeColor: "#CCE6A4",
-                strokeOpacity: 1.0,
-                strokeWeight: 7,
-                map: map
+            marker = new google.maps.Marker({
+                position: new google.maps.LatLng(lastLat, lastLng),
+                map: map,
+                icon: icon
             });
+
+            map.panTo( new google.maps.LatLng( lastLat, lastLng) );
         }
     })
 });
