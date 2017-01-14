@@ -120,7 +120,7 @@ class Driver extends Person
      */
     public function __toString()
     {
-        return (string) $this->getUsername();
+        return (string) $this->getFullName().' ('.$this->getUsername().')';
     }
 
     /**
