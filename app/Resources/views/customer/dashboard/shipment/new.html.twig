@@ -1,10 +1,12 @@
 {% extends ':customer/dashboard:layout.html.twig' %}
-
+{% block title %}
+    درخواست مرسوله جدید
+{% endblock %}
 {% block page_title %}
 ثبت درخواست ارسال
 {% endblock %}
 {% block breadcrumbs %}
-    <li><a href="{{ path('app_customer_dashboard_shipment_index') }}">سفارشات</a></li>
+    <li><a href="{{ path('app_customer_dashboard_shipment_index') }}">مرسوله ها</a></li>
     <li class="active">ثبت درخواست ارسال</li>
 {% endblock %}
 {% block main %}
