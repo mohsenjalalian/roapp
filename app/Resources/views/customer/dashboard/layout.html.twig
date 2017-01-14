@@ -88,7 +88,7 @@
         </div> <!-- / #main-menu-inner -->
     </div> <!-- / #main-menu -->
                 {#{{ knp_menu_render('main_menu', {"template": "menu.html.twig", "currentClass": "active"}) }}#}
-    <div id="content-wrapper">
+    <div id="content-wrapper" style="padding: 45px 18px 18px">
         <ul id="page-breadcrumb-demo" class="breadcrumb breadcrumb-page breadcrumb-dark" style="background: rgb(71, 142, 158); display: block;">
             <li><a href="{{ path('app_customer_dashboard_shipment_index') }}">خانه</a></li>
             {% block breadcrumbs %} {% endblock %}

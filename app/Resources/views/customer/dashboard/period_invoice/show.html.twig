@@ -1,5 +1,7 @@
 {% extends ':customer/dashboard:layout.html.twig' %}
-
+{% block title %}
+    جزئیات رسید ها
+{% endblock %}
 {% block page_title %}
     <h4>    فهرست مرسوله ها در تاریخ : {{ pagination.0.createdAt|jdate('Y/m/d') }}</h4>
 {% endblock %}
