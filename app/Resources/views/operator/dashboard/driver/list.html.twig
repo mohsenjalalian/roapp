@@ -46,6 +46,7 @@
         </div>
     {% endif  %}
     {% block javascripts %}
+        {{ parent() }}
         {% javascripts
         'assets/vendor/jquery/dist/jquery.js'
         '@semantic_base_js'

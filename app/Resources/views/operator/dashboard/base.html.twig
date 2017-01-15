@@ -31,16 +31,17 @@
 </head>
 <body dir="rtl" class="theme-default main-menu-animated right-to-left">
 <div id="main-wrapper">
-{% block body %}{% endblock %}
-{% block javascripts %}
-    {% javascripts
-    'assets/vendor/jquery/dist/jquery.js'
-    'bundles/app/pixeladmin/assets/javascripts/bootstrap.min.js'
-    'bundles/app/pixeladmin/assets/javascripts/pixel-admin.min.js'
-    %}
-    <script type="text/javascript" src="{{ asset_url }}" ></script>
-    {% endjavascripts %}
-{% endblock %}
+    {% block body %}{% endblock %}
+    {% block javascripts %}
+        {% javascripts
+        'assets/vendor/jquery/dist/jquery.js'
+        'bundles/app/pixeladmin/assets/javascripts/bootstrap.min.js'
+        'bundles/app/pixeladmin/assets/javascripts/pixel-admin.min.js'
+        'bundles/app/javascript/operator/right_menu_active.js'
+        %}
+        <script type="text/javascript" src="{{ asset_url }}" ></script>
+        {% endjavascripts %}
+    {% endblock %}
 </div>
 <script>var init = [];</script>
 <script type="text/javascript">
