@@ -5,6 +5,7 @@ namespace AppBundle\Controller\Customer\Dashboard;
 use AppBundle\Entity\Customer;
 
 use AppBundle\Form\Customer\Dashboard\RegisterType;
+use AppBundle\Form\Security\ForgetPasswordType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
@@ -20,10 +21,11 @@ class SecurityController extends Controller
     /**
      * @author Naghmeh Mashhadi
      * @Route("/login", name="app_customer_dashboard_security_login")
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @param Request $request
+     * @return Response This action displays and validates the login form
      * This action displays and validates the login form
      */
-    public function loginAction()
+    public function loginAction(Request $request)
     {
         if ($this->isGranted("ROLE_CUSTOMER")) {
             return $this->redirectToRoute("app_customer_dashboard_shipment_index");
@@ -36,6 +38,16 @@ class SecurityController extends Controller
 
         // last username entered by the user
         $lastUsername = $authenticationUtils->getLastUsername();
+        $currentRouteName = $request->get('_route');
+        $forgetPasswordForm = $this->createForm(
+            ForgetPasswordType::class,
+            [
+                'current_route_name' => $currentRouteName,
+            ],
+            [
+                'action' => $this->generateUrl('app_security_forget_password'),
+            ]
+        );
 
         return $this->render(
             ':customer/dashboard/security:login.html.twig',
@@ -43,6 +55,7 @@ class SecurityController extends Controller
                 // last username entered by the user
                 'last_username' => $lastUsername,
                 'error'         => $error,
+                'forgetPasswordForm' => $forgetPasswordForm->createView(),
             ]
         );
     }

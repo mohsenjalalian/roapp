@@ -140,3 +140,9 @@ services:
             public: false
             tags:
                 - { name: twig.extension }
+
+    app.recovery.password.form:
+        class: AppBundle\Form\Security\RecoveryPasswordType
+        arguments: ["@translator"]
+        tags:
+        - {name: form.type}
