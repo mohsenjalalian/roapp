@@ -5,7 +5,9 @@ var socket = io('http://localhost:4000');
 var map;
 var marker;
 var line;
-
+var show_map =$("#show-shipment-map");
+var other_address_lat = show_map.data('lat');
+var other_address_lng = show_map.data('lng');
 
 // function initMap() {
 //     var tehran = {lat: 35.78819000, lng: 51.45983810};
@@ -43,12 +45,15 @@ $(document).ready(function () {
             lastLat = result[0].lastLat;
             lastLng = result[0].lastLng;
 
+            var origin1 = {lat: parseFloat(lastLat), lng: parseFloat(lastLng)};
+            var destinationB = {lat: parseFloat(other_address_lat), lng: parseFloat(other_address_lng)};
+            distanceMatrix(origin1, destinationB);
+
             marker = new google.maps.Marker({
                 position: new google.maps.LatLng(lastLat, lastLng),
                 map: map,
                 icon: icon
             });
-
             map.panTo( new google.maps.LatLng( lastLat, lastLng) );
         }
     })

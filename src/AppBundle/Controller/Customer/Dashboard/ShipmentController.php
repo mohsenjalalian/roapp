@@ -461,11 +461,16 @@ class ShipmentController extends Controller
         $current = $t->current();
         $trackingToken = $current->getArrayCopy()['tracking_token'];
 
+        $otherAddressLat = $shipment->getOtherAddress()->getLatitude();
+        $otherAddressLng = $shipment->getOtherAddress()->getLongitude();
+
         $deleteForm = $this->createDeleteForm($shipment);
 
         return $this->render('customer/dashboard/shipment/show.html.twig', [
             'shipment' => $shipment,
             'tracking_token' => $trackingToken,
+            'other_address_lat' => $otherAddressLat,
+            'other_address_lng' => $otherAddressLng,
             'delete_form' => $deleteForm->createView(),
             'form' => $form->createView(),
         ]);
