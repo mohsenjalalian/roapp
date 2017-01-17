@@ -74,4 +74,42 @@ class CustomerRepository extends EntityRepository implements UserLoaderInterface
 
         return $result;
     }
+
+    /**
+     * @param string $email
+     * @return bool
+     */
+    public function isValidEmail($email)
+    {
+        $result = $this->createQueryBuilder('customer')
+            ->select("COUNT(customer)")
+            ->where('customer.email=:email')
+            ->setParameter('email', $email)
+            ->getQuery()
+            ->getSingleScalarResult();
+        if ($result) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * @param string $token
+     * @return bool
+     */
+    public function isValidRecoveryPasswordToken($token)
+    {
+        $result = $this->createQueryBuilder('customer')
+            ->select("COUNT(customer)")
+            ->where('customer.recoveryPasswordToken=:token')
+            ->setParameter('token', $token)
+            ->getQuery()
+            ->getSingleScalarResult();
+        if ($result) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 }

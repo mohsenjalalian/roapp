@@ -12,4 +12,41 @@ use Doctrine\ORM\EntityRepository;
  */
 class OperatorRepository extends EntityRepository
 {
+    /**
+     * @param string $email
+     * @return bool
+     */
+    public function isValidEmail($email)
+    {
+        $result = $this->createQueryBuilder('operator')
+            ->select("COUNT(operator)")
+            ->where('operator.email=:email')
+            ->setParameter('email', $email)
+            ->getQuery()
+            ->getSingleScalarResult();
+        if ($result) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * @param string $token
+     * @return bool
+     */
+    public function isValidRecoveryPasswordToken($token)
+    {
+        $result = $this->createQueryBuilder('operator')
+            ->select("COUNT(operator)")
+            ->where('operator.recoveryPasswordToken=:token')
+            ->setParameter('token', $token)
+            ->getQuery()
+            ->getSingleScalarResult();
+        if ($result) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 }

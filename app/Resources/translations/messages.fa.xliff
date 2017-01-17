@@ -114,6 +114,30 @@
                 <source>address_deleted_unsuccessfully</source>
                 <target>آدرسی مورد نظر نمی تواند حذف شود.</target>
              </trans-unit>
+             <trans-unit id="min_password_char_error">
+                <source>min_password_char_error</source>
+                <target>رمز وارد شده باید حداقل 6 کاراکتر باشد.</target>
+             </trans-unit>
+             <trans-unit id="max_password_char_error">
+                <source>max_password_char_error</source>
+                <target>رمز وارد شده باید حداکثر 12 کاراکتر باشد.</target>
+             </trans-unit>
+             <trans-unit id="please_check_your_email">
+                <source>please_check_your_email</source>
+                <target>لطفا ایمیل خود را بررسی نمایید.</target>
+             </trans-unit>
+             <trans-unit id="invalid_email">
+                <source>invalid_email</source>
+                <target>ایمیل نامعتبر است.</target>
+             </trans-unit>
+             <trans-unit id="invalid_input">
+                <source>invalid_input</source>
+                <target>داده ی وارد شده معتبر نمی باشد.</target>
+             </trans-unit>
+             <trans-unit id="different_password_error">
+                <source>different_password_error</source>
+                <target>رمزهای عبور وارد شده باید یکسان باشند.</target>
+             </trans-unit>
         </body>
     </file>
 </xliff>

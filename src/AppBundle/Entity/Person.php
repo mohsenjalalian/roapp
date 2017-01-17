@@ -94,6 +94,12 @@ abstract class Person implements UserInterface, \Serializable
     private $shipmentHistories;
 
     /**
+     * @var string
+     * @ORM\Column(name="recovery_password_token", type="string", nullable=true)
+     */
+    protected $recoveryPasswordToken;
+
+    /**
      * Get id
      *
      * @return int
@@ -408,5 +414,24 @@ abstract class Person implements UserInterface, \Serializable
     public function getShipmentHistories()
     {
         return $this->shipmentHistories;
+    }
+
+    /**
+     * @return string
+     */
+    public function getRecoveryPasswordToken()
+    {
+        return $this->recoveryPasswordToken;
+    }
+
+    /**
+     * @param string $recoveryPasswordToken
+     * @return $this
+     */
+    public function setRecoveryPasswordToken($recoveryPasswordToken)
+    {
+        $this->recoveryPasswordToken = $recoveryPasswordToken;
+
+        return$this;
     }
 }
