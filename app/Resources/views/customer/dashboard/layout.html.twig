@@ -28,8 +28,8 @@
 
                             <li class="dropdown">
                                 <a href="#" class="dropdown-toggle user-menu" data-toggle="dropdown">
-                                    <img src="{{ asset('bundles/app/pixeladmin/assets/demo/avatars/1.jpg') }}">
-                                    <span>Saeid Asali</span>
+                                    <img src="{{ asset('bundles/app/pixeladmin/assets/images/pixel-admin/profileAvatar.png') }}">
+                                    <span>{{ app.user.fullName }}</span>
                                 </a>
                                 <ul class="dropdown-menu">
                                     <li class="divider"></li>
@@ -47,16 +47,16 @@
         <div id="main-menu-inner">
             <div class="menu-content top" id="menu-content-demo">
                 <div>
-                    <div class="text-bg"><span class="text-slim"></span> <span class="text-semibold">Saeid Asali</span></div>
+                    <div class="text-bg"><span class="text-slim"></span> <span class="text-semibold">{{ app.user.fullName }}</span></div>
 
-                    <img src="{{ asset('bundles/app/pixeladmin/assets/demo/avatars/1.jpg') }}" alt="" class="">
+                    <img src="{{ asset('bundles/app/pixeladmin/assets/images/pixel-admin/profileAvatar.png') }}" alt="" class="">
                     <div class="btn-group">
-                        <a href="#" class="btn btn-xs btn-primary btn-outline dark"><i class="fa fa-envelope"></i></a>
-                        <a href="#" class="btn btn-xs btn-primary btn-outline dark"><i class="fa fa-user"></i></a>
-                        <a href="#" class="btn btn-xs btn-primary btn-outline dark"><i class="fa fa-cog"></i></a>
-                        <a href="#" class="btn btn-xs btn-danger btn-outline dark"><i class="fa fa-power-off"></i></a>
+                        {#<a href="#" class="btn btn-xs btn-primary btn-outline dark"><i class="fa fa-envelope"></i></a>#}
+                        <a href="{{ path('app_customer_dashboard_customer_index', {'id':  app.user.id }) }}" class="btn btn-xs btn-primary btn-outline dark"><i class="fa fa-user"></i></a>
+                        <a href="{{ path('app_customer_dashboard_customer_edit', {'id':  app.user.id }) }}" class="btn btn-xs btn-primary btn-outline dark"><i class="fa fa-cog"></i></a>
+                        <a href="{{ path('logout') }}" class="btn btn-xs btn-danger btn-outline dark"><i class="fa fa-power-off"></i></a>
                     </div>
-                    <a href="#" class="close">&times;</a>
+                    {#<a href="#" class="close">&times;</a>#}
                 </div>
             </div>
             <ul class="navigation" id="navigation_right_menu">
