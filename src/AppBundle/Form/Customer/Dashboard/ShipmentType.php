@@ -89,9 +89,9 @@ class ShipmentType extends AbstractType
                 [
                     'class' => 'AppBundle\Entity\Address',
                     'attr'  =>
-                    [
-                        'class' =>  'owner-address',
-                    ],
+                        [
+                            'class' =>  'owner-address',
+                        ],
                 ]
             )
         ;
@@ -153,7 +153,7 @@ class ShipmentType extends AbstractType
                         ]
                     );
                     $formOptions = [
-                      'class'   =>  Driver::class,
+                        'class'   =>  Driver::class,
                         'query_builder' =>  function (DriverRepository $er) use ($user) {
                             $businessUnit = $user->getBusinessUnit();
 
