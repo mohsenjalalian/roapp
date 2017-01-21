@@ -42,6 +42,7 @@ $(document).ready(function() {
                         // ... with the returned one from the AJAX response.
                         $(html).find('.select-address')
                     );
+                    $(".select-address input").first().attr('checked',true);
                     // Position field now displays the appropriate positions.
                 }
             });
@@ -55,8 +56,9 @@ $(document).ready(function() {
         data[$isBusinessUnitDriver.attr('name')] = $isBusinessUnitDriver.val();
         // Submit data via AJAX to the form's action path.
         if ($isBusinessUnitDriver.is(":checked")) {
-            $('.creator_shipment').prop('disabled', true);
-            $("#cost_show").html("---");
+            validate();
+            // $('.creator_shipment').prop('disabled', true);
+            // $("#cost_show").html("---");
             $.ajax({
                 url: $form.attr('action'),
                 type: $form.attr('method'),
@@ -72,8 +74,10 @@ $(document).ready(function() {
             });
         } else  {
             if (window.globalVar) {
+                $(".clac_price_section").css("display","block");
                 validate();
             } else {
+                $(".clac_price_section").css("display","block");
                 $('.creator_shipment').prop('disabled', true);
 
             }
@@ -82,8 +86,10 @@ $(document).ready(function() {
 });
 $('.businessUnit_driver_modal').on('hidden.bs.modal', function () {
     if($("#restaurant_shipment_driver input").is(":checked")) {
+        // validate();
+        $(".clac_price_section").css("display","none");
         validate();
-        $('.creator_shipment').prop('disabled', false);
+        // $('.creator_shipment').prop('disabled', false);
     } else {
         $("#cost_show").html("---");
         $('.creator_shipment').prop('disabled', true);
@@ -96,7 +102,8 @@ $(".calc_price_item, .select-address input").on('change', function () {
 function validate() {
     window.globalVar = false;
     var ownerAddressId = $('.owner-address').val();
-    var otherAddressId = $('.select-address input').val();
+    var otherAddressId = $('.select-address input:checked').val();
+    console.log(otherAddressId);
     var otherAddressLength = $('.select-address input').length;
     console.log(otherAddressId);
     var shipmentValue = 1000;
