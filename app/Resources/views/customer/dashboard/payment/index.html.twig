@@ -14,7 +14,7 @@
             <table class="table table-striped">
                 <thead>
                 <tr>
-                    <th>{{ knp_pagination_sortable(pagination, 'id','p.id') }}</th>
+                    <th>{{ knp_pagination_sortable(pagination, 'شماره پرداخت','p.id') }}</th>
                     <th>نام پرداخت کننده</th>
                     <th>مبلغ پرداختی</th>
                     <th{% if pagination.isSorted('p.status') %} class="sorted"{% endif %}>{{ knp_pagination_sortable(pagination, 'وضعیت', 'p.status') }}</th>

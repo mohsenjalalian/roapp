@@ -39,6 +39,7 @@
             <table class="table table-striped">
                 <thead>
                 <tr>
+                    <th>شماره مرسوله</th>
                     <th>توضیحات</th>
                     <th>وضعیت</th>
                     <th>زمان انجام</th>
@@ -48,6 +49,7 @@
                 </thead>
                 <tbody>
                 <tr>
+                    <td>{{ shipment.id }}</td>
                     <td>{{ shipment.description }}</td>
                     <td>
                         {% if shipment.status == constant('STATUS_NOT_ASSIGNED',shipment) %}
