@@ -1,19 +1,19 @@
 {% extends ':operator/dashboard:layout.html.twig' %}
 {% block title %}
-    ایجاد مشتری
+    ایجاد مسئول واحد تجاری
 {% endblock %}
 {% block page_title %}
-    ایجاد مشتری
+    ایجاد مسئول واحد تجاری
 {% endblock %}
 {% block breadcrumbs %}
-    <li><a href="{{ path('app_operator_dashboard_customer_index') }}">مشتریان</a></li>
-    <li class="active">ایجاد مشتری</li>
+    <li><a href="{{ path('app_operator_dashboard_customer_index') }}">مسئولین واحد های تجاری</a></li>
+    <li class="active">ایجاد مسئول واحد تجاری</li>
 {% endblock %}
 {% block main %}
     {{ form_start(form) }}
     {{ form_errors(form) }}
     <div class="panel-heading">
-        <span class="panel-title">ایجاد مشتری</span>
+        <span class="panel-title">ایجاد مسئول واحد تجاری</span>
     </div>
     <div class="panel-body">
         {% form_theme form 'bootstrap_3_layout.html.twig' %}
