@@ -19,7 +19,6 @@
                 <thead>
                 <tr>
                     <th>ایمیل</th>
-                    <th>رمز عبور</th>
                     <th>وضعیت حساب</th>
                     <th>تلفن</th>
                     <th>نام واحد شغلی</th>
@@ -28,7 +27,6 @@
                 <tbody>
                 <tr>
                     <td>{{ customer.username }}</td>
-                    <td>{{ customer.password }}</td>
                     <td>{% if customer.isActive %}فعال{% else %}غیر فعال{% endif %}</td>
                     <td>{{ customer.phone }}</td>
                     <td>{{ customer.businessUnit.name }}</td>
