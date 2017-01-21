@@ -47,7 +47,6 @@ $(document).ready(function() {
             });
         }
     });
-
     $isBusinessUnitDriver = $('#shipment-switch');
     $isBusinessUnitDriver.on('change', function (e) {
         var $form = $(this).closest('form');
@@ -56,6 +55,8 @@ $(document).ready(function() {
         data[$isBusinessUnitDriver.attr('name')] = $isBusinessUnitDriver.val();
         // Submit data via AJAX to the form's action path.
         if ($isBusinessUnitDriver.is(":checked")) {
+            $('.creator_shipment').prop('disabled', true);
+            $("#cost_show").html("---");
             $.ajax({
                 url: $form.attr('action'),
                 type: $form.attr('method'),
@@ -69,35 +70,70 @@ $(document).ready(function() {
                     // Position field now displays the appropriate positions.
                 }
             });
+        } else  {
+            if (window.globalVar) {
+                validate();
+            } else {
+                $('.creator_shipment').prop('disabled', true);
+
+            }
         }
     })
 });
+$('.businessUnit_driver_modal').on('hidden.bs.modal', function () {
+    if($("#restaurant_shipment_driver input").is(":checked")) {
+        validate();
+        $('.creator_shipment').prop('disabled', false);
+    } else {
+        $("#cost_show").html("---");
+        $('.creator_shipment').prop('disabled', true);
+    }
+})
 
 $(".calc_price_item, .select-address input").on('change', function () {
+    validate();
+});
+function validate() {
+    window.globalVar = false;
     var ownerAddressId = $('.owner-address').val();
     var otherAddressId = $('.select-address input').val();
+    var otherAddressLength = $('.select-address input').length;
+    console.log(otherAddressId);
     var shipmentValue = 1000;
     var shipmentPickUpTime = $(".duration").val();
-    $.ajax({
-        url: 'calc_shipment_price',
-        data: {
-            ownerAddressId: ownerAddressId,
-            otherAddressId: otherAddressId,
-            shipmentValue: shipmentValue,
-            shipmentPickUpTime: shipmentPickUpTime
-        },
-        type: "POST",
-        success: function (response) {
-            $("#calculate_price").html("<b>قیمت کل :</b>");
-            $("#cost_show").html(response);
-            $("#cost_show").css('display', 'inline');
-            $(".price_send").prepend(
-                '<input name="price_shipment" type="hidden" value="'+response+'">'
-            );
+    var restaurantShipmentValue = $("#restaurant_shipment_value").val()
+    if (ownerAddressId.length !=0 && otherAddressLength !=0 && shipmentPickUpTime.length !=0 && restaurantShipmentValue.length !=0) {
+        $.ajax({
+            url: 'calc_shipment_price',
+            data: {
+                ownerAddressId: ownerAddressId,
+                otherAddressId: otherAddressId,
+                shipmentValue: shipmentValue,
+                shipmentPickUpTime: shipmentPickUpTime
+            },
+            type: "POST",
+            success: function (response) {
+                $("#calculate_price").html("<b>قیمت کل :</b>");
+                $("#cost_show").html(response);
+                $("#cost_show").css('display', 'inline');
+                $(".price_send").prepend(
+                    '<input name="price_shipment" type="hidden" value="' + response + '">'
+                );
                 $('.creator_shipment').prop('disabled', false);
-        }
-    });
-});
+                window.globalVar = true;
+            },
+            error : function () {
+                $("#cost_show").html("---");
+                $('.creator_shipment').prop('disabled', true);
+                window.globalVar = false;
+            }
+        })
+    } else {
+        $("#cost_show").html("---");
+        $('.creator_shipment').prop('disabled', true);
+        window.globalVar = false;
+    }
+}
 $('#mapModal').on('hidden.bs.modal', function () {
     $("#address").val("");
     map = new google.maps.Map(document.getElementById('map'), {
