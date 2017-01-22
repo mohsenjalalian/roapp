@@ -17,7 +17,7 @@
             <table class="ui celled table">
                 <thead>
                     <tr>
-                        <th>{{ knp_pagination_sortable(pagination, 'Id','a.id') }}</th>
+                        <th>{{ knp_pagination_sortable(pagination, 'شماره آدرس','a.id') }}</th>
                         <th{% if pagination.isSorted('a.isPublic') %} class="sorted"{% endif %}>{{ knp_pagination_sortable(pagination, 'وضعیت نمایش', 'a.isPublic') }}</th>
                         <th{% if pagination.isSorted('a.description') %} class="sorted"{% endif %}>{{ knp_pagination_sortable(pagination, 'آدرس', 'a.description') }}</th>
                         <th>عملیات</th>

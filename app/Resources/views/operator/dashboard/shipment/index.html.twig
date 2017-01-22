@@ -14,6 +14,7 @@
             <table class="table table-striped">
                 <thead>
                 <tr>
+                    <th{% if pagination.isSorted('a.id') %} class="sorted"{% endif %}>{{ knp_pagination_sortable(pagination, 'شماره مرسوله', 'a.id') }}</th>
                     <th{% if pagination.isSorted('a.description') %} class="sorted"{% endif %}>{{ knp_pagination_sortable(pagination, 'توضیحات', 'a.description') }}</th>
                     <th{% if pagination.isSorted('a.status') %} class="sorted"{% endif %}>{{ knp_pagination_sortable(pagination, 'وضعیت', 'a.status') }}</th>
                     <th{% if pagination.isSorted('a.pickUpTime') %} class="sorted"{% endif %}>{{ knp_pagination_sortable(pagination, 'زمان انجام', 'a.pickUpTime') }}</th>
@@ -25,6 +26,7 @@
                 <tbody>
                 {% for shipment in pagination %}
                     <tr>
+                        <td>{{ shipment.id }}</td>
                         <td>{{ shipment.description }}</td>
                         <td>
                             {% if shipment.status == constant('STATUS_NOT_ASSIGNED',shipment) %}
