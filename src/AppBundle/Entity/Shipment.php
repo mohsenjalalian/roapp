@@ -109,6 +109,12 @@ class Shipment
     private $shipmentHistories;
 
     /**
+     * @var string
+     * @ORM\Column(name="tracking_token", type="string", nullable=true)
+     */
+    private $trackingToken;
+
+    /**
      * Get id
      *
      * @return int
@@ -425,5 +431,24 @@ class Shipment
         } else {
             return null;
         }
+    }
+
+    /**
+     * @return string
+     */
+    public function getTrackingToken()
+    {
+        return $this->trackingToken;
+    }
+
+    /**
+     * @param string $trackingToken
+     * @return $this
+     */
+    public function setTrackingToken($trackingToken)
+    {
+        $this->trackingToken = $trackingToken;
+
+        return $this;
     }
 }

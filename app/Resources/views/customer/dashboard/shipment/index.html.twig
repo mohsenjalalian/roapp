@@ -1,10 +1,23 @@
 {% extends ':customer/dashboard:layout.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent()  }}
+    {% stylesheets 'bundles/app/stylesheets/customer/dashboard/shipment/show/style.css' %}
+    <link rel="stylesheet" href="{{ asset_url }}" />
+    {% endstylesheets %}
+{% endblock %}
+
+
 {% block javascripts %}
     {{ parent()  }}
     {% javascripts
+    'bundles/app/javascript/customer/dashboard/shipment/initial_map.js'
+    'assets/vendor/socket.io-client/dist/socket.io.js'
+    'bundles/app/javascript/customer/dashboard/shipment/tracking_shipment.js'
     'bundles/app/javascript/customer/dashboard/shipment/cancel_shipment.js'
     %}
     <script type="text/javascript" src="{{ asset_url }}" ></script>
+    <script src="{{ getGoogleMapInitLink() }}"></script>
     {% endjavascripts %}
 {% endblock %}
 {% block breadcrumbs %}
@@ -20,6 +33,7 @@
     <a class="btn btn-sm btn-labeled btn-primary" style="margin-right: 10px" href="{{ path('app_customer_dashboard_shipment_new') }}"><span class="btn-label icon fa fa-plus-square"></span>درخواست مرسوله ی جدید</a>
 {% endblock %}
 {% block main %}
+    {% set motorIcon = asset('bundles/app/images/motor.png') %}
     <div class="alert alert-info" id="alert_msg_cancel_shipment-by-customer" style="display: none">
 
     </div>
@@ -73,14 +87,14 @@
                     <td>{% if shipment.createdAt %}{{ shipment.createdAt|jdate('Y/m/d') }}{% endif %}</td>
                     <td>{{ shipment.price }}</td>
                     <td>
-                    {% if shipment.assignedDriver %}
-                    {{ shipment.assignedDriver.fullName }}
+                        {% if shipment.assignedDriver %}
+                            {{ shipment.assignedDriver.fullName }}
                         {% else %}
-                        -
-                    {% endif %}
+                            -
+                        {% endif %}
                     <td>
                     <td>
-                        <a class="btn btn-sm btn-labeled btn-success" href="{{ path('app_customer_dashboard_shipment_show', { 'id': shipment.id }) }}"><span class="btn-label icon fa fa-eye"></span>نمایش</a>
+                        <a class="btn btn-sm btn-labeled btn-success" href="{{ path('app_customer_dashboard_shipment_show', { 'id': shipment.id }) }}">نمایش</a>
                     </td>
                     {% if
                     shipment.status == constant('STATUS_NOT_ASSIGNED',shipment) or
@@ -88,10 +102,37 @@
                     %}
                         <td class="customer_shipment_cancel_btn{{ shipment.id }}"><button value="{{ shipment.id }}" class="cancel_shipment_button btn btn-sm btn-labeled btn-danger">کنسل</button></td>
                     {% endif %}
+                    {% if
+                    shipment.status == constant('STATUS_ON_PICK_UP',shipment) or
+                    shipment.status == constant('STATUS_PICKED_UP',shipment) or
+                    shipment.status == constant('STATUS_ON_DELIVERY',shipment)
+                    %}
+                    <td class="tracking_btn{{ shipment.id }}"><button data-lat = "{{ shipment.otherAddress.latitude }}" data-lng = "{{ shipment.otherAddress.longitude }}" data-token = "{{ shipment.trackingToken }}" data-toggle="modal" class="tracking_shipment_button btn btn-sm btn-info">پیگیری</button></td>
+                    {% endif  %}
                 </tr>
             {% endfor %}
             </tbody>
         </table>
+    </div>
+
+    <!-- Modal -->
+    <div id="tracking_shipment_modal" class="modal fade" role="dialog">
+        <div class="modal-dialog modal-lg">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">پیگیری مرسوله</h4>
+                </div>
+                <div class="modal-body">
+                    <div style="height: 273px" data-icon =" {{ motorIcon }}" id="list-shipment-map-modal"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
     </div>
     <div id="cancel_modal_customer" data-target="#uidemo-modals-alerts-danger" class="modal small fade modal modal-alert modal-warning fade">
         <div class="modal-dialog">
