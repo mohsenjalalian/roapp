@@ -1,0 +1,21 @@
+{% extends 'email_base.html.twig' %}
+{% block body %}
+    <div id="content-wrapper" style="padding: 45px 18px 18px">
+        <!-- page title -->
+        {% set _page_title = block('page_title') %}
+        {% if _page_title is not empty %}
+            <div class="page-header">
+                <h1 class="ui header" style="display: inline">
+                    {{ _page_title|raw }}
+                </h1>
+                {% set _header_link = block('header_link') %}
+                {% if _header_link is not empty %}
+                    {{ _header_link|raw }}
+                {% endif %}
+            </div>
+        {% endif %}
+        {% block main %}
+        {% endblock %}
+    </div> <!-- / #content-wrapper -->
+    <div id="main-menu-bg"></div>
+{% endblock %}

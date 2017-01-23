@@ -138,6 +138,10 @@
                 <source>different_password_error</source>
                 <target>رمزهای عبور وارد شده باید یکسان باشند.</target>
              </trans-unit>
+             <trans-unit id="title_recovery_password_email">
+                <source>title_recovery_password_email</source>
+                <target>بازیابی رمز عبور</target>
+             </trans-unit>
         </body>
     </file>
 </xliff>

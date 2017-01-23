@@ -5,6 +5,7 @@ namespace AppBundle\Controller\Security;
 use AppBundle\Form\Security\ForgetPasswordType;
 use AppBundle\Form\Security\RecoveryPasswordType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Swift_Image;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -46,12 +47,32 @@ class SecurityController extends Controller
                 $em->persist($person);
                 $em->flush();
 
+                $translator = $this->get('translator');
                 $router = $this->get('router');
                 $recoveryPageUrl = $router->generate("app_security_recovery_password");
                 $recoveryPageLink = $this->get("roapp_media.upload_manager")->getAbsoluteUrl($recoveryPageUrl).'/'.$entityName.'/'.$token;
-                $logger = $this->get('logger');
-                $logger->info("link :".$recoveryPageLink);
-                $translator = $this->get('translator');
+                // send email
+                $message = \Swift_Message::newInstance();
+                $logoImageUrl = $message->embed(Swift_Image::fromPath('bundles/app/images/motor.png'));
+                $message->setSubject($translator->trans('title_recovery_password_email'))
+                    ->setFrom('roapp@narenjino.ir')
+                    ->setTo($person->getEmail())
+                    ->setBody(
+                        $this->renderView(
+                            ':security:email.html.twig',
+                            [
+                                'name' => $person->getFullName(),
+                                'link' => $recoveryPageLink,
+                                'logoImageUrl' => $logoImageUrl,
+                            ]
+                        ),
+                        'text/html'
+                    );
+
+                $mailer = $this->get('mailer');
+
+                $mailer->send($message);
+
                 $this->addFlash('send_recovery_link_success', $translator->trans('please_check_your_email'));
 
                 return $this->redirectToRoute($currentRouteName);
