@@ -54,6 +54,8 @@ class ShipmentService
         $shipment->setPrice(floatval($shipmentPrice));
         $shipment->setCreatedAt($createdAt);
         $shipment->setStatus(Shipment::STATUS_NOT_ASSIGNED);
+        $trackingToken = uniqid();
+        $shipment->setTrackingToken($trackingToken);
         $em = $this->container->get('doctrine.orm.entity_manager');
         $em->persist($shipment);
         $em->flush();
@@ -72,7 +74,7 @@ class ShipmentService
             $this->container->getParameter('rethink_password')
         );
         $driverToken = uniqid();
-        $trackingToken = uniqid();
+//        $trackingToken = uniqid();
         $document = [
             'shipment_id' => $shipment->getId(),
             'driver_token' => $driverToken,
@@ -143,6 +145,7 @@ class ShipmentService
     /**
      * @param Shipment $shipment
      * @return Shipment $shipment
+     * @throws ShipmentException
      */
     public function shipmentInit(Shipment $shipment)
     {
