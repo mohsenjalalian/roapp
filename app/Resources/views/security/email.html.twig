@@ -1,0 +1,25 @@
+{% extends 'email_layout.html.twig' %}
+
+{% block page_title %}
+    سلام {{ name }}  عزیز
+{% endblock %}
+{% block main %}
+    <div class="panel">
+        <div class="panel-body well">
+            <p>لطفا برای بازیابی رمز عبور خود روی لینک زیر کلیک نمایید.</p>
+
+            {# example, assuming you have a route named "login" #}
+            <div>
+                <a href="{{ link }}">{{ link }}</a>
+            </div>
+            <div style="margin-top: 15px">
+                <span>با سپاس فراوان از شما</span>
+            </div>
+            <div style="margin-top: 15px">
+                <span><img src="{{ logoImageUrl }}" sizes="40px"></span>
+            </div>
+
+            {# Makes an absolute URL to the /images/logo.png file #}
+        </div>
+    </div>
+{% endblock %}
