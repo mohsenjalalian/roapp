@@ -31,7 +31,7 @@ class ShipmentAssignmentController extends Controller
     {
         $isAssignTimeExpire = $this->get("app.shipment_assignment")
             ->isExpiredAssignTime($assignment);
-        if ($isAssignTimeExpire) {
+        if (!$isAssignTimeExpire) {
             $this->get('app.shipment_assignment')
                 ->acceptRequest($assignment);
 //            $driverExchangeCode = $assignment->getDriverExchangeCode();
@@ -82,7 +82,7 @@ class ShipmentAssignmentController extends Controller
     {
         $isAssignTimeExpire = $this->get("app.shipment_assignment")
             ->isExpiredAssignTime($assignment);
-        if ($isAssignTimeExpire) {
+        if (!$isAssignTimeExpire) {
             $reason = $req->getContent();
             $reason = json_decode($reason);
             $this->get("app.shipment_assignment")
@@ -137,33 +137,20 @@ class ShipmentAssignmentController extends Controller
             ->getPrice();
         $shipmentId = $assignment->getShipment()
             ->getId();
-        $senderName = $assignment->getShipment()
+        $ownerName = $assignment->getShipment()
             ->getOwnerAddress()
             ->getCustomer()
             ->getFullName();
-        $senderPhone = $assignment->getShipment()
+        $ownerPhone = $assignment->getShipment()
             ->getOwnerAddress()
             ->getCustomer()
             ->getPhone();
-        $reciverName = $assignment->getShipment()
-            ->getOther()
-            ->getFullName();
-        $reciverPhone = $assignment->getShipment()
-            ->getOther()
-            ->getPhone();
-        $shipmentValue = $assignment->getShipment()
-            ->getValue();
-        $shipmentPhotos = $assignment->getShipment()
-            ->getPhotoFiles();
-        $photoUrl = [];
-        if ($shipmentPhotos) {
-            foreach ($shipmentPhotos as $value) {
-                $photoUrl[] = $this->get("roapp_media.upload_manager")
-                   ->generateAbsoluteUrl($value->getMediaEntity());
-            }
-        } else {
-            $photoUrl = null;
-        }
+        $otherName = $assignment->getShipment()
+            ->getOtherAddress()
+            ->getCustomer()->getFullName();
+        $otherPhone = $assignment->getShipment()
+            ->getOtherPhone();
+        $assignmentId = $assignment->getId();
         $parameters = [
             'ownerLatitude' => $ownerLatitude,
             'ownerLongitude' => $ownerLongitude,
@@ -175,13 +162,12 @@ class ShipmentAssignmentController extends Controller
             'shipmentPickUpTime' => $shipmentPickUpTime,
             'shipmentPrice' => $shipmentPrice,
             'shipmentId' => $shipmentId,
-            'senderName' => $senderName,
-            'senderPhone' => $senderPhone,
-            'reciverName' => $reciverName,
-            'reciverPhone' => $reciverPhone,
-            'shipmentValue' => $shipmentValue,
-            'shipmentPhoto' => $photoUrl,
+            'ownerName' => $ownerName,
+            'ownerPhone' => $ownerPhone,
+            'otherName' => $otherName,
+            'otherPhone' => $otherPhone,
             'shipmentDescription' => $shipmentDescription,
+            'assignmentId' => $assignmentId,
         ];
 
          return $parameters;

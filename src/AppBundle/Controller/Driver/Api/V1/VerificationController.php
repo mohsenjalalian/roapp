@@ -68,7 +68,7 @@ class VerificationController extends Controller
                 $driver->setPhone($form->get('phone')->getData());
                 $em->persist($driver);
             }
-
+//            $randomVerificationNumber = "12345";
             $randomVerificationNumber = rand(100000, 999999);
             $driverDevice->setPerson($driver);
             $driverDevice->setPhoneVerificationSent(new \DateTime());
@@ -91,7 +91,6 @@ class VerificationController extends Controller
                 ->getResult();
 
             $driverDeviceHistory = new PersonDeviceHistory();
-
             if (count($lastFiveVerificationRequest) > 4) {
                 $driverDeviceHistory
                     ->setAction(EnumPersonDeviceHistoryActionType::ENUM_VERIFY)

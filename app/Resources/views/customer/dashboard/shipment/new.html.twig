@@ -11,7 +11,7 @@
 {% endblock %}
 {% block main %}
     {% form_theme form child_form_template %}
-    {{ form_row(form) }}
+    {{ form_row(form, {'other_phone_val' : null, 'shipment_id' : null}) }}
     <div style="margin-top: 10px">
     </div>
     <div id="mapModal" class="modal fade" role="dialog">

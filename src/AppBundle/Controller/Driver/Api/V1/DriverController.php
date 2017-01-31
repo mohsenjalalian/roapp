@@ -34,20 +34,25 @@ class DriverController extends Controller
             ->getRepository("AppBundle:Driver")
             ->find($driverId);
         if ($driver) {
-            if ($data->available) {
-                $driver->setStatus(Driver::STATUS_FREE);
-                $em->persist($driver);
+            $isOpenTaskExist = $em->getRepository("AppBundle:Driver")->isOpenTaskExist($driver);
+            if (!$isOpenTaskExist) {
+                if ($data->available) {
+                    $driver->setStatus(Driver::STATUS_FREE);
+                    $em->persist($driver);
 
-                $em->flush();
+                    $em->flush();
 
-                return new JsonResponse([], Response::HTTP_NO_CONTENT);
+                    return new JsonResponse([], Response::HTTP_NO_CONTENT);
+                } else {
+                    $driver->setStatus(Driver::STATUS_NOT_AVAILABLE);
+                    $em->persist($driver);
+
+                    $em->flush();
+
+                    return new JsonResponse([], Response::HTTP_NO_CONTENT);
+                }
             } else {
-                $driver->setStatus(Driver::STATUS_NOT_AVAILABLE);
-                $em->persist($driver);
-
-                $em->flush();
-
-                return new JsonResponse([], Response::HTTP_NO_CONTENT);
+                return new JsonResponse([], Response::HTTP_FORBIDDEN);
             }
         } else {
             return new JsonResponse([], Response::HTTP_BAD_REQUEST);

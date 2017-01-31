@@ -1,5 +1,4 @@
 {% extends 'bootstrap_3_layout.html.twig' %}
-
 {% block _restaurant_shipment_isBusinessUnitDriver_widget %}
     <button id="select-driver" disabled type="button" class="btn btn-sm btn-labeled btn-primary disabled" data-toggle="modal" data-target="#myModal">انتخاب راننده</button>
     <label class="switch">
@@ -23,19 +22,22 @@
         {{- block('form_rows') -}}
     </div>
 {% endblock %}
-
 {% block shipment_row %}
-    <form action="{{ path('app_customer_dashboard_shipment_new') }}" method="POST" class="panel form-horizontal">
+    <form action="{% if shipment_id == null %}{{ path('app_customer_dashboard_shipment_new') }}{% else %} {{ path('app_customer_dashboard_shipment_edit', { 'id': shipment_id }) }} {% endif %}" method="POST" class="panel form-horizontal">
         {{ form_errors(form) }}
         <div class="panel-heading">
-            <span class="panel-title">ثبت درخواست ارسال</span>
+            {% if other_phone_val == null %}
+                <span class="panel-title">ثبت درخواست ارسال</span>
+            {% else %}
+                <span class="panel-title">ویرایش درخواست</span>
+            {% endif %}
         </div>
         <div class="panel-body">
             {% block shipment_description_row %}
-            <div class="form-group row">
-                <label class="col-sm-2">{{ form_label(form.description) }}</label>
-                <div class="col-sm-10">{{ form_widget(form.description, { 'attr': {'class': 'form-control'} } ) }}</div>
-            </div>
+                <div class="form-group row">
+                    <label class="col-sm-2">{{ form_label(form.description) }}</label>
+                    <div class="col-sm-10">{{ form_widget(form.description, { 'attr': {'class': 'form-control'} } ) }}</div>
+                </div>
             {% endblock %}
             <div class="form-group row">
                 <div class="col-md-6">
@@ -50,7 +52,7 @@
                     <div class="form-group row">
                         <label class="col-sm-4">{{ form_label(form.other_phone) }}</label>
                         <div class="col-sm-8">
-                            {{ form_widget(form.other_phone) }}
+                            {{ form_widget(form.other_phone, {'value' : other_phone_val}) }}
                         </div>
                     </div>
                 </div>
@@ -75,40 +77,40 @@
                 </div>
             </div>
             {% if form.isBusinessUnitDriver is defined %}
-            <div class="form-group row">
-                <div class="col-md-6">
-                    <div class="form-group row">
-                        <label class="col-sm-4">{{ form_label(form.isBusinessUnitDriver) }}</label>
-                        <div class="col-sm-8">
-                            {{ form_widget(form.isBusinessUnitDriver) }}
+                <div class="form-group row">
+                    <div class="col-md-6">
+                        <div class="form-group row">
+                            <label class="col-sm-4">{{ form_label(form.isBusinessUnitDriver) }}</label>
+                            <div class="col-sm-8">
+                                {{ form_widget(form.isBusinessUnitDriver) }}
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
             {% endif %}
             {% if form.driver is defined %}
-            <!-- Modal -->
-            <div id="myModal" class="modal fade businessUnit_driver_modal" role="dialog">
-                <div class="modal-dialog">
-                    <!-- Modal content-->
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal">&times;</button>
-                            <h4 class="modal-title">انتخاب راننده</h4>
-                        </div>
-                        <div class="modal-body">
-                            <ul class="drivers">
-                                {{ form_widget(form.driver) }}
-                            </ul>
-                        </div>
-                        <div class="modal-footer">
-                            <button id="assign-driver" type="button" class="btn btn-default" data-dismiss="modal">انتخاب</button>
+                <!-- Modal -->
+                <div id="myModal" class="modal fade businessUnit_driver_modal" role="dialog">
+                    <div class="modal-dialog">
+                        <!-- Modal content-->
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                <h4 class="modal-title">انتخاب راننده</h4>
+                            </div>
+                            <div class="modal-body">
+                                <ul class="drivers">
+                                    {{ form_widget(form.driver) }}
+                                </ul>
+                            </div>
+                            <div class="modal-footer">
+                                <button id="assign-driver" type="button" class="btn btn-default" data-dismiss="modal">انتخاب</button>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
             {% endif %}
-                <hr>
+            <hr>
             <div class="form-group row">
                 <div class="col-xs-12">
                     {% block child_form %}{% endblock %}
@@ -125,7 +127,7 @@
             <div class="price_send">
 
             </div>
-            <input  class="btn btn-flat btn-sm btn-labeled btn-success creator_shipment" type="submit" tabindex="0" value="ایجاد سفارش" disabled />
+            <input  class="btn btn-flat btn-sm btn-labeled btn-success creator_shipment" type="submit" tabindex="0" value="{% if other_phone_val == null %}ایجاد سفارش{% else %}اعمال تغییرات{% endif %}" disabled />
             {{ form_rest(form) }}
         </div>
     </form>

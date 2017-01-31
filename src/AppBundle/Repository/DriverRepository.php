@@ -3,9 +3,12 @@
 namespace AppBundle\Repository;
 
 use AppBundle\Entity\BusinessUnit;
+use AppBundle\Entity\Driver;
 use AppBundle\Entity\ShipmentAssignment;
 use AppBundle\Entity\Shipment;
+use AppBundle\Utils\AssignmentShipment;
 use Doctrine\ORM\EntityRepository;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * DriverRepository
@@ -65,9 +68,10 @@ class DriverRepository extends EntityRepository
     /**
      * @param BusinessUnit $businessUnit
      * @param integer      $status
-     * @return array       $drivers
+     * @param null         $driverId
+     * @return array $drivers
      */
-    public function businessUnitDriver(BusinessUnit $businessUnit, $status)
+    public function businessUnitDriver(BusinessUnit $businessUnit, $status, $driverId = null)
     {
         $drivers = $this->getEntityManager()->getRepository('AppBundle:Driver')
             ->createQueryBuilder('driver')
@@ -77,6 +81,43 @@ class DriverRepository extends EntityRepository
             ->setParameter('businessUnit', $businessUnit)
             ->setParameter('status', $status);
 
+        if ($driverId != null) {
+            $drivers = $drivers->orWhere('driver.id = :driver_id')
+                ->setParameter('driver_id', $driverId);
+        }
+
         return $drivers;
+    }
+
+    /**
+     * @param Driver $driver
+     * @return bool
+     */
+    public function isOpenTaskExist(Driver $driver)
+    {
+        $assignment = $this->getEntityManager()->getRepository('AppBundle:ShipmentAssignment')
+            ->createQueryBuilder('assignment')
+            ->join('assignment.driver', 'driver')
+            ->join('assignment.shipment', 'shipment')
+            ->where('assignment.driver = :driver')
+            ->andWhere('shipment.status IN (:status)')
+            ->setParameter('driver', $driver)
+            ->setParameter(
+                'status',
+                [
+                    Shipment::STATUS_ON_PICK_UP,
+                    Shipment::STATUS_PICKED_UP,
+                    Shipment::STATUS_ON_DELIVERY,
+                    Shipment::STATUS_DELIVERED,
+                ]
+            )
+            ->getQuery()
+            ->getResult()
+        ;
+        if ($assignment instanceof AssignmentShipment) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }

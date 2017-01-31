@@ -16,6 +16,8 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormInterface;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
@@ -34,12 +36,19 @@ class ShipmentType extends AbstractType
     private $tokenStorage;
 
     /**
+     * @var RequestStack
+     */
+    private $requestStack;
+
+    /**
      * ShipmentType constructor.
      * @param TokenStorageInterface $tokenStorage
+     * @param RequestStack          $requestStack
      */
-    public function __construct(TokenStorageInterface $tokenStorage)
+    public function __construct(TokenStorageInterface $tokenStorage, RequestStack $requestStack)
     {
         $this->tokenStorage = $tokenStorage;
+        $this->requestStack = $requestStack;
     }
     /**
      * @param FormBuilderInterface $builder
@@ -157,7 +166,7 @@ class ShipmentType extends AbstractType
                         'query_builder' =>  function (DriverRepository $er) use ($user) {
                             $businessUnit = $user->getBusinessUnit();
 
-                            return $er->businessUnitDriver($businessUnit, Driver::STATUS_FREE);
+                            return $er->businessUnitDriver($businessUnit, Driver::STATUS_FREE, $this->requestStack->getCurrentRequest()->get('driverId'));
                         },
                         'mapped'    =>  false,
                         'expanded' => true,
@@ -174,12 +183,12 @@ class ShipmentType extends AbstractType
                             'query_builder' =>  function (DriverRepository $er) use ($user) {
                                 $businessUnit = $user->getBusinessUnit();
 
-                                return $er->businessUnitDriver($businessUnit, Driver::STATUS_FREE);
+                                return $er->businessUnitDriver($businessUnit, Driver::STATUS_FREE, $this->requestStack->getCurrentRequest()->get('driverId'));
                             },
                             'mapped'    =>  false,
                             'expanded' => true,
                             'multiple'  => false,
-                            'required'  =>  true,
+                            'required'  =>  false,
                         ];
 
                         $form->add('driver', EntityType::class, $formOptions);

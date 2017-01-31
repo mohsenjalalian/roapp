@@ -4,12 +4,13 @@ namespace AppBundle\Controller\Customer\Dashboard;
 
 use AppBundle\Entity\Address;
 use AppBundle\Entity\Customer;
+use AppBundle\Entity\ShipmentAssignment;
 use AppBundle\Entity\ShipmentHistory;
 use AppBundle\Exception\ShipmentException;
 use AppBundle\Form\Customer\Dashboard\AddressType;
-use AppBundle\Form\Customer\Dashboard\ShipmentType;
 use AppBundle\Form\Customer\Dashboard\ValidationCodeType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -18,7 +19,6 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use AppBundle\Entity\Shipment;
 use Symfony\Component\HttpFoundation\Response;
 use r;
-use Symfony\Component\Validator\Constraints\DateTime;
 
 /**
  * Shipment controller.
@@ -115,6 +115,7 @@ class ShipmentController extends Controller
                     'customerId' => $customerId,
                     'addressFrom' => $addressForm->createView(),
                     'address' => $address,
+                    'other_phone_number' => null,
                     'shipment' => $shipment,
                     'form' => $form->createView(),
                     'child_form_template' => $form->getConfig()->getOption('template'),
@@ -304,11 +305,13 @@ class ShipmentController extends Controller
     }
 
     /**
-     * @Route("/calc_shipment_price",name="app_customer_dashboard_shipment_calc_shipment_price")
+     * @Route("/calc_shipment_price")
+     * @Route("/{id}/calc_shipment_price")
      * @param Request $request
+     * @param int     $id
      * @return Response
      */
-    public function calcShipmentPriceAction(Request $request)
+    public function calcShipmentPriceAction(Request $request, $id = null)
     {
         $ownerAddressId = $request->request->get('ownerAddressId');
         $otherAddressId = $request->request->get('otherAddressId');
@@ -487,20 +490,72 @@ class ShipmentController extends Controller
     public function editAction(Request $request, Shipment $shipment)
     {
         $deleteForm = $this->createDeleteForm($shipment);
-        $editForm = $this->createForm(ShipmentType::class, $shipment);
+        $shipmentService = $this->get('app.shipment_service');
+        $otherPhone  = $shipment->getOtherAddress()->getCustomer()->getPhone();
+        $shipmentOtherAddressId  = $shipment->getOtherAddress()->getId();
+        $editForm = $this->createForm($shipmentService->getShipmentFormNamespace(), $shipment);
+        $addressEntity = new Address();
+        $addressForm = $this
+            ->createForm(
+                AddressType::class,
+                $addressEntity,
+                [
+                    'action' => $this->generateUrl(
+                        'customer_dashboard_address_add_address'
+                    ),
+                    'attr' => [
+                        'id' => 'add_address',
+                    ],
+                ]
+            )
+        ;
         $editForm->handleRequest($request);
+        $oldShipmentAssignment = $shipment->getAssignments()->filter(function (ShipmentAssignment $assignment) {
+            if ($assignment->getStatus() == ShipmentAssignment::STATUS_WAITING) {
+                return true;
+            }
 
+            return false;
+        });
+        $selectedDriverId = $oldShipmentAssignment->first() ? $oldShipmentAssignment->first()->getDriver()->getId(): false;
         if ($editForm->isSubmitted() && $editForm->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($shipment);
-            $em->flush();
+            die(dump($editForm));
+            $oldPrice = intval($shipment->getPrice());
+            try {
+                if ($oldShipmentAssignment->first() instanceof ShipmentAssignment) {
+                    $this->get('app.shipment_service')->edit($shipment, $request, $oldPrice, $oldShipmentAssignment->first());
+                } else {
+                    $this->get('app.shipment_service')->edit($shipment, $request, $oldPrice);
+                }
+            } catch (Exception $exception) {
+                $translator = $this->get('translator');
+                $this->addFlash('unSuccess_action', $translator->trans('shipment_edit_unsuccessfully'));
 
-            return $this->redirectToRoute('app_customer_dashboard_shipment_edit', ['id' => $shipment->getId()]);
+                return $this->redirectToRoute('app_customer_dashboard_shipment_show', ['id' => $shipment->getId()]);
+            }
+            //TODO: Refactor $selectedDriver get request
+            if (isset($request->request->get('restaurant_shipment')['driver'])) {
+                $selectedDriver = $request->request->get('restaurant_shipment')['driver'];
+                if ($selectedDriver) {
+                    $this->get('app.shipment_service')->shipmentAssign($shipment, $selectedDriver);
+                }
+            }
+            $translator = $this->get('translator');
+            $this->addFlash('edited_success', $translator->trans('edited_successfully'));
+
+            return $this->redirectToRoute('app_customer_dashboard_shipment_show', ['id' => $shipment->getId() ]);
         }
 
         return $this->render('customer/dashboard/shipment/edit.html.twig', [
+            'otherPhone' => $otherPhone,
+            'selectedDriverId' => $selectedDriverId,
+            'shipmentOtherAddressId' => $shipmentOtherAddressId,
             'shipment' => $shipment,
             'edit_form' => $editForm->createView(),
+            'addressFrom' => $addressForm->createView(),
+            'child_form_template' => $editForm->getConfig()->getOption('template'),
+            'child_form_javascript' => $editForm->getConfig()->getOption('javascript'),
+            'child_form_stylesheet' => $editForm->getConfig()->getOption('stylesheet'),
             'delete_form' => $deleteForm->createView(),
         ]);
     }

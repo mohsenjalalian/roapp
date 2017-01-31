@@ -125,7 +125,9 @@ services:
 
     app.form_shipment:
         class: AppBundle\Form\Customer\Dashboard\ShipmentType
-        arguments: ["@security.token_storage"]
+        arguments:
+            - "@security.token_storage"
+            - "@request_stack"
         tags:
         - { name: form.type }
 
