@@ -112,6 +112,11 @@
                 {{ flash_message }}
             </div>
         {% endfor %}
+        {% for flash_message in app.session.flashBag.get('unSuccess_action') %}
+            <div class="alert alert-danger">
+                {{ flash_message }}
+            </div>
+        {% endfor %}
         {% for flash_message in app.session.flashBag.get('registered_success') %}
             <div class="alert alert-success">
                 {{ flash_message }}

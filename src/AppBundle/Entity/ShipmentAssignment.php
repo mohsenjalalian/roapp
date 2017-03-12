@@ -16,6 +16,7 @@ class ShipmentAssignment
     const STATUS_REJECTED = 0;
     const STATUS_WAITING = 2;
     const STATUS_TIMEOUT = 3;
+    const STATUS_CANCEL = 4;
 
     /**
      * @var int

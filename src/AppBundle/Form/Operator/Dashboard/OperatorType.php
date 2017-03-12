@@ -43,6 +43,7 @@ class OperatorType extends AbstractType
                     'invalid_message' => 'رمز های عبور وارد شده باید یکسان باشند',
                     'options' => array('attr' => array('class' => 'password-field')),
                     'required' => true,
+                    'mapped' => false,
                     'first_options'  => array('label' => 'رمز عبور'),
                     'second_options' => array('label' => 'تکرار رمز عبور'),
                 ]

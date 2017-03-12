@@ -4,11 +4,14 @@ namespace AppBundle\Utils\Services;
 
 use AppBundle\Entity\AbstractInvoice;
 use AppBundle\Entity\Customer;
+use AppBundle\Entity\Driver;
 use AppBundle\Entity\PeriodInvoice;
 use AppBundle\Entity\Shipment;
+use AppBundle\Entity\ShipmentAssignment;
 use AppBundle\Entity\ShipmentHistory;
 use AppBundle\Exception\ShipmentException;
 use AppBundle\Utils\Shipment\ShipmentProcessInterface;
+use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\HttpFoundation\Request;
 use r;
@@ -74,7 +77,6 @@ class ShipmentService
             $this->container->getParameter('rethink_password')
         );
         $driverToken = uniqid();
-//        $trackingToken = uniqid();
         $document = [
             'shipment_id' => $shipment->getId(),
             'driver_token' => $driverToken,
@@ -101,10 +103,29 @@ class ShipmentService
     }
 
     /**
-     *
+     * @param Shipment           $shipment
+     * @param Request            $request
+     * @param int                $oldPrice
+     * @param ShipmentAssignment $oldAssignmentShipment
      */
-    public function edit()
+    public function edit(Shipment $shipment, Request $request, $oldPrice, ShipmentAssignment $oldAssignmentShipment = null)
     {
+        $shipmentPrice = $request
+            ->request->get('price_shipment');
+
+        $shipment->setPrice(floatval($shipmentPrice));
+        $shipment->setStatus(Shipment::STATUS_NOT_ASSIGNED);
+        $em = $this->container->get('doctrine.orm.entity_manager');
+        $em->persist($shipment);
+
+        $isBusinessUnitDriver = $shipment->getIsBusinessUnitDriver();
+        if (!$isBusinessUnitDriver) {
+            $this->editInvoice($shipment, $oldPrice, false, $oldAssignmentShipment);
+        } else {
+            $this->editInvoice($shipment, $oldPrice, true, $oldAssignmentShipment);
+        }
+        $em->flush();
+        $this->addHistory($shipment, ShipmentHistory::ACTION_CREATE);
     }
 
     /**
@@ -222,6 +243,69 @@ class ShipmentService
 
             $em->persist($periodInvoice);
             $em->flush();
+        }
+    }
+
+    /**
+     * @param Shipment           $shipment
+     * @param int                $oldPrice
+     * @param bool               $isBusinessUnitDriver
+     * @param ShipmentAssignment $oldAssignmentShipment
+     */
+    public function editInvoice(Shipment $shipment, $oldPrice, $isBusinessUnitDriver, ShipmentAssignment $oldAssignmentShipment = null)
+    {
+        $em = $this->container->get('doctrine.orm.entity_manager');
+        $todayPeriodInvoice = $em->getRepository("AppBundle:PeriodInvoice")->getTodayPeriodInvoice();
+        if ($todayPeriodInvoice instanceof PeriodInvoice) {
+            if (!$isBusinessUnitDriver) {
+                $previousPrice = intval($todayPeriodInvoice->getPrice());
+                $newPrice = intval($shipment->getPrice());
+                $totalPrice = ($previousPrice + $newPrice) - intval($oldPrice);
+                $todayPeriodInvoice->setPrice($totalPrice);
+                $shipmentItem = $todayPeriodInvoice->getShipments()->filter(function (Shipment $shipments) use ($shipment) {
+                    if ($shipment == $shipments) {
+                        return true;
+                    }
+
+                    return false;
+                });
+                if (!$shipmentItem->first() instanceof Shipment) {
+                    $todayPeriodInvoice->addShipment($shipment);
+                }
+                if ($oldAssignmentShipment instanceof ShipmentAssignment) {
+                    $oldAssignmentShipment->getDriver()->setStatus(Driver::STATUS_FREE);
+                    $oldAssignmentShipment->setStatus(ShipmentAssignment::STATUS_CANCEL);
+                    $em->persist($oldAssignmentShipment);
+                    $em->flush($oldAssignmentShipment);
+                }
+                $em->persist($todayPeriodInvoice);
+                $em->flush();
+            } else {
+                $shipmentItem = $todayPeriodInvoice->getShipments()->filter(function (Shipment $shipments) use ($shipment) {
+                    if ($shipment == $shipments) {
+                        return true;
+                    }
+
+                    return false;
+                });
+                if ($shipmentItem->first() instanceof Shipment) {
+                    $previousPrice = intval($todayPeriodInvoice->getPrice());
+                    $totalPrice = $previousPrice - intval($oldPrice);
+                    $todayPeriodInvoice->setPrice($totalPrice);
+                    $todayPeriodInvoice->removeShipment($shipmentItem[1]);
+
+                    $em->persist($todayPeriodInvoice);
+                    $em->flush();
+                }
+                if ($oldAssignmentShipment instanceof ShipmentAssignment) {
+                    $oldAssignmentShipment->getDriver()->setStatus(Driver::STATUS_FREE);
+                    $oldAssignmentShipment->setStatus(ShipmentAssignment::STATUS_CANCEL);
+                    $em->persist($oldAssignmentShipment);
+                    $em->flush($oldAssignmentShipment);
+                }
+            }
+        } else {
+            throw new Exception('Can not edit shipment');
         }
     }
 }

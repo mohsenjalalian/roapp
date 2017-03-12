@@ -142,6 +142,10 @@
                 <source>title_recovery_password_email</source>
                 <target>بازیابی رمز عبور</target>
              </trans-unit>
+             <trans-unit id="shipment_edit_unsuccessfully">
+                <source>shipment_edit_unsuccessfully</source>
+                <target>امکان ویرایش مرسوله ی مورد نظر وجود ندارد.</target>
+             </trans-unit>
         </body>
     </file>
 </xliff>

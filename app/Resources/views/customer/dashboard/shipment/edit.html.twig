@@ -1,68 +1,105 @@
 {% extends ':customer/dashboard:layout.html.twig' %}
 {% block title %}
-    ویرایش مرسوله ی جدید
+    ویرایش مرسوله
+{% endblock %}
+{% block page_title %}
+    ویرایش درخواست
+{% endblock %}
+{% block breadcrumbs %}
+    <li><a href="{{ path('app_customer_dashboard_shipment_index') }}">مرسوله ها</a></li>
+    <li class="active">ویرایش</li>
 {% endblock %}
 {% block main %}
-    <h1>ویرایش مرسوله</h1>
-    <div class="ui form">
-        {{ form_start(edit_form) }}
-        <div class="field">
-            <label>{{ form_label(edit_form.description) }}</label>
-            <div>{{ form_widget(edit_form.description ) }}</div>
-        </div>
-
-        <div class="two fields">
-            <div class="field">
-                <label>{{ form_label(edit_form.pickUpTime) }}</label>
-                <div style="direction: rtl !important;">{{ form_widget(edit_form.pickUpTime ) }}</div>
+    {% form_theme edit_form child_form_template %}
+    {{ form_row(edit_form, {'other_phone_val' : otherPhone, 'shipment_id' : shipment.id}) }}
+    <div hidden id="last_other_address_id_selected">{{ shipmentOtherAddressId }}</div>
+    <div hidden id="last_shipment_price_registered">{{ shipment.price }}</div>
+    <div hidden id="last_driver_selected">{{ selectedDriverId }}</div>
+    <div id="mapModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">افزودن آدرس</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="description">
+                        <div id="map"></div>
+                        <input id="address" style="position: absolute; top: 0;" class="controls" type="text" placeholder="آدرس">‍
+                    </div>
+                    {% include ':customer/dashboard/shipment:load_other_form.html.twig' %}
+                </div>
             </div>
-            </div>
         </div>
-        {#{{ form_widget(edit_form) }}#}
-        <input type="submit" value="ویرایش" />
-        {{ form_end(edit_form) }}
-    </div>
-    <div style="margin-top: 10px">
-        <a href="{{ path('app_customer_dashboard_shipment_index') }}"><button>فهرست مرسوله ها</button></a>
     </div>
 {% endblock %}
-
-   {% block stylesheets %}
-       {{ parent()  }}
-       {% stylesheets
-       'assets/vendor/persian-datepicker/src/css/persian-datepicker.css'
-       %}
-       <link rel="stylesheet" href="{{ asset_url }}" />
-       {% endstylesheets %}
-   {% endblock %}
-
-{% block javascripts %}
+    {% block stylesheets %}
         {{ parent()  }}
-    {% javascripts
-    'assets/vendor/persian-datepicker/lib/persian-date.js'
-    'assets/vendor/persian-datepicker/dist/js/persian-datepicker-0.4.5.min.js'
-    %}
-    <script type="text/javascript" src="{{ asset_url }}" ></script>
-    <script src="{{ getGoogleMapInitLink() }}"></script>
-    {% endjavascripts %}
-    <script>
-        $(document).ready(function() {
-            $(".js-datepicker").pDatepicker(
-                    {
-                        timePicker: {
-                            enabled: true,
-                            showSeconds: true,
-                            showMeridian: true,
-                            scrollEnabled: true,
-                            showOn: 'button',
-                            buttonImageOnly: true,
-                            changeMonth: true,
-                            changeYear: true,
-                            dateFormat: 'dd-mm-yy',
-                            yearRange: "-0:+1"
-                        }
-                    }
-            );
-        });
-    </script>
-{% endblock %}
+        {% stylesheets
+        'bundles/app/stylesheets/customer/dashboard/shipment/new.css'
+        'assets/vendor/persian-datepicker/src/css/persian-datepicker.css'
+        'bundles/app/stylesheets/customer/dashboard/address/style.css'
+        'assets/vendor/dropzone/dist/dropzone.css'
+        %}
+        <link rel="stylesheet" href="{{ asset_url }}" />
+        {% endstylesheets %}
+
+        <link rel="stylesheet" href="{{ asset(child_form_stylesheet) }}" />
+    {% endblock %}
+
+    {% block javascripts %}
+        {{ parent()  }}
+        {% javascripts
+        'assets/vendor/persian-datepicker/lib/persian-date.js'
+        'assets/vendor/persian-datepicker/dist/js/persian-datepicker-0.4.5.min.js'
+        'bundles/app/javascript/customer/dashboard/address/script.js'
+        'assets/vendor/dropzone/dist/min/dropzone.min.js'
+        'bundles/roappmedia/roapp-upload.js'
+        'bundles/app/javascript/customer/dashboard/shipment/scripts.js'
+        %}
+        <script type="text/javascript" src="{{ asset_url }}" ></script>
+        {% endjavascripts %}
+        <script src="{{ getGoogleMapInitLink() }}"></script>
+        <script src="{{ asset(child_form_javascript) }}" type="application/javascript"></script>
+
+    {% endblock %}
+   {#{% block stylesheets %}#}
+       {#{{ parent()  }}#}
+       {#{% stylesheets#}
+       {#'assets/vendor/persian-datepicker/src/css/persian-datepicker.css'#}
+       {#%}#}
+       {#<link rel="stylesheet" href="{{ asset_url }}" />#}
+       {#{% endstylesheets %}#}
+   {#{% endblock %}#}
+
+{#{% block javascripts %}#}
+        {#{{ parent()  }}#}
+    {#{% javascripts#}
+    {#'assets/vendor/persian-datepicker/lib/persian-date.js'#}
+    {#'assets/vendor/persian-datepicker/dist/js/persian-datepicker-0.4.5.min.js'#}
+    {#%}#}
+    {#<script type="text/javascript" src="{{ asset_url }}" ></script>#}
+    {#<script src="{{ getGoogleMapInitLink() }}"></script>#}
+    {#{% endjavascripts %}#}
+    {#<script>#}
+        {#$(document).ready(function() {#}
+            {#$(".js-datepicker").pDatepicker(#}
+                    {#{#}
+                        {#timePicker: {#}
+                            {#enabled: true,#}
+                            {#showSeconds: true,#}
+                            {#showMeriddescriptionian: true,#}
+                            {#scrollEnabled: true,#}
+                            {#showOn: 'button',#}
+                            {#buttonImageOnly: true,#}
+                            {#changeMonth: true,#}
+                            {#changeYear: true,#}
+                            {#dateFormat: 'dd-mm-yy',#}
+                            {#yearRange: "-0:+1"#}
+                        {#}#}
+                    {#}#}
+            {#);#}
+        {#});#}
+    {#</script>#}
+{#{% endblock %}#}
