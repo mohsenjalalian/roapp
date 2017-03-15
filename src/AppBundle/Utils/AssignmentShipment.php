@@ -96,6 +96,7 @@ class AssignmentShipment
         $data =
             [
                 'registerId' => $registerId,
+                'topic' => 'assignment',
                 'parameters' => [
                     'assignmentId' => $assignmentObj->getId(),
                     'sourceAddress' => $ownerDescription,

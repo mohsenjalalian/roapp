@@ -17,6 +17,7 @@ class ShipmentAssignment
     const STATUS_WAITING = 2;
     const STATUS_TIMEOUT = 3;
     const STATUS_CANCEL = 4;
+    const STATUS_DRIVER_FAILED = 5;
 
     /**
      * @var int

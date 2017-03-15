@@ -1,0 +1,17 @@
+{% extends ':driver/api:email_verify_layout.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent()  }}
+    {% stylesheets
+    'bundles/app/stylesheets/customer/dashboard/shipment/show/style.css'
+    'bundles/app/stylesheets/rate.css'
+    %}
+    <link rel="stylesheet" href="{{ asset_url }}" />
+    {% endstylesheets %}
+{% endblock %}
+
+{% block main %}
+<div class="text-center">
+    <h2>ایمیل شما تایید شد. با تشکر</h2>
+</div>
+{% endblock %}

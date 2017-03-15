@@ -40,7 +40,8 @@ class ShipmentAssignmentController extends Controller
             return new JsonResponse(
                 [
                     $param,
-                ]
+                ],
+                Response::HTTP_OK
             );
         } else {
             $conn = r\connect(
