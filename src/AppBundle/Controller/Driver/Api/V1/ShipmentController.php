@@ -4,7 +4,9 @@ namespace AppBundle\Controller\Driver\Api\V1;
 
 use AppBundle\Entity\Driver;
 use AppBundle\Entity\Shipment;
+use AppBundle\Entity\ShipmentAssignment;
 use AppBundle\Entity\ShipmentHistory;
+use AppBundle\Utils\AssignmentShipment;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -32,17 +34,18 @@ class ShipmentController extends Controller
     {
         $data = json_decode($request->getContent());
         $em = $this->getDoctrine()->getManager();
-        $shipment = $this->getDoctrine()
-            ->getRepository("AppBundle:Shipment")
-            ->find($data->shipmentId);
-        if ($shipment) {
-            $shipment->setStatus(Shipment::STATUS_DRIVER_FAILED);
-            $shipment->setReason($data->reason);
+        $assignment = $this->getDoctrine()
+            ->getRepository("AppBundle:ShipmentAssignment")
+            ->find($data->assignmentId);
+        if ($assignment) {
+            $assignment->setStatus(ShipmentAssignment::STATUS_DRIVER_FAILED);
+            $assignment->getShipment()->setStatus(Shipment::STATUS_DRIVER_FAILED);
+            $assignment->getDriver()->setStatus(Driver::STATUS_FREE);
 
-            $em->persist($shipment);
+            $em->persist($assignment);
             $em->flush();
 
-            $this->get('app.shipment_service')->addHistory($shipment, ShipmentHistory::ACTION_FAIL_BY_DRIVER);
+//            $this->get('app.shipment_service')->addHistory($shipment, ShipmentHistory::ACTION_FAIL_BY_DRIVER);
 
             // send sms to customer
             $sendNotification = $this->get("logger");
@@ -69,11 +72,11 @@ class ShipmentController extends Controller
         $em = $this->getDoctrine()->getManager();
         $data = json_decode($request->getContent());
         $assignmentId = $data->assignmentId;
-        $reciverCode = $data->reciverCode;
+        $receiverCode = $data->receiverCode;
         $assignment = $this->getDoctrine()
             ->getRepository("AppBundle:ShipmentAssignment")
             ->find($assignmentId);
-        if ($assignment->getReciverExchangeCode() == $reciverCode) {
+        if ($assignment->getReciverExchangeCode() == $receiverCode) {
             $assignment->getShipment()
                 ->setStatus(Shipment::STATUS_DELIVERED);
             $em->persist($assignment);
@@ -155,5 +158,36 @@ class ShipmentController extends Controller
                 Response::HTTP_BAD_REQUEST
             );
         }
+    }
+
+    /**
+     * @Route("/get_task_status")
+     * @Method("POST")
+     * @Security("is_granted('IS_AUTHENTICATED_ANONYMOUSLY')")
+     * @param Request $request
+     * @return Response
+     */
+    public function getTaskStatus(Request $request)
+    {
+        $data = json_decode($request->getContent());
+        $shipmentId = $data->shipmentId;
+        $em = $this->getDoctrine()->getEntityManager();
+        $shipment = $em->getRepository("AppBundle:Shipment")->find($shipmentId);
+        $status = $shipment->getStatus();
+        if ($status == Shipment::STATUS_CUSTOMER_FAILED) {
+            $response = 'customer_failed';
+        } elseif ($status == Shipment::STATUS_DRIVER_FAILED) {
+            $response = 'driver_failed';
+        } elseif ($status == Shipment::STATUS_ON_PICK_UP) {
+            $response = 'on_pick_up';
+        } elseif ($status == Shipment::STATUS_PICKED_UP || $status == Shipment::STATUS_ON_DELIVERY) {
+            $response = 'on_delivery';
+        } elseif ($status == Shipment::STATUS_DELIVERED || $status == Shipment::STATUS_FINISH) {
+            $response = 'finish';
+        } else {
+            $response = 'no_state';
+        }
+
+        return new Response($response, Response::HTTP_OK);
     }
 }

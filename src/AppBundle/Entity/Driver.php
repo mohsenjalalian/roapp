@@ -5,6 +5,7 @@ namespace AppBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\JoinColumn;
 use Doctrine\ORM\Mapping\ManyToOne;
+use FOS\RestBundle\Controller\Annotations\Route;
 use Symfony\Component\Validator\Constraints as Assert;
 use AppBundle\Annotation\Permissions;
 use AppBundle\Annotation\Permission as PermissionAnnotation;
@@ -47,6 +48,23 @@ class Driver extends Person
      * @JoinColumn(name="business_unit_id", referencedColumnName="id")
      */
     private $businessUnit;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="email", type="string", length=255, nullable=true)
+     */
+    private $email;
+
+    /**
+     * @ORM\Column(type="string", name="verify_email_token", nullable=true)
+     */
+    private $verifyEmailToken;
+
+    /**
+     * @ORM\Column(type="string", name="image_name", nullable=true)
+     */
+    private $imageName;
 
     /**
      * @inheritdoc
@@ -239,5 +257,77 @@ class Driver extends Person
         $this->businessUnit = $businessUnit;
 
         return $this;
+    }
+
+    /**
+     * Set email
+     *
+     * @param string $email
+     *
+     * @return Driver
+     */
+    public function setEmail($email)
+    {
+        $this->email = $email;
+
+        return $this;
+    }
+
+    /**
+     * Get email
+     *
+     * @return string
+     */
+    public function getEmail()
+    {
+        return $this->email;
+    }
+
+    /**
+     * Set verifyEmailToken
+     *
+     * @param string $verifyEmailToken
+     *
+     * @return Driver
+     */
+    public function setVerifyEmailToken($verifyEmailToken)
+    {
+        $this->verifyEmailToken = $verifyEmailToken;
+
+        return $this;
+    }
+
+    /**
+     * Get verifyEmailToken
+     *
+     * @return string
+     */
+    public function getVerifyEmailToken()
+    {
+        return $this->verifyEmailToken;
+    }
+
+    /**
+     * Set imageName
+     *
+     * @param string $imageName
+     *
+     * @return Driver
+     */
+    public function setImageName($imageName)
+    {
+        $this->imageName = $imageName;
+
+        return $this;
+    }
+
+    /**
+     * Get imageName
+     *
+     * @return string
+     */
+    public function getImageName()
+    {
+        return $this->imageName;
     }
 }

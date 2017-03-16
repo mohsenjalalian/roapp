@@ -21,10 +21,11 @@ class NotificationService
         ];
         $registerId = $data['registerId'];
         $parameters = $data['parameters'];
+        $topic = $data['topic'];
         $fields = [
             'data' => [
                 'body' => $parameters,
-                'tag' => 'assignment',
+                'tag' =>  $topic,
             ],
             'registration_ids' => [$registerId],
         ];

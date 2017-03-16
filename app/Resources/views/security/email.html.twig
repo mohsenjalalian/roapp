@@ -6,7 +6,11 @@
 {% block main %}
     <div class="panel">
         <div class="panel-body well">
-            <p>لطفا برای بازیابی رمز عبور خود روی لینک زیر کلیک نمایید.</p>
+            {% if bodyMessage %}
+                <p>{{ bodyMessage }}</p>
+            {% else %}
+                <p>لطفا برای بازیابی رمز عبور خود روی لینک زیر کلیک نمایید.</p>
+            {% endif %}
 
             {# example, assuming you have a route named "login" #}
             <div>

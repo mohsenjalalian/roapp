@@ -105,6 +105,7 @@ class DriverRepository extends EntityRepository
             ->setParameter(
                 'status',
                 [
+                    Shipment::STATUS_ASSIGNED,
                     Shipment::STATUS_ON_PICK_UP,
                     Shipment::STATUS_PICKED_UP,
                     Shipment::STATUS_ON_DELIVERY,
@@ -114,6 +115,7 @@ class DriverRepository extends EntityRepository
             ->getQuery()
             ->getResult()
         ;
+
         if ($assignment instanceof AssignmentShipment) {
             return true;
         } else {
